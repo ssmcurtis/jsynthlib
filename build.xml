@@ -36,6 +36,7 @@
 	<property file="build.properties"/>
 
 	<!-- Defaults -->
+	<property name="src_main" location="src/main/"/>
 	<property name="src" location="src/main/java"/>
 	<property name="build" location="target"/>
 	<property name="bin" location="${build}/bin"/>
@@ -77,12 +78,12 @@
 		</javac>
 		<!-- Images -->
 		<copy todir="${bin}/images">
-			<fileset dir="images"/>
+			<fileset dir="${src_main}/images"/>
 		</copy>
 		<!-- Resources -->
-		<copy file="synthdrivers.properties" todir="${bin}"/>
-		<copy todir="${bin}/synthdrivers">
-			<fileset dir="synthdrivers">
+		<copy file="${src_main}/resources/synthdrivers.properties" todir="${bin}"/>
+		<copy todir="synthdrivers">
+			<fileset dir="${src_main}/synthdrivers">
 				<include name="**/*.gif"/>
 				<include name="**/*.png"/>
 				<include name="**/*.syx"/>

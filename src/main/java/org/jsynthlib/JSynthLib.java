@@ -2,16 +2,18 @@ package org.jsynthlib;
 
 import java.util.ArrayList;
 
-import org.jsynthlib.core.PatchEdit;
+import org.jsynthlib.menu.PatchBayApplication;
 
 public class JSynthLib {
 
-	private static int debugLevel = 0;
-	private static ArrayList fileList = new ArrayList();
+	private static int debugLevel = 3;
+	private static ArrayList<String> fileList = new ArrayList<String>();
 
 	public static void main(String[] args) {
 		parseArgument(args);
-		PatchEdit frame = new PatchEdit(fileList, debugLevel);
+
+		@SuppressWarnings("unused")
+		PatchBayApplication frame = new PatchBayApplication(fileList, debugLevel);
 		// frame.setVisible(true);
 	}
 
@@ -45,5 +47,5 @@ public class JSynthLib {
 		System.err.println("\t-1\tall");
 		System.exit(status);
 	}
-	
+
 }
