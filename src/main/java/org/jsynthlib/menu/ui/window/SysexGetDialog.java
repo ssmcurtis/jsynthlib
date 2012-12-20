@@ -179,8 +179,6 @@ public class SysexGetDialog extends JDialog {
 
 		if (queue != null) {
 
-			System.out.println(queue.size());
-
 			SysexMessage[] msgs = (SysexMessage[]) queue.toArray(new SysexMessage[0]);
 
 			IPatch[] patarray = driver.createPatches(msgs);
@@ -318,7 +316,6 @@ public class SysexGetDialog extends JDialog {
 			// myLabel.setText(" ");
 			// timer.stop();
 			//
-			// System.out.println("......");
 			// pasteIntoSelectedFrame();
 			// sysexSize = 0; // ???
 		}

@@ -363,7 +363,6 @@ public class DevicesConfig {
 		DeviceDescriptor descriptor;
 		for (Iterator i = descriptors.iterator(); i.hasNext();) {
 			descriptor = (DeviceDescriptor) i.next();
-			System.out.println(descriptor + "\n");
 		}
 	}
 

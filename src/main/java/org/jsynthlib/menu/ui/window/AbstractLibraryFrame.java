@@ -19,6 +19,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,6 +69,8 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 	protected boolean changed = false; // wirski@op.pl
 	private JLabel statusBar;
 	private File filename;
+
+	private NumberFormat nf = NumberFormat.getInstance();
 
 	AbstractLibraryFrame(String title, String type, PatchTransferHandler pth) {
 		super(PatchBayApplication.getDesktop(), title);
@@ -262,7 +265,6 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 		}
 	}
 
-	
 	// TODO ssmcurtis - import patch
 	// begin PatchBasket methods
 	public void importPatch(File file) throws IOException, FileNotFoundException {
@@ -275,7 +277,7 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 		fileIn.close();
 
 		// ErrorMsg.reportStatus("Buffer length:" + buffer.length);
-		IPatch[] patarray = DriverUtil.createPatches(buffer);
+		IPatch[] patarray = DriverUtil.createPatches(buffer, file.getName());
 		for (int j = 0; j < patarray.length; j++) {
 			if (table.getSelectedRowCount() == 0)
 				myModel.addPatch(patarray[j]);
@@ -416,9 +418,7 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 			ObjectOutputStream s = new ObjectOutputStream(f);
 			List li = myModel.getList();
 
-			System.out.println(li.getClass());
-
-			s.writeObject(myModel.getList());
+			s.writeObject(li);
 			s.flush();
 			s.close();
 			f.close();
@@ -472,7 +472,7 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 		patch.setDriver();
 		if (patch.hasNullDriver()) {
 			// Unkown patch, try to guess at least the manufacturer
-			patch.setComment("Probably a " + patch.lookupManufacturer() + " Patch, Size: " + patch.getSize());
+			patch.setInfo(patch.lookupManufacturer() + " [?] " + nf.format(patch.getSize()) + "B");
 		}
 	}
 

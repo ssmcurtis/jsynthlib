@@ -208,7 +208,7 @@ public class BankEditorFrame extends MenuFrame implements PatchBasket {
 		fileIn.read(buffer);
 		fileIn.close();
 
-		IPatch p = (DriverUtil.createPatch(buffer));
+		IPatch p = (DriverUtil.createPatch(buffer, file.getName()));
 		bankData.put(p, getSelectedPatchNum());
 		myModel.fireTableDataChanged();
 	}

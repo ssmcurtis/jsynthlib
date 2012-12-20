@@ -131,7 +131,7 @@ public class RolandVG88BankDriver extends BankDriver {
 		// for (int i = 0; i < singleDriver.NUM_PATCH; i++) {
 		// putPatch(bank, p, i);
 		// }
-		bank.setComment("User VG88 - V2");
+		bank.setComment("new bank");
 		return bank;
 	}
 

@@ -67,6 +67,8 @@ public interface IPatchDriver extends IDriver {
 	 * @see IDriver#supportsPatch(String, byte[])
 	 * @see DriverUtil#createPatch(byte[])
 	 */
+	IPatch createPatch(byte[] sysex, String filename);
+	
 	IPatch createPatch(byte[] sysex);
 
 	/**

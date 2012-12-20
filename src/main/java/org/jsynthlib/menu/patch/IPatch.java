@@ -138,4 +138,22 @@ public interface IPatch extends Cloneable, Transferable, Serializable {
 
 	/** create a clone of the patch. */
 	Object clone();
+
+	public String getFileName();
+
+	public void setFileName(String fileName);
+
+	public String getPatchId();
+
+	/**
+	 * Should be not changeable
+	 * 
+	 * @param patchId
+	 */
+	public void setPatchId(String patchId);
+
+	public String getInfo();
+
+	public void setInfo(String info);
+	
 }

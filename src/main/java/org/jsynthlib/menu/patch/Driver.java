@@ -297,13 +297,19 @@ abstract public class Driver implements IPatchDriver {
 		return null;
 	}
 
+	// TODO add Filename
 	public IPatch createPatch(byte[] sysex) {
-		return new Patch(sysex, this);
+		return new Patch(sysex, this, "");
 	}
 
+	public IPatch createPatch(byte[] sysex, String filename) {
+		return new Patch(sysex, this, filename);
+	}
+
+	// TODO ssmcurtis opata
 	public IPatch[] createPatches(SysexMessage[] msgs) {
 		byte[] sysex = MidiUtil.sysexMessagesToByteArray(msgs);
-		IPatch[] patarray = DriverUtil.createPatches(sysex, getDevice());
+		IPatch[] patarray = DriverUtil.createPatches(sysex, getDevice(), "");
 
 		// Maybe you don't get the expected patch!
 		// Check all devices/drivers again! Call fixpatch() if supportsPatch
@@ -414,8 +420,6 @@ abstract public class Driver implements IPatchDriver {
 	 * @see Patch#getName()
 	 */
 	protected String getPatchName(Patch p) {
-		// System.out.println(">>>> Get patch name ...");
-
 		if (patchNameSize == 0)
 			return ("-");
 		try {
@@ -504,16 +508,15 @@ abstract public class Driver implements IPatchDriver {
 	}
 
 	/**
-	 * @see Patch#hasEditor()
-	 * ssmcurtis - HEX-View always
+	 * @see Patch#hasEditor() ssmcurtis - HEX-View always
 	 */
 	boolean hasEditor() {
-//		try {
-//			getClass().getDeclaredMethod("editPatch", new Class[] { Patch.class });
-			return true;
-//		} catch (NoSuchMethodException e) {
-//			return false;
-//		}
+		// try {
+		// getClass().getDeclaredMethod("editPatch", new Class[] { Patch.class });
+		return true;
+		// } catch (NoSuchMethodException e) {
+		// return false;
+		// }
 	}
 
 	/**
@@ -522,7 +525,7 @@ abstract public class Driver implements IPatchDriver {
 	 * @see Patch#edit()
 	 */
 	protected JSLFrame editPatch(Patch p) {
-			return (new HexDumpEditorFrame(p));
+		return (new HexDumpEditorFrame(p));
 	}
 
 	//

@@ -49,8 +49,8 @@ public class DriverUtil {
 	 * Factory method of Patch. Look up the driver for sysex byte array, and create a patch by using the driver found.
 	 * This is used for a byte array read from a Sysex file, for which a Driver is not known.
 	 */
-	public static IPatch[] createPatches(byte[] sysex) {
-		return createPatches(sysex, chooseDriver(sysex));
+	public static IPatch[] createPatches(byte[] sysex, String filename) {
+		return createPatches(sysex, chooseDriver(sysex), filename);
 	}
 
 	/**
@@ -60,22 +60,26 @@ public class DriverUtil {
 	 * @param device
 	 *            Device whose driver is looked up.
 	 */
-	public static IPatch[] createPatches(byte[] sysex, Device device) {
-		return createPatches(sysex, chooseDriver(sysex, device));
+	public static IPatch[] createPatches(byte[] sysex, Device device, String filename) {
+		return createPatches(sysex, chooseDriver(sysex, device), filename);
 	}
 
-	private static IPatch[] createPatches(byte[] sysex, IDriver driver) {
+	public static IPatch[] createPatches(byte[] sysex, Device device) {
+		return createPatches(sysex, chooseDriver(sysex, device), "");
+	}
+
+	private static IPatch[] createPatches(byte[] sysex, IDriver driver, String filename) {
 		if (driver == null)
 			return null;
 		else if (driver.isConverter())
 			return ((IConverter) driver).createPatches(sysex);
 		else
-			return new IPatch[] { ((IPatchDriver) driver).createPatch(sysex) };
+			return new IPatch[] { ((IPatchDriver) driver).createPatch(sysex, filename) };
 	}
 
-	public static IPatch createPatch(byte[] sysex) {
+	public static IPatch createPatch(byte[] sysex, String filename) {
 		IPatchDriver driver = (IPatchDriver) chooseDriver(sysex);
-		return driver != null ? driver.createPatch(sysex) : null;
+		return driver != null ? driver.createPatch(sysex, filename) : null;
 	}
 
 	/**
@@ -231,7 +235,7 @@ public class DriverUtil {
 			if (fileIn != null) {
 				fileIn.read(buffer);
 				fileIn.close();
-				return driver.createPatch(buffer);
+				return driver.createPatch(buffer, fileName);
 			} else {
 				throw new FileNotFoundException("File: " + fileName + " does not exist!");
 			}

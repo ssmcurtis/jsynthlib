@@ -42,7 +42,7 @@ public class MidiFileImport {
 				PatchBasket frame = (PatchBasket) PatchBayApplication.getDesktop().getSelectedFrame();
 				if (tr[j].get(i).getMessage() instanceof SysexMessage) {
 					// ErrorMsg.reportStatus("Track "+j+" Event "+i+" SYSEX!!");
-					IPatch[] patarray = DriverUtil.createPatches(tr[j].get(i).getMessage().getMessage());
+					IPatch[] patarray = DriverUtil.createPatches(tr[j].get(i).getMessage().getMessage(), file.getName());
 					for (int k = 0; k < patarray.length; k++) {
 						frame.pastePatch(patarray[k]);
 					}

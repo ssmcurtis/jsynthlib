@@ -6,7 +6,7 @@ import org.jsynthlib.menu.PatchBayApplication;
 
 public class JSynthLib {
 
-	private static int debugLevel = 3;
+	private static int debugLevel = 0;
 	private static ArrayList<String> fileList = new ArrayList<String>();
 
 	public static void main(String[] args) {

@@ -25,17 +25,10 @@ import org.jsynthlib.tools.ErrorMsg;
  */
 public class LibraryFrame extends AbstractLibraryFrame {
 	private static int openFrameCount = 0;
-	// column indices
-	private static final int SYNTH = 0;
-	private static final int TYPE = 1;
-	private static final int PATCH_NAME = 2;
-	private static final int FIELD1 = 3;
-	private static final int FIELD2 = 4;
-	private static final int COMMENT = 5;
 
 	public static final String FILE_EXTENSION = ".patchlib";
-	private static final FileFilter FILE_FILTER = new ExtensionFilter("PatchEdit Library Files (*"
-			+ FILE_EXTENSION + ")", FILE_EXTENSION);
+	private static final FileFilter FILE_FILTER = new ExtensionFilter("PatchEdit Library Files (*" + FILE_EXTENSION
+			+ ")", FILE_EXTENSION);
 	private static final PatchTransferHandler pth = new PatchListTransferHandler();
 
 	public LibraryFrame(File file) {
@@ -52,18 +45,25 @@ public class LibraryFrame extends AbstractLibraryFrame {
 
 	void setupColumns() {
 		TableColumn column = null;
-		column = table.getColumnModel().getColumn(SYNTH);
-		column.setPreferredWidth(50);
-		column = table.getColumnModel().getColumn(TYPE);
-		column.setPreferredWidth(50);
-		column = table.getColumnModel().getColumn(PATCH_NAME);
-		column.setPreferredWidth(100);
-		column = table.getColumnModel().getColumn(FIELD1);
-		column.setPreferredWidth(50);
-		column = table.getColumnModel().getColumn(FIELD2);
-		column.setPreferredWidth(50);
-		column = table.getColumnModel().getColumn(COMMENT);
-		column.setPreferredWidth(200);
+		for (LibraryColumn col : LibraryColumn.values()) {
+			column = table.getColumnModel().getColumn(col.ordinal());
+			column.setPreferredWidth(50);
+		}
+		// column.setPreferredWidth(50);
+		// column = table.getColumnModel().getColumn(TYPE);
+		// column.setPreferredWidth(50);
+		// column = table.getColumnModel().getColumn(PATCH_NAME);
+		// column.setPreferredWidth(100);
+		// column = table.getColumnModel().getColumn(FIELD1);
+		// column.setPreferredWidth(50);
+		// column = table.getColumnModel().getColumn(FIELD2);
+		// column.setPreferredWidth(50);
+		// column = table.getColumnModel().getColumn(FILENAME);
+		// column.setPreferredWidth(50);
+		// column = table.getColumnModel().getColumn(PATCHID);
+		// column.setPreferredWidth(50);
+		// column = table.getColumnModel().getColumn(COMMENT);
+		// column.setPreferredWidth(200);
 	}
 
 	void frameActivated() {
@@ -109,6 +109,7 @@ public class LibraryFrame extends AbstractLibraryFrame {
 		Actions.setEnabled(Toolkit.getDefaultToolkit().getSystemClipboard().getContents(this) != null, Actions.EN_PASTE);
 	}
 
+	@Deprecated
 	void deleteDuplicates() {
 		Collections.sort(myModel.getList(), new SysexSort());
 		int numDeleted = 0;
@@ -159,20 +160,11 @@ public class LibraryFrame extends AbstractLibraryFrame {
 	 * @author Gerrit Gehnen
 	 */
 	private class PatchListModel extends PatchTableModel {
-		private final String[] columnNames = { "Synth", "Type", "Patch Name", "Field 1", "Field 2", "Comment" };
-
-		// TODO: Remove these comments after June, 2006
-		// This isn't the same "changed" as the one used in AbstractLibraryFrame, and this one is never used
-		// - Emenaker 2006-02-21
-		// private boolean changed;
+		private final String[] columnNames = LibraryColumn.getColumNames();
 
 		private ArrayList list = new ArrayList();
 
-		PatchListModel(/* boolean c */) {
-			// TODO: Remove these comments after June, 2006
-			// This isn't the same "changed" as the one used in AbstractLibraryFrame, and this one is never used
-			// - Emenaker 2006-02-21
-			// changed = c;
+		PatchListModel() {
 		}
 
 		public int getRowCount() {
@@ -190,7 +182,10 @@ public class LibraryFrame extends AbstractLibraryFrame {
 		public Object getValueAt(int row, int col) {
 			IPatch myPatch = (IPatch) list.get(row);
 			try {
-				switch (col) {
+
+				LibraryColumn column = LibraryColumn.getLibraryColumn(col);
+
+				switch (column) {
 				case SYNTH:
 					return myPatch.getDevice().getSynthName();
 				case TYPE:
@@ -203,6 +198,12 @@ public class LibraryFrame extends AbstractLibraryFrame {
 					return myPatch.getAuthor();
 				case COMMENT:
 					return myPatch.getComment();
+				case FILENAME:
+					return myPatch.getFileName();
+				case PATCHID:
+					return myPatch.getPatchId();
+				case INFO:
+					return myPatch.getInfo();
 				default:
 					ErrorMsg.reportStatus("LibraryFrame.getValueAt: internal error.");
 					return null;
@@ -227,7 +228,7 @@ public class LibraryFrame extends AbstractLibraryFrame {
 		 * Don't need to implement this method unless your table's editable.
 		 */
 		public boolean isCellEditable(int row, int col) {
-			return (col > TYPE);
+			return (col > LibraryColumn.TYPE.ordinal());
 		}
 
 		/*
@@ -239,7 +240,10 @@ public class LibraryFrame extends AbstractLibraryFrame {
 			// - Emenaker 2006-02-21
 			// changed = true;
 			IPatch myPatch = (IPatch) list.get(row);
-			switch (col) {
+
+			LibraryColumn column = LibraryColumn.getLibraryColumn(col);
+
+			switch (column) {
 			case PATCH_NAME:
 				myPatch.setName((String) value);
 				break;
@@ -252,6 +256,12 @@ public class LibraryFrame extends AbstractLibraryFrame {
 			case COMMENT:
 				myPatch.setComment((String) value);
 				break;
+			case FILENAME:
+				myPatch.setFileName((String) value);
+			case PATCHID:
+				myPatch.setPatchId((String) value);
+			case INFO:
+				myPatch.setInfo((String) value);
 			default:
 				ErrorMsg.reportStatus("LibraryFrame.setValueAt: internal error.");
 			}

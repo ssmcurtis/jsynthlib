@@ -2,6 +2,11 @@ package org.jsynthlib.menu.patch;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.UUID;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.SysexMessage;
@@ -43,10 +48,17 @@ public class Patch implements PatchSingle, PatchBank {
 	/** Driver for this Patch. */
 	private transient Driver driver;
 
+	DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, Locale.ENGLISH);// new SimpleDateFormat("");
 	/**
 	 * MIDI System Exclusive Message byte array.
 	 */
 	public byte[] sysex;
+
+	private StringBuffer fileName;
+
+	private StringBuffer info;
+
+	private StringBuffer patchId;
 
 	// 'String' is better. But 'StringBuffer' is used to keep
 	// the compatibility for serialized files
@@ -71,10 +83,16 @@ public class Patch implements PatchSingle, PatchBank {
 	 *            a <code>Driver</code> instance. If <code>null</code>, a null driver (Generic Driver) is used.
 	 */
 	public Patch(byte[] gsysex, Driver driver) {
-		date = new StringBuffer();
-		author = new StringBuffer();
-		comment = new StringBuffer();
+		this(gsysex, driver, "");
+	}
+
+	public Patch(byte[] gsysex, Driver driver, String fileName) {
+		date = new StringBuffer(df.format(Calendar.getInstance().getTime()));
+		author = new StringBuffer(AppConfig.getRepositoryUser());
+		comment = new StringBuffer("");
 		sysex = gsysex;
+		setPatchId(UUID.randomUUID().toString());
+		setFileName(fileName);
 		setDriver(driver);
 		// commented out not to break backward compatibility
 		// driver.trimSysex(this);
@@ -89,14 +107,16 @@ public class Patch implements PatchSingle, PatchBank {
 	 *            a <code>Device</code> instance.
 	 */
 	public Patch(byte[] gsysex, Device device) {
-		date = new StringBuffer();
-		author = new StringBuffer();
-		comment = new StringBuffer();
+		date = new StringBuffer(df.format(Calendar.getInstance().getTime()));
+		author = new StringBuffer(AppConfig.getRepositoryUser());
+		comment = new StringBuffer("");
 		sysex = gsysex;
+		setPatchId(UUID.randomUUID().toString());
+		setFileName("unknown 1");
+		
 		setDriver((Driver) DriverUtil.chooseDriver(sysex, device));
 		driver.trimSysex(this);
 	}
-
 	/**
 	 * Constructor - Either Device nor Driver is not known. Consider using <code>Patch(byte[], Driver)</code> or
 	 * <code>Patch(byte[],
@@ -108,10 +128,12 @@ public class Patch implements PatchSingle, PatchBank {
 	 *            The MIDI SysEx message.
 	 */
 	public Patch(byte[] gsysex) {
-		date = new StringBuffer();
-		author = new StringBuffer();
-		comment = new StringBuffer();
+		date = new StringBuffer(df.format(Calendar.getInstance().getTime()));
+		author = new StringBuffer(AppConfig.getRepositoryUser());
+		comment = new StringBuffer("");
 		sysex = gsysex;
+		setPatchId(UUID.randomUUID().toString());
+		setFileName("unknown 2");
 		setDriver((Driver) DriverUtil.chooseDriver(sysex));
 		driver.trimSysex(this);
 	}
@@ -332,5 +354,35 @@ public class Patch implements PatchSingle, PatchBank {
 		StringBuffer buf = new StringBuffer();
 		buf.append("[" + driver + "] " + Utility.hexDumpOneLine(sysex, 0, -1, 20));
 		return buf.toString();
+	}
+
+	@Override
+	public String getFileName() {
+		return fileName.toString();
+	}
+
+	@Override
+	public void setFileName(String fileName) {
+		this.fileName = new StringBuffer(fileName);
+	}
+
+	@Override
+	public String getPatchId() {
+		return patchId.toString();
+	}
+
+	@Override
+	public void setPatchId(String patchId) {
+		this.patchId = new StringBuffer(patchId);
+	}
+
+	@Override
+	public String getInfo() {
+		return info.toString();
+	}
+
+	@Override
+	public void setInfo(String info) {
+		this.info = new StringBuffer(info);
 	}
 }

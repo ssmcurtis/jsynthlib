@@ -145,7 +145,7 @@ public class ImportAllDialog extends JDialog {
 					buffer = new byte[1];
 				}
 				if (buffer.length > 16) {
-					IPatch[] patarray = DriverUtil.createPatches(buffer);
+					IPatch[] patarray = DriverUtil.createPatches(buffer, files[i].getName());
 					if (patarray == null) {
 						ErrorMsg.reportError("Import All", "Can't import a file \"" + files[i].getCanonicalPath()
 								+ "\". Load a proper synth driver.");

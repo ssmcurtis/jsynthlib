@@ -2,6 +2,7 @@ package org.jsynthlib.synthdrivers.access.virus;
 
 import org.jsynthlib.menu.PatchBayApplication;
 import org.jsynthlib.menu.patch.BankDriver;
+import org.jsynthlib.menu.patch.IPatch;
 import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.SysexHandler;
 import org.jsynthlib.tools.ErrorMsg;
@@ -121,4 +122,5 @@ public class VirusMultiBankDriver extends BankDriver {
 	public void requestPatchDump(int bankNum, int patchNum) {
 		send(sysexRequestDump.toSysexMessage(getDeviceID(), new SysexHandler.NameValue("bankNum", 1)));
 	}
+
 }

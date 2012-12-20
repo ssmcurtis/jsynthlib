@@ -261,7 +261,6 @@ public class DKnob extends JComponent {
 			}
 		}
 	}
-
 	/**
 	 * Paint the DKnob
 	 */
