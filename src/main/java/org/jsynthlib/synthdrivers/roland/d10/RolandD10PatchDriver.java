@@ -77,7 +77,7 @@ public class RolandD10PatchDriver extends Driver {
 	}
 
 	protected void sendPatch(Patch patch) {
-		D10DataSetMessage message = new D10DataSetMessage(patch.sysex);
+		D10DataSetMessage message = new D10DataSetMessage(patch.getSysex());
 		message.setAddress(BASE_PATCH_TEMP_AREA);
 		send(message.getBytes());
 	}

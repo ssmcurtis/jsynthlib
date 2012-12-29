@@ -82,7 +82,7 @@ public class YamahaTG100BankDriver extends BankDriver {
 		for (int patchNum = 0; patchNum < patchNumbers.length; patchNum++) {
 			this.calculateChecksum(p, patchNum);
 
-			System.arraycopy(p.sysex, getPatchStart(patchNum), tempSysex, 0, tempSysex.length);
+			System.arraycopy(p.getSysex(), getPatchStart(patchNum), tempSysex, 0, tempSysex.length);
 
 			send(tempSysex);
 		}
@@ -130,7 +130,7 @@ public class YamahaTG100BankDriver extends BankDriver {
 			}
 		}
 
-		System.arraycopy(p.sysex, 0, bank.sysex, getPatchStart(patchNum) + TG100Constants.SYSEX_HEADER_OFFSET,
+		System.arraycopy(p.getSysex(), 0, bank.getSysex(), getPatchStart(patchNum) + TG100Constants.SYSEX_HEADER_OFFSET,
 				this.singleSize - TG100Constants.SYSEX_HEADER_OFFSET);
 
 		this.calculateChecksum(bank, patchNum);
@@ -143,7 +143,7 @@ public class YamahaTG100BankDriver extends BankDriver {
 		try {
 			byte[] sysex = new byte[this.singleSize];
 
-			System.arraycopy(bank.sysex, getPatchStart(patchNum), sysex, 0, this.singleSize);
+			System.arraycopy(bank.getSysex(), getPatchStart(patchNum), sysex, 0, this.singleSize);
 			Patch p = new Patch(sysex);
 			calculateChecksum(p);
 
@@ -162,7 +162,7 @@ public class YamahaTG100BankDriver extends BankDriver {
 		nameStart += TG100Constants.PATCH_NAME_START; // offset of name in patch data
 		try {
 			StringBuffer s = new StringBuffer(
-					new String(p.sysex, nameStart, TG100Constants.PATCH_NAME_SIZE, "US-ASCII"));
+					new String(p.getSysex(), nameStart, TG100Constants.PATCH_NAME_SIZE, "US-ASCII"));
 			return s.toString();
 		} catch (UnsupportedEncodingException ex) {
 			return "-";
@@ -180,7 +180,7 @@ public class YamahaTG100BankDriver extends BankDriver {
 		try {
 			namebytes = name.getBytes("US-ASCII");
 			for (int i = 0; i < patchNameSize; i++)
-				p.sysex[tempPatchNameStart + i] = namebytes[i];
+				p.getSysex()[tempPatchNameStart + i] = namebytes[i];
 		} catch (UnsupportedEncodingException ex) {
 			return;
 		}
@@ -199,7 +199,7 @@ public class YamahaTG100BankDriver extends BankDriver {
 
 			calculateChecksum(tempPatch);
 
-			System.arraycopy(tempPatch.sysex, 0, sysex, getPatchStart(patchNum), this.singleSize);
+			System.arraycopy(tempPatch.getSysex(), 0, sysex, getPatchStart(patchNum), this.singleSize);
 		}
 
 		p = new Patch(sysex);

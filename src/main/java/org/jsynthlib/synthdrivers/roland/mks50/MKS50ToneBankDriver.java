@@ -54,95 +54,95 @@ public class MKS50ToneBankDriver extends BankDriver {
 
 		byte bankSysex[] = new byte[32];
 		// DCO ENV MODE
-		bankSysex[5] |= (byte) ((((Patch) p).sysex[7] & 0x02) << 6);
-		bankSysex[6] |= (byte) ((((Patch) p).sysex[7] & 0x01) << 7);
+		bankSysex[5] |= (byte) ((((Patch) p).getSysex()[7] & 0x02) << 6);
+		bankSysex[6] |= (byte) ((((Patch) p).getSysex()[7] & 0x01) << 7);
 		// VCF ENV MODE
-		bankSysex[7] |= (byte) ((((Patch) p).sysex[8] & 0x02) << 6);
-		bankSysex[8] |= (byte) ((((Patch) p).sysex[8] & 0x01) << 7);
+		bankSysex[7] |= (byte) ((((Patch) p).getSysex()[8] & 0x02) << 6);
+		bankSysex[8] |= (byte) ((((Patch) p).getSysex()[8] & 0x01) << 7);
 		// VCA ENV MODE
-		bankSysex[9] |= (byte) ((((Patch) p).sysex[9] & 0x02) << 6);
-		bankSysex[10] |= (byte) ((((Patch) p).sysex[9] & 0x01) << 7);
+		bankSysex[9] |= (byte) ((((Patch) p).getSysex()[9] & 0x02) << 6);
+		bankSysex[10] |= (byte) ((((Patch) p).getSysex()[9] & 0x01) << 7);
 		// DCO WAVEFORM PULSE
-		bankSysex[17] |= (byte) ((((Patch) p).sysex[10] & 0x02) << 6);
-		bankSysex[18] |= (byte) ((((Patch) p).sysex[10] & 0x01) << 7);
+		bankSysex[17] |= (byte) ((((Patch) p).getSysex()[10] & 0x02) << 6);
+		bankSysex[18] |= (byte) ((((Patch) p).getSysex()[10] & 0x01) << 7);
 		// DCO WAVEFORM SAWTOOTH
-		bankSysex[14] |= (byte) ((((Patch) p).sysex[11] & 0x04) << 5);
-		bankSysex[15] |= (byte) ((((Patch) p).sysex[11] & 0x02) << 6);
-		bankSysex[16] |= (byte) ((((Patch) p).sysex[11] & 0x01) << 7);
+		bankSysex[14] |= (byte) ((((Patch) p).getSysex()[11] & 0x04) << 5);
+		bankSysex[15] |= (byte) ((((Patch) p).getSysex()[11] & 0x02) << 6);
+		bankSysex[16] |= (byte) ((((Patch) p).getSysex()[11] & 0x01) << 7);
 		// DCO WAVEFORM SUB
-		bankSysex[11] |= (byte) ((((Patch) p).sysex[12] & 0x04) << 5);
-		bankSysex[12] |= (byte) ((((Patch) p).sysex[12] & 0x02) << 6);
-		bankSysex[13] |= (byte) ((((Patch) p).sysex[12] & 0x01) << 7);
+		bankSysex[11] |= (byte) ((((Patch) p).getSysex()[12] & 0x04) << 5);
+		bankSysex[12] |= (byte) ((((Patch) p).getSysex()[12] & 0x02) << 6);
+		bankSysex[13] |= (byte) ((((Patch) p).getSysex()[12] & 0x01) << 7);
 		// DCO RANGE
-		bankSysex[21] |= (byte) ((((Patch) p).sysex[13] & 0x02) << 6);
-		bankSysex[22] |= (byte) ((((Patch) p).sysex[13] & 0x01) << 7);
+		bankSysex[21] |= (byte) ((((Patch) p).getSysex()[13] & 0x02) << 6);
+		bankSysex[22] |= (byte) ((((Patch) p).getSysex()[13] & 0x01) << 7);
 		// DCO SUB LEVEL
-		bankSysex[23] |= (byte) ((((Patch) p).sysex[14] & 0x02) << 6);
-		bankSysex[24] |= (byte) ((((Patch) p).sysex[14] & 0x01) << 7);
+		bankSysex[23] |= (byte) ((((Patch) p).getSysex()[14] & 0x02) << 6);
+		bankSysex[24] |= (byte) ((((Patch) p).getSysex()[14] & 0x01) << 7);
 		// DCO NOISE LEVEL
-		bankSysex[25] |= (byte) ((((Patch) p).sysex[15] & 0x02) << 6);
-		bankSysex[26] |= (byte) ((((Patch) p).sysex[15] & 0x01) << 7);
+		bankSysex[25] |= (byte) ((((Patch) p).getSysex()[15] & 0x02) << 6);
+		bankSysex[26] |= (byte) ((((Patch) p).getSysex()[15] & 0x01) << 7);
 		// HPF CUTOFF FREQ
-		bankSysex[19] |= (byte) ((((Patch) p).sysex[16] & 0x02) << 6);
-		bankSysex[20] |= (byte) ((((Patch) p).sysex[16] & 0x01) << 7);
+		bankSysex[19] |= (byte) ((((Patch) p).getSysex()[16] & 0x02) << 6);
+		bankSysex[20] |= (byte) ((((Patch) p).getSysex()[16] & 0x01) << 7);
 		// CHORUS
-		bankSysex[4] |= (byte) ((((Patch) p).sysex[17] & 0x01) << 7);
+		bankSysex[4] |= (byte) ((((Patch) p).getSysex()[17] & 0x01) << 7);
 		// DCO LFO MOD DEPTH
-		bankSysex[3] |= ((Patch) p).sysex[18];
+		bankSysex[3] |= ((Patch) p).getSysex()[18];
 		// DCO ENV MOD DEPTH
-		bankSysex[4] |= ((Patch) p).sysex[19];
+		bankSysex[4] |= ((Patch) p).getSysex()[19];
 		// DCO AFTER DEPTH (sysex docs say 0-127 value, but real range is 0-15 and it's stored shifted)
-		bankSysex[0] |= (byte) ((((Patch) p).sysex[20] & 0x78) << 1);
+		bankSysex[0] |= (byte) ((((Patch) p).getSysex()[20] & 0x78) << 1);
 		// DCO PW/PWM DEPTH
-		bankSysex[5] |= ((Patch) p).sysex[21];
+		bankSysex[5] |= ((Patch) p).getSysex()[21];
 		// DCO PWM RATE
-		bankSysex[6] |= ((Patch) p).sysex[22];
+		bankSysex[6] |= ((Patch) p).getSysex()[22];
 		// VCF CUTOFF FREQ
-		bankSysex[7] |= ((Patch) p).sysex[23];
+		bankSysex[7] |= ((Patch) p).getSysex()[23];
 		// VCF RESONANCE
-		bankSysex[8] |= ((Patch) p).sysex[24];
+		bankSysex[8] |= ((Patch) p).getSysex()[24];
 		// VCF LFO MOD DEPTH
-		bankSysex[10] |= ((Patch) p).sysex[25];
+		bankSysex[10] |= ((Patch) p).getSysex()[25];
 		// VCF ENV MOD DEPTH
-		bankSysex[9] |= ((Patch) p).sysex[26];
+		bankSysex[9] |= ((Patch) p).getSysex()[26];
 		// VCF KEY FOLLOW (sysex docs say 0-127 value, but real range is 0-15 and it's stored shifted)
-		bankSysex[0] |= (byte) ((((Patch) p).sysex[27] & 0x78) >> 3);
+		bankSysex[0] |= (byte) ((((Patch) p).getSysex()[27] & 0x78) >> 3);
 		// VCF AFTER DEPTH (sysex docs say 0-127 value, but real range is 0-15 and it's stored shifted)
-		bankSysex[1] |= (byte) ((((Patch) p).sysex[28] & 0x78) << 1);
+		bankSysex[1] |= (byte) ((((Patch) p).getSysex()[28] & 0x78) << 1);
 		// VCA LEVEL
-		bankSysex[11] |= ((Patch) p).sysex[29];
+		bankSysex[11] |= ((Patch) p).getSysex()[29];
 		// VCA AFTER DEPTH (sysex docs say 0-127 value, but real range is 0-15 and it's stored shifted)
-		bankSysex[1] |= (byte) ((((Patch) p).sysex[30] & 0x78) >> 3);
+		bankSysex[1] |= (byte) ((((Patch) p).getSysex()[30] & 0x78) >> 3);
 		// LFO RATE
-		bankSysex[12] |= ((Patch) p).sysex[31];
+		bankSysex[12] |= ((Patch) p).getSysex()[31];
 		// LFO DELAY TIME
-		bankSysex[13] |= ((Patch) p).sysex[32];
+		bankSysex[13] |= ((Patch) p).getSysex()[32];
 		// ENV T1
-		bankSysex[14] |= ((Patch) p).sysex[33];
+		bankSysex[14] |= ((Patch) p).getSysex()[33];
 		// ENV L1
-		bankSysex[15] |= ((Patch) p).sysex[34];
+		bankSysex[15] |= ((Patch) p).getSysex()[34];
 		// ENV T2
-		bankSysex[16] |= ((Patch) p).sysex[35];
+		bankSysex[16] |= ((Patch) p).getSysex()[35];
 		// ENV L2
-		bankSysex[17] |= ((Patch) p).sysex[36];
+		bankSysex[17] |= ((Patch) p).getSysex()[36];
 		// ENV T3
-		bankSysex[18] |= ((Patch) p).sysex[37];
+		bankSysex[18] |= ((Patch) p).getSysex()[37];
 		// ENV L3
-		bankSysex[19] |= ((Patch) p).sysex[38];
+		bankSysex[19] |= ((Patch) p).getSysex()[38];
 		// ENV T4
-		bankSysex[20] |= ((Patch) p).sysex[39];
+		bankSysex[20] |= ((Patch) p).getSysex()[39];
 		// ENV KEY FOLLOW (sysex docs say 0-127 value, but real range is 0-15 and it's stored shifted)
-		bankSysex[2] |= (byte) ((((Patch) p).sysex[40] & 0x78) << 1);
+		bankSysex[2] |= (byte) ((((Patch) p).getSysex()[40] & 0x78) << 1);
 		// CHORUS RATE
-		bankSysex[27] |= (byte) ((((Patch) p).sysex[41] & 0x03) << 6);
-		bankSysex[28] |= (byte) ((((Patch) p).sysex[41] & 0x0C) << 4);
-		bankSysex[29] |= (byte) ((((Patch) p).sysex[41] & 0x30) << 2);
-		bankSysex[30] |= (byte) (((Patch) p).sysex[41] & 0x40);
+		bankSysex[27] |= (byte) ((((Patch) p).getSysex()[41] & 0x03) << 6);
+		bankSysex[28] |= (byte) ((((Patch) p).getSysex()[41] & 0x0C) << 4);
+		bankSysex[29] |= (byte) ((((Patch) p).getSysex()[41] & 0x30) << 2);
+		bankSysex[30] |= (byte) (((Patch) p).getSysex()[41] & 0x40);
 		// BENDER RANGE
-		bankSysex[2] |= ((Patch) p).sysex[40];
+		bankSysex[2] |= ((Patch) p).getSysex()[40];
 		// TONE NAME (10 bytes)
 		for (int i = 0; i < 10; i++) {
-			bankSysex[i + 21] |= ((Patch) p).sysex[43 + i];
+			bankSysex[i + 21] |= ((Patch) p).getSysex()[43 + i];
 		}
 		byte bankSysexNibbles[] = new byte[64];
 		for (int i = 0; i < 32; i++) {
@@ -150,7 +150,7 @@ public class MKS50ToneBankDriver extends BankDriver {
 			bankSysexNibbles[i * 2 + 1] = (byte) ((bankSysex[i] & 0xF0) >> 4);
 		}
 		int patchOffset = getPatchStart(patchNum);
-		System.arraycopy(bankSysexNibbles, 0, ((Patch) bank).sysex, patchOffset, 64);
+		System.arraycopy(bankSysexNibbles, 0, ((Patch) bank).getSysex(), patchOffset, 64);
 	}
 
 	public Patch getPatch(Patch bank, int patchNum) {
@@ -166,7 +166,7 @@ public class MKS50ToneBankDriver extends BankDriver {
 		sysex[6] = (byte) 0x01;
 		sysex[53] = (byte) 0xF7;
 		int patchOffset = getPatchStart(patchNum);
-		System.arraycopy(((Patch) bank).sysex, patchOffset, bankSysexNibbles, 0, 64);
+		System.arraycopy(((Patch) bank).getSysex(), patchOffset, bankSysexNibbles, 0, 64);
 
 		// convert bank tone (31 bytes, lo/hi nibble) to single tone (46 bytes)
 		for (int i = 0; i < 32; i++) {
@@ -257,7 +257,7 @@ public class MKS50ToneBankDriver extends BankDriver {
 		byte bankSysex[] = new byte[32];
 		char patchName[] = new char[10];
 		int patchOffset = getPatchStart(patchNum);
-		System.arraycopy(((Patch) p).sysex, patchOffset, bankSysexNibbles, 0, 64);
+		System.arraycopy(((Patch) p).getSysex(), patchOffset, bankSysexNibbles, 0, 64);
 		for (int i = 0; i < 32; i++) {
 			bankSysex[i] = (byte) (bankSysexNibbles[i * 2] | bankSysexNibbles[i * 2 + 1] << 4);
 		}

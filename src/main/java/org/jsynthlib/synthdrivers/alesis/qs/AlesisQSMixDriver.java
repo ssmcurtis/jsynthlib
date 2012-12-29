@@ -53,7 +53,7 @@ public class AlesisQSMixDriver extends Driver {
 	 */
 	public String getPatchName(Patch ip) {
 		// ErrorMsg.reportStatus("Alesis getPatchName ", p.sysex);
-		return SysexRoutines.getChars(((Patch) ip).sysex, QSConstants.HEADER, QSConstants.MIX_NAME_START,
+		return SysexRoutines.getChars(((Patch) ip).getSysex(), QSConstants.HEADER, QSConstants.MIX_NAME_START,
 				QSConstants.MIX_NAME_LENGTH);
 	}
 
@@ -67,7 +67,7 @@ public class AlesisQSMixDriver extends Driver {
 	 */
 	public void setPatchName(Patch p, String name) {
 		// ErrorMsg.reportStatus("Alesis setPatchName ", p.sysex);
-		SysexRoutines.setChars(name, ((Patch) p).sysex, QSConstants.HEADER, QSConstants.MIX_NAME_START,
+		SysexRoutines.setChars(name, ((Patch) p).getSysex(), QSConstants.HEADER, QSConstants.MIX_NAME_START,
 				QSConstants.MIX_NAME_LENGTH);
 	}
 
@@ -159,14 +159,14 @@ public class AlesisQSMixDriver extends Driver {
 		// set specified patch in the User bank
 		byte location = (byte) patchNum;
 		byte opcode = QSConstants.OPCODE_MIDI_USER_MIX_DUMP;
-		byte oldOpcode = ((Patch) p).sysex[QSConstants.POSITION_OPCODE];
-		byte oldLocation = ((Patch) p).sysex[QSConstants.POSITION_LOCATION];
+		byte oldOpcode = ((Patch) p).getSysex()[QSConstants.POSITION_OPCODE];
+		byte oldLocation = ((Patch) p).getSysex()[QSConstants.POSITION_LOCATION];
 
 		// set the opcode and target location
-		((Patch) p).sysex[QSConstants.POSITION_OPCODE] = opcode;
-		((Patch) p).sysex[QSConstants.POSITION_LOCATION] = location;
+		((Patch) p).getSysex()[QSConstants.POSITION_OPCODE] = opcode;
+		((Patch) p).getSysex()[QSConstants.POSITION_LOCATION] = location;
 
-		ErrorMsg.reportStatus("foo", ((Patch) p).sysex);
+		ErrorMsg.reportStatus("foo", ((Patch) p).getSysex());
 		// setBankNum (bankNum);
 		// setPatchNum (patchNum);
 
@@ -174,7 +174,7 @@ public class AlesisQSMixDriver extends Driver {
 		sendPatchWorker(p);
 
 		// restore the old values
-		((Patch) p).sysex[QSConstants.POSITION_OPCODE] = oldOpcode;
-		((Patch) p).sysex[QSConstants.POSITION_LOCATION] = oldLocation;
+		((Patch) p).getSysex()[QSConstants.POSITION_OPCODE] = oldOpcode;
+		((Patch) p).getSysex()[QSConstants.POSITION_LOCATION] = oldLocation;
 	}
 }

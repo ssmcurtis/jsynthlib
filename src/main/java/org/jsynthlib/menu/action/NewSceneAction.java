@@ -14,6 +14,6 @@ public class NewSceneAction extends AbstractAction {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		Actions.addLibraryFrame(new SceneFrame());
+//		Actions.addLibraryFrame(new SceneFrame());
 	}
 }

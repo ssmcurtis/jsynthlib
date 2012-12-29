@@ -25,7 +25,7 @@ public class YamahaTX81zSingleDriver extends Driver {
 	public void calculateChecksum(Patch p) {
 		calculateChecksum(p, 6, 38, 39); // calculate ACED Checksum
 		calculateChecksum(p, 47, 139, 140); // calculate VCED Checksum
-		((Patch) p).sysex[43] = ((byte) (getChannel() - 1));
+		((Patch) p).getSysex()[43] = ((byte) (getChannel() - 1));
 	}
 
 	public void storePatch(Patch p, int bankNum, int patchNum) {
@@ -83,7 +83,7 @@ public class YamahaTX81zSingleDriver extends Driver {
 		return p;
 	}
 
-	public JSLFrame editPatch(Patch p) {
-		return new YamahaTX81zSingleEditor((Patch) p);
-	}
+//	public JSLFrame editPatch(Patch p) {
+//		return new YamahaTX81zSingleEditor((Patch) p);
+//	}
 }

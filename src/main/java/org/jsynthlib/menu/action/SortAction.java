@@ -6,7 +6,7 @@ import java.util.Map;
 
 import javax.swing.AbstractAction;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.ui.window.SortDialog;
 import org.jsynthlib.tools.ErrorMsg;
 

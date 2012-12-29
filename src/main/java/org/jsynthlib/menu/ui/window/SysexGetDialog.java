@@ -17,11 +17,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.patch.Device;
 import org.jsynthlib.menu.patch.IDriver;
 import org.jsynthlib.menu.patch.IPatchDriver;
 import org.jsynthlib.menu.patch.IPatch;
+import org.jsynthlib.menu.patch.PatchBank;
 import org.jsynthlib.menu.patch.PatchBasket;
 import org.jsynthlib.menu.preferences.AppConfig;
 import org.jsynthlib.tools.ErrorMsg;
@@ -170,10 +171,6 @@ public class SysexGetDialog extends JDialog {
 	// --------------------------------------------------------------------------
 
 	protected void pasteIntoSelectedFrame() {
-		// The following lines are not needed. Alesis DM5 driver has patch of
-		// size 11
-		// if (sysexSize < 20)
-		// return;
 
 		IPatchDriver driver = (IPatchDriver) driverComboBox.getSelectedItem();
 
@@ -182,13 +179,31 @@ public class SysexGetDialog extends JDialog {
 			SysexMessage[] msgs = (SysexMessage[]) queue.toArray(new SysexMessage[0]);
 
 			IPatch[] patarray = driver.createPatches(msgs);
-			int bankNum = bankNumComboBox.getSelectedIndex(); // wirski@op.pl
-			int patchNum = patchNumComboBox.getSelectedIndex(); // wirski@op.pl
 
 			try {
-				PatchBasket frame = (PatchBasket) PatchBayApplication.getDesktop().getSelectedFrame();
+				LibraryFrame frame = (LibraryFrame) PatchBayApplication.getDesktop().getSelectedFrame();
+
 				for (int i = 0; i < patarray.length; i++) {
-					frame.pastePatch(patarray[i], ((bankNum == -1) ? 0 : bankNum), ((patchNum == -1) ? 0 : patchNum)); // wirski@op.pl
+					IPatch pk = patarray[i];
+					// LibraryFrame frame = (LibraryFrame) PatchBayApplication.getDesktop().getSelectedFrame();
+
+					if (pk.isBankPatch()) {
+
+						String[] pn = pk.getDriver().getPatchNumbers();
+
+						for (int j = 0; j < ((PatchBank) pk).getNumPatches(); j++) {
+							IPatch q = ((PatchBank) pk).get(j);
+							q.setFileName(pk.getFileName());
+							frame.myModel.addPatch(q);
+						}
+					} else {
+						frame.myModel.addPatch(pk);
+					}
+					frame.revalidateDrivers();
+
+					// frame.pastePatch(patarray[i], ((bankNum == -1) ? 0 : bankNum), ((patchNum == -1) ? 0 :
+					// patchNum));
+
 				}
 			} catch (Exception ex) {
 				JOptionPane.showMessageDialog(null, "Library to Receive into must be the focused Window.", "Error",
@@ -292,8 +307,7 @@ public class SysexGetDialog extends JDialog {
 			inPort = driver.getDevice().getInPort();
 
 			MidiUtil.clearSysexInputQueue(inPort); // clear MIDI input
-			ErrorMsg.reportStatus("SysexGetDialog | port: " + inPort + " | bankNum: " + bankNum + " | patchNum: "
-					+ patchNum);
+			ErrorMsg.reportStatus("SysexGetDialog | port: " + inPort + " | bankNum: " + bankNum + " | patchNum: " + patchNum);
 
 			// ----- Start timer and request dump
 			myLabel.setText("Getting sysex dump...");
@@ -331,8 +345,7 @@ public class SysexGetDialog extends JDialog {
 			int bankNum = bankNumComboBox.getSelectedIndex();
 			int patchNum = patchNumComboBox.getSelectedIndex();
 			inPort = driver.getDevice().getInPort();
-			ErrorMsg.reportStatus("SysexGetDialog | port: " + inPort + " | bankNum: " + bankNum + " | patchNum: "
-					+ patchNum);
+			ErrorMsg.reportStatus("SysexGetDialog | port: " + inPort + " | bankNum: " + bankNum + " | patchNum: " + patchNum);
 
 			// ----- Start timer and request dump
 			myLabel.setText("Getting sysex dump...");

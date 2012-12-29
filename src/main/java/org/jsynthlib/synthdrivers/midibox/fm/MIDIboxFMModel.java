@@ -60,30 +60,30 @@ class MIDIboxFMModel extends ParamModel {
 
 	public void set(int i) {
 		if (flag == -1) {
-			patch.sysex[ofs] = (byte) i;
+			patch.getSysex()[ofs] = (byte) i;
 		} else {
-			patch.sysex[ofs] = (byte) (patch.sysex[ofs] & (~bitmask));
+			patch.getSysex()[ofs] = (byte) (patch.getSysex()[ofs] & (~bitmask));
 			if (mapped_values.length > 0)
-				patch.sysex[ofs] |= (byte) mapped_values[i];
+				patch.getSysex()[ofs] |= (byte) mapped_values[i];
 			else
-				patch.sysex[ofs] |= (byte) i << flag;
+				patch.getSysex()[ofs] |= (byte) i << flag;
 		}
 	}
 
 	public int get() {
 		if (flag == -1)
-			return patch.sysex[ofs];
+			return patch.getSysex()[ofs];
 		else {
 			if (mapped_values.length > 0) {
 				int value;
 
-				value = (patch.sysex[ofs] & bitmask) >> flag;
+				value = (patch.getSysex()[ofs] & bitmask) >> flag;
 				for (int i = 0; i < mapped_values.length; ++i)
 					if (mapped_values[i] == value)
 						return i;
 				return 0;
 			} else
-				return (patch.sysex[ofs] & bitmask) >> flag;
+				return (patch.getSysex()[ofs] & bitmask) >> flag;
 		}
 	}
 }

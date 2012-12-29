@@ -228,7 +228,7 @@ public class TCElectronicGMajorModDialog extends JDialog implements ItemListener
 	}
 
 	private void getModItems(Vector v, int from, int to, int ofs) {
-		TCBit bit = new TCBit(patch.sysex);
+		TCBit bit = new TCBit(patch.getSysex());
 		String param = new String();
 		int mod;
 		int min;
@@ -236,7 +236,7 @@ public class TCElectronicGMajorModDialog extends JDialog implements ItemListener
 		int max;
 
 		for (int i = from; i < to; i++) {
-			param = blockString[i][TCElectronicGMajorUtil.getValue(patch.sysex, ofs)];
+			param = blockString[i][TCElectronicGMajorUtil.getValue(patch.getSysex(), ofs)];
 
 			if (param.length() > 0) {
 				bit.setMaskOffset(TCElectronicGMajorConst.MOD_MASK, 29 + i * 4);
@@ -272,7 +272,7 @@ public class TCElectronicGMajorModDialog extends JDialog implements ItemListener
 	}
 
 	private void updateButtonActionPerformed(ActionEvent evt) {
-		TCBit bit = new TCBit(patch.sysex);
+		TCBit bit = new TCBit(patch.getSysex());
 		for (int i = 0; i < listVector.size(); i++) {
 			TCModListItem tc = (TCModListItem) listVector.elementAt(i);
 			bit.setMaskOffset(TCElectronicGMajorConst.MOD_MASK, tc.getOfs());

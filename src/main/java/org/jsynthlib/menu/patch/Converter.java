@@ -33,7 +33,7 @@ abstract public class Converter extends Driver implements IConverter {
 		// converted patch. Assign a proper driver to each patch of patarray
 		Device dev = getDevice();
 		for (int i = 0; i < patarray.length; i++) {
-			byte[] d = patarray[i].sysex;
+			byte[] d = patarray[i].getSysex();
 			patarray[i].setDriver((IPatchDriver) DriverUtil.chooseDriver(d, dev));
 		}
 		return patarray;

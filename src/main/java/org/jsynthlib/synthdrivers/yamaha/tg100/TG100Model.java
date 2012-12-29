@@ -48,10 +48,10 @@ public class TG100Model extends ParamModel {
 	public void set(int value) {
 		if (this.has2ByteValue) {
 			// Data
-			patch.sysex[ofs] = (byte) ((value & TG100Constants.BITMASK_11110000) >> 4);
-			patch.sysex[ofs + 1] = (byte) (value & TG100Constants.BITMASK_1111);
+			patch.getSysex()[ofs] = (byte) ((value & TG100Constants.BITMASK_11110000) >> 4);
+			patch.getSysex()[ofs + 1] = (byte) (value & TG100Constants.BITMASK_1111);
 		} else {
-			patch.sysex[ofs] = (byte) value;
+			patch.getSysex()[ofs] = (byte) value;
 		}
 	}
 
@@ -60,12 +60,12 @@ public class TG100Model extends ParamModel {
 		if (this.has2ByteValue) {
 			int iTemp;
 
-			iTemp = patch.sysex[ofs] << 4;
-			iTemp += patch.sysex[ofs + 1];
+			iTemp = patch.getSysex()[ofs] << 4;
+			iTemp += patch.getSysex()[ofs + 1];
 
 			return iTemp;
 		} else {
-			return patch.sysex[ofs];
+			return patch.getSysex()[ofs];
 		}
 	}
 }

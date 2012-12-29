@@ -78,21 +78,21 @@ public class DX7FamilyMicroTuningBankDriver extends BankDriver {
 		}
 
 		// Transform Voice Data to Bulk Dump Packed Format
-		((Patch) bank).sysex[getPatchStart(patchNum) + 0] = (byte) (0x02); // Byte Count MSB
-		((Patch) bank).sysex[getPatchStart(patchNum) + 1] = (byte) (0x0a); // Byte Count LSB
-		((Patch) bank).sysex[getPatchStart(patchNum) + 2] = (byte) (0x4c); // "L"
-		((Patch) bank).sysex[getPatchStart(patchNum) + 3] = (byte) (0x4d); // "M"
-		((Patch) bank).sysex[getPatchStart(patchNum) + 4] = (byte) (0x20); // " "
-		((Patch) bank).sysex[getPatchStart(patchNum) + 5] = (byte) (0x20); // " "
-		((Patch) bank).sysex[getPatchStart(patchNum) + 6] = (byte) (0x4d); // "M"
-		((Patch) bank).sysex[getPatchStart(patchNum) + 7] = (byte) (0x43); // "C"
-		((Patch) bank).sysex[getPatchStart(patchNum) + 8] = (byte) (0x52); // "R"
-		((Patch) bank).sysex[getPatchStart(patchNum) + 9] = (byte) (0x59); // "Y"
-		((Patch) bank).sysex[getPatchStart(patchNum) + 10] = (byte) (0x43); // "C"
-		((Patch) bank).sysex[getPatchStart(patchNum) + 11] = (byte) (0x20); // " "
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 0] = (byte) (0x02); // Byte Count MSB
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 1] = (byte) (0x0a); // Byte Count LSB
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 2] = (byte) (0x4c); // "L"
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 3] = (byte) (0x4d); // "M"
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 4] = (byte) (0x20); // " "
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 5] = (byte) (0x20); // " "
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 6] = (byte) (0x4d); // "M"
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 7] = (byte) (0x43); // "C"
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 8] = (byte) (0x52); // "R"
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 9] = (byte) (0x59); // "Y"
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 10] = (byte) (0x43); // "C"
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 11] = (byte) (0x20); // " "
 
 		for (int i = 0; i < 256; i++) {
-			((Patch) bank).sysex[getPatchStart(patchNum) + 12 + i] = (byte) ((Patch) p).sysex[16 + i];
+			((Patch) bank).getSysex()[getPatchStart(patchNum) + 12 + i] = (byte) ((Patch) p).getSysex()[16 + i];
 		}
 
 		// Calculate checkSum of single bulk data
@@ -125,7 +125,7 @@ public class DX7FamilyMicroTuningBankDriver extends BankDriver {
 			sysex[singleSize - 1] = (byte) 0xf7;
 
 			for (int i = 0; i < 256; i++) {
-				sysex[16 + i] = (byte) (((Patch) bank).sysex[getPatchStart(patchNum) + 12 + i]);
+				sysex[16 + i] = (byte) (((Patch) bank).getSysex()[getPatchStart(patchNum) + 12 + i]);
 			}
 
 			Patch p = new Patch(sysex, getDevice()); // single sysex

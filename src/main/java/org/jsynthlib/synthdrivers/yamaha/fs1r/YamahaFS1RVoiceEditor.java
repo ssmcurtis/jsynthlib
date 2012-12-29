@@ -26,6 +26,7 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib._widgets.CheckBoxWidget;
 import org.jsynthlib._widgets.ComboBoxWidget;
 import org.jsynthlib._widgets.KnobLookupWidget;
@@ -34,7 +35,6 @@ import org.jsynthlib._widgets.PatchNameWidget;
 import org.jsynthlib._widgets.SpinnerWidget;
 import org.jsynthlib._widgets.SysexSender;
 import org.jsynthlib._widgets.SysexWidget;
-import org.jsynthlib.menu.PatchBayApplication;
 import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.ParamModel;
 import org.jsynthlib.menu.ui.JSLFrame;
@@ -192,7 +192,7 @@ class YamahaFS1RVoiceEditor extends PatchEditorFrame {
 		oPaste.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (mPatchCopy != null) {
-					new PasteDialog(org.jsynthlib.menu.PatchBayApplication.getInstance(), mPatchCopy,
+					new PasteDialog(org.jsynthlib.PatchBayApplication.getInstance(), mPatchCopy,
 							(Patch) getPatch(), mPart, mOperatorWidgets);
 				}
 			}
@@ -917,9 +917,9 @@ class YamahaFS1RVoiceEditor extends PatchEditorFrame {
 		public byte[] generate(int value) {
 			// on recupere la valeur directement dans le patch
 			// 9 est le decalage de l'entete sysex
-			int oValue = mPatch.sysex[parameter + 9];
+			int oValue = mPatch.getSysex()[parameter + 9];
 			if (mOperator > 0) {
-				oValue = mPatch.sysex[YamahaFS1RVoiceDriver.COMMON_SIZE + YamahaFS1RVoiceDriver.VOICE_SIZE
+				oValue = mPatch.getSysex()[YamahaFS1RVoiceDriver.COMMON_SIZE + YamahaFS1RVoiceDriver.VOICE_SIZE
 						* (mOperator - 1) + parameter + 9];
 			}
 			// b[7]=(byte)((oValue/128));
@@ -956,11 +956,11 @@ class YamahaFS1RVoiceEditor extends PatchEditorFrame {
 		}
 
 		public void set(int i) {
-			patch.sysex[ofs] = (byte) (i & 127);
+			patch.getSysex()[ofs] = (byte) (i & 127);
 		}
 
 		public int get() {
-			return patch.sysex[ofs];
+			return patch.getSysex()[ofs];
 		}
 	}
 
@@ -987,12 +987,12 @@ class YamahaFS1RVoiceEditor extends PatchEditorFrame {
 		}
 
 		public void set(int i) {
-			patch.sysex[ofs] &= ~mMask;
-			patch.sysex[ofs] |= (i << mShift);
+			patch.getSysex()[ofs] &= ~mMask;
+			patch.getSysex()[ofs] |= (i << mShift);
 		}
 
 		public int get() {
-			return (patch.sysex[ofs] & mMask) >> mShift;
+			return (patch.getSysex()[ofs] & mMask) >> mShift;
 		}
 	}
 

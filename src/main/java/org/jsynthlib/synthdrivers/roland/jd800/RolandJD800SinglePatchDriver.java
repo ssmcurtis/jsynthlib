@@ -136,7 +136,7 @@ public class RolandJD800SinglePatchDriver extends Driver {
 		s1[5] = (byte) AddrMSB[patchNum];
 		s1[6] = (byte) Addr[patchNum];
 		s1[7] = (byte) 0x00;
-		System.arraycopy(p.sysex, JD800.SizeOfSyxHeader, s1, JD800.SizeOfSyxHeader, JD800.MaxSyxDataBlock);
+		System.arraycopy(p.getSysex(), JD800.SizeOfSyxHeader, s1, JD800.SizeOfSyxHeader, JD800.MaxSyxDataBlock);
 		DriverUtil.calculateChecksum(s1, JD800.checksumStartSyx1, JD800.checksumEndSyx1, JD800.checksumOffsetSyx1);
 		s1[265] = (byte) 0xF7;
 		sendPatchWorker(new Patch(s1, this));
@@ -154,7 +154,7 @@ public class RolandJD800SinglePatchDriver extends Driver {
 			s2[6] = 0x00;
 		} else
 			s2[6] = (byte) (Addr[patchNum] + 2);
-		System.arraycopy(p.sysex, JD800.SizeOfSyxHeader + JD800.MaxSyxDataBlock, s2, JD800.SizeOfSyxHeader,
+		System.arraycopy(p.getSysex(), JD800.SizeOfSyxHeader + JD800.MaxSyxDataBlock, s2, JD800.SizeOfSyxHeader,
 				JD800.SizeOfSinglePatch - JD800.MaxSyxDataBlock);
 		DriverUtil.calculateChecksum(s2, JD800.checksumStartSyx2, JD800.checksumEndSyx2, JD800.checksumOffsetSyx2);
 		s2[137] = (byte) 0xF7;

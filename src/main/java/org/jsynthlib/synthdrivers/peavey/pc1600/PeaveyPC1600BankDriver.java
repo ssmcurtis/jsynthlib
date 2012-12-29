@@ -98,7 +98,7 @@ public class PeaveyPC1600BankDriver extends BankDriver {
 	// ----------------------------------------------------------------------------------------------------------------------
 
 	public String getPatchName(Patch bank) {
-		return (((Patch) bank).sysex.length / 1024) + " Kilobytes";
+		return (((Patch) bank).getSysex().length / 1024) + " Kilobytes";
 	}
 
 	// ----------------------------------------------------------------------------------------------------------------------
@@ -110,7 +110,7 @@ public class PeaveyPC1600BankDriver extends BankDriver {
 			return;
 
 		// Utility.interrogateSysex(p.sysex);
-		NibbleSysex nibbleSysex = new NibbleSysex(bank.sysex, FIRST_PRESET_POINTER_START);
+		NibbleSysex nibbleSysex = new NibbleSysex(bank.getSysex(), FIRST_PRESET_POINTER_START);
 		for (int i = 0; i < getNumPatches() + 1; i++) {
 			patchIndex[i] = nibbleSysex.getNibbleInt(PRESET_POINTER_BYTES, NIBBLE_MULTIPLIER) * PRESET_POINTER_FACTOR;
 		}
@@ -123,7 +123,7 @@ public class PeaveyPC1600BankDriver extends BankDriver {
 	// ----------------------------------------------------------------------------------------------------------------------
 
 	public String getPatchName(Patch bank, int patchNum) {
-		NibbleSysex nibbleSysex = new NibbleSysex(((Patch) bank).sysex, FIRST_NAME_START + patchNum
+		NibbleSysex nibbleSysex = new NibbleSysex(((Patch) bank).getSysex(), FIRST_NAME_START + patchNum
 				* PATCH_NAME_SIZE * PATCH_NAME_CHAR_BYTES);
 		return nibbleSysex.getNibbleStr(PATCH_NAME_SIZE, PATCH_NAME_CHAR_BYTES, NIBBLE_MULTIPLIER);
 	}
@@ -133,7 +133,7 @@ public class PeaveyPC1600BankDriver extends BankDriver {
 	// ----------------------------------------------------------------------------------------------------------------------
 
 	public void setPatchName(Patch bank, int patchNum, String name) {
-		NibbleSysex nibbleSysex = new NibbleSysex(((Patch) bank).sysex, FIRST_NAME_START + patchNum
+		NibbleSysex nibbleSysex = new NibbleSysex(((Patch) bank).getSysex(), FIRST_NAME_START + patchNum
 				* PATCH_NAME_SIZE * PATCH_NAME_CHAR_BYTES);
 		nibbleSysex.putNibbleStr(name, PATCH_NAME_SIZE, PATCH_NAME_CHAR_BYTES, NIBBLE_MULTIPLIER);
 	}
@@ -145,7 +145,7 @@ public class PeaveyPC1600BankDriver extends BankDriver {
 	public Patch getPatch(Patch bank, int patchNum) {
 		try {
 			generateIndex((Patch) bank);
-			return createPatchFromData(((Patch) bank).sysex, FIRST_PRESET_START + patchIndex[patchNum],
+			return createPatchFromData(((Patch) bank).getSysex(), FIRST_PRESET_START + patchIndex[patchNum],
 					patchIndex[patchNum + 1] - patchIndex[patchNum], getPatchName(bank, patchNum));
 		} catch (Exception ex) {
 			ErrorMsg.reportStatus("PeaveyPC1600BankDriver->getPatch");
@@ -166,18 +166,18 @@ public class PeaveyPC1600BankDriver extends BankDriver {
 
 		// Update the <data>
 		int oldPatchSize = patchIndex[patchNum + 1] - patchIndex[patchNum];
-		int newPatchSize = ((Patch) p).sysex.length - PeaveyPC1600SingleDriver.NON_DATA_SIZE;
+		int newPatchSize = ((Patch) p).getSysex().length - PeaveyPC1600SingleDriver.NON_DATA_SIZE;
 
-		((Patch) bank).sysex = Utility.byteArrayReplace(((Patch) bank).sysex, FIRST_PRESET_START
-				+ patchIndex[patchNum], oldPatchSize, ((Patch) p).sysex,
-				PeaveyPC1600SingleDriver.PATCH_DATA_START, newPatchSize);
+		((Patch) bank).setSysex(Utility.byteArrayReplace(((Patch) bank).getSysex(), FIRST_PRESET_START
+				+ patchIndex[patchNum], oldPatchSize, ((Patch) p).getSysex(),
+				PeaveyPC1600SingleDriver.PATCH_DATA_START, newPatchSize));
 
 		// Update the <memory pointers>
 		int sizeDiff = newPatchSize - oldPatchSize;
 		for (int i = patchNum + 1; i < getNumPatches(); i++) {
 			patchIndex[i] += sizeDiff;
 		}
-		NibbleSysex nibbleSysex = new NibbleSysex(((Patch) bank).sysex, FIRST_PRESET_POINTER_START);
+		NibbleSysex nibbleSysex = new NibbleSysex(((Patch) bank).getSysex(), FIRST_PRESET_POINTER_START);
 		for (int i = 0; i < getNumPatches(); i++) {
 			nibbleSysex.putNibbleInt(patchIndex[i] / PRESET_POINTER_FACTOR, PRESET_POINTER_BYTES, NIBBLE_MULTIPLIER);
 		}

@@ -102,7 +102,7 @@ public final class TD6SingleDriver extends Driver {
 	public void storePatch(Patch p, int bankNum, int patchNum) {
 		// ErrorMsg.reportStatus("storePatch: " + p);
 		// ErrorMsg.reportStatus("storePatch: " + device);
-		storePatch(p.sysex, 0, patchNum);
+		storePatch(p.getSysex(), 0, patchNum);
 	}
 
 	/**
@@ -124,15 +124,15 @@ public final class TD6SingleDriver extends Driver {
 			System.arraycopy(sysex, offset, tmpSysex, 0, size);
 			Patch p = new Patch(tmpSysex, (Driver) null);
 
-			p.sysex[2] = (byte) (getDeviceID() - 1);
+			p.getSysex()[2] = (byte) (getDeviceID() - 1);
 			// Drum kit : kk, address 41 kk ii 00
-			p.sysex[6] = (byte) 0x41;
-			p.sysex[7] = (byte) patchNum;
-			p.sysex[8] = (byte) i;
+			p.getSysex()[6] = (byte) 0x41;
+			p.getSysex()[7] = (byte) patchNum;
+			p.getSysex()[8] = (byte) i;
 			calculateChecksum(p, 6, size - 3, size - 2);
 			// p.sysex[size - 2] = calcChkSum(tmpSysex, 6, size - 3);
 			try {
-				send(p.sysex);
+				send(p.getSysex());
 			} catch (Exception e) {
 				ErrorMsg.reportStatus(e);
 			}

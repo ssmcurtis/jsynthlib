@@ -196,7 +196,7 @@ class FCB1010ParamModel extends ParamModel {
 	public void set(int i) {
 		i = reverseMSB(i);
 
-		byte[] denibblizedArray = deNibblize(this.patch.sysex, Constants.HDR_SIZE);
+		byte[] denibblizedArray = deNibblize(this.patch.getSysex(), Constants.HDR_SIZE);
 
 		byte newPatchVal = (byte) ((denibblizedArray[getOffset()] & (~mask)) | ((i << power) & mask));
 		denibblizedArray[getOffset()] = newPatchVal;
@@ -204,7 +204,7 @@ class FCB1010ParamModel extends ParamModel {
 		// dump(denibblizedArray); //Test Code
 
 		byte[] renibblizedArray = reNibblize(denibblizedArray, Constants.HDR_SIZE);
-		System.arraycopy(renibblizedArray, 0, this.patch.sysex, 0, this.patch.sysex.length);
+		System.arraycopy(renibblizedArray, 0, this.patch.getSysex(), 0, this.patch.getSysex().length);
 	}
 
 	/**
@@ -212,7 +212,7 @@ class FCB1010ParamModel extends ParamModel {
 	 * value as in int.
 	 */
 	public int get() {
-		byte[] denibblizedArray = deNibblize(this.patch.sysex, Constants.HDR_SIZE);
+		byte[] denibblizedArray = deNibblize(this.patch.getSysex(), Constants.HDR_SIZE);
 		int patchVal = (byte) (denibblizedArray[getOffset()] & mask);
 		patchVal = patchVal & (int) 0x000000FF;
 		patchVal = (patchVal >>> power);

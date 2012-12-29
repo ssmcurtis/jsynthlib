@@ -54,36 +54,36 @@ public class MKS50PatchBankDriver extends BankDriver {
 
 		byte bankSysex[] = new byte[32];
 		// TONE NUMBER
-		bankSysex[0] |= ((Patch) p).sysex[7];
+		bankSysex[0] |= ((Patch) p).getSysex()[7];
 		// KEY RANGE LOW
-		bankSysex[1] |= (byte) (((Patch) p).sysex[8] + 4); // sysex docs didn't show, but needed to get correct
+		bankSysex[1] |= (byte) (((Patch) p).getSysex()[8] + 4); // sysex docs didn't show, but needed to get correct
 																	// value
 		// KEY RANGE HIGH
-		bankSysex[2] |= (byte) (((Patch) p).sysex[9] + 4); // sysex docs didn't show, but needed to get correct
+		bankSysex[2] |= (byte) (((Patch) p).getSysex()[9] + 4); // sysex docs didn't show, but needed to get correct
 																	// value
 		// PORTAMENTO TIME
-		bankSysex[3] |= ((Patch) p).sysex[10];
+		bankSysex[3] |= ((Patch) p).getSysex()[10];
 		// PORTAMENTO
-		bankSysex[10] |= (byte) (((Patch) p).sysex[11] << 4);
+		bankSysex[10] |= (byte) (((Patch) p).getSysex()[11] << 4);
 		// MOD SENS
-		bankSysex[4] |= ((Patch) p).sysex[12];
+		bankSysex[4] |= ((Patch) p).getSysex()[12];
 		// KEY SHIFT
-		bankSysex[5] |= ((Patch) p).sysex[13];
+		bankSysex[5] |= ((Patch) p).getSysex()[13];
 		// VOLUME
-		bankSysex[6] |= ((Patch) p).sysex[14];
+		bankSysex[6] |= ((Patch) p).getSysex()[14];
 		// DETUNE
-		bankSysex[7] |= ((Patch) p).sysex[15];
+		bankSysex[7] |= ((Patch) p).getSysex()[15];
 		// MIDI FUNCTION
-		bankSysex[9] |= ((Patch) p).sysex[16];
+		bankSysex[9] |= ((Patch) p).getSysex()[16];
 		// MONO BENDER RANGE
-		bankSysex[8] |= (byte) (((Patch) p).sysex[17] << 4);
+		bankSysex[8] |= (byte) (((Patch) p).getSysex()[17] << 4);
 		// CHORD MEMORY
-		bankSysex[8] |= ((Patch) p).sysex[18];
+		bankSysex[8] |= ((Patch) p).getSysex()[18];
 		// KEY ASSIGN MODE
-		bankSysex[10] |= (byte) (((Patch) p).sysex[19] & 0x60);
+		bankSysex[10] |= (byte) (((Patch) p).getSysex()[19] & 0x60);
 		// PATCH NAME (10 bytes)
 		for (int i = 0; i < 10; i++) {
-			bankSysex[i + 11] = ((Patch) p).sysex[20 + i];
+			bankSysex[i + 11] = ((Patch) p).getSysex()[20 + i];
 		}
 		byte bankSysexNibbles[] = new byte[64];
 		for (int i = 0; i < 32; i++) {
@@ -91,7 +91,7 @@ public class MKS50PatchBankDriver extends BankDriver {
 			bankSysexNibbles[i * 2 + 1] = (byte) ((bankSysex[i] & 0xF0) >> 4);
 		}
 		int patchOffset = getPatchStart(patchNum);
-		System.arraycopy(bankSysexNibbles, 0, ((Patch) bank).sysex, patchOffset, 64);
+		System.arraycopy(bankSysexNibbles, 0, ((Patch) bank).getSysex(), patchOffset, 64);
 	}
 
 	public Patch getPatch(Patch bank, int patchNum) {
@@ -107,7 +107,7 @@ public class MKS50PatchBankDriver extends BankDriver {
 		sysex[6] = (byte) 0x01;
 		sysex[30] = (byte) 0xF7;
 		int patchOffset = getPatchStart(patchNum);
-		System.arraycopy(((Patch) bank).sysex, patchOffset, bankSysexNibbles, 0, 64);
+		System.arraycopy(((Patch) bank).getSysex(), patchOffset, bankSysexNibbles, 0, 64);
 
 		// convert bank patch (31 bytes, lo/hi nibble) to single patch (46 bytes)
 		for (int i = 0; i < 32; i++) {
@@ -152,7 +152,7 @@ public class MKS50PatchBankDriver extends BankDriver {
 		byte bankSysex[] = new byte[32];
 		char patchName[] = new char[10];
 		int patchOffset = getPatchStart(patchNum);
-		System.arraycopy(((Patch) p).sysex, patchOffset, bankSysexNibbles, 0, 64);
+		System.arraycopy(((Patch) p).getSysex(), patchOffset, bankSysexNibbles, 0, 64);
 		for (int i = 0; i < 32; i++) {
 			bankSysex[i] = (byte) (bankSysexNibbles[i * 2] | bankSysexNibbles[i * 2 + 1] << 4);
 		}

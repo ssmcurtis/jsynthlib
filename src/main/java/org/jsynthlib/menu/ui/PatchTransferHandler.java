@@ -28,18 +28,19 @@ public abstract class PatchTransferHandler extends TransferHandler {
 
 	public static final DataFlavor PATCH_FLAVOR = new DataFlavor(IPatch[].class, "Patch Array");
 
-	public static final DataFlavor SCENE_FLAVOR = new DataFlavor(Scene[].class, "Scene Array");
+	//public static final DataFlavor SCENE_FLAVOR = new DataFlavor(Scene[].class, "Scene Array");
 
 	public static final DataFlavor TEXT_FLAVOR = new DataFlavor(String.class, "String");
 
-	private DataFlavor[] flavorsAccepted = new DataFlavor[] { PATCHES_FLAVOR, PATCH_FLAVOR, SCENE_FLAVOR, TEXT_FLAVOR, };
+	// private DataFlavor[] flavorsAccepted = new DataFlavor[] { PATCHES_FLAVOR, PATCH_FLAVOR, SCENE_FLAVOR, TEXT_FLAVOR, };
+	private DataFlavor[] flavorsAccepted = new DataFlavor[] { PATCHES_FLAVOR, PATCH_FLAVOR, TEXT_FLAVOR, };
 
 	protected abstract boolean storePatch(IPatch p, JComponent c);
 
-	protected boolean storeScene(Scene s, JComponent c) {
-		// Default behavior is to just get the patch data
-		return storePatch(s.getPatch(), c);
-	}
+//	protected boolean storeScene(Scene s, JComponent c) {
+//		// Default behavior is to just get the patch data
+//		return storePatch(s.getPatch(), c);
+//	}
 
 	public int getSourceActions(JComponent c) {
 		return COPY;
@@ -52,7 +53,7 @@ public abstract class PatchTransferHandler extends TransferHandler {
 			PatchTableModel pm = (PatchTableModel) table.getModel();
 			int[] rowIdxs = table.getSelectedRows();
 			for (int i = 0; i < rowIdxs.length; i++) {
-				IPatch patch = pm.getPatchAt(rowIdxs[i]);
+				IPatch patch = pm.getPatchAt(table.convertRowIndexToModel(rowIdxs[i]));
 				patchesAndScenes.add(patch);
 			}
 		} else {
@@ -87,30 +88,30 @@ public abstract class PatchTransferHandler extends TransferHandler {
 							continue; // for(int i=0; i<patches.size(); i++)
 						}
 
-						if (obj instanceof Scene) {
-							Scene scene = (Scene) obj;
-							/**
-							 * Once we get the patch, we need to clone it for the recipient of the paste. Otherwise, it
-							 * would be possible for the user to make multiple pastes from a single cut/copy and each
-							 * window could be altering the *same* object. - Emenaker - 2006-02-26
-							 */
-							ErrorMsg.reportStatus("Cloning: " + scene);
-							Scene newScene = (Scene) scene.clone();
-							// Serialization loses a transient field, driver.
-							if (!storeScene(newScene, c)) {
-								return (false);
-							}
-							continue; // for(int i=0; i<patches.size(); i++)
-						}
+//						if (obj instanceof Scene) {
+//							Scene scene = (Scene) obj;
+//							/**
+//							 * Once we get the patch, we need to clone it for the recipient of the paste. Otherwise, it
+//							 * would be possible for the user to make multiple pastes from a single cut/copy and each
+//							 * window could be altering the *same* object. - Emenaker - 2006-02-26
+//							 */
+//							ErrorMsg.reportStatus("Cloning: " + scene);
+//							Scene newScene = (Scene) scene.clone();
+//							// Serialization loses a transient field, driver.
+//							if (!storeScene(newScene, c)) {
+//								return (false);
+//							}
+//							continue; // for(int i=0; i<patches.size(); i++)
+//						}
 						ErrorMsg.reportStatus("PatchTransferHandler.importData was passed an unrecognized object: "
 								+ obj);
 						continue; // for(int i=0; i<patches.size(); i++)
 					}
 				} else if (t.isDataFlavorSupported(TEXT_FLAVOR)) {
-					String s = (String) t.getTransferData(TEXT_FLAVOR);
-					IPatch p = getPatchFromUrl(s);
-					if (p != null)
-						return storePatch(p, c);
+//					String s = (String) t.getTransferData(TEXT_FLAVOR);
+//					IPatch p = getPatchFromUrl(s);
+//					if (p != null)
+//						return storePatch(p, c);
 				}
 			} catch (UnsupportedFlavorException e) {
 				ErrorMsg.reportStatus(e);

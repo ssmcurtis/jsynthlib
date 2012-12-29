@@ -738,12 +738,12 @@ class MPSModel extends ParamModel {
 			;
 		}
 
-		patch.sysex[ofs + 1] = (byte) (i / 128);
-		patch.sysex[ofs] = (byte) (i % 128);
+		patch.getSysex()[ofs + 1] = (byte) (i / 128);
+		patch.getSysex()[ofs] = (byte) (i % 128);
 	}
 
 	public int get() {
-		int i = (((patch.sysex[ofs + 1] * 128) + (patch.sysex[ofs])));
+		int i = (((patch.getSysex()[ofs + 1] * 128) + (patch.getSysex()[ofs])));
 		if (i > 8000) {
 			i = 16384 - i;
 			i = -i;
@@ -763,12 +763,12 @@ class InstModel extends ParamModel {
 			i -= 125;
 			i += 512;
 		}
-		patch.sysex[ofs + 1] = (byte) (i / 128);
-		patch.sysex[ofs] = (byte) (i % 128);
+		patch.getSysex()[ofs + 1] = (byte) (i / 128);
+		patch.getSysex()[ofs] = (byte) (i % 128);
 	}
 
 	public int get() {
-		int i = (((patch.sysex[ofs + 1] * 128) + (patch.sysex[ofs])));
+		int i = (((patch.getSysex()[ofs + 1] * 128) + (patch.getSysex()[ofs])));
 		if (i > 512) {
 			i -= 512;
 			i += 125;

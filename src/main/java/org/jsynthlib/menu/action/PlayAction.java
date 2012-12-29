@@ -17,6 +17,7 @@ public class PlayAction extends AbstractAction {
 
 	public void actionPerformed(ActionEvent e) {
 		try {
+			
 			Actions.getSelectedFrame().playSelectedPatch();
 		} catch (Exception ex) {
 			ErrorMsg.reportError("Error", "Patch to Play must be highlighted in the focused Window.", ex);

@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyVetoException;
 import java.io.File;
@@ -19,6 +20,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -32,7 +34,8 @@ import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 import javax.swing.filechooser.FileFilter;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.JSynthResource;
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.patch.PatchBasket;
 import org.jsynthlib.menu.preferences.AppConfig;
 import org.jsynthlib.menu.ui.JSLDesktop;
@@ -48,6 +51,7 @@ import org.jsynthlib.menu.ui.window.MidiMonitorDialog;
 import org.jsynthlib.menu.ui.window.PatchEditorFrame;
 import org.jsynthlib.menu.ui.window.SceneFrame;
 import org.jsynthlib.menu.ui.window.SearchDialog;
+import org.jsynthlib.model.JSynthSequence;
 import org.jsynthlib.tools.ErrorMsg;
 import org.jsynthlib.tools.MacUtils;
 
@@ -87,7 +91,7 @@ final public class Actions {
 	public static final long EN_SEARCH = 0x0000000010000000L;
 	public static final long EN_SEND = 0x0000000020000000L;
 	public static final long EN_SEND_TO = 0x0000000040000000L;
-	public static final long EN_SORT = 0x0000000080000000L;
+	// public static final long EN_SORT = 0x0000000080000000L;
 	public static final long EN_STORE = 0x0000000100000000L;
 	public static final long EN_TRANSFER_SCENE = 0x0000000200000000L;
 	public static final long EN_UPLOAD = 0x0000000400000000L;
@@ -96,6 +100,7 @@ final public class Actions {
 	public static final long EN_UPDATE_SCENE = 0x0000002000000000L;
 	public static final long EN_UPDATE_SELECTED = 0x0000004000000000L;
 	public static final long EN_SHOW_DEVICE = 0x0000008000000000L;
+	public static final long EN_PLAY_ALL = 0x0000010000000000L;
 
 	/** All actions excluding ones which are always enabled. */
 	public static final long EN_ALL = (// EN_ABOUT
@@ -121,48 +126,11 @@ final public class Actions {
 			// | EN_PREV_FADER
 			// | EN_OPEN
 			// | EN_PASTE : 'paste' needs special handling
-			| EN_PLAY
+			| EN_PLAY | EN_PLAY_ALL
 			// | EN_PREFS
-			| EN_REASSIGN | EN_SAVE | EN_SAVE_AS | EN_SEARCH | EN_SEND | EN_SEND_TO | EN_SORT | EN_STORE
-			| EN_TRANSFER_SCENE | EN_UPDATE_SCENE | EN_UPDATE_SELECTED | EN_UPLOAD);
+			| EN_REASSIGN | EN_SAVE | EN_SAVE_AS | EN_SEARCH | EN_SEND | EN_SEND_TO | EN_STORE | EN_TRANSFER_SCENE | EN_UPDATE_SCENE
+			| EN_UPDATE_SELECTED | EN_UPLOAD);
 
-	// private static Action aboutAction;
-	// private static Action copyAction;
-	// private static Action cutAction;
-	// private static Action deleteAction;
-	// private static Action deleteDuplicatesAction;
-	// private static Action docsAction;
-	// private static Action editAction;
-	// public static Action exitAction; // refered by PatchEdit
-	// private static Action exportAction;
-	// private static Action extractAction;
-	// private static Action getAction;
-	// private static Action homePageAction;
-	// private static Action importAction;
-	// private static Action importAllAction;
-	// private static Action licenseAction;
-	// private static Action monitorAction;
-	// private static Action newAction;
-	// private static Action newSceneAction;
-	// private static Action openAction;
-	// private static Action pasteAction;
-	// private static Action playAction;
-	// private static Action prefsAction;
-	// private static Action printAction;
-	// private static Action reassignAction;
-	// private static Action saveAction;
-	// private static Action saveAsAction;
-	// private static Action searchAction;
-	// private static Action sendAction;
-	// private static Action sendToAction;
-	// private static Action sortAction;
-	// private static Action storeAction;
-	// private static Action transferSceneAction;
-	// private static Action updateSceneAction;
-	// private static Action updateSelectedAction;
-	// private static Action uploadAction;
-	// private static Action showDevice;
-	//
 	private static JPopupMenu menuPatchPopup;
 	private static MidiMonitorDialog midiMonitor;
 	private static SearchDialog searchDialog;
@@ -176,10 +144,10 @@ final public class Actions {
 	private static Action openAction = new OpenAction(mnemonics);
 	private static Action saveAction = new SaveAction(mnemonics);
 	private static Action saveAsAction = new SaveAsAction(mnemonics);
-	private static Action newSceneAction = new NewSceneAction(mnemonics);
-	private static Action txransferSceneAction = new TransferSceneAction(mnemonics);
-	private static Action updateSceneAction = new UpdateSceneAction(mnemonics);
-	private static Action sortAction = new SortAction(mnemonics);
+	// private static Action newSceneAction = new NewSceneAction(mnemonics);
+	// private static Action txransferSceneAction = new TransferSceneAction(mnemonics);
+	// private static Action updateSceneAction = new UpdateSceneAction(mnemonics);
+	// private static Action sortAction = new SortAction(mnemonics);
 	private static Action searchAction = new SearchAction(mnemonics);
 	public static Action exitAction = new ExitAction(mnemonics);
 
@@ -192,12 +160,13 @@ final public class Actions {
 	private static Action importAllAction = new ImportAllAction(mnemonics);
 	private static Action sendAction = new SendAction(mnemonics);
 	private static Action sendToAction = new SendToAction(mnemonics);
-	private static Action updateSelectedAction = new UpdateSelectedAction(mnemonics);// R. Wirski
+	// private static Action updateSelectedAction = new UpdateSelectedAction(mnemonics);// R. Wirski
 	private static Action printAction = new PrintAction(mnemonics);
 	private static Action storeAction = new StoreAction(mnemonics);
 	private static Action getAction = new GetAction(mnemonics);
 
 	private static Action playAction = new PlayAction(mnemonics);
+	private static Action playAllAction = new PlayLibraryCompleteAction(mnemonics);
 	private static Action editAction = new EditAction(mnemonics);
 	private static Action reassignAction = new ReassignAction(mnemonics);
 	private static Action extractAction = new ExtractAction(mnemonics);
@@ -211,10 +180,13 @@ final public class Actions {
 	private static Action homePageAction = new HomePageAction(mnemonics);
 	private static Action uploadAction = new UploadAction(mnemonics);
 	private static Action showDevice = new ShowDevicesAction(mnemonics);
+	private static Action showTestAction = new ShowTestAction(mnemonics);
 
 	public static Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
 	/** just for efficiency. */
 	public static boolean isMac = MacUtils.isMac();
+
+	private static JComboBox<String> comboBox = new JComboBox<String>(JSynthSequence.getNames());
 
 	// don't have to call constructor for Utility class.
 	private Actions() {
@@ -236,8 +208,13 @@ final public class Actions {
 
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.add(createFileMenu(mnemonics, mask));
-		menuBar.add(createLibraryMenu(mnemonics, mask));
+
+		// menuBar.add(createLibraryMenu(mnemonics, mask));
+
+		menuBar.add(createEditMenu(mnemonics, mask));
+
 		menuBar.add(createPatchMenu(mnemonics, mask));
+
 		menuBar.add(createWindowMenu(mnemonics, mask));
 		menuBar.add(createHelpMenu(mnemonics, mask));
 
@@ -255,7 +232,7 @@ final public class Actions {
 
 		mi = menuFile.add(newAction);
 		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, mask));
-		mi = menuFile.add(newSceneAction);
+		// mi = menuFile.add(newSceneAction);
 		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, mask));
 
 		mi = menuFile.add(openAction);
@@ -266,8 +243,8 @@ final public class Actions {
 
 		menuFile.addSeparator();
 		menuFile.add(importAction);
-		menuFile.add(exportAction);
 		menuFile.add(importAllAction);
+		menuFile.add(exportAction);
 
 		if (!isMac) {
 			menuFile.addSeparator();
@@ -281,20 +258,18 @@ final public class Actions {
 		mnemonics.put(menuLib, new Integer(KeyEvent.VK_L));
 
 		// menuLib.add(transferSceneAction);
-		menuLib.add(updateSceneAction);
-		menuLib.addSeparator();
+		// menuLib.add(updateSceneAction);
 
-		menuLib.add(sortAction);
-		menuLib.add(searchAction);
+		// menuLib.add(sortAction);
 		// menuLib.add(deleteDuplicatesAction);
 
 		return menuLib;
 	}
 
-	private static JMenu createPatchMenu(HashMap<Serializable, Integer> mnemonics, int mask) {
+	private static JMenu createEditMenu(HashMap<Serializable, Integer> mnemonics, int mask) {
 		JMenuItem mi;
-		JMenu menuPatch = new JMenu("Patch");
-		mnemonics.put(menuPatch, new Integer(KeyEvent.VK_P));
+		JMenu menuPatch = new JMenu("Edit");
+		mnemonics.put(menuPatch, new Integer(KeyEvent.VK_L));
 		mi = menuPatch.add(copyAction);
 		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_COPY, 0));
 		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, mask));
@@ -308,39 +283,53 @@ final public class Actions {
 		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
 		menuPatch.addSeparator();
 
+		mi = menuPatch.add(editAction);
+		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, mask));
+
+		menuPatch.addSeparator();
+		menuPatch.add(searchAction);
+
+		return menuPatch;
+	}
+
+	private static JMenu createPatchMenu(HashMap<Serializable, Integer> mnemonics, int mask) {
+		JMenuItem mi;
+		JMenu menuPatch = new JMenu("Patch");
+		mnemonics.put(menuPatch, new Integer(KeyEvent.VK_P));
+
 		mi = menuPatch.add(sendAction);
 		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, mask));
-		menuPatch.add(updateSelectedAction); // wirski@op.pl
+		// menuPatch.add(updateSelectedAction);
 		menuPatch.add(sendToAction);
 		menuPatch.add(storeAction);
 		mi = menuPatch.add(getAction); // phil@muqus.com
-		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, mask)); // wirski@op.pl
+		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, mask));
 		menuPatch.addSeparator();
 
-		mi = menuPatch.add(editAction);
-		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, mask));
-		mi = menuPatch.add(printAction);
+		// mi = menuPatch.add(printAction);
+		// mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, mask));
+
 		mi = menuPatch.add(playAction);
-		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, mask));
+		menuPatch.add(playAllAction);
 		menuPatch.addSeparator();
 
 		menuPatch.add(reassignAction);
 		menuPatch.add(extractAction);
-		menuPatch.addSeparator();
 
-		// menuPatch.add(newPatchAction);
-		menuPatch.add(uploadAction);
-		menuPatch.addMenuListener(new MenuListener() { // need this???
-					public void menuCanceled(MenuEvent e) {
-					}
+		// menuPatch.addSeparator();
+		// menuPatch.add(uploadAction);
 
-					public void menuDeselected(MenuEvent e) {
-					}
-
-					public void menuSelected(MenuEvent e) {
-						pasteAction.setEnabled(true);
-					}
-				});
+		// menuPatch.addMenuListener(new MenuListener() { // need this???
+		// public void menuCanceled(MenuEvent e) {
+		// }
+		//
+		// public void menuDeselected(MenuEvent e) {
+		// }
+		//
+		// public void menuSelected(MenuEvent e) {
+		// pasteAction.setEnabled(true);
+		// }
+		// });
 		return menuPatch;
 	}
 
@@ -358,14 +347,19 @@ final public class Actions {
 		wm.add(monitorAction);
 		// wm.add(JSLDesktop.toolBarAction);
 		wm.addSeparator();
+
+		wm.add(arrangeAction);
+
+		wm.add(tilingAction);
+
 		JMenuItem mi = wm.add(closeAction);
 		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, mask));
 		wm.addSeparator();
 
 		// add menu entries of existing frames
 		JSLDesktop desktop = PatchBayApplication.getDesktop();
-		if (desktop != null) { // when desktop is created, 'desktop' is still
-								// null.
+		if (desktop != null) {
+			// when desktop is created, 'desktop' is still null.
 			Iterator<?> it = desktop.getJSLFrameIterator();
 			while (it.hasNext()) {
 				wm.add((JSLFrame) it.next());
@@ -373,6 +367,26 @@ final public class Actions {
 		}
 		return wm;
 	}
+
+	private static Action tilingAction = new AbstractAction("Tiling") {
+		public void actionPerformed(ActionEvent ex) {
+			JSLDesktop desktop = PatchBayApplication.getDesktop();
+			if (desktop != null) {
+				desktop.tiling();
+			}
+
+		}
+	};
+
+	private static Action arrangeAction = new AbstractAction("Arrange") {
+		public void actionPerformed(ActionEvent ex) {
+			JSLDesktop desktop = PatchBayApplication.getDesktop();
+			if (desktop != null) {
+				desktop.cascade();
+			}
+
+		}
+	};
 
 	private static Action closeAction = new AbstractAction("Close") {
 		public void actionPerformed(ActionEvent ex) {
@@ -398,6 +412,7 @@ final public class Actions {
 		JMenuItem mi;
 		JMenu menuHelp = new JMenu("Help");
 		mnemonics.put(menuHelp, new Integer(KeyEvent.VK_H));
+		mi = menuHelp.add(showTestAction);
 		mi = menuHelp.add(showDevice);
 
 		mi = menuHelp.add(docsAction);
@@ -429,8 +444,9 @@ final public class Actions {
 		// create popup menu
 		menuPatchPopup = new JPopupMenu();
 		menuPatchPopup.add(playAction);
+		menuPatchPopup.add(playAllAction);
 		menuPatchPopup.add(editAction);
-		menuPatchPopup.add(updateSelectedAction);
+		// menuPatchPopup.add(updateSelectedAction);
 		menuPatchPopup.addSeparator();
 
 		menuPatchPopup.add(sendAction);
@@ -480,6 +496,16 @@ final public class Actions {
 		toolBar.addSeparator();
 
 		toolBar.add(createToolBarButton(playAction, "Play", "Play Patch"));
+		toolBar.add(createToolBarButton(playAllAction, "play_all", "Play library"));
+
+		comboBox.setSelectedIndex(AppConfig.getSequenceOrdinal());
+		comboBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AppConfig.setSequenceOrdinal(comboBox.getSelectedIndex());
+			}
+		});
+
+		toolBar.add(comboBox);
 		toolBar.add(createToolBarButton(storeAction, "Store", "Store Patch"));
 		toolBar.add(createToolBarButton(editAction, "Edit", "Edit Patch"));
 
@@ -493,8 +519,9 @@ final public class Actions {
 
 	private static JButton createToolBarButton(Action a, String label, String tooltip) {
 		String label2 = label.toLowerCase();
-		URL u1 = PatchBayApplication.class.getResource("/images/" + label2 + ".png");
-		URL u2 = PatchBayApplication.class.getResource("/images/disabled-" + label2 + ".png");
+		URL u1 = PatchBayApplication.class.getResource(JSynthResource.RESOURCES_PACKAGE.getUri() + "images/" + label2 + ".png");
+		URL u2 = PatchBayApplication.class.getResource(JSynthResource.RESOURCES_PACKAGE.getUri() + "images/disabled-" + label2 + ".png");
+
 		// Create and initialize the button.
 		JButton button = new JButton(a);
 		button.setToolTipText(tooltip);
@@ -507,7 +534,7 @@ final public class Actions {
 			}
 		} else { // no image found
 			button.setText(label);
-			ErrorMsg.reportStatus("Resource not found: " + "images/" + label + ".png");
+			ErrorMsg.reportStatus("Resource not found: " + JSynthResource.RESOURCES_PACKAGE.getUri() + "images/" + label + ".png");
 		}
 		return button;
 	}
@@ -559,8 +586,8 @@ final public class Actions {
 			newAction.setEnabled(b);
 		// if ((v & EN_NEW_PATCH) != 0)
 		// newPatchAction.setEnabled(b);
-		if ((v & EN_NEW_SCENE) != 0)
-			newSceneAction.setEnabled(b);
+		// if ((v & EN_NEW_SCENE) != 0)
+		// newSceneAction.setEnabled(b);
 		// if ((v & EN_NEXT_FADER) != 0)
 		// nextFaderAction.setEnabled(b);
 		// if ((v & EN_PREV_FADER) != 0)
@@ -571,6 +598,8 @@ final public class Actions {
 			pasteAction.setEnabled(b);
 		if ((v & EN_PLAY) != 0)
 			playAction.setEnabled(b);
+		if ((v & EN_PLAY_ALL) != 0)
+			playAllAction.setEnabled(b);
 		if ((v & EN_PREFS) != 0)
 			prefsAction.setEnabled(b);
 		if ((v & EN_REASSIGN) != 0)
@@ -585,16 +614,16 @@ final public class Actions {
 			sendAction.setEnabled(b);
 		if ((v & EN_SEND_TO) != 0)
 			sendToAction.setEnabled(b);
-		if ((v & EN_SORT) != 0)
-			sortAction.setEnabled(b);
+		// if ((v & EN_SORT) != 0)
+		// sortAction.setEnabled(b);
 		if ((v & EN_STORE) != 0)
 			storeAction.setEnabled(b);
 		// if ((v & EN_TRANSFER_SCENE) != 0)
 		// transferSceneAction.setEnabled(b);
-		if ((v & EN_UPDATE_SCENE) != 0)
-			updateSceneAction.setEnabled(b); // wirski@op.pl
-		if ((v & EN_UPDATE_SELECTED) != 0)
-			updateSelectedAction.setEnabled(b);// wirski@op.pl
+		// if ((v & EN_UPDATE_SCENE) != 0)
+		// updateSceneAction.setEnabled(b);
+		// if ((v & EN_UPDATE_SELECTED) != 0)
+		// updateSelectedAction.setEnabled(b);
 		if ((v & EN_UPLOAD) != 0)
 			uploadAction.setEnabled(b);
 		if ((v & EN_PRINT) != 0)
@@ -620,15 +649,16 @@ final public class Actions {
 			try {
 				frame.open(file);
 			} catch (Exception e) {
-				frame = new SceneFrame(file);
-				try {
-					frame.open(file);
-				} catch (Exception e1) {
-					// PatchEdit.hideWaitDialog();
-					// See comment at beginning of this method
-					ErrorMsg.reportError("Error", "Error Loading Library:\n " + file.getAbsolutePath(), e1);
-					return;
-				}
+				e.printStackTrace();
+				// frame = new SceneFrame(file);
+				// try {
+				// frame.open(file);
+				// } catch (Exception e1) {
+				// // PatchEdit.hideWaitDialog();
+				// // See comment at beginning of this method
+				// ErrorMsg.reportError("Error", "Error Loading Library:\n " + file.getAbsolutePath(), e1);
+				// return;
+				// }
 			}
 		} else {
 			// PatchEdit.hideWaitDialog();
@@ -692,17 +722,21 @@ final public class Actions {
 		fc.setCurrentDirectory(new File(AppConfig.getLibPath()));
 		if (fc.showSaveDialog(PatchBayApplication.getInstance()) != JFileChooser.APPROVE_OPTION)
 			return null;
+
 		File file = fc.getSelectedFile();
 
-		if (!file.getName().toLowerCase().endsWith(oFrame.getFileExtension()))
+		if (!file.getName().toLowerCase().endsWith(oFrame.getFileExtension())) {
 			file = new File(file.getPath() + oFrame.getFileExtension());
+		}
 		if (file.isDirectory()) {
 			ErrorMsg.reportError("Error", "Can not Save over a Directory");
 			return null;
 		}
-		if (file.exists())
-			if (JOptionPane.showConfirmDialog(null, "Are you sure?", "File Exists", JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION)
+		if (file.exists()) {
+			if (JOptionPane.showConfirmDialog(null, "Are you sure?", "File Exists", JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION) {
 				return null;
+			}
+		}
 		return file;
 	}
 
@@ -742,7 +776,8 @@ final public class Actions {
 						}
 					}
 				} catch (Exception ex) {
-					ErrorMsg.reportError("Error", "Error in PatchEditor.", ex);
+					ex.printStackTrace();
+					// ErrorMsg.reportError("Error", "Error in PatchEditor.", ex);
 				}
 			}
 		}

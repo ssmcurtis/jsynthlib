@@ -84,8 +84,8 @@ public class DX7FamilyPerformanceIIIBankDriver extends BankDriver {
 			byte[] b = new byte[dxPatchNameSize];
 
 			for (int i = 0; i < b.length; i++) {
-				b[i] = (byte) (DX7FamilyByteEncoding.AsciiHex2Value(((Patch) p).sysex[patchNameStart + (2 * i)]) * 16 + DX7FamilyByteEncoding
-						.AsciiHex2Value(((Patch) p).sysex[patchNameStart + (2 * i) + 1]));
+				b[i] = (byte) (DX7FamilyByteEncoding.AsciiHex2Value(((Patch) p).getSysex()[patchNameStart + (2 * i)]) * 16 + DX7FamilyByteEncoding
+						.AsciiHex2Value(((Patch) p).getSysex()[patchNameStart + (2 * i) + 1]));
 			}
 
 			StringBuffer s = new StringBuffer(new String(b, 0, dxPatchNameSize, "US-ASCII"));
@@ -108,9 +108,9 @@ public class DX7FamilyPerformanceIIIBankDriver extends BankDriver {
 			namebytes = name.getBytes("US-ASCII");
 
 			for (int i = 0; i < dxPatchNameSize; i++) {
-				((Patch) p).sysex[patchNameStart + (2 * i)] = (byte) (DX7FamilyByteEncoding
+				((Patch) p).getSysex()[patchNameStart + (2 * i)] = (byte) (DX7FamilyByteEncoding
 						.Value2AsciiHexHigh(namebytes[i]));
-				((Patch) p).sysex[patchNameStart + (2 * i) + 1] = (byte) (DX7FamilyByteEncoding
+				((Patch) p).getSysex()[patchNameStart + (2 * i) + 1] = (byte) (DX7FamilyByteEncoding
 						.Value2AsciiHexLow(namebytes[i]));
 			}
 
@@ -121,8 +121,8 @@ public class DX7FamilyPerformanceIIIBankDriver extends BankDriver {
 
 	// returns the byte value of the ASCII Hex encoded high and low nibble
 	public int getByte(Patch p, int index) {
-		return (DX7FamilyByteEncoding.AsciiHex2Value(p.sysex[index]) * 16 + DX7FamilyByteEncoding
-				.AsciiHex2Value(p.sysex[index + 1]));
+		return (DX7FamilyByteEncoding.AsciiHex2Value(p.getSysex()[index]) * 16 + DX7FamilyByteEncoding
+				.AsciiHex2Value(p.getSysex()[index + 1]));
 	}
 
 	public void putPatch(Patch bank, Patch ip, int patchNum) // puts a patch into the bank, converting it
@@ -137,52 +137,52 @@ public class DX7FamilyPerformanceIIIBankDriver extends BankDriver {
 		// Transform Voice Data to Bulk Dump Packed Format
 		int value;
 
-		((Patch) bank).sysex[getPatchStart(patchNum) + 0] = (byte) (0x01); // Byte Count MSB
-		((Patch) bank).sysex[getPatchStart(patchNum) + 1] = (byte) (0x28); // Byte Count LSB
-		((Patch) bank).sysex[getPatchStart(patchNum) + 2] = (byte) (0x4C); // "L"
-		((Patch) bank).sysex[getPatchStart(patchNum) + 3] = (byte) (0x4D); // "M"
-		((Patch) bank).sysex[getPatchStart(patchNum) + 4] = (byte) (0x20); // " "
-		((Patch) bank).sysex[getPatchStart(patchNum) + 5] = (byte) (0x20); // " "
-		((Patch) bank).sysex[getPatchStart(patchNum) + 6] = (byte) (0x38); // "8"
-		((Patch) bank).sysex[getPatchStart(patchNum) + 7] = (byte) (0x39); // "9"
-		((Patch) bank).sysex[getPatchStart(patchNum) + 8] = (byte) (0x35); // "5"
-		((Patch) bank).sysex[getPatchStart(patchNum) + 9] = (byte) (0x32); // "2"
-		((Patch) bank).sysex[getPatchStart(patchNum) + 10] = (byte) (0x50); // "P"
-		((Patch) bank).sysex[getPatchStart(patchNum) + 11] = (byte) (0x4D); // "M"
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 0] = (byte) (0x01); // Byte Count MSB
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 1] = (byte) (0x28); // Byte Count LSB
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 2] = (byte) (0x4C); // "L"
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 3] = (byte) (0x4D); // "M"
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 4] = (byte) (0x20); // " "
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 5] = (byte) (0x20); // " "
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 6] = (byte) (0x38); // "8"
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 7] = (byte) (0x39); // "9"
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 8] = (byte) (0x35); // "5"
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 9] = (byte) (0x32); // "2"
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 10] = (byte) (0x50); // "P"
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 11] = (byte) (0x4D); // "M"
 
 		for (int i = 0; i < 8; i++) { // TG1-8 - Voice Channel Offset (0-7) | MIDI Receive Channel (0-16)
 			value = getByte(p, 16 + (2 * 0) + (2 * i)) * 32 + getByte(p, 16 + (2 * 8) + (2 * i));
 
-			((Patch) bank).sysex[getPatchStart(patchNum) + 12 + (2 * 0) + (2 * i)] = (byte) (DX7FamilyByteEncoding
+			((Patch) bank).getSysex()[getPatchStart(patchNum) + 12 + (2 * 0) + (2 * i)] = (byte) (DX7FamilyByteEncoding
 					.Value2AsciiHexHigh(value));
-			((Patch) bank).sysex[getPatchStart(patchNum) + 12 + (2 * 0) + (2 * i) + 1] = (byte) (DX7FamilyByteEncoding
+			((Patch) bank).getSysex()[getPatchStart(patchNum) + 12 + (2 * 0) + (2 * i) + 1] = (byte) (DX7FamilyByteEncoding
 					.Value2AsciiHexLow(value));
 		}
 
 		for (int i = 0; i < 8; i++) { // TG1-8 - Voice Number (0-255)
 			value = getByte(p, 16 + (2 * 16) + (2 * i));
 
-			((Patch) bank).sysex[getPatchStart(patchNum) + 12 + (2 * 8) + (2 * i)] = (byte) (DX7FamilyByteEncoding
+			((Patch) bank).getSysex()[getPatchStart(patchNum) + 12 + (2 * 8) + (2 * i)] = (byte) (DX7FamilyByteEncoding
 					.Value2AsciiHexHigh(value));
-			((Patch) bank).sysex[getPatchStart(patchNum) + 12 + (2 * 8) + (2 * i) + 1] = (byte) (DX7FamilyByteEncoding
+			((Patch) bank).getSysex()[getPatchStart(patchNum) + 12 + (2 * 8) + (2 * i) + 1] = (byte) (DX7FamilyByteEncoding
 					.Value2AsciiHexLow(value));
 		}
 
 		for (int i = 0; i < 8; i++) { // TG1-8 - Micro Tuning Table # (0-254)
 			value = getByte(p, 16 + (2 * 88) + (2 * i));
 
-			((Patch) bank).sysex[getPatchStart(patchNum) + 12 + (2 * 16) + (2 * i)] = (byte) (DX7FamilyByteEncoding
+			((Patch) bank).getSysex()[getPatchStart(patchNum) + 12 + (2 * 16) + (2 * i)] = (byte) (DX7FamilyByteEncoding
 					.Value2AsciiHexHigh(value));
-			((Patch) bank).sysex[getPatchStart(patchNum) + 12 + (2 * 16) + (2 * i) + 1] = (byte) (DX7FamilyByteEncoding
+			((Patch) bank).getSysex()[getPatchStart(patchNum) + 12 + (2 * 16) + (2 * i) + 1] = (byte) (DX7FamilyByteEncoding
 					.Value2AsciiHexLow(value));
 		}
 
 		for (int i = 0; i < 8; i++) { // TG1-8 - Output Volume (0-99)
 			value = getByte(p, 16 + (2 * 32) + (2 * i));
 
-			((Patch) bank).sysex[getPatchStart(patchNum) + 12 + (2 * 24) + (2 * i)] = (byte) (DX7FamilyByteEncoding
+			((Patch) bank).getSysex()[getPatchStart(patchNum) + 12 + (2 * 24) + (2 * i)] = (byte) (DX7FamilyByteEncoding
 					.Value2AsciiHexHigh(value));
-			((Patch) bank).sysex[getPatchStart(patchNum) + 12 + (2 * 24) + (2 * i) + 1] = (byte) (DX7FamilyByteEncoding
+			((Patch) bank).getSysex()[getPatchStart(patchNum) + 12 + (2 * 24) + (2 * i) + 1] = (byte) (DX7FamilyByteEncoding
 					.Value2AsciiHexLow(value));
 		}
 
@@ -190,45 +190,45 @@ public class DX7FamilyPerformanceIIIBankDriver extends BankDriver {
 			value = getByte(p, 16 + (2 * 24) + (2 * i)) * 16 + getByte(p, 16 + (2 * 80) + (2 * i)) * 8
 					+ getByte(p, 16 + (2 * 40) + (2 * i));
 
-			((Patch) bank).sysex[getPatchStart(patchNum) + 12 + (2 * 32) + (2 * i)] = (byte) (DX7FamilyByteEncoding
+			((Patch) bank).getSysex()[getPatchStart(patchNum) + 12 + (2 * 32) + (2 * i)] = (byte) (DX7FamilyByteEncoding
 					.Value2AsciiHexHigh(value));
-			((Patch) bank).sysex[getPatchStart(patchNum) + 12 + (2 * 32) + (2 * i) + 1] = (byte) (DX7FamilyByteEncoding
+			((Patch) bank).getSysex()[getPatchStart(patchNum) + 12 + (2 * 32) + (2 * i) + 1] = (byte) (DX7FamilyByteEncoding
 					.Value2AsciiHexLow(value));
 		}
 
 		for (int i = 0; i < 8; i++) { // TG1-8 - Note Limit Low (0-127)
 			value = getByte(p, 16 + (2 * 48) + (2 * i));
 
-			((Patch) bank).sysex[getPatchStart(patchNum) + 12 + (2 * 40) + (2 * i)] = (byte) (DX7FamilyByteEncoding
+			((Patch) bank).getSysex()[getPatchStart(patchNum) + 12 + (2 * 40) + (2 * i)] = (byte) (DX7FamilyByteEncoding
 					.Value2AsciiHexHigh(value));
-			((Patch) bank).sysex[getPatchStart(patchNum) + 12 + (2 * 40) + (2 * i) + 1] = (byte) (DX7FamilyByteEncoding
+			((Patch) bank).getSysex()[getPatchStart(patchNum) + 12 + (2 * 40) + (2 * i) + 1] = (byte) (DX7FamilyByteEncoding
 					.Value2AsciiHexLow(value));
 		}
 
 		for (int i = 0; i < 8; i++) { // TG1-8 - Note Limit High (0-127)
 			value = getByte(p, 16 + (2 * 56) + (2 * i));
 
-			((Patch) bank).sysex[getPatchStart(patchNum) + 12 + (2 * 48) + (2 * i)] = (byte) (DX7FamilyByteEncoding
+			((Patch) bank).getSysex()[getPatchStart(patchNum) + 12 + (2 * 48) + (2 * i)] = (byte) (DX7FamilyByteEncoding
 					.Value2AsciiHexHigh(value));
-			((Patch) bank).sysex[getPatchStart(patchNum) + 12 + (2 * 48) + (2 * i) + 1] = (byte) (DX7FamilyByteEncoding
+			((Patch) bank).getSysex()[getPatchStart(patchNum) + 12 + (2 * 48) + (2 * i) + 1] = (byte) (DX7FamilyByteEncoding
 					.Value2AsciiHexLow(value));
 		}
 
 		for (int i = 0; i < 8; i++) { // TG1-8 - EG forced Damp (0-1) | Note Shift (0-48)
 			value = getByte(p, 16 + (2 * 72) + (2 * i)) * 64 + getByte(p, 16 + (2 * 64) + (2 * i));
 
-			((Patch) bank).sysex[getPatchStart(patchNum) + 12 + (2 * 56) + (2 * i)] = (byte) (DX7FamilyByteEncoding
+			((Patch) bank).getSysex()[getPatchStart(patchNum) + 12 + (2 * 56) + (2 * i)] = (byte) (DX7FamilyByteEncoding
 					.Value2AsciiHexHigh(value));
-			((Patch) bank).sysex[getPatchStart(patchNum) + 12 + (2 * 56) + (2 * i) + 1] = (byte) (DX7FamilyByteEncoding
+			((Patch) bank).getSysex()[getPatchStart(patchNum) + 12 + (2 * 56) + (2 * i) + 1] = (byte) (DX7FamilyByteEncoding
 					.Value2AsciiHexLow(value));
 		}
 
 		for (int i = 0; i < 20; i++) { // Performance Name (ASCII)
 			value = getByte(p, 16 + (2 * 96) + (2 * i));
 
-			((Patch) bank).sysex[getPatchStart(patchNum) + 12 + (2 * 64) + (2 * i)] = (byte) (DX7FamilyByteEncoding
+			((Patch) bank).getSysex()[getPatchStart(patchNum) + 12 + (2 * 64) + (2 * i)] = (byte) (DX7FamilyByteEncoding
 					.Value2AsciiHexHigh(value));
-			((Patch) bank).sysex[getPatchStart(patchNum) + 12 + (2 * 64) + (2 * i) + 1] = (byte) (DX7FamilyByteEncoding
+			((Patch) bank).getSysex()[getPatchStart(patchNum) + 12 + (2 * 64) + (2 * i) + 1] = (byte) (DX7FamilyByteEncoding
 					.Value2AsciiHexLow(value));
 		}
 

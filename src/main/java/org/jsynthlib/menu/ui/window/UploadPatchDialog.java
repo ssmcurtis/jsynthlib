@@ -20,7 +20,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.patch.IPatch;
 import org.jsynthlib.menu.patch.PatchBasket;
 import org.jsynthlib.menu.patch.PatchSingle;

@@ -31,9 +31,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib._widgets.SpinnerWidget;
 import org.jsynthlib._widgets.SysexSender;
-import org.jsynthlib.menu.PatchBayApplication;
 import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.ParamModel;
 import org.jsynthlib.menu.ui.window.PatchEditorFrame;
@@ -160,12 +160,12 @@ public class DX7FamilyFractionalScalingEditor extends PatchEditorFrame {
 		}
 
 		public void set(int i) {
-			patch.sysex[ofs] = (byte) ((i / 16) + 0x30);
-			patch.sysex[ofs + 1] = (byte) ((i & 0x0f) + 0x30);
+			patch.getSysex()[ofs] = (byte) ((i / 16) + 0x30);
+			patch.getSysex()[ofs + 1] = (byte) ((i & 0x0f) + 0x30);
 		}
 
 		public int get() {
-			return (((patch.sysex[ofs] - 0x30) * 16 + (patch.sysex[ofs + 1] - 0x30)) & 0xff);
+			return (((patch.getSysex()[ofs] - 0x30) * 16 + (patch.getSysex()[ofs + 1] - 0x30)) & 0xff);
 		}
 	}
 

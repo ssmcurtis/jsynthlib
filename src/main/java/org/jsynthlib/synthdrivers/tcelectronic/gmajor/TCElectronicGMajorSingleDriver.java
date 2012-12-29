@@ -23,7 +23,7 @@ package org.jsynthlib.synthdrivers.tcelectronic.gmajor;
 
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.Driver;
 import org.jsynthlib.menu.patch.SysexHandler;
@@ -68,8 +68,8 @@ public class TCElectronicGMajorSingleDriver extends Driver {
 			Thread.sleep(100);
 		} catch (Exception e) {
 		}
-		((Patch) p).sysex[7] = (byte) TCElectronicGMajorUtil.calcBankNum(bankNum, patchNum);
-		((Patch) p).sysex[8] = (byte) TCElectronicGMajorUtil.calcPatchNum(bankNum, patchNum);
+		((Patch) p).getSysex()[7] = (byte) TCElectronicGMajorUtil.calcBankNum(bankNum, patchNum);
+		((Patch) p).getSysex()[8] = (byte) TCElectronicGMajorUtil.calcPatchNum(bankNum, patchNum);
 		sendPatchWorker(p);
 		try {
 			Thread.sleep(100);
@@ -79,8 +79,8 @@ public class TCElectronicGMajorSingleDriver extends Driver {
 	}
 
 	public void sendPatch(Patch p) {
-		((Patch) p).sysex[7] = (byte) 0x00;
-		((Patch) p).sysex[8] = (byte) 0x00;
+		((Patch) p).getSysex()[7] = (byte) 0x00;
+		((Patch) p).getSysex()[8] = (byte) 0x00;
 		sendPatchWorker(p);
 	}
 
@@ -89,7 +89,7 @@ public class TCElectronicGMajorSingleDriver extends Driver {
 	}
 
 	protected void calculateChecksum(Patch patch, int start, int end, int offset) {
-		patch.sysex[offset] = TCElectronicGMajorUtil.calcChecksum(patch.sysex, start, end);
+		patch.getSysex()[offset] = TCElectronicGMajorUtil.calcChecksum(patch.getSysex(), start, end);
 	}
 
 	public Patch createNewPatch() {

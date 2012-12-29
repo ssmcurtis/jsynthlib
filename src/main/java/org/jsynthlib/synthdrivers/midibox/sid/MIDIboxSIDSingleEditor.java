@@ -362,31 +362,31 @@ class MIDIboxSIDSingleEditor extends PatchEditorFrame {
 
 		ComboBoxWidget WT1CCBox = new ComboBoxWidget("Parameter #1", patch, new SIDModel(patch, 0x5a), new SIDSender(
 				patch, 0x5a), ccName);
-		dataModel.setColumnCC(0, (byte) ((Patch) p).sysex[8 + 0x5a]);
+		dataModel.setColumnCC(0, (byte) ((Patch) p).getSysex()[8 + 0x5a]);
 		ComboBoxWidget WT2CCBox = new ComboBoxWidget("Parameter #2", patch, new SIDModel(patch, 0x5b), new SIDSender(
 				patch, 0x5b), ccName);
-		dataModel.setColumnCC(1, (byte) ((Patch) p).sysex[8 + 0x5b]);
+		dataModel.setColumnCC(1, (byte) ((Patch) p).getSysex()[8 + 0x5b]);
 		ComboBoxWidget WT3CCBox = new ComboBoxWidget("Parameter #3", patch, new SIDModel(patch, 0x5c), new SIDSender(
 				patch, 0x5c), ccName);
-		dataModel.setColumnCC(2, (byte) ((Patch) p).sysex[8 + 0x5c]);
+		dataModel.setColumnCC(2, (byte) ((Patch) p).getSysex()[8 + 0x5c]);
 
 		table.repaint();
 
 		WT1CCBox.addEventListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dataModel.setColumnCC(0, (byte) ((Patch) p).sysex[8 + 0x5a]);
+				dataModel.setColumnCC(0, (byte) ((Patch) p).getSysex()[8 + 0x5a]);
 				table.repaint();
 			}
 		});
 		WT2CCBox.addEventListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dataModel.setColumnCC(1, (byte) ((Patch) p).sysex[8 + 0x5b]);
+				dataModel.setColumnCC(1, (byte) ((Patch) p).getSysex()[8 + 0x5b]);
 				table.repaint();
 			}
 		});
 		WT3CCBox.addEventListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dataModel.setColumnCC(2, (byte) ((Patch) p).sysex[8 + 0x5c]);
+				dataModel.setColumnCC(2, (byte) ((Patch) p).getSysex()[8 + 0x5c]);
 				table.repaint();
 			}
 		});
@@ -422,7 +422,7 @@ class MIDIboxSIDSingleEditor extends PatchEditorFrame {
 
 		byte[] cooked_dump = dataModel.getCookedDump();
 		for (int i = 0; i < cooked_dump.length; ++i)
-			cooked_dump[i] = ((Patch) p).sysex[8 + 0x80 + i];
+			cooked_dump[i] = ((Patch) p).getSysex()[8 + 0x80 + i];
 		dataModel.setCookedDump(cooked_dump);
 
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -694,10 +694,10 @@ class MIDIboxSIDSingleEditor extends PatchEditorFrame {
 		byte[] cooked_dump = dataModel.getCookedDump();
 
 		for (int i = 0; i < 4 * 32; ++i) {
-			byte stored_value = ((Patch) p).sysex[8 + 0x80 + i];
+			byte stored_value = ((Patch) p).getSysex()[8 + 0x80 + i];
 			if (stored_value != cooked_dump[i]) {
 				System.out.println("Wavetable Field changed: " + i);
-				((Patch) p).sysex[8 + 0x80 + i] = cooked_dump[i];
+				((Patch) p).getSysex()[8 + 0x80 + i] = cooked_dump[i];
 				SlowSender.sendParameter((Driver) ((Patch) p).getDriver(), 0x80 + i, cooked_dump[i], 10);
 			}
 		}
@@ -772,7 +772,7 @@ class SIDSender extends SysexSender {
 		if (flag == -1) {
 			b[9] = (byte) value;
 		} else {
-			b[9] = (byte) (patch.sysex[8 + parameter] & (~bitmask));
+			b[9] = (byte) (patch.getSysex()[8 + parameter] & (~bitmask));
 
 			if (mapped_values.length > 0)
 				value = mapped_values[value];
@@ -817,30 +817,30 @@ class SIDModel extends ParamModel {
 
 	public void set(int i) {
 		if (flag == -1) {
-			patch.sysex[ofs] = (byte) i;
+			patch.getSysex()[ofs] = (byte) i;
 		} else {
-			patch.sysex[ofs] = (byte) (patch.sysex[ofs] & (~bitmask));
+			patch.getSysex()[ofs] = (byte) (patch.getSysex()[ofs] & (~bitmask));
 			if (mapped_values.length > 0)
-				patch.sysex[ofs] |= (byte) mapped_values[i];
+				patch.getSysex()[ofs] |= (byte) mapped_values[i];
 			else
-				patch.sysex[ofs] |= (byte) i << flag;
+				patch.getSysex()[ofs] |= (byte) i << flag;
 		}
 	}
 
 	public int get() {
 		if (flag == -1)
-			return patch.sysex[ofs];
+			return patch.getSysex()[ofs];
 		else {
 			if (mapped_values.length > 0) {
 				int value;
 
-				value = (patch.sysex[ofs] & bitmask) >> flag;
+				value = (patch.getSysex()[ofs] & bitmask) >> flag;
 				for (int i = 0; i < mapped_values.length; ++i)
 					if (mapped_values[i] == value)
 						return i;
 				return 0;
 			} else
-				return (patch.sysex[ofs] & bitmask) >> flag;
+				return (patch.getSysex()[ofs] & bitmask) >> flag;
 		}
 	}
 

@@ -74,7 +74,7 @@ public class NovationXioSynthBankDriver extends BankDriver {
 		nameStart += 164; // offset of name in patch data
 		String retname = new String();
 		try {
-			StringBuffer s = new StringBuffer(new String(((Patch) p).sysex, nameStart, 16, "US-ASCII"));
+			StringBuffer s = new StringBuffer(new String(((Patch) p).getSysex(), nameStart, 16, "US-ASCII"));
 			retname = s.toString();
 			while (retname.length() < 16)
 				retname += " ";
@@ -101,10 +101,10 @@ public class NovationXioSynthBankDriver extends BankDriver {
 			return;
 		}
 
-		p.sysex[7] = (byte) 0x01;
-		p.sysex[12] = (byte) patchNum;
+		p.getSysex()[7] = (byte) 0x01;
+		p.getSysex()[12] = (byte) patchNum;
 
-		System.arraycopy(((Patch) p).sysex, 0, ((Patch) bank).sysex, getPatchStart(patchNum), 270);
+		System.arraycopy(((Patch) p).getSysex(), 0, ((Patch) bank).getSysex(), getPatchStart(patchNum), 270);
 	}
 
 	public Patch getPatch(Patch bank, int patchNum) {
@@ -113,7 +113,7 @@ public class NovationXioSynthBankDriver extends BankDriver {
 		try {
 			byte[] sysex = new byte[270];
 
-			System.arraycopy(((Patch) bank).sysex, getPatchStart(patchNum), sysex, 0, 270);
+			System.arraycopy(((Patch) bank).getSysex(), getPatchStart(patchNum), sysex, 0, 270);
 			sysex[269] = (byte) 0xF7;
 			sysex[7] = (byte) 0X00;
 			sysex[12] = (byte) patchNum;

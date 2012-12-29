@@ -71,7 +71,7 @@ public class YamahaFS1RBankDriver extends BankDriver {
 		try {
 			namebytes = name.getBytes("US-ASCII");
 			for (int i = 0; i < patchNameSize; i++)
-				((Patch) p).sysex[patchNameStart + i] = namebytes[i];
+				((Patch) p).getSysex()[patchNameStart + i] = namebytes[i];
 		} catch (UnsupportedEncodingException ex) {
 			return;
 		}
@@ -80,7 +80,7 @@ public class YamahaFS1RBankDriver extends BankDriver {
 
 	public String getPatchName(Patch ip) {
 		try {
-			StringBuffer s = new StringBuffer(new String(((Patch) ip).sysex, patchNameStart, patchNameSize,
+			StringBuffer s = new StringBuffer(new String(((Patch) ip).getSysex(), patchNameStart, patchNameSize,
 					"US-ASCII"));
 			return s.toString();
 		} catch (UnsupportedEncodingException ex) {
@@ -112,7 +112,7 @@ public class YamahaFS1RBankDriver extends BankDriver {
 		int oSize = (patchNum > 127 ? YamahaFS1RVoiceDriver.PATCH_AND_HEADER_SIZE
 				: YamahaFS1RPerformanceDriver.PATCH_AND_HEADER_SIZE);
 		byte oPatch[] = new byte[oSize];
-		System.arraycopy(((Patch) bank).sysex, oStart, oPatch, 0, oSize);
+		System.arraycopy(((Patch) bank).getSysex(), oStart, oPatch, 0, oSize);
 		return new Patch(oPatch);
 	}
 
@@ -121,12 +121,12 @@ public class YamahaFS1RBankDriver extends BankDriver {
 		int oStart = getPatchStart(patchNum);
 		int oSize = (patchNum > 127 ? YamahaFS1RVoiceDriver.PATCH_AND_HEADER_SIZE
 				: YamahaFS1RPerformanceDriver.PATCH_AND_HEADER_SIZE);
-		if (oSize != ((Patch) p).sysex.length) {
+		if (oSize != ((Patch) p).getSysex().length) {
 			JOptionPane.showMessageDialog(null, "Performances in P000-P127, Voices in V000-V127 ", "Error",
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-		System.arraycopy(((Patch) p).sysex, 0, ((Patch) bank).sysex, oStart, oSize);
+		System.arraycopy(((Patch) p).getSysex(), 0, ((Patch) bank).getSysex(), oStart, oSize);
 	}
 
 	/**
@@ -222,7 +222,7 @@ public class YamahaFS1RBankDriver extends BankDriver {
 	 */
 	protected boolean canHoldPatch(Patch p) {
 		// TODO
-		return (((Patch) p).sysex.length == YamahaFS1RPerformanceDriver.PATCH_AND_HEADER_SIZE || ((Patch) p).sysex.length == YamahaFS1RVoiceDriver.PATCH_AND_HEADER_SIZE);
+		return (((Patch) p).getSysex().length == YamahaFS1RPerformanceDriver.PATCH_AND_HEADER_SIZE || ((Patch) p).getSysex().length == YamahaFS1RVoiceDriver.PATCH_AND_HEADER_SIZE);
 	}
 
 }

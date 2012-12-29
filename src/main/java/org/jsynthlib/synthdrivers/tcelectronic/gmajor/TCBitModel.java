@@ -44,16 +44,16 @@ class TCBitModel extends ParamModel {
 	}
 
 	protected int getValue() {
-		int value = (patch.sysex[ofs + 1] << 7);
-		value = (value ^ patch.sysex[ofs]);
+		int value = (patch.getSysex()[ofs + 1] << 7);
+		value = (value ^ patch.getSysex()[ofs]);
 		return value;
 	}
 
 	public void set(int i) {
 		int j = ((getValue() & (~mask)) | ((i << shift) & mask));
 
-		patch.sysex[ofs + 1] = (byte) ((j >> 7) & 127);
-		patch.sysex[ofs] = (byte) (j & 127);
+		patch.getSysex()[ofs + 1] = (byte) ((j >> 7) & 127);
+		patch.getSysex()[ofs] = (byte) (j & 127);
 
 	}
 

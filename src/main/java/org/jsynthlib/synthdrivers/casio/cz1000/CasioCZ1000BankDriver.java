@@ -73,7 +73,7 @@ public class CasioCZ1000BankDriver extends BankDriver {
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-		System.arraycopy(((Patch) p).sysex, 7, ((Patch) bank).sysex, getPatchStart(patchNum), 264 - 7);
+		System.arraycopy(((Patch) p).getSysex(), 7, ((Patch) bank).getSysex(), getPatchStart(patchNum), 264 - 7);
 		calculateChecksum(bank);
 	}
 
@@ -93,7 +93,7 @@ public class CasioCZ1000BankDriver extends BankDriver {
 			sysex[5] = (byte) 0x20;
 			sysex[6] = (byte) (0x60); // to send to edit buffer
 			sysex[263] = (byte) 0xF7;
-			System.arraycopy(((Patch) bank).sysex, getPatchStart(patchNum), sysex, 7, 264 - 7);
+			System.arraycopy(((Patch) bank).getSysex(), getPatchStart(patchNum), sysex, 7, 264 - 7);
 			Patch p = new Patch(sysex, getDevice());
 			p.calculateChecksum();
 			return p;
@@ -120,9 +120,9 @@ public class CasioCZ1000BankDriver extends BankDriver {
 		Patch p = new Patch(sysex, this);
 		for (int i = 0; i < 16; i++) {
 			sysexHeader[6] = (byte) (0x20 + i); // patch nunmber
-			System.arraycopy(sysexHeader, 0, p.sysex, i * 264, 7);
+			System.arraycopy(sysexHeader, 0, p.getSysex(), i * 264, 7);
 
-			p.sysex[(263 * (i + 1))] = (byte) 0xF7;
+			p.getSysex()[(263 * (i + 1))] = (byte) 0xF7;
 		}
 		calculateChecksum(p);
 		return p;
@@ -134,7 +134,7 @@ public class CasioCZ1000BankDriver extends BankDriver {
 		Patch p = new Patch(newsysex, getDevice());
 		try {
 			for (int i = 0; i < 16; i++) {
-				System.arraycopy(((Patch) bank).sysex, 264 * i, p.sysex, 0, 264);
+				System.arraycopy(((Patch) bank).getSysex(), 264 * i, p.getSysex(), 0, 264);
 				sendPatchWorker(p);
 				Thread.sleep(100); // a small delay to play safe
 			}

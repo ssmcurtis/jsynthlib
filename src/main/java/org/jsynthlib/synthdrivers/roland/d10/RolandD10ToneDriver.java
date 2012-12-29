@@ -78,7 +78,7 @@ public class RolandD10ToneDriver extends Driver {
 		// The tone temp area has a record size that is the same as the data
 		// size so we can not send the whole patch.
 		D10DataSetMessage message = new D10DataSetMessage(TONE_SIZE, BASE_TONE_TEMP_AREA);
-		System.arraycopy(patch.sysex, SIZE_HEADER_DT1, message.getBytes(), SIZE_HEADER_DT1, TONE_SIZE.getIntValue());
+		System.arraycopy(patch.getSysex(), SIZE_HEADER_DT1, message.getBytes(), SIZE_HEADER_DT1, TONE_SIZE.getIntValue());
 		send(message.getBytes());
 	}
 

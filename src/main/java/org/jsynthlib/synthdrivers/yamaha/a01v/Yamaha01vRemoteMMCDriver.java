@@ -56,7 +56,7 @@ public class Yamaha01vRemoteMMCDriver extends Driver {
 	 */
 	protected void storePatch(Patch p, int bankNum, int patchNum) {
 		setPatchNum(patchNum);
-		p.sysex[15] = (byte) patchNum; // Location
+		p.getSysex()[15] = (byte) patchNum; // Location
 		calculateChecksum(p);
 
 		sendPatchWorker(p);

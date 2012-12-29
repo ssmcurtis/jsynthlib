@@ -20,12 +20,12 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib._widgets.CheckBoxWidget;
 import org.jsynthlib._widgets.ComboBoxWidget;
 import org.jsynthlib._widgets.KnobWidget;
 import org.jsynthlib._widgets.PatchNameWidget;
 import org.jsynthlib._widgets.SpinnerWidget;
-import org.jsynthlib.menu.PatchBayApplication;
 import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.ui.JSLFrameEvent;
 import org.jsynthlib.menu.ui.JSLFrameListener;

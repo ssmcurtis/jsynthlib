@@ -83,7 +83,7 @@ public class EvolverBankDriver extends BankDriver {
 			return;
 		}
 
-		System.arraycopy(p.sysex, HSIZE, bank.sysex, getPatchStart(patchNum), SSIZE);
+		System.arraycopy(p.getSysex(), HSIZE, bank.getSysex(), getPatchStart(patchNum), SSIZE);
 		calculateChecksum(bank);
 	}
 
@@ -128,8 +128,8 @@ public class EvolverBankDriver extends BankDriver {
 			Thread.sleep(100);
 		} catch (Exception e) {
 		}
-		p.sysex[5] = (byte) (bankNum << 1);
-		p.sysex[6] = (byte) (patchNum);
+		p.getSysex()[5] = (byte) (bankNum << 1);
+		p.getSysex()[6] = (byte) (patchNum);
 		sendPatchWorker(p);
 		try {
 			Thread.sleep(100);

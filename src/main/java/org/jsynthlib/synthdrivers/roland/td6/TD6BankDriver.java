@@ -84,7 +84,7 @@ public class TD6BankDriver extends BankDriver {
 	public String getPatchName(Patch p, int patchNum) {
 		int nameOfst = SINGLE_SIZE * patchNum + NAME_OFFSET;
 		try {
-			return new String(p.sysex, nameOfst, patchNameSize, "US-ASCII");
+			return new String(p.getSysex(), nameOfst, patchNameSize, "US-ASCII");
 		} catch (UnsupportedEncodingException e) {
 			return "---";
 		}
@@ -95,7 +95,7 @@ public class TD6BankDriver extends BankDriver {
 		name += "       ";
 		byte[] namebytes = name.getBytes();
 		for (int i = 0; i < patchNameSize; i++)
-			p.sysex[nameOfst + i] = namebytes[i];
+			p.getSysex()[nameOfst + i] = namebytes[i];
 	}
 
 	public void calculateChecksum(Patch p) {
@@ -104,17 +104,17 @@ public class TD6BankDriver extends BankDriver {
 	}
 
 	public void putPatch(Patch bank, Patch p, int patchNum) {
-		System.arraycopy(p.sysex, 0, bank.sysex, SINGLE_SIZE * patchNum, SINGLE_SIZE);
+		System.arraycopy(p.getSysex(), 0, bank.getSysex(), SINGLE_SIZE * patchNum, SINGLE_SIZE);
 		for (int i = 0; i < TD6SingleDriver.NUM_PKT; i++) {
 			// adjust address field
-			bank.sysex[getPktOfst(patchNum, i) + 7] = (byte) patchNum;
+			bank.getSysex()[getPktOfst(patchNum, i) + 7] = (byte) patchNum;
 		}
 		singleDriver.calculateChecksum(bank, SINGLE_SIZE * patchNum);
 	}
 
 	public Patch getPatch(Patch bank, int patchNum) {
 		byte[] sysex = new byte[SINGLE_SIZE];
-		System.arraycopy(bank.sysex, getPktOfst(patchNum, 0), sysex, 0, SINGLE_SIZE);
+		System.arraycopy(bank.getSysex(), getPktOfst(patchNum, 0), sysex, 0, SINGLE_SIZE);
 		return new Patch(sysex, singleDriver);
 	}
 
@@ -136,7 +136,7 @@ public class TD6BankDriver extends BankDriver {
 	public void storePatch(Patch p, int bankNum, int patchNum) {
 		int ofst = 0;
 		for (int i = 0; i < NUM_PATCH; i++, ofst += SINGLE_SIZE) {
-			singleDriver.storePatch(p.sysex, ofst, i);
+			singleDriver.storePatch(p.getSysex(), ofst, i);
 		}
 	}
 }

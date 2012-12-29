@@ -147,7 +147,7 @@ abstract public class BankDriver extends Driver implements IPatchDriver {
 	 * @see Driver#supportsPatch
 	 */
 	protected boolean canHoldPatch(Patch p) {
-		if ((singleSize != p.sysex.length) && (singleSize != 0))
+		if ((singleSize != p.getSysex().length) && (singleSize != 0))
 			return false;
 
 		String patchString = p.getPatchHeader().toString();

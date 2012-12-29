@@ -30,28 +30,35 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.RowFilter;
 import javax.swing.TransferHandler;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.table.TableRowSorter;
 import javax.swing.text.MaskFormatter;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.action.Actions;
 import org.jsynthlib.menu.patch.IPatch;
 import org.jsynthlib.menu.patch.PatchBank;
 import org.jsynthlib.menu.patch.PatchBasket;
 import org.jsynthlib.menu.patch.PatchSingle;
+import org.jsynthlib.menu.preferences.AppConfig;
 import org.jsynthlib.menu.ui.JSLFrame;
 import org.jsynthlib.menu.ui.JSLFrameEvent;
 import org.jsynthlib.menu.ui.JSLFrameListener;
 import org.jsynthlib.menu.ui.PatchTransferHandler;
 import org.jsynthlib.menu.ui.ProxyImportHandler;
+import org.jsynthlib.model.ImportFileType;
 import org.jsynthlib.tools.DriverUtil;
 import org.jsynthlib.tools.ErrorMsg;
-import org.jsynthlib.tools.midi.MidiFileImport;
+import org.jsynthlib.tools.ImportUtils;
+import org.jsynthlib.tools.Utility;
+
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Abstract class for unified handling of Library and Scene frames.
@@ -61,12 +68,13 @@ import org.jsynthlib.tools.midi.MidiFileImport;
  */
 public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBasket {
 	protected JTable table;
+
 	protected PatchTableModel myModel;
 
 	private final String TYPE;
 	private PatchTransferHandler pth;
 	/** Has the library been altered since it was last saved? */
-	protected boolean changed = false; // wirski@op.pl
+	protected boolean changed = false;
 	private JLabel statusBar;
 	private File filename;
 
@@ -76,6 +84,10 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 		super(PatchBayApplication.getDesktop(), title);
 		TYPE = type;
 		this.pth = pth;
+
+		// sorting
+		// JTable table = new JTable(myModel);
+		// table.setRowSorter(new TableRowSorter<PatchTableModel>(myModel));
 
 		// ...Create the GUI and put it in the window...
 		addJSLFrameListener(new MyFrameListener());
@@ -108,7 +120,9 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 		getContentPane().add(statusPanel, BorderLayout.SOUTH);
 
 		// ...Then set the window size or call pack...
-		setSize(800, 300); // wirski@op.pl
+		setSize(800, 500);
+
+		table.setAutoCreateRowSorter(true);
 	}
 
 	abstract PatchTableModel createTableModel();
@@ -127,6 +141,8 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 		table.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				if (e.isPopupTrigger()) {
+
+					// System.out.println(">>> Mouse pressed");
 					Actions.showMenuPatchPopup(table, e.getX(), e.getY());
 					table.setRowSelectionInterval(table.rowAtPoint(new Point(e.getX(), e.getY())),
 							table.rowAtPoint(new Point(e.getX(), e.getY())));
@@ -135,6 +151,7 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 
 			public void mouseReleased(MouseEvent e) {
 				if (e.isPopupTrigger()) {
+					// System.out.println(">>> Mouse released");
 					Actions.showMenuPatchPopup(table, e.getX(), e.getY());
 					table.setRowSelectionInterval(table.rowAtPoint(new Point(e.getX(), e.getY())),
 							table.rowAtPoint(new Point(e.getX(), e.getY())));
@@ -143,12 +160,13 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
+					// System.out.println(">>> Mouse double");
 					PatchSingle myPatch = (PatchSingle) getSelectedPatch();
 					String name = myPatch.getName();
 					int nameSize = myPatch.getNameSize();
 					if (myPatch.hasEditor()) {
 						Actions.EditActionProc();
-						changed();
+						setChanged();
 					} else if (nameSize != 0) {
 						final JOptionPane optionPane;
 						String maskStr = "";
@@ -164,25 +182,24 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 						JFormattedTextField patchName = new JFormattedTextField(Mask);
 						patchName.setValue(name);
 						Object[] options = { new String("OK"), new String("Cancel") };
-						optionPane = new JOptionPane(patchName, JOptionPane.PLAIN_MESSAGE, JOptionPane.YES_NO_OPTION,
-								null, options, options[0]);
+						optionPane = new JOptionPane(patchName, JOptionPane.PLAIN_MESSAGE, JOptionPane.YES_NO_OPTION, null, options,
+								options[0]);
 						JDialog dialog = optionPane.createDialog(table, "Edit patch name");
 						dialog.setVisible(true);
 						if (optionPane.getValue() == options[0]) {
 							String newName = (String) patchName.getValue();
 							myPatch.setName(newName);
-							changed();
+							setChanged();
 						}
 					}
 				}
 			}
 		});
-
 		// table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setTransferHandler(pth);
 		table.setDragEnabled(true);
 
-		setupColumns();
+		// setupColumns();
 
 		table.getModel().addTableModelListener(new TableModelListener() {
 			public void tableChanged(TableModelEvent e) {
@@ -200,12 +217,14 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 	}
 
 	private class MyFrameListener implements JSLFrameListener {
+
 		public void JSLFrameClosing(JSLFrameEvent e) {
 			if (!changed)
 				return;
 
 			// close Patch/Bank Editor editing a patch in this frame.
 			JSLFrame[] jList = PatchBayApplication.getDesktop().getAllFrames();
+			System.out.println("Frames: " + jList.length);
 			for (int j = 0; j < jList.length; j++) {
 				if (jList[j] instanceof BankEditorFrame) {
 					for (int i = 0; i < myModel.getRowCount(); i++)
@@ -235,8 +254,7 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 				}
 			}
 
-			if (JOptionPane.showConfirmDialog(null,
-					"This " + TYPE + " may contain unsaved data.\nSave before closing?", "Unsaved Data",
+			if (JOptionPane.showConfirmDialog(null, "This " + TYPE + " may contain unsaved data.\nSave before closing?", "Unsaved Data",
 					JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION)
 				return;
 
@@ -252,6 +270,10 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 		}
 
 		public void JSLFrameClosed(JSLFrameEvent e) {
+			if (PatchBayApplication.getDesktop().getAllFrames().length == 0) {
+				Actions.setEnabled(false, Actions.EN_PASTE);
+			}
+			System.out.println(">>>> Closed");
 		}
 
 		public void JSLFrameDeactivated(JSLFrameEvent e) {
@@ -265,30 +287,69 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 		}
 	}
 
-	// TODO ssmcurtis - import patch
+	// INFO import patch
 	// begin PatchBasket methods
-	public void importPatch(File file) throws IOException, FileNotFoundException {
-		if (MidiFileImport.doImport(file)) {
-			return;
-		}
-		FileInputStream fileIn = new FileInputStream(file);
-		byte[] buffer = new byte[(int) file.length()];
-		fileIn.read(buffer);
-		fileIn.close();
+	public void importPatch(File file, ImportFileType type) throws IOException, FileNotFoundException {
 
-		// ErrorMsg.reportStatus("Buffer length:" + buffer.length);
-		IPatch[] patarray = DriverUtil.createPatches(buffer, file.getName());
-		for (int j = 0; j < patarray.length; j++) {
-			if (table.getSelectedRowCount() == 0)
-				myModel.addPatch(patarray[j]);
-			else
-				myModel.setPatchAt(patarray[j], table.getSelectedRow());
+		IPatch[] patarray = null;
+		if (ImportFileType.MIDI.equals(type)) {
+			patarray = ImportUtils.getPatchesFromMidi(file);
+		} else if (ImportFileType.TXTHEX.equals(type)) {
+			System.out.println("IMPORT TEXT");
+			patarray = ImportUtils.getPatchesFromTexhex(file);
 		}
 
-		changed();
+		// Default is sysex
+		if (patarray == null) {
+			FileInputStream fileIn = new FileInputStream(file);
+			byte[] buffer = new byte[(int) file.length()];
+			fileIn.read(buffer);
+			fileIn.close();
+
+			// ErrorMsg.reportStatus("Buffer length:" + buffer.length);
+			patarray = DriverUtil.createPatches(buffer, file.getName());
+
+		}
+		// INFO import will never overwrite existing patches in table
+		for (int k = 0; k < patarray.length; k++) {
+			IPatch pk = patarray[k];
+			// if (putName == 1)
+			// pk.setDate(pk.getDate() + currentFile.getName());
+			// if (putName == 2)
+			// pk.setAuthor(pk.getAuthor() + currentFile.getName());
+			LibraryFrame frame = (LibraryFrame) PatchBayApplication.getDesktop().getSelectedFrame();
+
+			System.out.println("IMPORT " + Utility.hexDump(pk.getByteArray(), 0, -1, -1));
+
+			if (pk.isBankPatch()) {
+
+				String[] pn = pk.getDriver().getPatchNumbers();
+
+				for (int j = 0; j < ((PatchBank) pk).getNumPatches(); j++) {
+					IPatch q = ((PatchBank) pk).get(j);
+					q.setFileName(pk.getFileName());
+					// if (putName == 1)
+					// q.setDate(q.getDate() + currentFile.getName() + " " + pn[j]);
+					// if (putName == 2)
+					// q.setAuthor(q.getAuthor() + currentFile.getName() + " " + pn[j]);
+					frame.myModel.addPatch(q);
+				}
+			} else {
+				frame.myModel.addPatch(pk);
+			}
+			frame.revalidateDrivers();
+			// if (table.getSelectedRowCount() == 0) {
+			// myModel.addPatch(patarray[j]);
+			// } else {
+			// myModel.setPatchAt(patarray[j], table.getSelectedRow());
+			// }
+		}
+
+		revalidateDrivers();
+		// setChanged();
 	}
 
-	protected void changed() {
+	protected void setChanged() {
 		myModel.fireTableDataChanged();
 		// This is done in tableChanged for the TableModelListener
 		// changed = true;
@@ -299,6 +360,8 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 	}
 
 	public void exportPatch(File file) throws IOException, FileNotFoundException {
+		System.out.println("Export - Selected row: " + table.getSelectedRow());
+		System.out.println("Export - Converted row: " + table.convertRowIndexToModel(table.getSelectedRow()));
 		if (table.getSelectedRowCount() == 0) {
 			ErrorMsg.reportError("Error", "No Patch Selected.");
 			return;
@@ -308,17 +371,17 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 		fileOut.close();
 	}
 
-	public void deleteSelectedPatch() {
+	public void deleteSelectedPatches() {
 		ErrorMsg.reportStatus("delete patch : " + table.getSelectedRowCount());
 		int[] ia = table.getSelectedRows();
 		// Without this we cannot delete the patch at the bottom.
 		table.clearSelection();
 		// delete from bottom not to change indices to be removed
 		for (int i = ia.length; i > 0; i--) {
-			ErrorMsg.reportStatus("i = " + ia[i - 1]);
-			myModel.removeAt(ia[i - 1]);
+			ErrorMsg.reportStatus("i = " + table.convertRowIndexToModel(ia[i - 1]));
+			myModel.removeAt(table.convertRowIndexToModel(ia[i - 1]));
 		}
-		changed();
+		setChanged();
 	}
 
 	public void copySelectedPatch() {
@@ -327,24 +390,32 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 
 	public void pastePatch() {
 		if (pth.importData(table, Toolkit.getDefaultToolkit().getSystemClipboard().getContents(this))) {
-			changed();
+			setChanged();
 		} else {
 			Actions.setEnabled(false, Actions.EN_PASTE);
 		}
 	}
 
+	// TODO can be remove ?
 	public void pastePatch(IPatch p) {
 		myModel.addPatch(p);
-		changed();
+		setChanged();
 	}
 
 	public void pastePatch(IPatch p, int bankNum, int patchNum) {// added by R. Wirski
 		myModel.addPatch(p, bankNum, patchNum);
-		changed();
+		setChanged();
 	}
 
 	public IPatch getSelectedPatch() {
-		return myModel.getPatchAt(table.getSelectedRow());
+		System.out.println("Get - Selected row: " + table.getSelectedRow());
+		System.out.println("Get - Converted row: " + table.convertRowIndexToModel(table.getSelectedRow()));
+		System.out.println("Coubn: " + myModel.getRowCount());
+
+		// TODO sort and id
+		IPatch p = myModel.getPatchAt(table.convertRowIndexToModel(table.getSelectedRow()));
+		System.out.println(">>>>> " + p.getFileName());
+		return p;
 	}
 
 	public void sendSelectedPatch() {
@@ -357,17 +428,20 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 
 	public void reassignSelectedPatch() {
 		new ReassignPatchDialog(getSelectedPatch());
-		changed();
+		setChanged();
 	}
 
 	public void playSelectedPatch() {
 		PatchSingle myPatch = (PatchSingle) getSelectedPatch();
-		myPatch.send();
+
+		if (AppConfig.getSendPatchBeforePlay()) {
+			myPatch.send();
+		}
 		myPatch.play();
 	}
 
 	public void storeSelectedPatch() {
-		new SysexStoreDialog(getSelectedPatch(), 0, 0); // wirski@op.pl
+		new SysexStoreDialog(getSelectedPatch(), 0, 0);
 	}
 
 	public JSLFrame editSelectedPatch() {
@@ -376,7 +450,7 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 		return getSelectedPatch().edit();
 	}
 
-	public ArrayList getPatchCollection() {
+	public ArrayList<IPatch> getPatchCollection() {
 		return myModel.getList();
 	}
 
@@ -407,7 +481,7 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 			if (p != null)
 				myModel.addPatch(p);
 		}
-		changed();
+		setChanged();
 	}
 
 	// for open/save/save-as actions
@@ -463,16 +537,19 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 	 * Re-assigns drivers to all patches in libraryframe. Called after new drivers are added or or removed
 	 */
 	public void revalidateDrivers() {
-		for (int i = 0; i < myModel.getRowCount(); i++)
+		for (int i = 0; i < myModel.getRowCount(); i++) {
 			chooseDriver(myModel.getPatchAt(i));
+		}
 		myModel.fireTableDataChanged();
 	}
 
 	private void chooseDriver(IPatch patch) {
 		patch.setDriver();
 		if (patch.hasNullDriver()) {
-			// Unkown patch, try to guess at least the manufacturer
-			patch.setInfo(patch.lookupManufacturer() + " [?] " + nf.format(patch.getSize()) + "B");
+			// INFO Unknown patch, try to guess at least the manufacturer
+			patch.setInfo(nf.format(patch.getSize()) + " " + patch.lookupManufacturer() + " [?] ");
+		} else {
+			patch.setInfo("");
 		}
 	}
 
@@ -485,4 +562,25 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 		return table.getSelectedRowCount();
 	}
 
+	@Override
+	public void playAllPatches() {
+		for (int row = 0; row < myModel.getList().size(); row++) {
+			PatchSingle myPatch = (PatchSingle) myModel.getPatchAt(row);
+			// statusBar.setText(myPatch.getName() + " " + myPatch.getFileName());
+			myPatch.send();
+			myPatch.play();
+		}
+		// TODO ssmcurtis multiple threads
+		// statusBar.setText(myModel.getRowCount() + " Patches");
+	}
+
+	// private void newFilter() {
+	// RowFilter<PatchTableModel, Object> rf = null;
+	// try {
+	// rf = RowFilter.regexFilter(filterText.getText(), 0);
+	// } catch (java.util.regex.PatternSyntaxException e) {
+	// return;
+	// }
+	// sorter.setRowFilter(rf);
+	// }
 }

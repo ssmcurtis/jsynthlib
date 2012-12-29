@@ -23,10 +23,10 @@ public class YamahaDX100SingleDriver extends Driver {
 
 	public void calculateChecksum(Patch ip) {
 		Patch p = (Patch) ip;
-		if (p.sysex.length > 101) {
+		if (p.getSysex().length > 101) {
 			byte[] newSysex = new byte[101];
-			System.arraycopy(p.sysex, 0, newSysex, 0, 101);
-			p.sysex = newSysex;
+			System.arraycopy(p.getSysex(), 0, newSysex, 0, 101);
+			p.setSysex(newSysex);
 		}
 		calculateChecksum(p, 6, 98, 99); // calculate VCED Checksum
 	}

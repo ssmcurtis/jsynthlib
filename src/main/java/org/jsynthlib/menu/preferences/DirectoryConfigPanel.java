@@ -9,12 +9,13 @@ import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.ui.ExtensionFilter;
 import org.jsynthlib.menu.ui.window.CompatibleFileDialog;
 import org.jsynthlib.menu.ui.window.LibraryFrame;
@@ -36,6 +37,7 @@ public class DirectoryConfigPanel extends ConfigPanel {
 	private final JTextField tFile = new JTextField(null, 35);
 	private final JTextField tLib = new JTextField(null, 35);
 	private final JTextField tSyx = new JTextField(null, 35);
+	private JCheckBox cbxEnMidi;
 
 	public DirectoryConfigPanel(PrefsDialog parent) {
 		super(parent);
@@ -133,8 +135,20 @@ public class DirectoryConfigPanel extends ConfigPanel {
 		c.gridx = 2;
 		p.add(b, c);
 
+		cbxEnMidi = new JCheckBox("Import directories recursive");
+		c.gridx = 0;
+		c.gridy++;
+		p.add(cbxEnMidi, c);
+		// add actionListeners
+		cbxEnMidi.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setModified(true);
+			}
+		});
+
 		add(p, BorderLayout.CENTER);
 
+		
 		tFile.setEditable(false);
 		tLib.setEditable(false);
 		tSyx.setEditable(false);
@@ -144,12 +158,14 @@ public class DirectoryConfigPanel extends ConfigPanel {
 		tFile.setText(AppConfig.getDefaultLibrary());
 		tLib.setText(AppConfig.getLibPath());
 		tSyx.setText(AppConfig.getSysexPath());
+		cbxEnMidi.setSelected(AppConfig.getImportDirectoryRecursive());
 	}
 
 	public void commitSettings() {
 		AppConfig.setDefaultLibrary(tFile.getText());
 		AppConfig.setLibPath(tLib.getText());
 		AppConfig.setSysexPath(tSyx.getText());
+		AppConfig.setImportDirectoryRecursive(cbxEnMidi.isSelected());
 		setModified(false);
 	}
 }

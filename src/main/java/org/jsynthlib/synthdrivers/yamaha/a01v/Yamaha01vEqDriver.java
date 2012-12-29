@@ -79,7 +79,7 @@ public class Yamaha01vEqDriver extends Driver {
 		patchNum = correctPatchNumber(patchNum);
 		setPatchNum(patchNum);
 		setBankNum(0);
-		p.sysex[15] = (byte) patchNum; // Location
+		p.getSysex()[15] = (byte) patchNum; // Location
 		calculateChecksum(p);
 
 		sendPatchWorker(p);

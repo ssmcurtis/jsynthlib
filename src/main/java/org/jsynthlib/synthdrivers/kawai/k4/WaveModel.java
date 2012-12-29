@@ -13,11 +13,11 @@ class WaveModel implements SysexWidget.IParamModel {
 	}
 
 	public void set(int i) {
-		patch.sysex[34 + 8 + source] = (byte) ((patch.sysex[34 + 8 + source] & 254) + (byte) (i / 128));
-		patch.sysex[38 + 8 + source] = (byte) (i % 128);
+		patch.getSysex()[34 + 8 + source] = (byte) ((patch.getSysex()[34 + 8 + source] & 254) + (byte) (i / 128));
+		patch.getSysex()[38 + 8 + source] = (byte) (i % 128);
 	}
 
 	public int get() {
-		return (((patch.sysex[34 + 8 + source] & 1) * 128) + (patch.sysex[38 + 8 + source]));
+		return (((patch.getSysex()[34 + 8 + source] & 1) * 128) + (patch.getSysex()[38 + 8 + source]));
 	}
 }

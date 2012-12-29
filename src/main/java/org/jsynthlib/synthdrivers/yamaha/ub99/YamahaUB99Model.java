@@ -40,27 +40,27 @@ class YamahaUB99Model extends ParamModel {
 	}
 
 	private int getShortParameter() {
-		int retval = patch.sysex[ofs] << 7;
-		retval |= (patch.sysex[ofs + 1] & 127);
+		int retval = patch.getSysex()[ofs] << 7;
+		retval |= (patch.getSysex()[ofs + 1] & 127);
 		return retval;
 	}
 
 	private void setShortParameter(int value) {
-		patch.sysex[ofs] = (byte) ((value >> 7) & 127);
-		patch.sysex[ofs + 1] = (byte) (value & 127);
+		patch.getSysex()[ofs] = (byte) ((value >> 7) & 127);
+		patch.getSysex()[ofs + 1] = (byte) (value & 127);
 	}
 
 	public void set(int value) {
 		if (twobytes)
 			setShortParameter(value);
 		else
-			patch.sysex[ofs] = (byte) value;
+			patch.getSysex()[ofs] = (byte) value;
 	}
 
 	public int get() {
 		if (twobytes)
 			return getShortParameter();
 		else
-			return patch.sysex[ofs];
+			return patch.getSysex()[ofs];
 	}
 }

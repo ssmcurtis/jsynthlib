@@ -93,7 +93,7 @@ public class RolandJV80Converter extends Converter {
 					// a byte of a JV880 patch tone in a JV880 bank.
 					// A JV880 patch tone in a JV80 bank will overwrite the checksum
 					// byte, which is revalidated anyway.
-					System.arraycopy(dump, 0, bpatch.sysex, addr + 1, dump.length - 1);
+					System.arraycopy(dump, 0, bpatch.getSysex(), addr + 1, dump.length - 1);
 				}
 			}
 		}

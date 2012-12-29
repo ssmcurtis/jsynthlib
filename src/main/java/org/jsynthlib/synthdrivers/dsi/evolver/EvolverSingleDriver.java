@@ -16,11 +16,11 @@ import org.jsynthlib.tools.Utility;
  */
 public class EvolverSingleDriver extends Driver {
 	/** Header Size */
-	private static final int HSIZE = 8;
+	private static final int HSIZE = Evolver.HEADER_SIZE.number();
 	/** Single Patch size */
-	private static final int SSIZE = 131;
+	private static final int SSIZE =  Evolver.PATCH_SIZE.number() - Evolver.HEADER_SIZE.number();
 
-	private static final SysexHandler SYS_REQ = new SysexHandler("F0 01 20 01 05 *bankNum* *patchNum* F7");
+	private static final SysexHandler SYS_REQ = new SysexHandler(Evolver.REQUEST_SINGLE_PATCH_TEMPLATE);
 
 	private int bankNum = 0;
 	private int patchNum = 0;
@@ -28,11 +28,10 @@ public class EvolverSingleDriver extends Driver {
 	public EvolverSingleDriver() {
 		super("Single", "ssmcurtis");
 		sysexID = Evolver.DEVICE_SYSEX_ID;
-
-		patchSize = 228; // HSIZE + SSIZE + 1;
-		patchNameStart = 0; // = HSIZE;
-		patchNameSize = 0;
-		deviceIDoffset = 2;
+		patchSize = Evolver.PATCH_SIZE.number(); // HSIZE + SSIZE + 1;
+		patchNameStart = Evolver.PATCH_NAME_START_AT.number(); // = HSIZE;
+		patchNameSize = Evolver.PATCH_NAME_END_AT.number();
+		deviceIDoffset = Evolver.DEVICE_ID_OFFSET.number();
 		// checksumStart = HSIZE;
 		// checksumEnd = HSIZE + SSIZE - 2;
 		// checksumOffset = HSIZE + SSIZE - 1;
@@ -48,10 +47,13 @@ public class EvolverSingleDriver extends Driver {
 		try {
 			Thread.sleep(100);
 		} catch (Exception e) {
+			// nothing
 		}
-		p.sysex[5] = (byte) (bankNum << 1);
-		p.sysex[6] = (byte) (patchNum);
+		p.getSysex()[Evolver.BANK_AT.number()] = (byte) (bankNum << 1);
+		p.getSysex()[Evolver.PATCH_AT.number()] = (byte) (patchNum);
+
 		sendPatchWorker(p);
+
 		try {
 			Thread.sleep(100);
 		} catch (Exception e) {
@@ -79,5 +81,5 @@ public class EvolverSingleDriver extends Driver {
 		System.out.println(">>>" + Utility.hexDumpOneLine(msg.getMessage(), 0, -1, 100));
 		send(msg);
 	}
-	
+
 }

@@ -7,7 +7,7 @@ import java.io.UnsupportedEncodingException;
 
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.patch.BankDriver;
 import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.SysexHandler;
@@ -51,26 +51,26 @@ public class KawaiK5000BankDriver extends BankDriver {
 	public int numPatchesinBank(Patch p) {
 		int num = 0;
 		for (int i = 8; i < 26; i++) {
-			if ((p.sysex[i] & 1) > 0)
+			if ((p.getSysex()[i] & 1) > 0)
 				num++;
-			if ((p.sysex[i] & 2) > 0)
+			if ((p.getSysex()[i] & 2) > 0)
 				num++;
-			if ((p.sysex[i] & 4) > 0)
+			if ((p.getSysex()[i] & 4) > 0)
 				num++;
-			if ((p.sysex[i] & 8) > 0)
+			if ((p.getSysex()[i] & 8) > 0)
 				num++;
-			if ((p.sysex[i] & 16) > 0)
+			if ((p.getSysex()[i] & 16) > 0)
 				num++;
-			if ((p.sysex[i] & 32) > 0)
+			if ((p.getSysex()[i] & 32) > 0)
 				num++;
-			if ((p.sysex[i] & 64) > 0)
+			if ((p.getSysex()[i] & 64) > 0)
 				num++;
 		}
 		return num;
 	}
 
 	public boolean patchExists(Patch p, int num) {
-		int sub = p.sysex[8 + (num / 7)];
+		int sub = p.getSysex()[8 + (num / 7)];
 		if (num % 7 == 0)
 			return ((sub & 1) > 0);
 		if (num % 7 == 1)
@@ -91,7 +91,7 @@ public class KawaiK5000BankDriver extends BankDriver {
 	public void setPatchExists(Patch p, int num, boolean exists) {
 		if (exists == patchExists(p, num))
 			return;
-		int sub = p.sysex[8 + (num / 7)];
+		int sub = p.getSysex()[8 + (num / 7)];
 		System.out.println("bitmask was " + sub);
 		if (num % 7 == 0)
 			sub = sub ^ 1;
@@ -109,7 +109,7 @@ public class KawaiK5000BankDriver extends BankDriver {
 			sub = sub ^ 64;
 		System.out.println("bitmask is " + sub);
 
-		p.sysex[8 + (num / 7)] = (byte) sub;
+		p.getSysex()[8 + (num / 7)] = (byte) sub;
 	}
 
 	public void generateIndex(Patch p) {
@@ -119,10 +119,10 @@ public class KawaiK5000BankDriver extends BankDriver {
 		for (int i = 0; i < 128; i++) {
 			if (patchExists(p, i)) {
 				patchIndex[i] = currentPatchStart;
-				int newPatchStart = currentPatchStart + (82 + 86 * p.sysex[currentPatchStart + 51]);
+				int newPatchStart = currentPatchStart + (82 + 86 * p.getSysex()[currentPatchStart + 51]);
 				int numWaveData = 0;
-				for (int j = 0; j < p.sysex[currentPatchStart + 51]; j++)
-					if (((p.sysex[81 + currentPatchStart + 29 + (86 * j)] & 7) * 128 + p.sysex[81 + currentPatchStart
+				for (int j = 0; j < p.getSysex()[currentPatchStart + 51]; j++)
+					if (((p.getSysex()[81 + currentPatchStart + 29 + (86 * j)] & 7) * 128 + p.getSysex()[81 + currentPatchStart
 							+ 30 + (86 * j)]) == 512)
 						numWaveData++;
 
@@ -133,7 +133,7 @@ public class KawaiK5000BankDriver extends BankDriver {
 
 		}
 		indexedPatch = p;
-		patchIndex[128] = p.sysex.length - 1;
+		patchIndex[128] = p.getSysex().length - 1;
 	}
 
 	public int getPatchStart(int patchNum) {
@@ -147,7 +147,7 @@ public class KawaiK5000BankDriver extends BankDriver {
 	}
 
 	public String getPatchName(Patch ip) {
-		return (((Patch) ip).sysex.length / 1024) + " Kilobytes";
+		return (((Patch) ip).getSysex().length / 1024) + " Kilobytes";
 	}
 
 	public String getPatchName(Patch ip, int patchNum) {
@@ -157,7 +157,7 @@ public class KawaiK5000BankDriver extends BankDriver {
 			return "[empty]";
 		nameStart += 40; // offset of name in patch data
 		try {
-			StringBuffer s = new StringBuffer(new String(p.sysex, nameStart, 8, "US-ASCII"));
+			StringBuffer s = new StringBuffer(new String(p.getSysex(), nameStart, 8, "US-ASCII"));
 			return s.toString();
 		} catch (UnsupportedEncodingException ex) {
 			return "-";
@@ -212,8 +212,8 @@ public class KawaiK5000BankDriver extends BankDriver {
 		System.out.println("Insert at patchNum: " + nextPatchNum + " | index: " + patchIndex[nextPatchNum]);
 
 		// p.sysex <DATA> starts at 9, ends just before trailing F7
-		((Patch) bank).sysex = Utility.byteArrayReplace(((Patch) bank).sysex, patchIndex[nextPatchNum],
-				patchSize(bank, patchNum), ((Patch) p).sysex, 9, ((Patch) p).sysex.length - 10);
+		((Patch) bank).setSysex(Utility.byteArrayReplace(((Patch) bank).getSysex(), patchIndex[nextPatchNum],
+				patchSize(bank, patchNum), ((Patch) p).getSysex(), 9, ((Patch) p).getSysex().length - 10));
 
 		// Update index and checksum
 		indexedPatch = null;
@@ -247,7 +247,7 @@ public class KawaiK5000BankDriver extends BankDriver {
 			sysex[07] = (byte) 0x00;
 			sysex[8] = (byte) 0x00;
 			sysex[patchSize - 1] = (byte) 0xF7;
-			System.arraycopy(((Patch) bank).sysex, getPatchStart(patchNum), sysex, 9, patchSize - 10);
+			System.arraycopy(((Patch) bank).getSysex(), getPatchStart(patchNum), sysex, 9, patchSize - 10);
 			Patch p = new Patch(sysex, getDevice());
 			p.calculateChecksum();
 			return p;
@@ -272,9 +272,9 @@ public class KawaiK5000BankDriver extends BankDriver {
 
 	public void storePatch(Patch p, int bankNum, int patchNum) {
 		if (bankNum == 0)
-			((Patch) p).sysex[7] = 0; // bank a
+			((Patch) p).getSysex()[7] = 0; // bank a
 		if (bankNum == 3)
-			((Patch) p).sysex[7] = 2; // bank d
+			((Patch) p).getSysex()[7] = 2; // bank d
 		PatchBayApplication.showWaitDialog();
 		setBankNum(bankNum);
 		sendPatchWorker(p);
@@ -300,8 +300,8 @@ public class KawaiK5000BankDriver extends BankDriver {
 		generateIndex(bank);
 
 		// Delete patch from sysex
-		((Patch) bank).sysex = Utility.byteArrayDelete(((Patch) bank).sysex, patchIndex[patchNum],
-				patchSize(bank, patchNum));
+		((Patch) bank).setSysex(Utility.byteArrayDelete(((Patch) bank).getSysex(), patchIndex[patchNum],
+				patchSize(bank, patchNum)));
 
 		// Update index and checksum
 		indexedPatch = null;

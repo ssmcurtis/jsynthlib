@@ -143,7 +143,7 @@ class GP16BitSender extends SysexSender {
 	public byte[] generate(int value) {
 		ErrorMsg.reportStatus("GP16BitSender: got value " + (byte) value);
 		int mask = ~(1 << bit);
-		int bitfield = patch.sysex[ofs + 8] & mask;
+		int bitfield = patch.getSysex()[ofs + 8] & mask;
 		ErrorMsg.reportStatus("GP16BitSender: computed bitfield " + (byte) bitfield);
 		if (value == 1)
 			bitfield |= (1 << bit);
@@ -165,17 +165,17 @@ class GP16BitModel extends ParamModel {
 
 	public void set(int i) {
 		int mask = ~(1 << bit);
-		int value = patch.sysex[ofs] & mask;
+		int value = patch.getSysex()[ofs] & mask;
 		if (i == 1)
 			value |= (1 << bit);
 		ErrorMsg.reportStatus("GP16BitModel: setting status " + (byte) value + " to adress " + ofs);
-		patch.sysex[ofs] = (byte) value;
+		patch.getSysex()[ofs] = (byte) value;
 	}
 
 	public int get() {
-		ErrorMsg.reportStatus("GP16BitModel: getting status " + patch.sysex[ofs] + " from adress " + ofs);
+		ErrorMsg.reportStatus("GP16BitModel: getting status " + patch.getSysex()[ofs] + " from adress " + ofs);
 		int mask = 1 << bit;
-		if ((patch.sysex[ofs] & mask) > 0)
+		if ((patch.getSysex()[ofs] & mask) > 0)
 			return 1;
 		else
 			return 0;
@@ -189,11 +189,11 @@ class BBParamModel extends ParamModel {
 	}
 
 	public void set(int i) {
-		patch.sysex[ofs] = (byte) (i + 6);
+		patch.getSysex()[ofs] = (byte) (i + 6);
 	}
 
 	public int get() {
-		return patch.sysex[ofs] - 6;
+		return patch.getSysex()[ofs] - 6;
 	}
 }
 
@@ -206,11 +206,11 @@ class EParamModel extends ParamModel {
 	public void set(int i) {
 		if (i == 0)
 			i = 128;
-		patch.sysex[ofs] = (byte) (i - 1);
+		patch.getSysex()[ofs] = (byte) (i - 1);
 	}
 
 	public int get() {
-		int temp = patch.sysex[ofs];
+		int temp = patch.getSysex()[ofs];
 		if (temp == 127)
 			temp = -1;
 		return temp + 1;
@@ -224,12 +224,12 @@ class BigValParamModel extends ParamModel {
 	}
 
 	public void set(int i) {
-		patch.sysex[ofs] = (byte) (i / 128);
-		patch.sysex[ofs + 1] = (byte) (i % 128);
+		patch.getSysex()[ofs] = (byte) (i / 128);
+		patch.getSysex()[ofs + 1] = (byte) (i % 128);
 	}
 
 	public int get() {
-		return patch.sysex[ofs] * 128 + patch.sysex[ofs + 1];
+		return patch.getSysex()[ofs] * 128 + patch.getSysex()[ofs + 1];
 	}
 }
 
@@ -566,7 +566,7 @@ class GP16JointPolice {
 		int temp;
 		boolean[] used = new boolean[] { false, false, false, false, false };
 		for (int dum = 0; dum < 5; dum++) {
-			temp = thisPatch.sysex[dum + offset + 8] - offset;
+			temp = thisPatch.getSysex()[dum + offset + 8] - offset;
 			ErrorMsg.reportStatus("GP16JointPolice: dum=" + dum + " temp=" + temp + " used[temp]=" + used[temp]);
 			if (used[temp])
 				return false;

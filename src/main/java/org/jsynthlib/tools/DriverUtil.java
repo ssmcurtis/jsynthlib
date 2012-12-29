@@ -23,8 +23,13 @@ package org.jsynthlib.tools;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.jsynthlib.menu.patch.Device;
 import org.jsynthlib.menu.patch.Driver;
@@ -68,18 +73,69 @@ public class DriverUtil {
 		return createPatches(sysex, chooseDriver(sysex, device), "");
 	}
 
+	// TODO ssmcurtis ... split always F0..F7
 	private static IPatch[] createPatches(byte[] sysex, IDriver driver, String filename) {
-		if (driver == null)
+		if (driver == null) {
 			return null;
-		else if (driver.isConverter())
+		} else if (driver.isConverter()) {
+			// ErrorMsg.reportStatus(">>> IS Converter in " + DriverUtil.class.getName());
 			return ((IConverter) driver).createPatches(sysex);
-		else
+		} else {
+
+			// ByteBuffer byteBuffer = ByteBuffer.allocate(sysex.length);
+			// byteBuffer.put(sysex);
+			// TODO ssmcurtis - split always patches ...
+			// List<IPatch> li = new ArrayList<IPatch>();
+			// for (byte[] sysexSplit : splitSysexBytearray(byteBuffer)) {
+			// li.add(((IPatchDriver) driver).createPatch(sysexSplit, filename));
+			// }
+			// return li.toArray(new IPatch[] {});
+			
 			return new IPatch[] { ((IPatchDriver) driver).createPatch(sysex, filename) };
+		}
 	}
 
 	public static IPatch createPatch(byte[] sysex, String filename) {
 		IPatchDriver driver = (IPatchDriver) chooseDriver(sysex);
 		return driver != null ? driver.createPatch(sysex, filename) : null;
+	}
+
+	public static Set<byte[]> splitSysexBytearray(ByteBuffer byteBuffer) {
+		System.out.println(">>> " + byteBuffer.capacity());
+		Set<byte[]> sysexArr = new HashSet<byte[]>();
+
+		int start = 0;
+		int end = 0;
+		for (int i = 0; i < byteBuffer.capacity(); i++) {
+			if (Hexa.isStartSysex(byteBuffer.get(i))) {
+				start = i;
+				// System.out.println(">>> set f0" + i);
+			}
+			if (Hexa.isEndSysex(byteBuffer.get(i))) {
+				end = i;
+				// System.out.println(">>> set f7" + i);
+			}
+			// System.out.println("i: " + i + " start: " + start + " end:" + end);
+
+			if (end > start) {
+				int length = end - start + 1;
+				byte[] tmp = new byte[length];
+				
+				int pos = 0;
+				for (int j = start; j < end; j++) {
+					tmp[pos] = byteBuffer.get(j);
+					pos++;
+				}
+
+				sysexArr.add(tmp);
+
+				start = 0;
+				end = 0;
+			}
+		}
+
+		System.out.println(">>>> " + sysexArr.size());
+		return sysexArr;
 	}
 
 	/**
@@ -168,8 +224,9 @@ public class DriverUtil {
 	 */
 	public static void calculateChecksum(byte[] sysex, int start, int end, int ofs) {
 		int sum = 0;
-		for (int i = start; i <= end; i++)
+		for (int i = start; i <= end; i++) {
 			sum += sysex[i];
+		}
 		sysex[ofs] = (byte) (-sum & 0x7f);
 		/*
 		 * Equivalent with above. p.sysex[ofs] = (byte) (sum & 0x7f); p.sysex[ofs] = (byte) (p.sysex[ofs] ^ 0x7f);
@@ -209,8 +266,9 @@ public class DriverUtil {
 		String retval[] = new String[max - min + 1];
 		DecimalFormat df = (DecimalFormat) NumberFormat.getInstance().clone();
 		df.applyPattern(format);
-		while (max >= min)
+		while (max >= min) {
 			retval[max - min] = df.format(max--);
+		}
 		return retval;
 	}
 
@@ -243,6 +301,19 @@ public class DriverUtil {
 			ErrorMsg.reportError("Error", "Unable to open " + fileName, e);
 			return null;
 		}
+	}
+
+	public static void main(String[] args) {
+		int intHex = 0xF0;
+		byte hex = (byte) intHex;
+
+		byte[] test = new byte[] { hex };
+
+		System.out.printf("%d %32s%n", intHex, Integer.toBinaryString(intHex));
+		System.out.printf("%d %32s%n", hex & 0xff, Integer.toBinaryString(Hexa.byteToInt(hex)));
+		System.out.printf("%d %32s%n", hex & 0xff, Integer.toBinaryString(Hexa.byteToChar(hex)));
+		System.out.println(Hexa.byteToHexString(hex));
+		Hexa.isStartSysex(hex);
 	}
 
 }

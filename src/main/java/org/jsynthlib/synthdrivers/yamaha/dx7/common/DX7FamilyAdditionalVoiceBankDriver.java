@@ -74,225 +74,225 @@ public class DX7FamilyAdditionalVoiceBankDriver extends BankDriver {
 		}
 
 		// Transform Voice Data to Bulk Dump Packed Format
-		((Patch) bank).sysex[getPatchStart(patchNum) + 0] = (byte) ((((Patch) p).sysex[6 + 0] + // OP6
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 0] = (byte) ((((Patch) p).getSysex()[6 + 0] + // OP6
 																												// Scaling
 																												// Mode
 																												// normal/fractional...(0-
 																												// 1)
-				((Patch) p).sysex[6 + 1] * 2 + // OP5 Scaling Mode normal/fractional...(0- 1)
-				((Patch) p).sysex[6 + 2] * 4 + // OP4 Scaling Mode normal/fractional...(0- 1)
-				((Patch) p).sysex[6 + 3] * 8 + // OP3 Scaling Mode normal/fractional...(0- 1)
-				((Patch) p).sysex[6 + 4] * 16 + // OP2 Scaling Mode normal/fractional...(0- 1)
-		((Patch) p).sysex[6 + 5] * 32)); // OP1 Scaling Mode normal/fractional...(0- 1)
-		((Patch) bank).sysex[getPatchStart(patchNum) + 1] = (byte) ((((Patch) p).sysex[6 + 6] + // OP6
+				((Patch) p).getSysex()[6 + 1] * 2 + // OP5 Scaling Mode normal/fractional...(0- 1)
+				((Patch) p).getSysex()[6 + 2] * 4 + // OP4 Scaling Mode normal/fractional...(0- 1)
+				((Patch) p).getSysex()[6 + 3] * 8 + // OP3 Scaling Mode normal/fractional...(0- 1)
+				((Patch) p).getSysex()[6 + 4] * 16 + // OP2 Scaling Mode normal/fractional...(0- 1)
+		((Patch) p).getSysex()[6 + 5] * 32)); // OP1 Scaling Mode normal/fractional...(0- 1)
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 1] = (byte) ((((Patch) p).getSysex()[6 + 6] + // OP6
 																												// amplitude
 																												// modulation
 																												// sensitivity
 																												// (0-
 																												// 7)
-		((Patch) p).sysex[6 + 7] * 8)); // OP5 amplitude modulation sensitivity (0- 7)
-		((Patch) bank).sysex[getPatchStart(patchNum) + 2] = (byte) ((((Patch) p).sysex[6 + 8] + // OP4
+		((Patch) p).getSysex()[6 + 7] * 8)); // OP5 amplitude modulation sensitivity (0- 7)
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 2] = (byte) ((((Patch) p).getSysex()[6 + 8] + // OP4
 																												// amplitude
 																												// modulation
 																												// sensitivity
 																												// (0-
 																												// 7)
-		((Patch) p).sysex[6 + 9] * 8)); // OP3 amplitude modulation sensitivity (0- 7)
-		((Patch) bank).sysex[getPatchStart(patchNum) + 3] = (byte) ((((Patch) p).sysex[6 + 10] + // OP2
+		((Patch) p).getSysex()[6 + 9] * 8)); // OP3 amplitude modulation sensitivity (0- 7)
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 3] = (byte) ((((Patch) p).getSysex()[6 + 10] + // OP2
 																												// amplitude
 																												// modulation
 																												// sensitivity
 																												// (0-
 																												// 7)
-		((Patch) p).sysex[6 + 11] * 8)); // OP1 amplitude modulation sensitivity (0- 7)
-		((Patch) bank).sysex[getPatchStart(patchNum) + 4] = (byte) ((((Patch) p).sysex[6 + 12] + // Pitch
+		((Patch) p).getSysex()[6 + 11] * 8)); // OP1 amplitude modulation sensitivity (0- 7)
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 4] = (byte) ((((Patch) p).getSysex()[6 + 12] + // Pitch
 																												// EG
 																												// Range
 																												// ......................(0-
 																												// 3)
-				((Patch) p).sysex[6 + 13] * 4 + // LFO key trigger (delay) .............(0- 1)
-				((Patch) p).sysex[6 + 14] * 8 + // Pitch EG by velocity switch .........(0- 1)
-		((Patch) p).sysex[6 + 19] * 16)); // Random Pitch Depth ..................(0- 7)
-		((Patch) bank).sysex[getPatchStart(patchNum) + 5] = (byte) ((((Patch) p).sysex[6 + 15] + // bit1:Poly/Mono,
+				((Patch) p).getSysex()[6 + 13] * 4 + // LFO key trigger (delay) .............(0- 1)
+				((Patch) p).getSysex()[6 + 14] * 8 + // Pitch EG by velocity switch .........(0- 1)
+		((Patch) p).getSysex()[6 + 19] * 16)); // Random Pitch Depth ..................(0- 7)
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 5] = (byte) ((((Patch) p).getSysex()[6 + 15] + // bit1:Poly/Mono,
 																												// bit0:
 																												// Unison
 																												// off/on
 																												// .(0-
 																												// 3)
-		((Patch) p).sysex[6 + 16] * 4)); // Pitch Bend Range ....................(0-12)
-		((Patch) bank).sysex[getPatchStart(patchNum) + 6] = (byte) ((((Patch) p).sysex[6 + 17] + // Pitch
+		((Patch) p).getSysex()[6 + 16] * 4)); // Pitch Bend Range ....................(0-12)
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 6] = (byte) ((((Patch) p).getSysex()[6 + 17] + // Pitch
 																												// Bend
 																												// Step
 																												// .....................(0-12)
-		((Patch) p).sysex[6 + 18] * 16)); // Pitch Bend Mode .....................(0- 3)
-		((Patch) bank).sysex[getPatchStart(patchNum) + 7] = (byte) ((((Patch) p).sysex[6 + 20] + // Portamento
+		((Patch) p).getSysex()[6 + 18] * 16)); // Pitch Bend Mode .....................(0- 3)
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 7] = (byte) ((((Patch) p).getSysex()[6 + 20] + // Portamento
 																												// Mode
 																												// .....................(0-
 																												// 1)
-		((Patch) p).sysex[6 + 21] * 2)); // Portamento Step .....................(0-12)
-		((Patch) bank).sysex[getPatchStart(patchNum) + 8] = (byte) ((((Patch) p).sysex[6 + 22])); // Portamento
+		((Patch) p).getSysex()[6 + 21] * 2)); // Portamento Step .....................(0-12)
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 8] = (byte) ((((Patch) p).getSysex()[6 + 22])); // Portamento
 																												// Time
 																												// .....................(0-99)
-		((Patch) bank).sysex[getPatchStart(patchNum) + 9] = (byte) ((((Patch) p).sysex[6 + 23])); // Modulation
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 9] = (byte) ((((Patch) p).getSysex()[6 + 23])); // Modulation
 																												// Wheel
 																												// Pitch
 																												// Mod
 																												// Range
 																												// ....(0-99)
-		((Patch) bank).sysex[getPatchStart(patchNum) + 10] = (byte) ((((Patch) p).sysex[6 + 24])); // Modulation
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 10] = (byte) ((((Patch) p).getSysex()[6 + 24])); // Modulation
 																													// Wheel
 																													// Ampl.
 																													// Mod
 																													// Range
 																													// ....(0-99)
-		((Patch) bank).sysex[getPatchStart(patchNum) + 11] = (byte) ((((Patch) p).sysex[6 + 25])); // Modulation
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 11] = (byte) ((((Patch) p).getSysex()[6 + 25])); // Modulation
 																													// Wheel
 																													// EG
 																													// Bias
 																													// Range
 																													// ......(0-99)
-		((Patch) bank).sysex[getPatchStart(patchNum) + 12] = (byte) ((((Patch) p).sysex[6 + 26])); // Foot
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 12] = (byte) ((((Patch) p).getSysex()[6 + 26])); // Foot
 																													// Control
 																													// 1
 																													// Pitch
 																													// Mod
 																													// Range
 																													// ....(0-99)
-		((Patch) bank).sysex[getPatchStart(patchNum) + 13] = (byte) ((((Patch) p).sysex[6 + 27])); // Foot
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 13] = (byte) ((((Patch) p).getSysex()[6 + 27])); // Foot
 																													// Control
 																													// 1
 																													// Ampl.
 																													// Mod
 																													// Range
 																													// ....(0-99)
-		((Patch) bank).sysex[getPatchStart(patchNum) + 14] = (byte) ((((Patch) p).sysex[6 + 28])); // Foot
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 14] = (byte) ((((Patch) p).getSysex()[6 + 28])); // Foot
 																													// Control
 																													// 1
 																													// EG
 																													// Bias
 																													// Range
 																													// ......(0-99)
-		((Patch) bank).sysex[getPatchStart(patchNum) + 15] = (byte) ((((Patch) p).sysex[6 + 29])); // Foot
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 15] = (byte) ((((Patch) p).getSysex()[6 + 29])); // Foot
 																													// Control
 																													// 1
 																													// Volume
 																													// Range
 																													// .......(0-99)
-		((Patch) bank).sysex[getPatchStart(patchNum) + 16] = (byte) ((((Patch) p).sysex[6 + 30])); // Breath
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 16] = (byte) ((((Patch) p).getSysex()[6 + 30])); // Breath
 																													// Control
 																													// Pitch
 																													// Mod
 																													// Range
 																													// ....(0-99)
-		((Patch) bank).sysex[getPatchStart(patchNum) + 17] = (byte) ((((Patch) p).sysex[6 + 31])); // Breath
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 17] = (byte) ((((Patch) p).getSysex()[6 + 31])); // Breath
 																													// Control
 																													// Ampl.
 																													// Mod
 																													// Range
 																													// ....(0-99)
-		((Patch) bank).sysex[getPatchStart(patchNum) + 18] = (byte) ((((Patch) p).sysex[6 + 32])); // Breath
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 18] = (byte) ((((Patch) p).getSysex()[6 + 32])); // Breath
 																													// Control
 																													// EG
 																													// Bias
 																													// Range
 																													// ......(0-99)
-		((Patch) bank).sysex[getPatchStart(patchNum) + 19] = (byte) ((((Patch) p).sysex[6 + 33])); // Breath
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 19] = (byte) ((((Patch) p).getSysex()[6 + 33])); // Breath
 																													// Control
 																													// Pitch
 																													// Bias
 																													// Range
 																													// ...(0-100)
-		((Patch) bank).sysex[getPatchStart(patchNum) + 20] = (byte) ((((Patch) p).sysex[6 + 34])); // After
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 20] = (byte) ((((Patch) p).getSysex()[6 + 34])); // After
 																													// Touch
 																													// Pitch
 																													// Mod
 																													// Range
 																													// ....(0-99)
-		((Patch) bank).sysex[getPatchStart(patchNum) + 21] = (byte) ((((Patch) p).sysex[6 + 35])); // After
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 21] = (byte) ((((Patch) p).getSysex()[6 + 35])); // After
 																													// Touch
 																													// Ampl.
 																													// Mod
 																													// Range
 																													// ....(0-99)
-		((Patch) bank).sysex[getPatchStart(patchNum) + 22] = (byte) ((((Patch) p).sysex[6 + 36])); // After
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 22] = (byte) ((((Patch) p).getSysex()[6 + 36])); // After
 																													// Touch
 																													// EG
 																													// Bias
 																													// Range
 																													// ......(0-99)
-		((Patch) bank).sysex[getPatchStart(patchNum) + 23] = (byte) ((((Patch) p).sysex[6 + 37])); // After
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 23] = (byte) ((((Patch) p).getSysex()[6 + 37])); // After
 																													// Touch
 																													// Pitch
 																													// Bias
 																													// Range
 																													// ...(0-100)
-		((Patch) bank).sysex[getPatchStart(patchNum) + 24] = (byte) ((((Patch) p).sysex[6 + 38])); // Pitch
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 24] = (byte) ((((Patch) p).getSysex()[6 + 38])); // Pitch
 																													// EG
 																													// Rate
 																													// Scaling
 																													// ..............(0-
 																													// 7)
 		// bank.sysex[getPatchStart(patchNum)+ 25]=(byte)(); // !!! RESERVED !!!
-		((Patch) bank).sysex[getPatchStart(patchNum) + 26] = (byte) ((((Patch) p).sysex[6 + 39])); // Foot
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 26] = (byte) ((((Patch) p).getSysex()[6 + 39])); // Foot
 																													// Control
 																													// 2
 																													// Pitch
 																													// Mod
 																													// Range
 																													// ....(0-99)
-		((Patch) bank).sysex[getPatchStart(patchNum) + 27] = (byte) ((((Patch) p).sysex[6 + 40])); // Foot
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 27] = (byte) ((((Patch) p).getSysex()[6 + 40])); // Foot
 																													// Control
 																													// 2
 																													// Ampl.
 																													// Mod
 																													// Range
 																													// ....(0-99)
-		((Patch) bank).sysex[getPatchStart(patchNum) + 28] = (byte) ((((Patch) p).sysex[6 + 41])); // Foot
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 28] = (byte) ((((Patch) p).getSysex()[6 + 41])); // Foot
 																													// Control
 																													// 2
 																													// EG
 																													// Bias
 																													// Range
 																													// ......(0-99)
-		((Patch) bank).sysex[getPatchStart(patchNum) + 29] = (byte) ((((Patch) p).sysex[6 + 42])); // Foot
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 29] = (byte) ((((Patch) p).getSysex()[6 + 42])); // Foot
 																													// Control
 																													// 2
 																													// Volume
 																													// Range
 																													// .......(0-99)
-		((Patch) bank).sysex[getPatchStart(patchNum) + 30] = (byte) ((((Patch) p).sysex[6 + 43])); // MIDI
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 30] = (byte) ((((Patch) p).getSysex()[6 + 43])); // MIDI
 																													// IN
 																													// Control
 																													// Pitch
 																													// Mod
 																													// Range
 																													// ....(0-99)
-		((Patch) bank).sysex[getPatchStart(patchNum) + 31] = (byte) ((((Patch) p).sysex[6 + 44])); // MIDI
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 31] = (byte) ((((Patch) p).getSysex()[6 + 44])); // MIDI
 																													// IN
 																													// Control
 																													// Ampl.
 																													// Mod
 																													// Range
 																													// ....(0-99)
-		((Patch) bank).sysex[getPatchStart(patchNum) + 32] = (byte) ((((Patch) p).sysex[6 + 45])); // MIDI
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 32] = (byte) ((((Patch) p).getSysex()[6 + 45])); // MIDI
 																													// IN
 																													// Control
 																													// EG
 																													// Bias
 																													// Range
 																													// ......(0-99)
-		((Patch) bank).sysex[getPatchStart(patchNum) + 33] = (byte) ((((Patch) p).sysex[6 + 46])); // MIDI
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 33] = (byte) ((((Patch) p).getSysex()[6 + 46])); // MIDI
 																													// IN
 																													// Control
 																													// Volume
 																													// Range
 																													// .......(0-99)
-		((Patch) bank).sysex[getPatchStart(patchNum) + 34] = (byte) ((((Patch) p).sysex[6 + 47] + // Unison
+		((Patch) bank).getSysex()[getPatchStart(patchNum) + 34] = (byte) ((((Patch) p).getSysex()[6 + 47] + // Unison
 																												// detune
 																												// depth
 																												// .................(0-
 																												// 7)
-		((Patch) p).sysex[6 + 48] * 8)); // Foot Control 1 use as CS1 switch ....(0- 1)
+		((Patch) p).getSysex()[6 + 48] * 8)); // Foot Control 1 use as CS1 switch ....(0- 1)
 
 		calculateChecksum(bank);
 	}
@@ -311,196 +311,196 @@ public class DX7FamilyAdditionalVoiceBankDriver extends BankDriver {
 			sysex[4] = (byte) 0x00;
 			sysex[5] = (byte) 0x31;
 
-			sysex[6 + 0] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 0] & 1)); // OP6 scaling mode
+			sysex[6 + 0] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 0] & 1)); // OP6 scaling mode
 																									// normal/fractional
 																									// ..(0- 1)
-			sysex[6 + 1] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 0] & 2) / 2); // OP5 scaling
+			sysex[6 + 1] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 0] & 2) / 2); // OP5 scaling
 																										// mode
 																										// normal/fractional
 																										// ..(0- 1)
-			sysex[6 + 2] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 0] & 4) / 4); // OP4 scaling
+			sysex[6 + 2] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 0] & 4) / 4); // OP4 scaling
 																										// mode
 																										// normal/fractional
 																										// ..(0- 1)
-			sysex[6 + 3] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 0] & 8) / 8); // OP3 scaling
+			sysex[6 + 3] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 0] & 8) / 8); // OP3 scaling
 																										// mode
 																										// normal/fractional
 																										// ..(0- 1)
-			sysex[6 + 4] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 0] & 16) / 16); // OP2 scaling
+			sysex[6 + 4] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 0] & 16) / 16); // OP2 scaling
 																											// mode
 																											// normal/fractional
 																											// ..(0- 1)
-			sysex[6 + 5] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 0] & 32) / 32); // OP1 scaling
+			sysex[6 + 5] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 0] & 32) / 32); // OP1 scaling
 																											// mode
 																											// normal/fractional
 																											// ..(0- 1)
-			sysex[6 + 6] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 1] & 7)); // OP6 amplitude
+			sysex[6 + 6] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 1] & 7)); // OP6 amplitude
 																									// modulation
 																									// sensitivity (0-
 																									// 7)
-			sysex[6 + 7] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 1] & 56) / 8); // OP5
+			sysex[6 + 7] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 1] & 56) / 8); // OP5
 																											// amplitude
 																											// modulation
 																											// sensitivity
 																											// (0- 7)
-			sysex[6 + 8] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 2] & 7)); // OP4 amplitude
+			sysex[6 + 8] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 2] & 7)); // OP4 amplitude
 																									// modulation
 																									// sensitivity (0-
 																									// 7)
-			sysex[6 + 9] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 2] & 56) / 8); // OP3
+			sysex[6 + 9] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 2] & 56) / 8); // OP3
 																											// amplitude
 																											// modulation
 																											// sensitivity
 																											// (0- 7)
-			sysex[6 + 10] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 3] & 7)); // OP2 amplitude
+			sysex[6 + 10] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 3] & 7)); // OP2 amplitude
 																										// modulation
 																										// sensitivity
 																										// (0- 7)
-			sysex[6 + 11] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 3] & 56) / 8); // OP1
+			sysex[6 + 11] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 3] & 56) / 8); // OP1
 																											// amplitude
 																											// modulation
 																											// sensitivity
 																											// (0- 7)
-			sysex[6 + 12] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 4] & 3)); // Pitch EG Range
+			sysex[6 + 12] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 4] & 3)); // Pitch EG Range
 																										// ......................(0-
 																										// 3)
-			sysex[6 + 13] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 4] & 4) / 4); // LFO key
+			sysex[6 + 13] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 4] & 4) / 4); // LFO key
 																											// trigger
 																											// (delay)
 																											// .............(0-
 																											// 1)
-			sysex[6 + 14] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 4] & 8) / 8); // Pitch EG by
+			sysex[6 + 14] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 4] & 8) / 8); // Pitch EG by
 																											// velocity
 																											// switch
 																											// .........(0-
 																											// 1)
-			sysex[6 + 15] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 5] & 3)); // bit1:Poly/Mono,
+			sysex[6 + 15] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 5] & 3)); // bit1:Poly/Mono,
 																										// bit0: Unison
 																										// off/on .(0-
 																										// 3)
-			sysex[6 + 16] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 5] & 60) / 4); // Pitch Bend
+			sysex[6 + 16] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 5] & 60) / 4); // Pitch Bend
 																											// Range
 																											// ....................(0-12)
-			sysex[6 + 17] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 6] & 15)); // Pitch Bend Step
+			sysex[6 + 17] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 6] & 15)); // Pitch Bend Step
 																										// .....................(0-12)
-			sysex[6 + 18] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 6] & 48) / 16); // Pitch Bend
+			sysex[6 + 18] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 6] & 48) / 16); // Pitch Bend
 																											// Mode
 																											// .....................(0-
 																											// 3)
-			sysex[6 + 19] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 4] & 112) / 16); // Random
+			sysex[6 + 19] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 4] & 112) / 16); // Random
 																											// Pitch
 																											// Depth
 																											// ..................(0-
 																											// 7)
-			sysex[6 + 20] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 7] & 1)); // Portamento Mode
+			sysex[6 + 20] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 7] & 1)); // Portamento Mode
 																										// .....................(0-
 																										// 1)
-			sysex[6 + 21] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 7] & 30) / 2); // Portamento
+			sysex[6 + 21] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 7] & 30) / 2); // Portamento
 																											// Step
 																											// .....................(0-12)
-			sysex[6 + 22] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 8] & 127)); // Portamento
+			sysex[6 + 22] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 8] & 127)); // Portamento
 																										// Time
 																										// .....................(0-99)
-			sysex[6 + 23] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 9] & 127)); // Modulation
+			sysex[6 + 23] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 9] & 127)); // Modulation
 																										// Wheel Pitch
 																										// Mod Range
 																										// ....(0-99)
-			sysex[6 + 24] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 10] & 127)); // Modulation
+			sysex[6 + 24] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 10] & 127)); // Modulation
 																										// Wheel Ampl.
 																										// Mod Range
 																										// ....(0-99)
-			sysex[6 + 25] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 11] & 127)); // Modulation
+			sysex[6 + 25] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 11] & 127)); // Modulation
 																										// Wheel EG Bias
 																										// Range
 																										// ......(0-99)
-			sysex[6 + 26] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 12] & 127)); // Foot Control
+			sysex[6 + 26] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 12] & 127)); // Foot Control
 																										// 1 Pitch Mod
 																										// Range
 																										// ....(0-99)
-			sysex[6 + 27] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 13] & 127)); // Foot Control
+			sysex[6 + 27] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 13] & 127)); // Foot Control
 																										// 1 Ampl. Mod
 																										// Range
 																										// ....(0-99)
-			sysex[6 + 28] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 14] & 127)); // Foot Control
+			sysex[6 + 28] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 14] & 127)); // Foot Control
 																										// 1 EG Bias
 																										// Range
 																										// ......(0-99)
-			sysex[6 + 29] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 15] & 127)); // Foot Control
+			sysex[6 + 29] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 15] & 127)); // Foot Control
 																										// 1 Volume
 																										// Range
 																										// .......(0-99)
-			sysex[6 + 30] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 16] & 127)); // Breath
+			sysex[6 + 30] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 16] & 127)); // Breath
 																										// Control Pitch
 																										// Mod Range
 																										// ....(0-99)
-			sysex[6 + 31] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 17] & 127)); // Breath
+			sysex[6 + 31] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 17] & 127)); // Breath
 																										// Control Ampl.
 																										// Mod Range
 																										// ....(0-99)
-			sysex[6 + 32] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 18] & 127)); // Breath
+			sysex[6 + 32] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 18] & 127)); // Breath
 																										// Control EG
 																										// Bias Range
 																										// ......(0-99)
-			sysex[6 + 33] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 19] & 127)); // Breath
+			sysex[6 + 33] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 19] & 127)); // Breath
 																										// Control Pitch
 																										// Bias Range
 																										// ...(0-100)
-			sysex[6 + 34] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 20] & 127)); // After Touch
+			sysex[6 + 34] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 20] & 127)); // After Touch
 																										// Pitch Mod
 																										// Range
 																										// ....(0-99)
-			sysex[6 + 35] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 21] & 127)); // After Touch
+			sysex[6 + 35] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 21] & 127)); // After Touch
 																										// Ampl. Mod
 																										// Range
 																										// ....(0-99)
-			sysex[6 + 36] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 22] & 127)); // After Touch
+			sysex[6 + 36] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 22] & 127)); // After Touch
 																										// EG Bias Range
 																										// ......(0-99)
-			sysex[6 + 37] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 23] & 127)); // After Touch
+			sysex[6 + 37] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 23] & 127)); // After Touch
 																										// Pitch Bias
 																										// Range
 																										// ...(0-100)
-			sysex[6 + 38] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 24] & 7)); // Pitch EG Rate
+			sysex[6 + 38] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 24] & 7)); // Pitch EG Rate
 																										// Scaling
 																										// ..............(0-
 																										// 7)
-			sysex[6 + 39] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 26] & 127)); // Foot Control
+			sysex[6 + 39] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 26] & 127)); // Foot Control
 																										// 2 Pitch Mod
 																										// Range
 																										// ....(0-99)
-			sysex[6 + 40] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 27] & 127)); // Foot Control
+			sysex[6 + 40] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 27] & 127)); // Foot Control
 																										// 2 Ampl. Mod
 																										// Range
 																										// ....(0-99)
-			sysex[6 + 41] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 28] & 127)); // Foot Control
+			sysex[6 + 41] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 28] & 127)); // Foot Control
 																										// 2 EG Bias
 																										// Range
 																										// ......(0-99)
-			sysex[6 + 42] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 29] & 127)); // Foot Control
+			sysex[6 + 42] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 29] & 127)); // Foot Control
 																										// 2 Volume
 																										// Range
 																										// .......(0-99)
-			sysex[6 + 43] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 30] & 127)); // MIDI IN
+			sysex[6 + 43] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 30] & 127)); // MIDI IN
 																										// Control Pitch
 																										// Mod Range
 																										// ....(0-99)
-			sysex[6 + 44] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 31] & 127)); // MIDI IN
+			sysex[6 + 44] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 31] & 127)); // MIDI IN
 																										// Control Ampl.
 																										// Mod Range
 																										// ....(0-99)
-			sysex[6 + 45] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 32] & 127)); // MIDI IN
+			sysex[6 + 45] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 32] & 127)); // MIDI IN
 																										// Control EG
 																										// Bias Range
 																										// ......(0-99)
-			sysex[6 + 46] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 33] & 127)); // MIDI IN
+			sysex[6 + 46] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 33] & 127)); // MIDI IN
 																										// Control
 																										// Volume Range
 																										// .......(0-99)
-			sysex[6 + 47] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 34] & 7)); // Unison detune
+			sysex[6 + 47] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 34] & 7)); // Unison detune
 																										// depth
 																										// .................(0-
 																										// 7)
-			sysex[6 + 48] = (byte) ((((Patch) bank).sysex[getPatchStart(patchNum) + 34] & 8) / 8); // Foot
+			sysex[6 + 48] = (byte) ((((Patch) bank).getSysex()[getPatchStart(patchNum) + 34] & 8) / 8); // Foot
 																											// Control 1
 																											// use as
 																											// CS1

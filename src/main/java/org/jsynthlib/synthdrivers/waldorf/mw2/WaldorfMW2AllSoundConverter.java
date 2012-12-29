@@ -66,11 +66,11 @@ public class WaldorfMW2AllSoundConverter extends Converter {
 			tempPatch = new Patch(temporarySysex, getDevice());
 
 			WaldorfMW2SingleDriver.createPatchHeader(tempPatch, 0, patchNo);
-			WaldorfMW2SingleDriver.calculateChecksum(tempPatch.sysex, MW2Constants.SYSEX_HEADER_OFFSET,
+			WaldorfMW2SingleDriver.calculateChecksum(tempPatch.getSysex(), MW2Constants.SYSEX_HEADER_OFFSET,
 					MW2Constants.SYSEX_HEADER_OFFSET + MW2Constants.PURE_PATCH_SIZE - 1,
 					MW2Constants.SYSEX_HEADER_OFFSET + MW2Constants.PURE_PATCH_SIZE);
 
-			System.arraycopy(tempPatch.sysex, 0, bankSysex, patchNo * MW2Constants.PATCH_SIZE, MW2Constants.PATCH_SIZE);
+			System.arraycopy(tempPatch.getSysex(), 0, bankSysex, patchNo * MW2Constants.PATCH_SIZE, MW2Constants.PATCH_SIZE);
 		}
 
 		tempPatch = new Patch(bankSysex, getDevice());
@@ -91,11 +91,11 @@ public class WaldorfMW2AllSoundConverter extends Converter {
 			tempPatch = new Patch(temporarySysex, getDevice());
 
 			WaldorfMW2SingleDriver.createPatchHeader(tempPatch, 1, patchNo);
-			WaldorfMW2SingleDriver.calculateChecksum(tempPatch.sysex, MW2Constants.SYSEX_HEADER_OFFSET,
+			WaldorfMW2SingleDriver.calculateChecksum(tempPatch.getSysex(), MW2Constants.SYSEX_HEADER_OFFSET,
 					MW2Constants.SYSEX_HEADER_OFFSET + MW2Constants.PURE_PATCH_SIZE - 1,
 					MW2Constants.SYSEX_HEADER_OFFSET + MW2Constants.PURE_PATCH_SIZE);
 
-			System.arraycopy(tempPatch.sysex, 0, bankSysex, patchNo * MW2Constants.PATCH_SIZE, MW2Constants.PATCH_SIZE);
+			System.arraycopy(tempPatch.getSysex(), 0, bankSysex, patchNo * MW2Constants.PATCH_SIZE, MW2Constants.PATCH_SIZE);
 		}
 
 		tempPatch = new Patch(bankSysex, getDevice());

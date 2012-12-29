@@ -68,7 +68,7 @@ class BitModel extends ParamModel {
 	 * i.
 	 */
 	public void set(int i) {
-		patch.sysex[ofs] = (byte) ((patch.sysex[ofs] & (~mask)) | ((i << power) & mask));
+		patch.getSysex()[ofs] = (byte) ((patch.getSysex()[ofs] & (~mask)) | ((i << power) & mask));
 	}
 
 	/**
@@ -76,6 +76,6 @@ class BitModel extends ParamModel {
 	 * value as in int.
 	 */
 	public int get() {
-		return ((patch.sysex[ofs] & mask) >> power);
+		return ((patch.getSysex()[ofs] & mask) >> power);
 	}
 }

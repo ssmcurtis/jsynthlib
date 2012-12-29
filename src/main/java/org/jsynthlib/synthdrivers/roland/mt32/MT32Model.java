@@ -65,10 +65,10 @@ class MT32Model extends ParamModel {
 	}
 
 	public void set(int i) {
-		patch.sysex[ofs] = (byte) i;
+		patch.getSysex()[ofs] = (byte) i;
 	}
 
 	public int get() {
-		return patch.sysex[ofs];
+		return patch.getSysex()[ofs];
 	}
 }

@@ -97,7 +97,7 @@ public class VAmp2BankDriver extends BankDriver {
 			return;
 		}
 
-		System.arraycopy(p.sysex, Constants.HDR_SIZE, bank.sysex, getPatchStart(patchNum), Constants.SINGLE_PATCH_SIZE);
+		System.arraycopy(p.getSysex(), Constants.HDR_SIZE, bank.getSysex(), getPatchStart(patchNum), Constants.SINGLE_PATCH_SIZE);
 	}
 
 	/**
@@ -117,7 +117,7 @@ public class VAmp2BankDriver extends BankDriver {
 		sysex[4] = (byte) getChannel();
 		sysex[7] = (byte) patchNum;
 		sysex[singleSize - 1] = (byte) 0xF7;
-		System.arraycopy(bank.sysex, getPatchStart(patchNum), sysex, Constants.HDR_SIZE, Constants.SINGLE_PATCH_SIZE);
+		System.arraycopy(bank.getSysex(), getPatchStart(patchNum), sysex, Constants.HDR_SIZE, Constants.SINGLE_PATCH_SIZE);
 		try {
 			Patch p = new Patch(sysex, getDevice());
 			return p;
@@ -140,7 +140,7 @@ public class VAmp2BankDriver extends BankDriver {
 	protected String getPatchName(Patch p, int patchNum) {
 		int nameStart = getPatchStart(patchNum) + Constants.PATCH_NAME_START;
 		try {
-			StringBuffer s = new StringBuffer(new String(p.sysex, nameStart, patchNameSize, "US-ASCII"));
+			StringBuffer s = new StringBuffer(new String(p.getSysex(), nameStart, patchNameSize, "US-ASCII"));
 			return s.toString();
 		} catch (UnsupportedEncodingException ex) {
 			return "-";
@@ -171,7 +171,7 @@ public class VAmp2BankDriver extends BankDriver {
 		try {
 			namebytes = name.getBytes("US-ASCII");
 			for (int i = 0; i < patchNameSize; i++) {
-				p.sysex[nameStart + i] = namebytes[i];
+				p.getSysex()[nameStart + i] = namebytes[i];
 			}
 		} catch (UnsupportedEncodingException ex) {
 			return;
@@ -190,7 +190,7 @@ public class VAmp2BankDriver extends BankDriver {
 		sysex[Constants.HDR_SIZE + (Constants.SINGLE_PATCH_SIZE * Constants.PATCHES_PER_BANK)] = (byte) 0xF7;
 		Patch p = new Patch(sysex, this);
 		for (int i = 0; i < Constants.PATCHES_PER_BANK; i++) {
-			System.arraycopy(Constants.NEW_SINGLE_SYSEX, Constants.HDR_SIZE, p.sysex, getPatchStart(i),
+			System.arraycopy(Constants.NEW_SINGLE_SYSEX, Constants.HDR_SIZE, p.getSysex(), getPatchStart(i),
 					Constants.SINGLE_PATCH_SIZE);
 			setPatchName(p, i, "New Patch");
 		}

@@ -75,8 +75,8 @@ public class DX7FamilyPerformanceIIISingleDriver extends Driver {
 			byte[] b = new byte[patchNameSize / 2]; // 1 character encoded in 2 bytes!
 
 			for (int i = 0; i < b.length; i++) {
-				b[i] = (byte) (DX7FamilyByteEncoding.AsciiHex2Value(ip.sysex[16 + 2 * (96 + i)]) * 16 + DX7FamilyByteEncoding
-						.AsciiHex2Value(ip.sysex[16 + 2 * (96 + i) + 1]));
+				b[i] = (byte) (DX7FamilyByteEncoding.AsciiHex2Value(ip.getSysex()[16 + 2 * (96 + i)]) * 16 + DX7FamilyByteEncoding
+						.AsciiHex2Value(ip.getSysex()[16 + 2 * (96 + i) + 1]));
 			}
 
 			StringBuffer s = new StringBuffer(new String(b, 0, patchNameSize / 2, "US-ASCII"));
@@ -97,9 +97,9 @@ public class DX7FamilyPerformanceIIISingleDriver extends Driver {
 			namebytes = name.getBytes("US-ASCII");
 
 			for (int i = 0; i < namebytes.length; i++) {
-				((Patch) p).sysex[16 + 2 * (96 + i)] = (byte) (DX7FamilyByteEncoding
+				((Patch) p).getSysex()[16 + 2 * (96 + i)] = (byte) (DX7FamilyByteEncoding
 						.Value2AsciiHexHigh(namebytes[i]));
-				((Patch) p).sysex[16 + 2 * (96 + i) + 1] = (byte) (DX7FamilyByteEncoding
+				((Patch) p).getSysex()[16 + 2 * (96 + i) + 1] = (byte) (DX7FamilyByteEncoding
 						.Value2AsciiHexLow(namebytes[i]));
 			}
 		} catch (Exception e) {

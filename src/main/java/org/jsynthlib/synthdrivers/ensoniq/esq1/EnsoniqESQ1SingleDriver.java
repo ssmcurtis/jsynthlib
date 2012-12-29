@@ -31,12 +31,12 @@ public class EnsoniqESQ1SingleDriver extends Driver {
 		Patch p = (Patch) ip;
 		try {
 			byte[] b = new byte[8];
-			b[0] = ((byte) (p.sysex[5] + p.sysex[6] * 16));
-			b[1] = ((byte) (p.sysex[7] + p.sysex[8] * 16));
-			b[2] = ((byte) (p.sysex[9] + p.sysex[10] * 16));
-			b[3] = ((byte) (p.sysex[11] + p.sysex[12] * 16));
-			b[4] = ((byte) (p.sysex[13] + p.sysex[14] * 16));
-			b[5] = ((byte) (p.sysex[15] + p.sysex[16] * 16));
+			b[0] = ((byte) (p.getSysex()[5] + p.getSysex()[6] * 16));
+			b[1] = ((byte) (p.getSysex()[7] + p.getSysex()[8] * 16));
+			b[2] = ((byte) (p.getSysex()[9] + p.getSysex()[10] * 16));
+			b[3] = ((byte) (p.getSysex()[11] + p.getSysex()[12] * 16));
+			b[4] = ((byte) (p.getSysex()[13] + p.getSysex()[14] * 16));
+			b[5] = ((byte) (p.getSysex()[15] + p.getSysex()[16] * 16));
 			StringBuffer s = new StringBuffer(new String(b, 0, 6, "US-ASCII"));
 			return s.toString();
 		} catch (Exception ex) {
@@ -50,18 +50,18 @@ public class EnsoniqESQ1SingleDriver extends Driver {
 			if (name.length() < 6)
 				name = name + "        ";
 			namebytes = name.getBytes("US-ASCII");
-			((Patch) p).sysex[5] = ((byte) (namebytes[0] % 16));
-			((Patch) p).sysex[6] = ((byte) (namebytes[0] / 16));
-			((Patch) p).sysex[7] = ((byte) (namebytes[1] % 16));
-			((Patch) p).sysex[8] = ((byte) (namebytes[1] / 16));
-			((Patch) p).sysex[9] = ((byte) (namebytes[2] % 16));
-			((Patch) p).sysex[10] = ((byte) (namebytes[2] / 16));
-			((Patch) p).sysex[11] = ((byte) (namebytes[3] % 16));
-			((Patch) p).sysex[12] = ((byte) (namebytes[3] / 16));
-			((Patch) p).sysex[13] = ((byte) (namebytes[4] % 16));
-			((Patch) p).sysex[14] = ((byte) (namebytes[4] / 16));
-			((Patch) p).sysex[15] = ((byte) (namebytes[5] % 16));
-			((Patch) p).sysex[16] = ((byte) (namebytes[5] / 16));
+			((Patch) p).getSysex()[5] = ((byte) (namebytes[0] % 16));
+			((Patch) p).getSysex()[6] = ((byte) (namebytes[0] / 16));
+			((Patch) p).getSysex()[7] = ((byte) (namebytes[1] % 16));
+			((Patch) p).getSysex()[8] = ((byte) (namebytes[1] / 16));
+			((Patch) p).getSysex()[9] = ((byte) (namebytes[2] % 16));
+			((Patch) p).getSysex()[10] = ((byte) (namebytes[2] / 16));
+			((Patch) p).getSysex()[11] = ((byte) (namebytes[3] % 16));
+			((Patch) p).getSysex()[12] = ((byte) (namebytes[3] / 16));
+			((Patch) p).getSysex()[13] = ((byte) (namebytes[4] % 16));
+			((Patch) p).getSysex()[14] = ((byte) (namebytes[4] / 16));
+			((Patch) p).getSysex()[15] = ((byte) (namebytes[5] % 16));
+			((Patch) p).getSysex()[16] = ((byte) (namebytes[5] / 16));
 		} catch (Exception e) {
 		}
 	}

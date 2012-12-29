@@ -107,7 +107,7 @@ public class RolandJV80PatchDriver extends Driver {
 		setBankNum(bankNum);
 		setPatchNum(patchNum);
 
-		setPatchNum(p.sysex, bankNum, patchNum);
+		setPatchNum(p.getSysex(), bankNum, patchNum);
 		calculateChecksum(p);
 		sendPatchWorker(p);
 
@@ -116,7 +116,7 @@ public class RolandJV80PatchDriver extends Driver {
 
 	// Sends a patch to the synth's edit buffer.
 	public void sendPatch(Patch p) {
-		setPatchNum(p.sysex, 0, -1, -1);
+		setPatchNum(p.getSysex(), 0, -1, -1);
 
 		calculateChecksum(p);
 		sendPatchWorker(p);
@@ -127,9 +127,9 @@ public class RolandJV80PatchDriver extends Driver {
 	}
 
 	public void calculateChecksum(Patch p, int offset) {
-		JV80Constants.calculateChecksum(p.sysex, offset, patchCommonLength - SYSEX_OVERHEAD);
+		JV80Constants.calculateChecksum(p.getSysex(), offset, patchCommonLength - SYSEX_OVERHEAD);
 		for (int i = 0; i < 4; i++) {
-			JV80Constants.calculateChecksum(p.sysex, offset + patchToneOffsets[i], patchToneLength - SYSEX_OVERHEAD);
+			JV80Constants.calculateChecksum(p.getSysex(), offset + patchToneOffsets[i], patchToneLength - SYSEX_OVERHEAD);
 		}
 	}
 

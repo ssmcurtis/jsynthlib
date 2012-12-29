@@ -15,7 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.PatchBayApplication;
 
 /**
  * ConfigPanel for generic parameters.
@@ -101,8 +101,8 @@ public class GeneralConfigPanel extends ConfigPanel {
 		if (AppConfig.getLookAndFeel() != cbLF.getSelectedIndex()) {
 			AppConfig.setLookAndFeel(cbLF.getSelectedIndex());
 			PatchBayApplication.getDesktop().updateLookAndFeel();
-			((JPanel) this).updateUI(); // wirski@op.pl
-			SwingUtilities.updateComponentTreeUI(this.getRootPane()); // wirski@op.pl
+			((JPanel) this).updateUI(); 
+			SwingUtilities.updateComponentTreeUI(this.getRootPane()); 
 		}
 		if (AppConfig.getGuiStyle() != cbGS.getSelectedIndex()) {
 			JOptionPane.showMessageDialog(null,

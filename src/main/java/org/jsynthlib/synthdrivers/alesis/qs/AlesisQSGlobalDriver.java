@@ -119,12 +119,12 @@ public class AlesisQSGlobalDriver extends Driver {
 	 */
 	public void storePatch(Patch p, int bankNum, int patchNum) {
 		byte opcode = QSConstants.OPCODE_MIDI_GLOBAL_DATA_DUMP;
-		byte oldOpcode = ((Patch) p).sysex[QSConstants.POSITION_OPCODE];
+		byte oldOpcode = ((Patch) p).getSysex()[QSConstants.POSITION_OPCODE];
 
 		// set the opcode
-		((Patch) p).sysex[QSConstants.POSITION_OPCODE] = opcode;
+		((Patch) p).getSysex()[QSConstants.POSITION_OPCODE] = opcode;
 
-		ErrorMsg.reportStatus("foo", ((Patch) p).sysex);
+		ErrorMsg.reportStatus("foo", ((Patch) p).getSysex());
 		// setBankNum (bankNum);
 		// setPatchNum (patchNum);
 
@@ -132,6 +132,6 @@ public class AlesisQSGlobalDriver extends Driver {
 		sendPatchWorker(p);
 
 		// restore the old values
-		((Patch) p).sysex[QSConstants.POSITION_OPCODE] = oldOpcode;
+		((Patch) p).getSysex()[QSConstants.POSITION_OPCODE] = oldOpcode;
 	}
 }

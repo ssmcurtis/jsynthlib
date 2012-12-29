@@ -707,12 +707,12 @@ class TD6KitModel extends ParamModel { // extended by TD6PadModel
 		ErrorMsg.reportStatus("TD6KitModel.set(): ofs =  " + ofs + "(0x" + Integer.toHexString(ofs) + ")");
 		if (nibbled) {
 			// 4bit each, MSB first
-			patch.sysex[ofs] = (byte) ((d >> 12) & 0xf);
-			patch.sysex[ofs + 1] = (byte) ((d >> 8) & 0xf);
-			patch.sysex[ofs + 2] = (byte) ((d >> 4) & 0xf);
-			patch.sysex[ofs + 3] = (byte) (d & 0xf);
+			patch.getSysex()[ofs] = (byte) ((d >> 12) & 0xf);
+			patch.getSysex()[ofs + 1] = (byte) ((d >> 8) & 0xf);
+			patch.getSysex()[ofs + 2] = (byte) ((d >> 4) & 0xf);
+			patch.getSysex()[ofs + 3] = (byte) (d & 0xf);
 		} else {
-			patch.sysex[ofs] = (byte) d;
+			patch.getSysex()[ofs] = (byte) d;
 		}
 		// ErrorMsg.reportStatus(patch.sysex);
 	}
@@ -725,14 +725,14 @@ class TD6KitModel extends ParamModel { // extended by TD6PadModel
 	public int get() {
 		if (nibbled) {
 			// MSB first nibbled word data
-			int d = (patch.sysex[ofs + 0] << 12 | patch.sysex[ofs + 1] << 8 | patch.sysex[ofs + 2] << 4 | patch.sysex[ofs + 3]);
+			int d = (patch.getSysex()[ofs + 0] << 12 | patch.getSysex()[ofs + 1] << 8 | patch.getSysex()[ofs + 2] << 4 | patch.getSysex()[ofs + 3]);
 			/*
 			 * ErrorMsg.reportStatus("TD6KitModel.get(): " + d); ErrorMsg.reportStatus("TD6KitModel.get(): ofs =  " +
 			 * ofs + "(0x" + Integer.toHexString(ofs) + ")");
 			 */
 			return d;
 		} else {
-			return patch.sysex[ofs];
+			return patch.getSysex()[ofs];
 		}
 	}
 }

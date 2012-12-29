@@ -6,7 +6,7 @@ import java.io.File;
 import javax.swing.Action;
 import javax.swing.SwingUtilities;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.action.Actions;
 
 import com.apple.eawt.Application;
@@ -73,7 +73,7 @@ public final class MacUtils extends Application {
 
 			public void handleQuit(ApplicationEvent e) {
 				exitAction.actionPerformed(new ActionEvent(e.getSource(), 0, "Exit"));
-				if (PatchBayApplication.getDesktop().isReadyToExit()) { // wirski@op.pl
+				if (PatchBayApplication.getDesktop().isReadyToExit()) { 
 					e.setHandled(true);
 				} else {
 					e.setHandled(false);

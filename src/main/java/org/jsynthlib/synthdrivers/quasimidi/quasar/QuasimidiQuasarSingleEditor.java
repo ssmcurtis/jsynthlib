@@ -84,9 +84,9 @@ public class QuasimidiQuasarSingleEditor extends PatchEditorFrame {
 		}
 
 		// Needed for initial tab enabling/disabling
-		changePerfMode((int) patch.sysex[9]);
-		changeFX1((int) patch.sysex[50]);
-		changeFX2((int) patch.sysex[58]);
+		changePerfMode((int) patch.getSysex()[9]);
+		changeFX1((int) patch.getSysex()[50]);
+		changeFX2((int) patch.getSysex()[58]);
 
 		setSize(500, 600);
 		// pack();

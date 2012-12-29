@@ -116,8 +116,8 @@ class ScaledDblParamModel extends ParamModel {
 	 * if reverse is true.
 	 */
 	public int get() {
-		int msB = 0xFF & (int) PatchBytes.getSysexByte(patch.sysex, 9, ofs);
-		int lsB = 0xFF & (int) PatchBytes.getSysexByte(patch.sysex, 9, ofs + 1);
+		int msB = 0xFF & (int) PatchBytes.getSysexByte(patch.getSysex(), 9, ofs);
+		int lsB = 0xFF & (int) PatchBytes.getSysexByte(patch.getSysex(), 9, ofs + 1);
 
 		int returnValue = msB << 8;
 		returnValue = returnValue | lsB;

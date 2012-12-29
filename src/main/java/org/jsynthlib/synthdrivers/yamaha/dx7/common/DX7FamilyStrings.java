@@ -25,7 +25,7 @@ package org.jsynthlib.synthdrivers.yamaha.dx7.common;
 
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.PatchBayApplication;
 
 public class DX7FamilyStrings {
 	public final static void dxShowInformation(String driver, String string) {

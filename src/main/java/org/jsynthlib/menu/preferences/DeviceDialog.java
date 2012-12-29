@@ -28,7 +28,7 @@ import javax.swing.KeyStroke;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.patch.Device;
 import org.jsynthlib.menu.ui.DeviceSelectionTree;
 import org.jsynthlib.menu.ui.JSLDialog;
@@ -45,10 +45,10 @@ public class DeviceDialog extends JSLDialog {
 		if (isReadOnly) {
 			setTitle("Supported synthesizer");
 		}
-		
+
 		JPanel container = new JPanel();
 		container.setLayout(new BorderLayout());
-		
+
 		deviceSelectionTree = new DeviceSelectionTree();
 		JScrollPane scrollpane = new JScrollPane(deviceSelectionTree);
 		container.add(scrollpane, BorderLayout.CENTER);
@@ -56,26 +56,27 @@ public class DeviceDialog extends JSLDialog {
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
-		// The following code catches double-clicks on leafs and treats them like pressing "OK"
-		MouseListener ml = new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				int selRow = deviceSelectionTree.getRowForLocation(e.getX(), e.getY());
-				TreePath tp = deviceSelectionTree.getPathForRow(selRow);
-				// Did they even click on a tree item
-				if (tp != null) {
-					if (e.getClickCount() == 2) {
-						// User double-clicked. What did they click on?
-						DefaultMutableTreeNode o = (DefaultMutableTreeNode) tp.getLastPathComponent();
-						if (o.isLeaf()) {
-							// User double-clicked on a leaf. Treat it like "OK"
-							okPressed();
+		if (!isReadOnly) {
+			// The following code catches double-clicks on leafs and treats them like pressing "OK"
+			MouseListener ml = new MouseAdapter() {
+				public void mousePressed(MouseEvent e) {
+					int selRow = deviceSelectionTree.getRowForLocation(e.getX(), e.getY());
+					TreePath tp = deviceSelectionTree.getPathForRow(selRow);
+					// Did they even click on a tree item
+					if (tp != null) {
+						if (e.getClickCount() == 2) {
+							// User double-clicked. What did they click on?
+							DefaultMutableTreeNode o = (DefaultMutableTreeNode) tp.getLastPathComponent();
+							if (o.isLeaf()) {
+								// User double-clicked on a leaf. Treat it like "OK"
+								okPressed();
+							}
 						}
 					}
 				}
-			}
-		};
-		deviceSelectionTree.addMouseListener(ml);
-		if (!isReadOnly) {
+			};
+			deviceSelectionTree.addMouseListener(ml);
+
 			JButton ok = new JButton("OK");
 			ok.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -104,10 +105,14 @@ public class DeviceDialog extends JSLDialog {
 	void okPressed() {
 		this.setVisible(false);
 		String s = (String) deviceSelectionTree.getSelectedValue();
+
 		if (s == null)
 			return;
 
-		String cls = PatchBayApplication.devConfig.getClassNameForDeviceName(s);
+		String cls = PatchBayApplication.deviceConfig.getClassNameForDeviceName(s);
+
+		System.out.println("DeviceDialog: " + cls);
+
 		Device device = AppConfig.addDevice(cls);
 		if (device == null)
 			return;

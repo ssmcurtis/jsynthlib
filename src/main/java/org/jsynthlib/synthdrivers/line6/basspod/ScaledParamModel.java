@@ -96,7 +96,7 @@ class ScaledParamModel extends ParamModel {
 	 * if reverse is true.
 	 */
 	public int get() {
-		int returnValue = (int) PatchBytes.getSysexByte(patch.sysex, 9, ofs) * maxCC / maxSysex;
+		int returnValue = (int) PatchBytes.getSysexByte(patch.getSysex(), 9, ofs) * maxCC / maxSysex;
 		return returnValue;
 	}
 }

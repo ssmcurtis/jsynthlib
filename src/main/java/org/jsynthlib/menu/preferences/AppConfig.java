@@ -12,6 +12,9 @@
 package org.jsynthlib.menu.preferences;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -19,7 +22,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.patch.Device;
 import org.jsynthlib.menu.patch.IPatchDriver;
 import org.jsynthlib.model.DevicesConfig;
@@ -30,7 +33,9 @@ import org.jsynthlib.tools.midi.MidiUtil;
 public class AppConfig {
 	public static final int GUI_MDI = 0;
 	static final int GUI_SDI = 1;
+
 	private static ArrayList<Device> deviceList = new ArrayList<Device>();
+
 	private static Preferences prefs = Preferences.userNodeForPackage(Object.class);
 	private static Preferences prefsDev = prefs.node("devices");
 
@@ -54,28 +59,43 @@ public class AppConfig {
 	public static boolean loadPrefs() {
 		try {
 			String[] devs;
-			// Some classes assume that the 1st driver is a Generic Driver.
-			if (prefsDev.nodeExists("Generic#0")) {
-				addDevice("org.jsynthlib.synthdrivers.GenericDevice", prefsDev.node("Generic#0"));
-			} else {
-				// create for the 1st time.
-				addDevice("org.jsynthlib.drivers.generic.GenericDevice");
-			}
 
+			// debug prefs
+//			devs = prefsDev.childrenNames();
+//			for (int i = 0; i < devs.length; i++) {
+//				if (prefsDev.nodeExists(devs[i])) {
+//					Preferences.userRoot().node(devs[i]).removeNode();
+//					prefsDev.removeNode();
+//				}
+//			}
+//			prefsDev.flush();
 			devs = prefsDev.childrenNames();
 
+			// Some classes assume that the 1st driver is a Generic Driver.
+			if (prefsDev.nodeExists("org.jsynthlib.synthdrivers.generic.GenericDevice#0")) {
+				addDevice("org.jsynthlib.synthdrivers.generic.GenericDevice",
+						prefsDev.node("org.jsynthlib.synthdrivers.generic.GenericDevice#0"));
+			} else {
+				// create for the 1st time.
+				addDevice("org.jsynthlib.synthdrivers.generic.GenericDevice");
+			}
+
 			for (int i = 0; i < devs.length; i++) {
+				if (devs[i].equals("org.jsynthlib.synthdrivers.generic.GenericDevice#0"))
+					continue;
 				if (devs[i].equals("Generic#0"))
 					continue;
 
 				// get class name from preferences node name
 				// ErrorMsg.reportStatus("loadDevices: \"" + devs[i] + "\"");
-				String s = devs[i].substring(0, devs[i].indexOf('#'));
+				String className = devs[i].substring(0, devs[i].indexOf('#'));
 				// ErrorMsg.reportStatus("loadDevices: -> " + s);
-				String className = PatchBayApplication.devConfig.getClassNameForShortName(s);
+				// String className = PatchBayApplication.deviceConfig.getClassNameForShortName(s);
 				// ErrorMsg.reportStatus("loadDevices: -> " + s);
+				if (className != null) {
+					addDevice(className, prefsDev.node(devs[i]));
 
-				addDevice(className, prefsDev.node(devs[i]));
+				}
 			}
 			// ErrorMsg.reportStatus("deviceList: " + deviceList);
 			return true;
@@ -84,7 +104,7 @@ public class AppConfig {
 			e.printStackTrace();
 			return false;
 		} catch (Exception e) {
-			ErrorMsg.reportStatus("loadPrefs: " + e);
+  			ErrorMsg.reportStatus("loadPrefs: " + e);
 			e.printStackTrace();
 			return false;
 		}
@@ -163,11 +183,13 @@ public class AppConfig {
 		prefs.putBoolean("sequencerEnable", sequencerEnable);
 	}
 
+	@Deprecated
 	/** Getter for midi file (Sequence) to play */
 	public static String getSequencePath() {
 		return prefs.get("sequencePath", "");
 	}
 
+	@Deprecated
 	/** Setter for midi file (Sequence) to play */
 	public static void setSequencePath(String sequencePath) {
 		prefs.put("sequencePath", sequencePath);
@@ -183,6 +205,16 @@ public class AppConfig {
 		prefs.putInt("note", note);
 	}
 
+	/** Getter for note */
+	public static int getSequenceOrdinal() {
+		return prefs.getInt("sequenceOrdinal", 0);
+	}
+
+	/** Setter for note */
+	public static void setSequenceOrdinal(int note) {
+		prefs.putInt("sequenceOrdinal", note);
+	}
+
 	/** Getter for velocity */
 	public static int getVelocity() {
 		return prefs.getInt("velocity", 0);
@@ -194,6 +226,7 @@ public class AppConfig {
 	}
 
 	/** Getter for delay */
+	// TODO ssmcurtis - notelength ?
 	public static int getDelay() {
 		return prefs.getInt("delay", 0);
 	}
@@ -316,8 +349,7 @@ public class AppConfig {
 	 * Getter for masterInEnable. Returns false if either MIDI input or output is unavailable.
 	 */
 	public static boolean getMasterInEnable() {
-		return (MidiUtil.isOutputAvailable() && MidiUtil.isInputAvailable() && getMidiEnable() && prefs.getBoolean(
-				"masterInEnable", false));
+		return (MidiUtil.isOutputAvailable() && MidiUtil.isInputAvailable() && getMidiEnable() && prefs.getBoolean("masterInEnable", false));
 	}
 
 	/** Setter for masterInEnable */
@@ -411,6 +443,22 @@ public class AppConfig {
 		prefs.putBoolean("multiMIDI", enable);
 	}
 
+	public static boolean getSendPatchBeforePlay() {
+		return prefs.getBoolean("sendPatchBeforePlay", false);
+	}
+
+	public static void setSendPatchBeforePlay(boolean enable) {
+		prefs.putBoolean("sendPatchBeforePlay", enable);
+	}
+
+	public static boolean getImportDirectoryRecursive() {
+		return prefs.getBoolean("importDirectoryRecursive", false);
+	}
+
+	public static void setImportDirectoryRecursive(boolean enable) {
+		prefs.putBoolean("importDirectoryRecursive", enable);
+	}
+
 	/**
 	 * Add Device into <code>deviceList</code>.
 	 * 
@@ -421,7 +469,8 @@ public class AppConfig {
 	 * @return a <code>Device</code> value created.
 	 */
 	private static Device addDevice(String className, Preferences prefs) {
-		Device device = PatchBayApplication.devConfig.createDevice(className, prefs);
+		System.out.println("AppConfig add device " + className);
+		Device device = PatchBayApplication.deviceConfig.createDevice(className, prefs);
 		if (device != null) {
 			device.setup();
 			deviceList.add(device); // always returns true
@@ -444,8 +493,8 @@ public class AppConfig {
 	/** returns the 1st unused device node name for Preferences. */
 	private static Preferences getDeviceNode(String s) {
 		ErrorMsg.reportStatus("getDeviceNode: " + s);
-		s = DevicesConfig.getShortNameForClassName(s);
-		ErrorMsg.reportStatus("getDeviceNode: -> " + s);
+		// s = DevicesConfig.getShortNameForClassName(s);
+		// ErrorMsg.reportStatus("getDeviceNode: -> " + s);
 		int i;
 		try {
 			for (i = 0; prefsDev.nodeExists(s + "#" + i); i++)

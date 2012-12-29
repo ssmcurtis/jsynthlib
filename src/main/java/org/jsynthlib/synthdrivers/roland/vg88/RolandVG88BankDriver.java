@@ -108,7 +108,7 @@ public class RolandVG88BankDriver extends BankDriver {
 	 */
 	public void putPatch(Patch bank, Patch p, int patchNum) {
 		singleDriver.arrangePatchVG88(p, patchNum);
-		System.arraycopy(p.sysex, 0, bank.sysex, singleSize * patchNum, singleSize);
+		System.arraycopy(p.getSysex(), 0, bank.getSysex(), singleSize * patchNum, singleSize);
 	}
 
 	/**
@@ -116,7 +116,7 @@ public class RolandVG88BankDriver extends BankDriver {
 	 */
 	public Patch getPatch(Patch bank, int patchNum) {
 		byte[] sysex = new byte[singleSize];
-		System.arraycopy(bank.sysex, singleSize * patchNum, sysex, 0, singleSize);
+		System.arraycopy(bank.getSysex(), singleSize * patchNum, sysex, 0, singleSize);
 		return new Patch(sysex, singleDriver);
 	}
 

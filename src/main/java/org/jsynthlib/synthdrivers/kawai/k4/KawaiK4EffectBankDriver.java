@@ -46,7 +46,7 @@ public class KawaiK4EffectBankDriver extends BankDriver {
 		int nameStart = getPatchStart(patchNum);
 		nameStart += 0; // offset of name in patch data
 		// System.out.println("Patch Num "+patchNum+ "Name Start:"+nameStart);
-		String s = "Effect Type " + (p.sysex[nameStart] + 1);
+		String s = "Effect Type " + (p.getSysex()[nameStart] + 1);
 		return s;
 	}
 
@@ -57,9 +57,9 @@ public class KawaiK4EffectBankDriver extends BankDriver {
 	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
 		int sum = 0;
 		for (int i = start; i <= end; i++)
-			sum += p.sysex[i];
+			sum += p.getSysex()[i];
 		sum += 0xA5;
-		p.sysex[ofs] = (byte) (sum % 128);
+		p.getSysex()[ofs] = (byte) (sum % 128);
 	}
 
 	public void calculateChecksum(Patch p) {
@@ -74,7 +74,7 @@ public class KawaiK4EffectBankDriver extends BankDriver {
 			return;
 		}
 
-		System.arraycopy(p.sysex, HSIZE, bank.sysex, getPatchStart(patchNum), SSIZE);
+		System.arraycopy(p.getSysex(), HSIZE, bank.getSysex(), getPatchStart(patchNum), SSIZE);
 		calculateChecksum(bank);
 	}
 
@@ -98,7 +98,7 @@ public class KawaiK4EffectBankDriver extends BankDriver {
 		sysex[6] = (byte) 0x01;
 		sysex[7] = (byte) (patchNum);
 		sysex[HSIZE + SSIZE] = (byte) 0xF7;
-		System.arraycopy(bank.sysex, getPatchStart(patchNum), sysex, HSIZE, SSIZE);
+		System.arraycopy(bank.getSysex(), getPatchStart(patchNum), sysex, HSIZE, SSIZE);
 		try {
 			Patch p = new Patch(sysex, getDevice());
 			p.calculateChecksum();
@@ -151,9 +151,9 @@ public class KawaiK4EffectBankDriver extends BankDriver {
 			Thread.sleep(100);
 		} catch (Exception e) {
 		}
-		p.sysex[3] = (byte) 0x21;
-		p.sysex[6] = (byte) ((bankNum << 1) + 1);
-		p.sysex[7] = (byte) 0x0;
+		p.getSysex()[3] = (byte) 0x21;
+		p.getSysex()[6] = (byte) ((bankNum << 1) + 1);
+		p.getSysex()[7] = (byte) 0x0;
 		sendPatchWorker(p);
 		try {
 			Thread.sleep(100);

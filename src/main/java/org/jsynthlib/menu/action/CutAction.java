@@ -18,7 +18,7 @@ public class CutAction extends AbstractAction {
 	public void actionPerformed(ActionEvent e) {
 		try {
 			Actions.getSelectedFrame().copySelectedPatch();
-			Actions.getSelectedFrame().deleteSelectedPatch();
+			Actions.getSelectedFrame().deleteSelectedPatches();
 		} catch (Exception ex) {
 			ErrorMsg.reportError("Error", "Patch to cut must be hilighted\nin the focused Window.", ex);
 		}

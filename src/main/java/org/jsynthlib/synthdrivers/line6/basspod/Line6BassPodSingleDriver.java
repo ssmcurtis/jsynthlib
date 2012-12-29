@@ -91,7 +91,7 @@ public class Line6BassPodSingleDriver extends Driver {
 	protected String getPatchName(Patch p) {
 		char c[] = new char[patchNameSize];
 		for (int i = 0; i < patchNameSize; i++) {
-			c[i] = (char) PatchBytes.getSysexByte(p.sysex, Constants.PDMP_HDR_SIZE, Constants.PDMP_HDR_SIZE + i
+			c[i] = (char) PatchBytes.getSysexByte(p.getSysex(), Constants.PDMP_HDR_SIZE, Constants.PDMP_HDR_SIZE + i
 					+ nameStart);
 		}
 		return new String(c);
@@ -121,18 +121,18 @@ public class Line6BassPodSingleDriver extends Driver {
 	 * be sent.
 	 */
 	protected void sendPatch(Patch p) {
-		byte[] saveSysex = p.sysex; // Save the patch to a temp save area
+		byte[] saveSysex = p.getSysex(); // Save the patch to a temp save area
 
 		// Convert to a edit buffer patch
-		int newSysexLength = p.sysex.length - 1;
+		int newSysexLength = p.getSysex().length - 1;
 		byte newSysex[] = new byte[newSysexLength];
 		System.arraycopy(Constants.EDIT_DUMP_HDR_BYTES, 0, newSysex, 0, Constants.EDMP_HDR_SIZE);
-		System.arraycopy(p.sysex, Constants.PDMP_HDR_SIZE, newSysex, Constants.EDMP_HDR_SIZE, newSysexLength
+		System.arraycopy(p.getSysex(), Constants.PDMP_HDR_SIZE, newSysex, Constants.EDMP_HDR_SIZE, newSysexLength
 				- Constants.EDMP_HDR_SIZE);
-		p.sysex = newSysex;
+		p.setSysex(newSysex);
 		sendPatchWorker(p);
 
-		p.sysex = saveSysex; // Restore the patch from the temp save area
+		p.setSysex(saveSysex); // Restore the patch from the temp save area
 	}
 
 	/**
@@ -141,8 +141,8 @@ public class Line6BassPodSingleDriver extends Driver {
 	 */
 	protected void storePatch(Patch p, int bankNum, int patchNum) {
 		int progNum = bankNum * 4 + patchNum;
-		p.sysex[0] = (byte) 0xF0;
-		p.sysex[7] = (byte) progNum;
+		p.getSysex()[0] = (byte) 0xF0;
+		p.getSysex()[7] = (byte) progNum;
 		sendPatchWorker(p);
 		try {
 			Thread.sleep(Constants.PATCH_SEND_INTERVAL); // Delay so POD can keep up (pauses between each patch when
@@ -157,8 +157,8 @@ public class Line6BassPodSingleDriver extends Driver {
 	 */
 	protected void playPatch(Patch p) {
 		ErrorMsg.reportStatus(getPatchName(p) + "  Header -- " + "  "
-				+ Utility.hexDump(p.sysex, 0, Constants.PDMP_HDR_SIZE, 16) + "  Data -- " + "  "
-				+ Utility.hexDump(p.sysex, Constants.PDMP_HDR_SIZE, -1, 16));
+				+ Utility.hexDump(p.getSysex(), 0, Constants.PDMP_HDR_SIZE, 16) + "  Data -- " + "  "
+				+ Utility.hexDump(p.getSysex(), Constants.PDMP_HDR_SIZE, -1, 16));
 
 		JFrame frame = new JFrame();
 		JOptionPane.showMessageDialog(frame, Constants.PLAY_CMD_MSG);

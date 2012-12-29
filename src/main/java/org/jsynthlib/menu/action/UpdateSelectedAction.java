@@ -18,7 +18,7 @@ public class UpdateSelectedAction extends AbstractAction {
 
 	public void actionPerformed(ActionEvent e) {
 		try {
-			((SceneFrame) Actions.getSelectedFrame()).updateSelected();
+			// ((SceneFrame) Actions.getSelectedFrame()).updateSelected();
 		} catch (Exception ex) {
 			ErrorMsg.reportError("Error", "Patches to update must be highlighted\nin the focused Window.", ex);
 		}

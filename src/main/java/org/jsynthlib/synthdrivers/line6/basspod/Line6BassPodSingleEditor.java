@@ -616,7 +616,7 @@ public class Line6BassPodSingleEditor extends PatchEditorFrame {
 		 * determines if the mid sweep knob should be visible or not.
 		 */
 		public int get() {
-			int i = (int) PatchBytes.getSysexByte(patch.sysex, 9, ofs);
+			int i = (int) PatchBytes.getSysexByte(patch.getSysex(), 9, ofs);
 			modelDesc.setText(ampModelDesc[i]);
 			setCtrlVisibility(i);
 			return i;
@@ -677,7 +677,7 @@ public class Line6BassPodSingleEditor extends PatchEditorFrame {
 		 * Gets the cabinet type value from the sysex record and translates it to the comboBoxWidget value.
 		 */
 		public int get() {
-			int i = (int) PatchBytes.getSysexByte(patch.sysex, 9, ofs);
+			int i = (int) PatchBytes.getSysexByte(patch.getSysex(), 9, ofs);
 			int j;
 			for (j = 0; j < cabTranslate.length; j++) {
 				if (i == cabTranslate[j]) {
@@ -730,7 +730,7 @@ public class Line6BassPodSingleEditor extends PatchEditorFrame {
 		 * Gets the effect type value from the sysex record and translates it to the comboBoxWidget value.
 		 */
 		public int get() {
-			int i = (int) PatchBytes.getSysexByte(patch.sysex, 9, ofs);
+			int i = (int) PatchBytes.getSysexByte(patch.getSysex(), 9, ofs);
 			int j;
 			for (j = 0; j < effectTranslate.length; j++) {
 				if (i == effectTranslate[j]) {

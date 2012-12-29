@@ -47,12 +47,12 @@ public class KawaiK5000ADDSingleDriver extends Driver {
 			Thread.sleep(100);
 		} catch (Exception e) {
 		}
-		((Patch) p).sysex[3] = (byte) 0x20;
-		((Patch) p).sysex[8] = (byte) (patchNum);
+		((Patch) p).getSysex()[3] = (byte) 0x20;
+		((Patch) p).getSysex()[8] = (byte) (patchNum);
 		if (bankNum == 0)
-			((Patch) p).sysex[7] = 0; // bank a
+			((Patch) p).getSysex()[7] = 0; // bank a
 		if (bankNum == 3)
-			((Patch) p).sysex[7] = 2; // bank d
+			((Patch) p).getSysex()[7] = 2; // bank d
 
 		sendPatchWorker(p);
 		try {
@@ -68,15 +68,15 @@ public class KawaiK5000ADDSingleDriver extends Driver {
 
 	public void calculateChecksum(Patch ip) {
 		Patch p = (Patch) ip;
-		calculateChecksum(p, checksumStart, 90 + p.sysex[60] * 86, checksumOffset);
+		calculateChecksum(p, checksumStart, 90 + p.getSysex()[60] * 86, checksumOffset);
 		int sourceDataStart = 91;
 		int numWaveData = 0;
-		for (int i = 0; i < p.sysex[60]; i++) {
-			if (((p.sysex[sourceDataStart + 28] & 7) * 128 + p.sysex[sourceDataStart + 29]) == 512)
+		for (int i = 0; i < p.getSysex()[60]; i++) {
+			if (((p.getSysex()[sourceDataStart + 28] & 7) * 128 + p.getSysex()[sourceDataStart + 29]) == 512)
 				numWaveData++;
 			sourceDataStart += 86;
 		}
-		int waveDataStart = 91 + p.sysex[60] * 86;
+		int waveDataStart = 91 + p.getSysex()[60] * 86;
 		for (int i = 0; i < numWaveData; i++) {
 			calculateChecksum(p, waveDataStart + 1, waveDataStart + 805, waveDataStart);
 
@@ -87,9 +87,9 @@ public class KawaiK5000ADDSingleDriver extends Driver {
 	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
 		int sum = 0;
 		for (int i = start; i <= end; i++)
-			sum += p.sysex[i];
+			sum += p.getSysex()[i];
 		sum += (byte) 0xA5;
-		p.sysex[ofs] = (byte) (sum % 128);
+		p.getSysex()[ofs] = (byte) (sum % 128);
 		// p.sysex[ofs]=(byte)(p.sysex[ofs]^127);
 		// p.sysex[ofs]=(byte)(p.sysex[ofs]+1);
 
@@ -116,10 +116,10 @@ public class KawaiK5000ADDSingleDriver extends Driver {
 
 	// ----- End phil@muqus.com
 
-	public JSLFrame editPatch(Patch p) {
-		return new KawaiK5000ADDSingleEditor((Patch) p);
-	}
-
+//	public JSLFrame editPatch(Patch p) {
+//		return new KawaiK5000ADDSingleEditor((Patch) p);
+//	}
+//
 	public Patch createNewPatch() {
 		try {
 			InputStream fileIn = getClass().getResourceAsStream("k5k.syx");

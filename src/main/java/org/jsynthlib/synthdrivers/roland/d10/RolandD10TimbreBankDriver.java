@@ -77,7 +77,7 @@ public class RolandD10TimbreBankDriver extends BankDriver {
 
 	protected Patch getPatch(Patch bank, int patchNum) {
 		Patch patch = timbreDriver.createNewPatch();
-		RolandD10Support.copyPatchFromBank(patchNum, bank.sysex, patch.sysex);
+		RolandD10Support.copyPatchFromBank(patchNum, bank.getSysex(), patch.getSysex());
 		return patch;
 	}
 
@@ -90,7 +90,7 @@ public class RolandD10TimbreBankDriver extends BankDriver {
 	}
 
 	protected void putPatch(Patch bank, Patch patch, int patchNum) {
-		RolandD10Support.copyPatchFromBank(patchNum, bank.sysex, patch.sysex);
+		RolandD10Support.copyPatchFromBank(patchNum, bank.getSysex(), patch.getSysex());
 	}
 
 }

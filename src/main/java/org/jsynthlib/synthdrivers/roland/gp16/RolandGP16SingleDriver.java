@@ -53,7 +53,7 @@ public class RolandGP16SingleDriver extends Driver {
 		nVs[1] = new SysexHandler.NameValue("checksum", 0);
 		Patch p = new Patch(SYS_REQ.toByteArray(getChannel(), nVs));
 		calculateChecksum(p, 5, 10, 11); // the gp-16 requires correct checksum when requesting a patch
-		send(p.sysex);
+		send(p.getSysex());
 		try {
 			Thread.sleep(sleepTime);
 		} catch (Exception e) {
@@ -62,9 +62,9 @@ public class RolandGP16SingleDriver extends Driver {
 
 	/** Store patch in a specified location, the GP-16 way. */
 	public void storePatch(Patch p, int bankNum, int patchNum) {
-		((Patch) p).sysex[5] = (byte) 0x09;
-		((Patch) p).sysex[6] = (byte) (bankNum * 8 + patchNum);
-		((Patch) p).sysex[7] = (byte) 0x00;
+		((Patch) p).getSysex()[5] = (byte) 0x09;
+		((Patch) p).getSysex()[6] = (byte) (bankNum * 8 + patchNum);
+		((Patch) p).getSysex()[7] = (byte) 0x00;
 		sendPatchWorker(p);
 		try {
 			Thread.sleep(sleepTime);
@@ -74,9 +74,9 @@ public class RolandGP16SingleDriver extends Driver {
 
 	/** Send patch to the temporary edit memory of the GP-16. */
 	public void sendPatch(Patch p) {
-		((Patch) p).sysex[5] = (byte) 0x08;
-		((Patch) p).sysex[6] = (byte) 0x00;
-		((Patch) p).sysex[7] = (byte) 0x00;
+		((Patch) p).getSysex()[5] = (byte) 0x08;
+		((Patch) p).getSysex()[6] = (byte) 0x00;
+		((Patch) p).getSysex()[7] = (byte) 0x00;
 		try {
 			Thread.sleep(sleepTime);
 		} catch (Exception e) {

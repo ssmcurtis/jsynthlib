@@ -39,7 +39,7 @@ public class YamahaTG33BankDriver extends BankDriver {
 		int nameStart = getPatchStart(patchNum);
 		nameStart += 12; // offset of name in patch data
 		try {
-			StringBuffer s = new StringBuffer(new String(((Patch) p).sysex, nameStart, 8, "US-ASCII"));
+			StringBuffer s = new StringBuffer(new String(((Patch) p).getSysex(), nameStart, 8, "US-ASCII"));
 			return s.toString();
 		} catch (UnsupportedEncodingException ex) {
 			return "-";
@@ -57,7 +57,7 @@ public class YamahaTG33BankDriver extends BankDriver {
 		try {
 			namebytes = name.getBytes("US-ASCII");
 			for (int i = 0; i < patchNameSize; i++)
-				((Patch) p).sysex[patchNameStart + i] = namebytes[i];
+				((Patch) p).getSysex()[patchNameStart + i] = namebytes[i];
 
 		} catch (UnsupportedEncodingException ex) {
 			return;
@@ -90,7 +90,7 @@ public class YamahaTG33BankDriver extends BankDriver {
 			return;
 		}
 
-		System.arraycopy(((Patch) p).sysex, 16, ((Patch) bank).sysex, getPatchStart(patchNum), 587);
+		System.arraycopy(((Patch) p).getSysex(), 16, ((Patch) bank).getSysex(), getPatchStart(patchNum), 587);
 		calculateChecksum(bank);
 	}
 
@@ -114,7 +114,7 @@ public class YamahaTG33BankDriver extends BankDriver {
 			sysex[14] = (byte) 0x56;
 			sysex[15] = (byte) 0x45;
 			sysex[604] = (byte) 0xF7;
-			System.arraycopy(((Patch) bank).sysex, getPatchStart(patchNum), sysex, 16, 587);
+			System.arraycopy(((Patch) bank).getSysex(), getPatchStart(patchNum), sysex, 16, 587);
 			Patch p = new Patch(sysex, getDevice());
 			p.calculateChecksum();
 			return p;

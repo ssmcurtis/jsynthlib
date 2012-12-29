@@ -28,7 +28,7 @@ package org.jsynthlib.synthdrivers.midibox.sid;
 
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.Driver;
 import org.jsynthlib.menu.patch.SysexHandler;
@@ -80,9 +80,9 @@ public class MIDIboxSIDSingleDriver extends Driver {
 	}
 
 	public void storePatch(Patch p, int bankNum, int patchNum) {
-		((Patch) p).sysex[5] = (byte) ((getDeviceID() - 1) & 0x7f);
-		((Patch) p).sysex[6] = (byte) 0x02;
-		((Patch) p).sysex[7] = (byte) (patchNum);
+		((Patch) p).getSysex()[5] = (byte) ((getDeviceID() - 1) & 0x7f);
+		((Patch) p).getSysex()[6] = (byte) 0x02;
+		((Patch) p).getSysex()[7] = (byte) (patchNum);
 		sendPatchWorker(p);
 		try {
 			Thread.sleep(100);
@@ -92,9 +92,9 @@ public class MIDIboxSIDSingleDriver extends Driver {
 	}
 
 	public void sendPatch(Patch p) {
-		((Patch) p).sysex[5] = (byte) ((getDeviceID() - 1) & 0x7f);
-		((Patch) p).sysex[6] = (byte) 0x02;
-		((Patch) p).sysex[7] = (byte) 0x00;
+		((Patch) p).getSysex()[5] = (byte) ((getDeviceID() - 1) & 0x7f);
+		((Patch) p).getSysex()[6] = (byte) 0x02;
+		((Patch) p).getSysex()[7] = (byte) 0x00;
 
 		sendPatchWorker(p);
 	}

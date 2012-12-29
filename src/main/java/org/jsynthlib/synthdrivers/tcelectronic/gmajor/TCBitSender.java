@@ -52,24 +52,24 @@ class TCBitSender extends SysexSender {
 	}
 
 	protected int getValue() {
-		int value = (patch.sysex[offs + 1] << 7);
-		value = (value ^ patch.sysex[offs]);
+		int value = (patch.getSysex()[offs + 1] << 7);
+		value = (value ^ patch.getSysex()[offs]);
 		return value;
 	}
 
 	public byte[] generate(int value) {
-		patch.sysex[7] = (byte) 0x00;
-		patch.sysex[8] = (byte) 0x00;
+		patch.getSysex()[7] = (byte) 0x00;
+		patch.getSysex()[8] = (byte) 0x00;
 
 		value = value + delta;
 
 		int j = ((getValue() & (~mask)) | ((value << shift) & mask));
 
-		patch.sysex[offs + 1] = (byte) ((j >> 7) & 127);
-		patch.sysex[offs] = (byte) (j & 127);
+		patch.getSysex()[offs + 1] = (byte) ((j >> 7) & 127);
+		patch.getSysex()[offs] = (byte) (j & 127);
 
-		patch.sysex[TCElectronicGMajorConst.CHECKSUMOFFSET] = TCElectronicGMajorUtil.calcChecksum(patch.sysex);
-		return patch.sysex;
+		patch.getSysex()[TCElectronicGMajorConst.CHECKSUMOFFSET] = TCElectronicGMajorUtil.calcChecksum(patch.getSysex());
+		return patch.getSysex();
 	}
 
 }

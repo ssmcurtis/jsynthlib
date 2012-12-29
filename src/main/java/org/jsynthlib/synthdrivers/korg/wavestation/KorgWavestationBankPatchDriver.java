@@ -51,7 +51,7 @@ public class KorgWavestationBankPatchDriver extends BankDriver {
 			byte[] byteBuffer = new byte[16];
 
 			for (int i = 0; i < 16; i++) {
-				byteBuffer[i] = (byte) (((Patch) p).sysex[nameStart + i * 2] + ((0x10) * ((Patch) p).sysex[nameStart
+				byteBuffer[i] = (byte) (((Patch) p).getSysex()[nameStart + i * 2] + ((0x10) * ((Patch) p).getSysex()[nameStart
 						+ i * 2 + 1]));
 				if (byteBuffer[i] == 0)
 					byteBuffer[i] = 0x20;
@@ -75,8 +75,8 @@ public class KorgWavestationBankPatchDriver extends BankDriver {
 		try {
 			namebytes = name.getBytes("US-ASCII");
 			for (int i = 0; i < patchNameSize; i++) {
-				((Patch) p).sysex[patchNameStart + i * 2] = (byte) (namebytes[i] & 0x0f);
-				((Patch) p).sysex[patchNameStart + i * 2 + 1] = (byte) (namebytes[i] / 0x10);
+				((Patch) p).getSysex()[patchNameStart + i * 2] = (byte) (namebytes[i] & 0x0f);
+				((Patch) p).getSysex()[patchNameStart + i * 2 + 1] = (byte) (namebytes[i] / 0x10);
 			}
 
 		} catch (UnsupportedEncodingException ex) {
@@ -85,8 +85,8 @@ public class KorgWavestationBankPatchDriver extends BankDriver {
 	}
 
 	public void storePatch(Patch p, int bankNum, int patchNum) {
-		((Patch) p).sysex[2] = (byte) (0x30 + getChannel() - 1);
-		((Patch) p).sysex[5] = (byte) bankNum;
+		((Patch) p).getSysex()[2] = (byte) (0x30 + getChannel() - 1);
+		((Patch) p).getSysex()[5] = (byte) bankNum;
 		sendPatchWorker(p);
 	}
 
@@ -96,9 +96,9 @@ public class KorgWavestationBankPatchDriver extends BankDriver {
 
 		// System.out.println("Checksum was" + p.sysex[ofs]);
 		for (i = start; i <= end; i++) {
-			sum += p.sysex[i];
+			sum += p.getSysex()[i];
 		}
-		p.sysex[ofs] = (byte) (sum % 128);
+		p.getSysex()[ofs] = (byte) (sum % 128);
 		// System.out.println("Checksum new is" + p.sysex[ofs]);
 
 	}
@@ -114,7 +114,7 @@ public class KorgWavestationBankPatchDriver extends BankDriver {
 			return;
 		}
 
-		System.arraycopy(((Patch) p).sysex, 8, ((Patch) bank).sysex, getPatchStart(patchNum), 131);
+		System.arraycopy(((Patch) p).getSysex(), 8, ((Patch) bank).getSysex(), getPatchStart(patchNum), 131);
 		calculateChecksum(bank);
 	}
 
@@ -131,7 +131,7 @@ public class KorgWavestationBankPatchDriver extends BankDriver {
 
 			/* sysex[852+7]=checksum; */
 			sysex[852 + 8] = (byte) 0xF7;
-			System.arraycopy(((Patch) bank).sysex, getPatchStart(patchNum), sysex, 7, 852);
+			System.arraycopy(((Patch) bank).getSysex(), getPatchStart(patchNum), sysex, 7, 852);
 			Patch p = new Patch(sysex, getDevice());
 			p.calculateChecksum();
 			return p;

@@ -25,7 +25,7 @@ import java.io.UnsupportedEncodingException;
 
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.Driver;
 import org.jsynthlib.menu.patch.SysexHandler;
@@ -87,14 +87,14 @@ public class QuasimidiQuasarSingleDriver extends Driver {
 		if (deviceIDoffset > 0) {
 			int deviceID = (getDeviceID() - 1);
 
-			p.sysex[deviceIDoffset] = (byte) deviceID;
-			p.sysex[deviceIDoffset + QuasarConstants.ARRAY_PART_1_OFFSET] = (byte) deviceID;
-			p.sysex[deviceIDoffset + QuasarConstants.ARRAY_PART_2_OFFSET] = (byte) deviceID;
-			p.sysex[deviceIDoffset + QuasarConstants.ARRAY_PART_3_OFFSET] = (byte) deviceID;
-			p.sysex[deviceIDoffset + QuasarConstants.ARRAY_PART_4_OFFSET] = (byte) deviceID;
-			p.sysex[deviceIDoffset + QuasarConstants.ARRAY_NAME_OFFSET] = (byte) deviceID;
+			p.getSysex()[deviceIDoffset] = (byte) deviceID;
+			p.getSysex()[deviceIDoffset + QuasarConstants.ARRAY_PART_1_OFFSET] = (byte) deviceID;
+			p.getSysex()[deviceIDoffset + QuasarConstants.ARRAY_PART_2_OFFSET] = (byte) deviceID;
+			p.getSysex()[deviceIDoffset + QuasarConstants.ARRAY_PART_3_OFFSET] = (byte) deviceID;
+			p.getSysex()[deviceIDoffset + QuasarConstants.ARRAY_PART_4_OFFSET] = (byte) deviceID;
+			p.getSysex()[deviceIDoffset + QuasarConstants.ARRAY_NAME_OFFSET] = (byte) deviceID;
 
-			send(p.sysex);
+			send(p.getSysex());
 		}
 	}
 
@@ -112,23 +112,23 @@ public class QuasimidiQuasarSingleDriver extends Driver {
 		int performanceOffset = patchNum + QuasarConstants.SYSEX_PERFORMANCE_OFFSET;
 
 		// Set the performance number
-		p.sysex[QuasarConstants.ARRAY_PERFORMANCE_OFFSET] = (byte) performanceOffset;
+		p.getSysex()[QuasarConstants.ARRAY_PERFORMANCE_OFFSET] = (byte) performanceOffset;
 
 		// Part 1
-		p.sysex[QuasarConstants.ARRAY_PART_1_OFFSET + QuasarConstants.ARRAY_PERFORMANCE_OFFSET] = (byte) performanceOffset;
-		p.sysex[QuasarConstants.ARRAY_PART_1_OFFSET + QuasarConstants.ARRAY_PERF_PART_OFFSET] = (byte) 0x01;
+		p.getSysex()[QuasarConstants.ARRAY_PART_1_OFFSET + QuasarConstants.ARRAY_PERFORMANCE_OFFSET] = (byte) performanceOffset;
+		p.getSysex()[QuasarConstants.ARRAY_PART_1_OFFSET + QuasarConstants.ARRAY_PERF_PART_OFFSET] = (byte) 0x01;
 		// Part 2
-		p.sysex[QuasarConstants.ARRAY_PART_2_OFFSET + QuasarConstants.ARRAY_PERFORMANCE_OFFSET] = (byte) performanceOffset;
-		p.sysex[QuasarConstants.ARRAY_PART_2_OFFSET + QuasarConstants.ARRAY_PERF_PART_OFFSET] = (byte) 0x02;
+		p.getSysex()[QuasarConstants.ARRAY_PART_2_OFFSET + QuasarConstants.ARRAY_PERFORMANCE_OFFSET] = (byte) performanceOffset;
+		p.getSysex()[QuasarConstants.ARRAY_PART_2_OFFSET + QuasarConstants.ARRAY_PERF_PART_OFFSET] = (byte) 0x02;
 		// Part 3
-		p.sysex[QuasarConstants.ARRAY_PART_3_OFFSET + QuasarConstants.ARRAY_PERFORMANCE_OFFSET] = (byte) performanceOffset;
-		p.sysex[QuasarConstants.ARRAY_PART_3_OFFSET + QuasarConstants.ARRAY_PERF_PART_OFFSET] = (byte) 0x03;
+		p.getSysex()[QuasarConstants.ARRAY_PART_3_OFFSET + QuasarConstants.ARRAY_PERFORMANCE_OFFSET] = (byte) performanceOffset;
+		p.getSysex()[QuasarConstants.ARRAY_PART_3_OFFSET + QuasarConstants.ARRAY_PERF_PART_OFFSET] = (byte) 0x03;
 		// Part 4
-		p.sysex[QuasarConstants.ARRAY_PART_4_OFFSET + QuasarConstants.ARRAY_PERFORMANCE_OFFSET] = (byte) performanceOffset;
-		p.sysex[QuasarConstants.ARRAY_PART_4_OFFSET + QuasarConstants.ARRAY_PERF_PART_OFFSET] = (byte) 0x04;
+		p.getSysex()[QuasarConstants.ARRAY_PART_4_OFFSET + QuasarConstants.ARRAY_PERFORMANCE_OFFSET] = (byte) performanceOffset;
+		p.getSysex()[QuasarConstants.ARRAY_PART_4_OFFSET + QuasarConstants.ARRAY_PERF_PART_OFFSET] = (byte) 0x04;
 		// The performance name
-		p.sysex[QuasarConstants.ARRAY_NAME_OFFSET + QuasarConstants.ARRAY_PERFORMANCE_OFFSET] = (byte) performanceOffset;
-		p.sysex[QuasarConstants.ARRAY_NAME_OFFSET + QuasarConstants.ARRAY_PERF_PART_OFFSET] = (byte) 0x05;
+		p.getSysex()[QuasarConstants.ARRAY_NAME_OFFSET + QuasarConstants.ARRAY_PERFORMANCE_OFFSET] = (byte) performanceOffset;
+		p.getSysex()[QuasarConstants.ARRAY_NAME_OFFSET + QuasarConstants.ARRAY_PERF_PART_OFFSET] = (byte) 0x05;
 
 		doSendPatch(p);
 
@@ -150,23 +150,23 @@ public class QuasimidiQuasarSingleDriver extends Driver {
 		int performanceOffset = QuasarConstants.SYSEX_TEMPORARY_OFFSET;
 
 		// Set the performance number
-		p.sysex[QuasarConstants.ARRAY_PERFORMANCE_OFFSET] = (byte) performanceOffset;
+		p.getSysex()[QuasarConstants.ARRAY_PERFORMANCE_OFFSET] = (byte) performanceOffset;
 
 		// Part 13
-		p.sysex[QuasarConstants.ARRAY_PART_1_OFFSET + QuasarConstants.ARRAY_PERFORMANCE_OFFSET] = (byte) performanceOffset;
-		p.sysex[QuasarConstants.ARRAY_PART_1_OFFSET + QuasarConstants.ARRAY_PERF_PART_OFFSET] = (byte) 0x0D;
+		p.getSysex()[QuasarConstants.ARRAY_PART_1_OFFSET + QuasarConstants.ARRAY_PERFORMANCE_OFFSET] = (byte) performanceOffset;
+		p.getSysex()[QuasarConstants.ARRAY_PART_1_OFFSET + QuasarConstants.ARRAY_PERF_PART_OFFSET] = (byte) 0x0D;
 		// Part 14
-		p.sysex[QuasarConstants.ARRAY_PART_2_OFFSET + QuasarConstants.ARRAY_PERFORMANCE_OFFSET] = (byte) performanceOffset;
-		p.sysex[QuasarConstants.ARRAY_PART_2_OFFSET + QuasarConstants.ARRAY_PERF_PART_OFFSET] = (byte) 0x0E;
+		p.getSysex()[QuasarConstants.ARRAY_PART_2_OFFSET + QuasarConstants.ARRAY_PERFORMANCE_OFFSET] = (byte) performanceOffset;
+		p.getSysex()[QuasarConstants.ARRAY_PART_2_OFFSET + QuasarConstants.ARRAY_PERF_PART_OFFSET] = (byte) 0x0E;
 		// Part 15
-		p.sysex[QuasarConstants.ARRAY_PART_3_OFFSET + QuasarConstants.ARRAY_PERFORMANCE_OFFSET] = (byte) performanceOffset;
-		p.sysex[QuasarConstants.ARRAY_PART_3_OFFSET + QuasarConstants.ARRAY_PERF_PART_OFFSET] = (byte) 0x0F;
+		p.getSysex()[QuasarConstants.ARRAY_PART_3_OFFSET + QuasarConstants.ARRAY_PERFORMANCE_OFFSET] = (byte) performanceOffset;
+		p.getSysex()[QuasarConstants.ARRAY_PART_3_OFFSET + QuasarConstants.ARRAY_PERF_PART_OFFSET] = (byte) 0x0F;
 		// Part 16
-		p.sysex[QuasarConstants.ARRAY_PART_4_OFFSET + QuasarConstants.ARRAY_PERFORMANCE_OFFSET] = (byte) performanceOffset;
-		p.sysex[QuasarConstants.ARRAY_PART_4_OFFSET + QuasarConstants.ARRAY_PERF_PART_OFFSET] = (byte) 0x10;
+		p.getSysex()[QuasarConstants.ARRAY_PART_4_OFFSET + QuasarConstants.ARRAY_PERFORMANCE_OFFSET] = (byte) performanceOffset;
+		p.getSysex()[QuasarConstants.ARRAY_PART_4_OFFSET + QuasarConstants.ARRAY_PERF_PART_OFFSET] = (byte) 0x10;
 		// The temporary name
-		p.sysex[QuasarConstants.ARRAY_NAME_OFFSET + QuasarConstants.ARRAY_PERFORMANCE_OFFSET] = (byte) performanceOffset;
-		p.sysex[QuasarConstants.ARRAY_NAME_OFFSET + QuasarConstants.ARRAY_PERF_PART_OFFSET] = (byte) 0x11;
+		p.getSysex()[QuasarConstants.ARRAY_NAME_OFFSET + QuasarConstants.ARRAY_PERFORMANCE_OFFSET] = (byte) performanceOffset;
+		p.getSysex()[QuasarConstants.ARRAY_NAME_OFFSET + QuasarConstants.ARRAY_PERF_PART_OFFSET] = (byte) 0x11;
 
 		doSendPatch(p);
 	}
@@ -224,7 +224,7 @@ public class QuasimidiQuasarSingleDriver extends Driver {
 		try {
 			namebytes = name.getBytes("US-ASCII");
 			for (int i = 0; i < patchNameSize; i++)
-				p.sysex[patchNameStart + i] = namebytes[i];
+				p.getSysex()[patchNameStart + i] = namebytes[i];
 
 		} catch (UnsupportedEncodingException ex) {
 			return;

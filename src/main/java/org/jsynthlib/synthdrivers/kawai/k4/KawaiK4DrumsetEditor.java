@@ -181,12 +181,12 @@ class KawaiK4DrumsetEditor extends PatchEditorFrame {
 		}
 
 		public void set(int i) {
-			patch.sysex[8 + 11 + drum * 11 + source] = (byte) ((patch.sysex[8 + 11 + drum * 11 + source] & 254) + (byte) (i / 128));
-			patch.sysex[8 + 11 + 2 + drum * 11 + source] = (byte) (i & 0x7f);
+			patch.getSysex()[8 + 11 + drum * 11 + source] = (byte) ((patch.getSysex()[8 + 11 + drum * 11 + source] & 254) + (byte) (i / 128));
+			patch.getSysex()[8 + 11 + 2 + drum * 11 + source] = (byte) (i & 0x7f);
 		}
 
 		public int get() {
-			return (((patch.sysex[8 + 11 + drum * 11 + source] & 1) * 128) + (patch.sysex[8 + 11 + 2 + drum * 11
+			return (((patch.getSysex()[8 + 11 + drum * 11 + source] & 1) * 128) + (patch.getSysex()[8 + 11 + 2 + drum * 11
 					+ source]));
 		}
 	}
@@ -223,11 +223,11 @@ class KawaiK4DrumsetEditor extends PatchEditorFrame {
 		}
 
 		public void set(int i) {
-			patch.sysex[ofs + 11 * drum] = (byte) ((i * mult) + (patch.sysex[ofs + 11 * drum] & (~bitmask)));
+			patch.getSysex()[ofs + 11 * drum] = (byte) ((i * mult) + (patch.getSysex()[ofs + 11 * drum] & (~bitmask)));
 		}
 
 		public int get() {
-			return ((patch.sysex[ofs + 11 * drum] & bitmask) / mult);
+			return ((patch.getSysex()[ofs + 11 * drum] & bitmask) / mult);
 		}
 	}
 

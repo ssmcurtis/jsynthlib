@@ -117,7 +117,7 @@ class ScaledParamModel extends ParamModel {
 		if (reverse) {
 			i = (maxSysex - i);
 		}
-		patch.sysex[ofs] = (byte) (i * maxSysex / maxCC);
+		patch.getSysex()[ofs] = (byte) (i * maxSysex / maxCC);
 	}
 
 	/**
@@ -127,7 +127,7 @@ class ScaledParamModel extends ParamModel {
 	 * @return The value of this ParamModel.
 	 */
 	public int get() {
-		int returnValue = (int) patch.sysex[ofs] * maxCC / maxSysex;
+		int returnValue = (int) patch.getSysex()[ofs] * maxCC / maxSysex;
 		return returnValue;
 	}
 }

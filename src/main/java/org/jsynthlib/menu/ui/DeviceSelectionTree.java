@@ -18,7 +18,7 @@ import javax.swing.tree.DefaultTreeSelectionModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.model.DeviceDescriptor;
 
 public class DeviceSelectionTree extends JTree {
@@ -62,7 +62,7 @@ public class DeviceSelectionTree extends JTree {
 	 *            The node of the tree to add the items to
 	 */
 	private void buildTree(DefaultMutableTreeNode node) {
-		Collection alldevicedescriptors = PatchBayApplication.devConfig.getDeviceDescriptors();
+		Collection alldevicedescriptors = PatchBayApplication.deviceConfig.getDeviceDescriptors();
 
 		switch (groupStyle) {
 		case GROUP_NONE:

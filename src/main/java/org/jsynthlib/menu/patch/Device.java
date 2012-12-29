@@ -126,8 +126,12 @@ public abstract class Device /* implements Serializable, Storable */{
 	/** Called after Device(Preferences prefs) is called. */
 	public void setup() {
 		// set default MIDI in/out port
-		setInPort(prefs.getInt("inPort", AppConfig.getInitPortIn()));
-		setPort(prefs.getInt("port", AppConfig.getInitPortOut()));
+		int initPortIn = AppConfig.getInitPortIn();
+		int inPort = prefs.getInt("inPort", initPortIn);
+		setInPort(inPort);
+		int initPortOut = AppConfig.getInitPortOut();
+		int outPort = prefs.getInt("port", initPortOut); 
+		setPort(outPort);
 	}
 
 	public final Preferences getPreferences() {
@@ -401,7 +405,7 @@ public abstract class Device /* implements Serializable, Storable */{
 		} catch (Exception ex) {
 		}
 		return getManufacturerName() + " "
-				+ getModelName() // wirski@op.pl
+				+ getModelName() 
 				+ " <" + getSynthName() + ">  -  MIDI Out Port: " + ((di == "") ? "None" : di) + "  -  MIDI Channel: "
 				+ getChannel();
 	}

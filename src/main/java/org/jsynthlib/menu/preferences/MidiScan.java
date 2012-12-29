@@ -32,7 +32,7 @@ import javax.swing.JDialog;
 import javax.swing.ProgressMonitor;
 import javax.swing.table.AbstractTableModel;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.patch.Device;
 import org.jsynthlib.menu.ui.window.ScanUnkownReportDialog;
 import org.jsynthlib.model.ManufacturerLookup;
@@ -191,7 +191,7 @@ public class MidiScan extends Thread {
 		}
 		// ErrorMsg.reportStatus ("ResponseString "+responseString);
 		boolean found = false;
-		Iterator synthIDs = PatchBayApplication.devConfig.getIDStrings().iterator();
+		Iterator synthIDs = PatchBayApplication.deviceConfig.getIDStrings().iterator();
 		while (synthIDs.hasNext()) {
 			String se = (String) synthIDs.next();
 			// ErrorMsg.reportStatus ("Checking "+se.getManufacturerName ()
@@ -201,12 +201,12 @@ public class MidiScan extends Thread {
 				boolean dontadd = false;
 				for (int checkloop = 0; checkloop < AppConfig.deviceCount(); checkloop++) {
 					String checkDevice = AppConfig.getDevice(checkloop).getClass().getName();
-					if (checkDevice.equalsIgnoreCase(PatchBayApplication.devConfig.getClassNameForIDString(se))) {
+					if (checkDevice.equalsIgnoreCase(PatchBayApplication.deviceConfig.getClassNameForIDString(se))) {
 						dontadd = true; // Oh, its already there....
 					}
 				}
 				if (!dontadd) { // add it only, if it is not in the list
-					String cls = PatchBayApplication.devConfig.getClassNameForIDString(se);
+					String cls = PatchBayApplication.deviceConfig.getClassNameForIDString(se);
 					Device useDevice = AppConfig.addDevice(cls);
 					ErrorMsg.reportStatus("MidiOut: " + midiout + ", MidiIn: " + midiin + ", devID: " + devID);
 

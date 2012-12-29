@@ -42,13 +42,13 @@ class TCSender extends SysexSender {
 		// TODO: EEN SEND METHODE BEDENKEN WAARBIJ DIT AUTOMATISCH WORDT GEREGELD, ZONDER DE STORE FUNCTIE TE
 		// ONTREGELEN.
 		// TODO: STORE ZET PATCH- EN BANKNUMMER EN GEBRUIKT SEND.
-		patch.sysex[7] = (byte) 0x00;
-		patch.sysex[8] = (byte) 0x00;
+		patch.getSysex()[7] = (byte) 0x00;
+		patch.getSysex()[8] = (byte) 0x00;
 
 		value = value + delta;
 
-		TCElectronicGMajorUtil.setValue(patch.sysex, value, offs);
-		patch.sysex[TCElectronicGMajorConst.CHECKSUMOFFSET] = TCElectronicGMajorUtil.calcChecksum(patch.sysex);
-		return patch.sysex;
+		TCElectronicGMajorUtil.setValue(patch.getSysex(), value, offs);
+		patch.getSysex()[TCElectronicGMajorConst.CHECKSUMOFFSET] = TCElectronicGMajorUtil.calcChecksum(patch.getSysex());
+		return patch.getSysex();
 	}
 }

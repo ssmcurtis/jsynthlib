@@ -77,9 +77,9 @@ public class VirusMultiSingleDriver extends Driver {
 	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
 		int sum = 0;
 		for (int i = start; i <= end; i++) {
-			sum += p.sysex[i];
+			sum += p.getSysex()[i];
 		}
-		p.sysex[ofs] = (byte) (sum & 0x7F);
+		p.getSysex()[ofs] = (byte) (sum & 0x7F);
 	}
 
 	public void sendPatch(Patch p) {
@@ -87,10 +87,10 @@ public class VirusMultiSingleDriver extends Driver {
 	}
 
 	public void sendPatch(Patch p, int bankNum, int patchNum) {
-		Patch p2 = new Patch(p.sysex);
-		p2.sysex[deviceIDoffset] = (byte) (getDeviceID() - 1);
-		p2.sysex[BANK_NUM_OFFSET] = (byte) bankNum;
-		p2.sysex[PATCH_NUM_OFFSET] = (byte) patchNum;
+		Patch p2 = new Patch(p.getSysex());
+		p2.getSysex()[deviceIDoffset] = (byte) (getDeviceID() - 1);
+		p2.getSysex()[BANK_NUM_OFFSET] = (byte) bankNum;
+		p2.getSysex()[PATCH_NUM_OFFSET] = (byte) patchNum;
 		calculateChecksum(p2);
 		sendPatchWorker(p2);
 	}
@@ -101,10 +101,10 @@ public class VirusMultiSingleDriver extends Driver {
 	}
 
 	protected void playPatch(Patch p) {
-		Patch p2 = new Patch(((Patch) p).sysex);
-		p2.sysex[deviceIDoffset] = (byte) (getDeviceID() - 1);
-		p2.sysex[BANK_NUM_OFFSET] = 0; // edit buffer
-		p2.sysex[PATCH_NUM_OFFSET] = 0; // single mode
+		Patch p2 = new Patch(((Patch) p).getSysex());
+		p2.getSysex()[deviceIDoffset] = (byte) (getDeviceID() - 1);
+		p2.getSysex()[BANK_NUM_OFFSET] = 0; // edit buffer
+		p2.getSysex()[PATCH_NUM_OFFSET] = 0; // single mode
 		calculateChecksum(p2);
 		super.playPatch(p2);
 	}

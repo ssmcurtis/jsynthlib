@@ -39,12 +39,12 @@ public class EnsoniqESQ1BankDriver extends BankDriver {
 
 		try {
 			byte[] b = new byte[6];
-			b[0] = ((byte) (((Patch) p).sysex[nameStart] + ((Patch) p).sysex[nameStart + 1] * 16));
-			b[1] = ((byte) (((Patch) p).sysex[nameStart + 2] + ((Patch) p).sysex[nameStart + 3] * 16));
-			b[2] = ((byte) (((Patch) p).sysex[nameStart + 4] + ((Patch) p).sysex[nameStart + 5] * 16));
-			b[3] = ((byte) (((Patch) p).sysex[nameStart + 6] + ((Patch) p).sysex[nameStart + 7] * 16));
-			b[4] = ((byte) (((Patch) p).sysex[nameStart + 8] + ((Patch) p).sysex[nameStart + 9] * 16));
-			b[5] = ((byte) (((Patch) p).sysex[nameStart + 10] + ((Patch) p).sysex[nameStart + 11] * 16));
+			b[0] = ((byte) (((Patch) p).getSysex()[nameStart] + ((Patch) p).getSysex()[nameStart + 1] * 16));
+			b[1] = ((byte) (((Patch) p).getSysex()[nameStart + 2] + ((Patch) p).getSysex()[nameStart + 3] * 16));
+			b[2] = ((byte) (((Patch) p).getSysex()[nameStart + 4] + ((Patch) p).getSysex()[nameStart + 5] * 16));
+			b[3] = ((byte) (((Patch) p).getSysex()[nameStart + 6] + ((Patch) p).getSysex()[nameStart + 7] * 16));
+			b[4] = ((byte) (((Patch) p).getSysex()[nameStart + 8] + ((Patch) p).getSysex()[nameStart + 9] * 16));
+			b[5] = ((byte) (((Patch) p).getSysex()[nameStart + 10] + ((Patch) p).getSysex()[nameStart + 11] * 16));
 			StringBuffer s = new StringBuffer(new String(b, 0, 6, "US-ASCII"));
 			return s.toString();
 		} catch (Exception ex) {
@@ -60,18 +60,18 @@ public class EnsoniqESQ1BankDriver extends BankDriver {
 			if (name.length() < 6)
 				name = name + "        ";
 			namebytes = name.getBytes("US-ASCII");
-			((Patch) p).sysex[nameStart] = ((byte) (namebytes[0] % 16));
-			((Patch) p).sysex[nameStart + 1] = ((byte) (namebytes[0] / 16));
-			((Patch) p).sysex[nameStart + 2] = ((byte) (namebytes[1] % 16));
-			((Patch) p).sysex[nameStart + 3] = ((byte) (namebytes[1] / 16));
-			((Patch) p).sysex[nameStart + 4] = ((byte) (namebytes[2] % 16));
-			((Patch) p).sysex[nameStart + 5] = ((byte) (namebytes[2] / 16));
-			((Patch) p).sysex[nameStart + 6] = ((byte) (namebytes[3] % 16));
-			((Patch) p).sysex[nameStart + 7] = ((byte) (namebytes[3] / 16));
-			((Patch) p).sysex[nameStart + 8] = ((byte) (namebytes[4] % 16));
-			((Patch) p).sysex[nameStart + 9] = ((byte) (namebytes[4] / 16));
-			((Patch) p).sysex[nameStart + 10] = ((byte) (namebytes[5] % 16));
-			((Patch) p).sysex[nameStart + 11] = ((byte) (namebytes[5] / 16));
+			((Patch) p).getSysex()[nameStart] = ((byte) (namebytes[0] % 16));
+			((Patch) p).getSysex()[nameStart + 1] = ((byte) (namebytes[0] / 16));
+			((Patch) p).getSysex()[nameStart + 2] = ((byte) (namebytes[1] % 16));
+			((Patch) p).getSysex()[nameStart + 3] = ((byte) (namebytes[1] / 16));
+			((Patch) p).getSysex()[nameStart + 4] = ((byte) (namebytes[2] % 16));
+			((Patch) p).getSysex()[nameStart + 5] = ((byte) (namebytes[2] / 16));
+			((Patch) p).getSysex()[nameStart + 6] = ((byte) (namebytes[3] % 16));
+			((Patch) p).getSysex()[nameStart + 7] = ((byte) (namebytes[3] / 16));
+			((Patch) p).getSysex()[nameStart + 8] = ((byte) (namebytes[4] % 16));
+			((Patch) p).getSysex()[nameStart + 9] = ((byte) (namebytes[4] / 16));
+			((Patch) p).getSysex()[nameStart + 10] = ((byte) (namebytes[5] % 16));
+			((Patch) p).getSysex()[nameStart + 11] = ((byte) (namebytes[5] / 16));
 		} catch (Exception e) {
 		}
 
@@ -92,7 +92,7 @@ public class EnsoniqESQ1BankDriver extends BankDriver {
 			return;
 		}
 
-		System.arraycopy(((Patch) p).sysex, 5, ((Patch) bank).sysex, getPatchStart(patchNum), 204);
+		System.arraycopy(((Patch) p).getSysex(), 5, ((Patch) bank).getSysex(), getPatchStart(patchNum), 204);
 		calculateChecksum(bank);
 	}
 
@@ -105,7 +105,7 @@ public class EnsoniqESQ1BankDriver extends BankDriver {
 			sysex[03] = (byte) 0x00;
 			sysex[04] = (byte) 0x01;
 			sysex[209] = (byte) 0xF7;
-			System.arraycopy(((Patch) bank).sysex, getPatchStart(patchNum), sysex, 5, 204);
+			System.arraycopy(((Patch) bank).getSysex(), getPatchStart(patchNum), sysex, 5, 204);
 			Patch p = new Patch(sysex, getDevice());
 			p.calculateChecksum();
 			return p;

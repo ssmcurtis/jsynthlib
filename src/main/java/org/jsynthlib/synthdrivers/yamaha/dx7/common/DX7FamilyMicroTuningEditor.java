@@ -31,9 +31,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib._widgets.SpinnerWidget;
 import org.jsynthlib._widgets.SysexSender;
-import org.jsynthlib.menu.PatchBayApplication;
 import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.ParamModel;
 import org.jsynthlib.menu.ui.window.PatchEditorFrame;
@@ -166,9 +166,9 @@ public class DX7FamilyMicroTuningEditor extends PatchEditorFrame {
 
 			if (coarse) {
 				b[6] = (byte) value;
-				b[7] = (byte) (patch.sysex[offset + 1]);
+				b[7] = (byte) (patch.getSysex()[offset + 1]);
 			} else {
-				b[6] = (byte) (patch.sysex[offset]);
+				b[6] = (byte) (patch.getSysex()[offset]);
 				b[7] = (byte) value;
 			}
 

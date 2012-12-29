@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
+import org.jsynthlib.example.midi.MidiActionPlayNote;
 import org.jsynthlib.tools.ErrorMsg;
 import org.jsynthlib.tools.midi.MidiTest;
 import org.jsynthlib.tools.midi.MidiUtil;
@@ -44,6 +45,8 @@ public class MidiConfigPanel extends ConfigPanel {
 	private JCheckBox cbxEnMC;
 	/** button for loop-back test. */
 	private JButton testButton;
+	/** button for play test. */
+	private JButton playButton;
 	/** spinner for MIDI output buffer size. */
 	private JSpinner spBufSize;
 	/** spinner for MIDI output delay time. */
@@ -70,7 +73,7 @@ public class MidiConfigPanel extends ConfigPanel {
 		c.gridwidth = 1;
 		c.insets = new Insets(10, 0, 0, 0);
 		p.add(new JLabel("Output Port:"), c);
-		cbOut = new JComboBox(MidiUtil.getOutputNames()); // wirski@op.pl
+		cbOut = new JComboBox(MidiUtil.getOutputNames()); 
 		c.gridx = 1;
 		c.gridwidth = 2;
 		p.add(cbOut, c);
@@ -80,10 +83,18 @@ public class MidiConfigPanel extends ConfigPanel {
 		c.gridwidth = 1;
 		c.insets = new Insets(0, 0, 0, 0);
 		p.add(new JLabel("Input Port:"), c);
-		cbIn = new JComboBox(MidiUtil.getInputNames()); // wirski@op.pl
+		cbIn = new JComboBox(MidiUtil.getInputNames()); 
 		c.gridx = 1;
 		c.gridwidth = 2;
 		p.add(cbIn, c);
+
+		c.gridx = 0;
+		c.gridy++;
+		c.insets = new Insets(10, 0, 0, 0);
+		p.add(new JLabel("Play"), c);
+		c.gridx = 1;
+		playButton = new JButton("16 channels x 3 notes (~" + ((16*3*200/1000) +1) + " sec)");
+		p.add(playButton, c);
 
 		// master controller selection
 		cbxEnMC = new JCheckBox("Enable Master Controller Input Port");
@@ -101,7 +112,7 @@ public class MidiConfigPanel extends ConfigPanel {
 		p.add(label, c);
 		c.gridx = 1;
 		c.gridwidth = 2;
-		cbMC = new JComboBox(MidiUtil.getInputNames()); // wirski@op.pl
+		cbMC = new JComboBox(MidiUtil.getInputNames()); 
 		p.add(cbMC, c);
 
 		// MIDI output buffer size and delay
@@ -173,6 +184,12 @@ public class MidiConfigPanel extends ConfigPanel {
 				MidiTest.runLoopbackTest(cbIn.getSelectedIndex(), cbOut.getSelectedIndex());
 			}
 		});
+
+		playButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new MidiActionPlayNote(cbOut.getSelectedIndex(), -1);
+			}
+		});
 	}
 
 	public void init() {
@@ -201,6 +218,7 @@ public class MidiConfigPanel extends ConfigPanel {
 	private void setEnable(boolean midiEn) {
 		cbxEnMC.setEnabled(midiEn && MidiUtil.isOutputAvailable() && MidiUtil.isInputAvailable());
 		testButton.setEnabled(midiEn && MidiUtil.isOutputAvailable() && MidiUtil.isInputAvailable());
+		playButton.setEnabled(midiEn && MidiUtil.isOutputAvailable() && MidiUtil.isInputAvailable());
 
 		cbOut.setEnabled(midiEn && MidiUtil.isOutputAvailable());
 		cbIn.setEnabled(midiEn && MidiUtil.isInputAvailable());

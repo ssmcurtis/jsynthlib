@@ -39,11 +39,11 @@ public class ParamModel implements SysexWidget.IParamModel {
 	// SysexWidget.IParamModel interface methods
 	/** Set a parameter value <code>value</code>. */
 	public void set(int value) {
-		patch.sysex[ofs] = (byte) value;
+		patch.getSysex()[ofs] = (byte) value;
 	}
 
 	/** Get a parameter value. */
 	public int get() {
-		return patch.sysex[ofs];
+		return patch.getSysex()[ofs];
 	}
 }

@@ -35,9 +35,9 @@ public class KawaiK4DrumsetDriver extends Driver {
 			Thread.sleep(100);
 		} catch (Exception e) {
 		}
-		p.sysex[3] = (byte) 0x20;
-		p.sysex[6] = (byte) ((bankNum << 1) + 1);
-		p.sysex[7] = (byte) 0x20;
+		p.getSysex()[3] = (byte) 0x20;
+		p.getSysex()[6] = (byte) ((bankNum << 1) + 1);
+		p.getSysex()[7] = (byte) 0x20;
 		sendPatchWorker(p);
 		try {
 			Thread.sleep(100);
@@ -46,8 +46,8 @@ public class KawaiK4DrumsetDriver extends Driver {
 	}
 
 	public void sendPatch(Patch p) {
-		p.sysex[3] = (byte) 0x23;
-		p.sysex[7] = (byte) 0x20;
+		p.getSysex()[3] = (byte) 0x23;
+		p.getSysex()[7] = (byte) 0x20;
 		sendPatchWorker(p);
 	}
 
@@ -56,10 +56,10 @@ public class KawaiK4DrumsetDriver extends Driver {
 		for (int i = 8; i < HSIZE + SSIZE - 1; i += 11) {
 			int sum = 0;
 			for (int j = i; j < i + 10; j++) {
-				sum += p.sysex[j];
+				sum += p.getSysex()[j];
 			}
 			sum += 0xA5;
-			p.sysex[i + 10] = (byte) (sum % 128);
+			p.getSysex()[i + 10] = (byte) (sum % 128);
 		}
 	}
 

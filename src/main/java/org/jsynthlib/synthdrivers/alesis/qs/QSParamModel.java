@@ -38,7 +38,7 @@ public class QSParamModel implements SysexWidget.IParamModel {
 	 */
 	public QSParamModel(Patch patch, int msByte, int msBit, int lsByte, int lsBit, boolean signed) {
 		// count # of usable bits in the patch
-		int patchBits = (patch.sysex.length - QSConstants.HEADER) * 7;
+		int patchBits = (patch.getSysex().length - QSConstants.HEADER) * 7;
 
 		if (lsByte < 0)
 			throw new IllegalArgumentException("lsByte byte must be >= 0");
@@ -73,7 +73,7 @@ public class QSParamModel implements SysexWidget.IParamModel {
 	 */
 	public QSParamModel(Patch patch, int msBit, int bitSize, int offset) {
 		// count # of usable bits in the patch
-		int patchBits = (patch.sysex.length - QSConstants.HEADER) * 7;
+		int patchBits = (patch.getSysex().length - QSConstants.HEADER) * 7;
 
 		if (msBit - bitSize + 1 < 0)
 			throw new IllegalArgumentException("Starting bit must be >= 0");
@@ -98,7 +98,7 @@ public class QSParamModel implements SysexWidget.IParamModel {
 	public void set(int value) {
 		// Function header is followed by one normal byte, which is either
 		// 0 (for global dump), or the program #, effect #, etc.
-		SysexRoutines.setBits(value - offset, this.patch.sysex, QSConstants.HEADER, this.msBit, this.bitSize);
+		SysexRoutines.setBits(value - offset, this.patch.getSysex(), QSConstants.HEADER, this.msBit, this.bitSize);
 	}
 
 	/**
@@ -113,7 +113,7 @@ public class QSParamModel implements SysexWidget.IParamModel {
 		// ", bitSize=" + this.bitSize +
 		// ", signed=" + this.signed);
 		int retVal = offset
-				+ SysexRoutines.getBits(this.patch.sysex, QSConstants.HEADER, this.msBit, this.bitSize, false);
+				+ SysexRoutines.getBits(this.patch.getSysex(), QSConstants.HEADER, this.msBit, this.bitSize, false);
 
 		// System.out.println("Returning: " + retVal);
 		return retVal;

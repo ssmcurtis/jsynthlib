@@ -62,7 +62,7 @@ public class AlesisQSProgramDriver extends Driver {
 	 */
 	public String getPatchName(Patch ip) {
 		// ErrorMsg.reportStatus("Alesis getPatchName ", p.sysex);
-		return SysexRoutines.getChars(((Patch) ip).sysex, QSConstants.HEADER, QSConstants.PROG_NAME_START,
+		return SysexRoutines.getChars(((Patch) ip).getSysex(), QSConstants.HEADER, QSConstants.PROG_NAME_START,
 				QSConstants.PROG_NAME_LENGTH);
 	}
 
@@ -76,7 +76,7 @@ public class AlesisQSProgramDriver extends Driver {
 	 */
 	public void setPatchName(Patch p, String name) {
 		// ErrorMsg.reportStatus("Alesis setPatchName ", p.sysex);
-		SysexRoutines.setChars(name, ((Patch) p).sysex, QSConstants.HEADER, QSConstants.PROG_NAME_START,
+		SysexRoutines.setChars(name, ((Patch) p).getSysex(), QSConstants.HEADER, QSConstants.PROG_NAME_START,
 				QSConstants.PROG_NAME_LENGTH);
 	}
 
@@ -174,8 +174,8 @@ public class AlesisQSProgramDriver extends Driver {
 		// default to simple case - set specified patch in the User bank
 		int location = patchNum;
 		byte opcode = QSConstants.OPCODE_MIDI_USER_PROG_DUMP;
-		byte oldOpcode = ((Patch) p).sysex[QSConstants.POSITION_OPCODE];
-		byte oldLocation = ((Patch) p).sysex[QSConstants.POSITION_LOCATION];
+		byte oldOpcode = ((Patch) p).getSysex()[QSConstants.POSITION_OPCODE];
+		byte oldLocation = ((Patch) p).getSysex()[QSConstants.POSITION_LOCATION];
 
 		// if the patch number is > max location, get from Edit buffers
 		if (location > QSConstants.MAX_LOCATION_PROG) {
@@ -183,10 +183,10 @@ public class AlesisQSProgramDriver extends Driver {
 			opcode = QSConstants.OPCODE_MIDI_EDIT_PROG_DUMP;
 		}
 		// set the opcode and target location
-		((Patch) p).sysex[QSConstants.POSITION_OPCODE] = opcode;
-		((Patch) p).sysex[QSConstants.POSITION_LOCATION] = (byte) location;
+		((Patch) p).getSysex()[QSConstants.POSITION_OPCODE] = opcode;
+		((Patch) p).getSysex()[QSConstants.POSITION_LOCATION] = (byte) location;
 
-		ErrorMsg.reportStatus("foo", ((Patch) p).sysex);
+		ErrorMsg.reportStatus("foo", ((Patch) p).getSysex());
 		// setBankNum (bankNum);
 		// setPatchNum (patchNum);
 
@@ -194,7 +194,7 @@ public class AlesisQSProgramDriver extends Driver {
 		sendPatchWorker(p);
 
 		// restore the old values
-		((Patch) p).sysex[QSConstants.POSITION_OPCODE] = oldOpcode;
-		((Patch) p).sysex[QSConstants.POSITION_LOCATION] = oldLocation;
+		((Patch) p).getSysex()[QSConstants.POSITION_OPCODE] = oldOpcode;
+		((Patch) p).getSysex()[QSConstants.POSITION_LOCATION] = oldLocation;
 	}
 }

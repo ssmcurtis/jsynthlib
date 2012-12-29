@@ -60,7 +60,7 @@ public class RolandJV80PerformanceEditor extends PatchEditorFrame {
 
 		isJV80 = ((RolandJV80PerformanceDriver) p.getDriver()).isJV80;
 
-		((RolandJV80Device) p.getDevice()).getPerformanceDriver().setPerformanceNum(p.sysex, -1, 0);
+		((RolandJV80Device) p.getDevice()).getPerformanceDriver().setPerformanceNum(p.getSysex(), -1, 0);
 		buildEditor(p);
 	}
 
@@ -452,12 +452,12 @@ public class RolandJV80PerformanceEditor extends PatchEditorFrame {
 		}
 
 		public int get() {
-			return (patch.sysex[ofs] << 4) + (patch.sysex[ofs + 1]);
+			return (patch.getSysex()[ofs] << 4) + (patch.getSysex()[ofs + 1]);
 		}
 
 		public void set(int value) {
-			patch.sysex[ofs] = (byte) (value >> 4);
-			patch.sysex[ofs + 1] = (byte) (value & 0x0F);
+			patch.getSysex()[ofs] = (byte) (value >> 4);
+			patch.getSysex()[ofs + 1] = (byte) (value & 0x0F);
 		}
 	}
 

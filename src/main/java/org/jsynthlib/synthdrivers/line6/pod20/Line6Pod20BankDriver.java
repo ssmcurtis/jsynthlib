@@ -86,7 +86,7 @@ public class Line6Pod20BankDriver extends BankDriver {
 		nameOfs += nameStart; // offset of name in patch data
 		char c[] = new char[patchNameSize];
 		for (int i = 0; i < patchNameSize; i++) {
-			c[i] = (char) PatchBytes.getSysexByte(p.sysex, Constants.BDMP_HDR_SIZE, i + nameOfs);
+			c[i] = (char) PatchBytes.getSysexByte(p.getSysex(), Constants.BDMP_HDR_SIZE, i + nameOfs);
 		}
 
 		return new String(c);
@@ -127,7 +127,7 @@ public class Line6Pod20BankDriver extends BankDriver {
 			return;
 		}
 
-		System.arraycopy(p.sysex, Constants.PDMP_HDR_SIZE, bank.sysex, getNibblizedSysexStart(patchNum),
+		System.arraycopy(p.getSysex(), Constants.PDMP_HDR_SIZE, bank.getSysex(), getNibblizedSysexStart(patchNum),
 				Constants.SIGL_SIZE);
 	}
 
@@ -141,7 +141,7 @@ public class Line6Pod20BankDriver extends BankDriver {
 		System.arraycopy(Constants.SIGL_DUMP_HDR_BYTES, 0, sysex, 0, Constants.PDMP_HDR_SIZE);
 		sysex[7] = (byte) patchNum;
 		sysex[Constants.SIGL_SIZE + Constants.BDMP_HDR_SIZE + 1] = (byte) 0xF7;
-		System.arraycopy(bank.sysex, getNibblizedSysexStart(patchNum), sysex, Constants.PDMP_HDR_SIZE,
+		System.arraycopy(bank.getSysex(), getNibblizedSysexStart(patchNum), sysex, Constants.PDMP_HDR_SIZE,
 				Constants.SIGL_SIZE);
 		try {
 			Patch p = new Patch(sysex, getDevice());
@@ -170,7 +170,7 @@ public class Line6Pod20BankDriver extends BankDriver {
 		sysex[Constants.BDMP_HDR_SIZE + (Constants.SIGL_SIZE * Constants.PATCHES_PER_BANK)] = (byte) 0xF7;
 		Patch p = new Patch(sysex, this);
 		for (int i = 0; i < Constants.PATCHES_PER_BANK; i++) {
-			System.arraycopy(Constants.NEW_SYSEX, Constants.PDMP_HDR_SIZE, p.sysex, getNibblizedSysexStart(i),
+			System.arraycopy(Constants.NEW_SYSEX, Constants.PDMP_HDR_SIZE, p.getSysex(), getNibblizedSysexStart(i),
 					Constants.SIGL_SIZE);
 			setPatchName(p, i, "New Patch");
 		}

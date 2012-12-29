@@ -143,7 +143,7 @@ public class AlesisDM5SysInfoEditor extends PatchEditorFrame {
 			if (reverse) {
 				i = (i - 1) * -1;
 			}
-			patch.sysex[ofs] = (byte) ((i * mult) + (patch.sysex[ofs] & (~bitmask)));
+			patch.getSysex()[ofs] = (byte) ((i * mult) + (patch.getSysex()[ofs] & (~bitmask)));
 		}
 
 		/**
@@ -151,7 +151,7 @@ public class AlesisDM5SysInfoEditor extends PatchEditorFrame {
 		 * reverse = true .
 		 */
 		public int get() {
-			int returnVal = (patch.sysex[ofs] & bitmask) / mult;
+			int returnVal = (patch.getSysex()[ofs] & bitmask) / mult;
 			if (reverse) {
 				returnVal = (returnVal - 1) * -1;
 			}
@@ -179,7 +179,7 @@ public class AlesisDM5SysInfoEditor extends PatchEditorFrame {
 		 * Generate method for sending entire patch.
 		 */
 		public byte[] generate(int value) {
-			return patch.sysex;
+			return patch.getSysex();
 		}
 	}
 }

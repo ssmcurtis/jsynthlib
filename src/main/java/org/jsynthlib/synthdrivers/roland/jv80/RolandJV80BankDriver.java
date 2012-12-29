@@ -73,8 +73,8 @@ public class RolandJV80BankDriver extends BankDriver {
 		Patch patch = patchDriver.createNewPatch();
 
 		for (int i = 0; i < PATCHES_PER_BANK; i++) {
-			patchDriver.setPatchNum(patch.sysex, 0, i);
-			System.arraycopy(patch.sysex, 0, bankSysex, i * singleSize, patch.sysex.length);
+			patchDriver.setPatchNum(patch.getSysex(), 0, i);
+			System.arraycopy(patch.getSysex(), 0, bankSysex, i * singleSize, patch.getSysex().length);
 		}
 
 		Patch bankPatch = new Patch(bankSysex, this);
@@ -84,13 +84,13 @@ public class RolandJV80BankDriver extends BankDriver {
 
 	public Patch getPatch(Patch bank, int patchNum) {
 		byte[] sysex = new byte[singleSize];
-		System.arraycopy(bank.sysex, getStartOffset(patchNum), sysex, 0, sysex.length);
+		System.arraycopy(bank.getSysex(), getStartOffset(patchNum), sysex, 0, sysex.length);
 		return new Patch(sysex, patchDriver);
 	}
 
 	public String getPatchName(Patch p, int patchNum) {
 		int offset = getStartOffset(patchNum);
-		return new String(p.sysex, offset + patchNameStart, patchNameSize);
+		return new String(p.getSysex(), offset + patchNameStart, patchNameSize);
 	}
 
 	public int getStartOffset(int patchnr) {
@@ -104,7 +104,7 @@ public class RolandJV80BankDriver extends BankDriver {
 			return;
 		}
 		int offset = getStartOffset(patchNum);
-		System.arraycopy(p.sysex, 0, bank.sysex, offset, p.sysex.length);
+		System.arraycopy(p.getSysex(), 0, bank.getSysex(), offset, p.getSysex().length);
 		patchDriver.calculateChecksum(bank, offset);
 	}
 
@@ -137,12 +137,12 @@ public class RolandJV80BankDriver extends BankDriver {
 		if (data.length > patchNameSize)
 			return;
 
-		System.arraycopy(data, 0, p.sysex, offset + patchNameStart, data.length);
+		System.arraycopy(data, 0, p.getSysex(), offset + patchNameStart, data.length);
 	}
 
 	// stores entire bank
 	public void storePatch(Patch p, int bankNum, int patchNum) {
-		setPatchNum(p.sysex, bankNum);
+		setPatchNum(p.getSysex(), bankNum);
 		calculateChecksum(p);
 		sendPatchWorker(p);
 	}
@@ -150,7 +150,7 @@ public class RolandJV80BankDriver extends BankDriver {
 	public void deletePatch(Patch bank, int patchNum) {
 		Patch patch = patchDriver.createNewPatch();
 		int offset = getStartOffset(patchNum);
-		System.arraycopy(patch.sysex, 0, bank.sysex, offset, patch.sysex.length);
+		System.arraycopy(patch.getSysex(), 0, bank.getSysex(), offset, patch.getSysex().length);
 	}
 
 }

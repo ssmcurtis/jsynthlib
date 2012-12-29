@@ -16,6 +16,7 @@ import javax.swing.JRootPane;
 import javax.swing.KeyStroke;
 
 import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.tools.Utility;
 
 /**
  * This class serves as a initial substitute for a patch editor. It is to be used for verifying that your driver is
@@ -33,7 +34,7 @@ public class HexDumpEditorFrame extends SingleTextAreaFrame {
 	static final int bytesperline = 16;
 
 	public HexDumpEditorFrame(byte[] bytes) {
-		this();
+		super("Hex dump of sysex message byte[]", bytesperline * 4 + 12);
 		appendBytes(bytes);
 	}
 
@@ -41,7 +42,7 @@ public class HexDumpEditorFrame extends SingleTextAreaFrame {
 	 * public HexDumpEditorFrame(DataModel dm) { this(dm.getDecodedBytes()); }
 	 */
 	public HexDumpEditorFrame(Patch p) {
-		this();
+		super("Hex dump of sysex message patch ", bytesperline * 4 + 12);
 		SysexMessage[] messages = p.getMessages();
 		for (int i = 0; i < messages.length; i++) {
 			append("Message " + i + ":\n");
@@ -49,12 +50,8 @@ public class HexDumpEditorFrame extends SingleTextAreaFrame {
 		}
 	}
 
-	public HexDumpEditorFrame() {
-		super("Hex dump of sysex message", bytesperline * 4 + 12);
-	}
-
 	public void appendBytes(byte[] bytes) {
-		append(org.jsynthlib.tools.Utility.hexDump(bytes, 0, -1, bytesperline, true, true));
+		append(Utility.hexDump(bytes, 0, -1, bytesperline, true, true));
 	}
 	
 }

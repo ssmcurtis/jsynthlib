@@ -224,7 +224,7 @@ class KawaiK5000ADDSingleEditor extends PatchEditorFrame {
 		scrollPane.add(tabPane, gbc);
 		for (int i = 0; i < 6; i++) {
 			srcPanel[i] = createSourcePanel(i);
-			if (patch.sysex[60] > i)
+			if (patch.getSysex()[60] > i)
 				tabPane.addTab("Source " + (i + 1), srcPanel[i]);
 		}
 
@@ -353,16 +353,16 @@ class K5kVelSwModel extends ParamModel {
 
 	public void set(int i) {
 		if (part == 0)
-			patch.sysex[ofs] = ((byte) (i * 32 + (get() & 31)));
+			patch.getSysex()[ofs] = ((byte) (i * 32 + (get() & 31)));
 		else
-			patch.sysex[ofs] = ((byte) (i + (get() & (127 - 31))));
+			patch.getSysex()[ofs] = ((byte) (i + (get() & (127 - 31))));
 	}
 
 	public int get() {
 		if (part == 0)
-			return (patch.sysex[ofs] & (127 - 31) / 32);
+			return (patch.getSysex()[ofs] & (127 - 31) / 32);
 		else
-			return (patch.sysex[ofs] & 31);
+			return (patch.getSysex()[ofs] & 31);
 	}
 }
 

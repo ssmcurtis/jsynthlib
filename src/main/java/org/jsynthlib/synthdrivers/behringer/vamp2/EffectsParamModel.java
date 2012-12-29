@@ -112,12 +112,12 @@ class EffectsParamModel extends ParamModel {
 	 *            The new value of this parameter.
 	 */
 	public void set(int value) {
-		patch.sysex[ofs] = (byte) value;
-		patch.sysex[Constants.HDR_SIZE + 9] = 1; // Set effects on
-		System.arraycopy(EFFECT_DEFAULT[value], 0, patch.sysex, Constants.HDR_SIZE + 16, 16);
+		patch.getSysex()[ofs] = (byte) value;
+		patch.getSysex()[Constants.HDR_SIZE + 9] = 1; // Set effects on
+		System.arraycopy(EFFECT_DEFAULT[value], 0, patch.getSysex(), Constants.HDR_SIZE + 16, 16);
 
-		ErrorMsg.reportStatus(">>>>>>> Patch After Edit <<<<<<<<<");
-		ErrorMsg.reportStatus("  " + Utility.hexDump(patch.sysex, 0, -1, 16));
+//		ErrorMsg.reportStatus(">>>>>>> Patch After Edit <<<<<<<<<");
+		ErrorMsg.reportStatus("  " + Utility.hexDump(patch.getSysex(), 0, -1, 16));
 	}
 
 	/**
@@ -126,6 +126,6 @@ class EffectsParamModel extends ParamModel {
 	 * @return The value of this parameter.
 	 */
 	public int get() {
-		return (int) patch.sysex[ofs];
+		return (int) patch.getSysex()[ofs];
 	}
 }

@@ -78,7 +78,7 @@ public class DX7FamilyPerformanceIIBankDriver extends BankDriver {
 		int nameStart = getPatchNameStart(patchNum);
 
 		try {
-			StringBuffer s = new StringBuffer(new String(((Patch) p).sysex, nameStart, dxPatchNameSize,
+			StringBuffer s = new StringBuffer(new String(((Patch) p).getSysex(), nameStart, dxPatchNameSize,
 					"US-ASCII"));
 			return s.toString();
 		} catch (UnsupportedEncodingException ex) {
@@ -97,7 +97,7 @@ public class DX7FamilyPerformanceIIBankDriver extends BankDriver {
 		try {
 			namebytes = name.getBytes("US-ASCII");
 			for (int i = 0; i < dxPatchNameSize; i++)
-				((Patch) p).sysex[nameStart + i] = namebytes[i];
+				((Patch) p).getSysex()[nameStart + i] = namebytes[i];
 
 		} catch (UnsupportedEncodingException ex) {
 			return;
@@ -113,7 +113,7 @@ public class DX7FamilyPerformanceIIBankDriver extends BankDriver {
 		}
 
 		for (int i = 0; i < 51; i++) {
-			((Patch) bank).sysex[getPatchStart(patchNum) + i] = (byte) (((Patch) p).sysex[16 + i]);
+			((Patch) bank).getSysex()[getPatchStart(patchNum) + i] = (byte) (((Patch) p).getSysex()[16 + i]);
 		}
 
 		calculateChecksum(bank);
@@ -144,7 +144,7 @@ public class DX7FamilyPerformanceIIBankDriver extends BankDriver {
 			sysex[singleSize - 1] = (byte) 0xf7;
 
 			for (int i = 0; i < 51; i++) {
-				sysex[16 + i] = (byte) (((Patch) bank).sysex[getPatchStart(patchNum) + i]);
+				sysex[16 + i] = (byte) (((Patch) bank).getSysex()[getPatchStart(patchNum) + i]);
 			}
 
 			Patch p = new Patch(sysex, getDevice()); // single sysex

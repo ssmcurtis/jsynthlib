@@ -51,7 +51,7 @@ public class NovationNova1BankDriver extends BankDriver {
 	public String getPatchName(Patch p, int patchNum) {
 		int nameStart = getPatchStart(patchNum);
 		try {
-			StringBuffer s = new StringBuffer(new String(((Patch) p).sysex, nameStart, 16, "US-ASCII"));
+			StringBuffer s = new StringBuffer(new String(((Patch) p).getSysex(), nameStart, 16, "US-ASCII"));
 			return s.toString();
 		} catch (UnsupportedEncodingException ex) {
 			return "-";
@@ -69,7 +69,7 @@ public class NovationNova1BankDriver extends BankDriver {
 		try {
 			namebytes = name.getBytes("US-ASCII");
 			for (int i = 0; i < patchNameSize; i++)
-				((Patch) p).sysex[patchNameStart + i] = namebytes[i];
+				((Patch) p).getSysex()[patchNameStart + i] = namebytes[i];
 		} catch (UnsupportedEncodingException ex) {
 			return;
 		}
@@ -94,7 +94,7 @@ public class NovationNova1BankDriver extends BankDriver {
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-		System.arraycopy(((Patch) p).sysex, 9, ((Patch) bank).sysex, getPatchStart(patchNum), 296 - 9);
+		System.arraycopy(((Patch) p).getSysex(), 9, ((Patch) bank).getSysex(), getPatchStart(patchNum), 296 - 9);
 		calculateChecksum(bank);
 	}
 
@@ -116,7 +116,7 @@ public class NovationNova1BankDriver extends BankDriver {
 			sysex[7] = (byte) 0x00;
 			sysex[8] = (byte) 0x09;
 			sysex[295] = (byte) 0xF7;
-			System.arraycopy(((Patch) bank).sysex, getPatchStart(patchNum), sysex, 9, 296 - 9);
+			System.arraycopy(((Patch) bank).getSysex(), getPatchStart(patchNum), sysex, 9, 296 - 9);
 			Patch p = new Patch(sysex, getDevice());
 			p.calculateChecksum();
 			return p;
@@ -150,9 +150,9 @@ public class NovationNova1BankDriver extends BankDriver {
 		Patch p = new Patch(sysex, this);
 		for (int i = 0; i < 128; i++) {
 			sysexHeader[9] = (byte) i;
-			System.arraycopy(sysexHeader, 0, p.sysex, i * 297, 10);
-			System.arraycopy(NovationNova1InitPatch.initpatch, 9, p.sysex, (i * 297) + 10, 296 - 9);
-			p.sysex[(297 * i) + 296] = (byte) 0xF7;
+			System.arraycopy(sysexHeader, 0, p.getSysex(), i * 297, 10);
+			System.arraycopy(NovationNova1InitPatch.initpatch, 9, p.getSysex(), (i * 297) + 10, 296 - 9);
+			p.getSysex()[(297 * i) + 296] = (byte) 0xF7;
 		}
 		calculateChecksum(p);
 		return p;
@@ -166,14 +166,14 @@ public class NovationNova1BankDriver extends BankDriver {
 		// either 5 (Nova bank A) or 6 (Nova bank B)
 
 		for (int i = 0; i < 128; i++) {
-			((Patch) bank).sysex[getPatchStart(i) - 2] = (byte) (bankNum + 5);
+			((Patch) bank).getSysex()[getPatchStart(i) - 2] = (byte) (bankNum + 5);
 		}
 
 		byte[] newsysex = new byte[297];
 		Patch p = new Patch(newsysex);
 		try {
 			for (int i = 0; i < 128; i++) {
-				System.arraycopy(((Patch) bank).sysex, 297 * i, p.sysex, 0, 297);
+				System.arraycopy(((Patch) bank).getSysex(), 297 * i, p.getSysex(), 0, 297);
 				sendPatchWorker(p);
 				Thread.sleep(150); // Nova have problem receiving too fast,
 									// NOTE : Do not modify this to send the bank in one shot! It will be faster but

@@ -6,7 +6,7 @@ package org.jsynthlib.synthdrivers.alesis.a6;
 
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.Driver;
 import org.jsynthlib.menu.patch.SysexHandler;
@@ -90,7 +90,7 @@ public class AlesisA6PgmSingleDriver extends Driver {
 		try {
 			char c[] = new char[patchNameSize];
 			for (int i = 0; i < patchNameSize; i++)
-				c[i] = (char) (getA6PgmByte(p.sysex, i + patchNameStart));
+				c[i] = (char) (getA6PgmByte(p.getSysex(), i + patchNameStart));
 			return new String(c);
 		} catch (Exception ex) {
 			return "-";
@@ -102,7 +102,7 @@ public class AlesisA6PgmSingleDriver extends Driver {
 			name = name + "                ";
 		byte nameByte[] = name.getBytes();
 		for (int i = 0; i < patchNameSize; i++) {
-			setA6PgmByte(nameByte[i], ((Patch) p).sysex, i + patchNameStart);
+			setA6PgmByte(nameByte[i], ((Patch) p).getSysex(), i + patchNameStart);
 		}
 	}
 
@@ -111,9 +111,9 @@ public class AlesisA6PgmSingleDriver extends Driver {
 	}
 
 	public void sendPatch(Patch p, int bankNum, int patchNum) {
-		Patch p2 = new Patch(p.sysex);
-		p2.sysex[6] = (byte) bankNum;
-		p2.sysex[7] = (byte) patchNum;
+		Patch p2 = new Patch(p.getSysex());
+		p2.getSysex()[6] = (byte) bankNum;
+		p2.getSysex()[7] = (byte) patchNum;
 		sendPatchWorker(p2);
 	}
 
@@ -133,7 +133,7 @@ public class AlesisA6PgmSingleDriver extends Driver {
 	// is being used for that purpose.
 	protected void playPatch(Patch p) {
 		byte sysex[] = new byte[2352];
-		System.arraycopy(((Patch) p).sysex, 0, sysex, 0, 2350);
+		System.arraycopy(((Patch) p).getSysex(), 0, sysex, 0, 2350);
 		sysex[6] = 0; // user bank
 		sysex[7] = 127; // program # 127
 		sysex[2350] = (byte) (0xC0 + getChannel() - 1); // program change

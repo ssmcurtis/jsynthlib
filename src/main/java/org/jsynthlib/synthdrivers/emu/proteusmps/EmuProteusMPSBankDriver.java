@@ -41,7 +41,7 @@ public class EmuProteusMPSBankDriver extends BankDriver {
 		int nameStart = getPatchStart(patchNum);
 		nameStart += 7; // offset of name in patch data
 		try {
-			StringBuffer s = new StringBuffer(new String(((Patch) p).sysex, nameStart, 24, "US-ASCII"));
+			StringBuffer s = new StringBuffer(new String(((Patch) p).getSysex(), nameStart, 24, "US-ASCII"));
 			for (int i = 1; i < s.length(); i++)
 				s.deleteCharAt(i);
 			return s.toString();
@@ -61,7 +61,7 @@ public class EmuProteusMPSBankDriver extends BankDriver {
 		try {
 			namebytes = name.getBytes("US-ASCII");
 			for (int i = 0; i < patchNameSize; i++)
-				((Patch) p).sysex[patchNameStart + (i * 2)] = namebytes[i];
+				((Patch) p).getSysex()[patchNameStart + (i * 2)] = namebytes[i];
 
 		} catch (UnsupportedEncodingException ex) {
 			return;
@@ -73,8 +73,8 @@ public class EmuProteusMPSBankDriver extends BankDriver {
 		int sum = 0;
 
 		for (i = start; i <= end; i++)
-			sum += p.sysex[i];
-		p.sysex[ofs] = (byte) (sum % 128);
+			sum += p.getSysex()[i];
+		p.getSysex()[ofs] = (byte) (sum % 128);
 
 	}
 
@@ -90,14 +90,14 @@ public class EmuProteusMPSBankDriver extends BankDriver {
 			return;
 		}
 
-		System.arraycopy(((Patch) p).sysex, 0, ((Patch) bank).sysex, getPatchStart(patchNum), 319);
+		System.arraycopy(((Patch) p).getSysex(), 0, ((Patch) bank).getSysex(), getPatchStart(patchNum), 319);
 		calculateChecksum(bank);
 	}
 
 	public Patch getPatch(Patch bank, int patchNum) {
 		try {
 			byte[] sysex = new byte[319];
-			System.arraycopy(((Patch) bank).sysex, getPatchStart(patchNum), sysex, 0, 319);
+			System.arraycopy(((Patch) bank).getSysex(), getPatchStart(patchNum), sysex, 0, 319);
 			Patch p = new Patch(sysex, getDevice());
 			p.calculateChecksum();
 			return p;
@@ -110,8 +110,8 @@ public class EmuProteusMPSBankDriver extends BankDriver {
 	public void storePatch(Patch p, int bankNum, int patchNum) {
 		setBankNum(bankNum);
 		for (int i = 0; i < 100; i++) {
-			((Patch) p).sysex[getPatchStart(i) + 5] = (byte) ((bankNum * 100 + i) % 128);
-			((Patch) p).sysex[getPatchStart(i) + 6] = (byte) ((bankNum * 100 + i) / 128);
+			((Patch) p).getSysex()[getPatchStart(i) + 5] = (byte) ((bankNum * 100 + i) % 128);
+			((Patch) p).getSysex()[getPatchStart(i) + 6] = (byte) ((bankNum * 100 + i) / 128);
 		}
 		sendPatchWorker(p);
 	}

@@ -158,7 +158,7 @@ public class DX7FamilyVoiceEditor extends PatchEditorFrame implements ItemListen
 		algoIcon[30] = new ImageIcon(getClass().getResource("../images/algo31.gif"));
 		algoIcon[31] = new ImageIcon(getClass().getResource("../images/algo32.gif"));
 
-		final JLabel l = new JLabel(algoIcon[patch.sysex[6 + 134]]);
+		final JLabel l = new JLabel(algoIcon[patch.getSysex()[6 + 134]]);
 
 		/*
 		 * DX7 Voice Parameter - Common settings

@@ -59,7 +59,7 @@ class PacketModel extends BitModel {
 	 * i.
 	 */
 	public void set(int i) {
-		patch.sysex[(PACKET_SIZE * packetIndex) + ofs] = (byte) ((patch.sysex[(PACKET_SIZE * packetIndex) + ofs] & (~mask)) | ((i << power) & mask));
+		patch.getSysex()[(PACKET_SIZE * packetIndex) + ofs] = (byte) ((patch.getSysex()[(PACKET_SIZE * packetIndex) + ofs] & (~mask)) | ((i << power) & mask));
 	}
 
 	/**
@@ -67,7 +67,7 @@ class PacketModel extends BitModel {
 	 * value as in int.
 	 */
 	public int get() {
-		int returnVal = ((patch.sysex[(PACKET_SIZE * packetIndex) + ofs] & mask) >> power);
+		int returnVal = ((patch.getSysex()[(PACKET_SIZE * packetIndex) + ofs] & mask) >> power);
 		return returnVal;
 	}
 

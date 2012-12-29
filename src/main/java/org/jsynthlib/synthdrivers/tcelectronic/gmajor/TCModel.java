@@ -38,11 +38,11 @@ class TCModel extends ParamModel {
 	}
 
 	public void set(int i) {
-		TCElectronicGMajorUtil.setValue(patch.sysex, i + delta, ofs);
+		TCElectronicGMajorUtil.setValue(patch.getSysex(), i + delta, ofs);
 	}
 
 	public int get() {
-		return TCElectronicGMajorUtil.getValue(patch.sysex, ofs) - delta;
+		return TCElectronicGMajorUtil.getValue(patch.getSysex(), ofs) - delta;
 	}
 
 }

@@ -80,7 +80,7 @@ public class KorgX3BankDriver extends BankDriver {
 		int nameStart = getPatchStart(patchNum);
 		nameStart += 0; // offset of name in patch data
 		try {
-			StringBuffer s = new StringBuffer(new String(((Patch) p).sysex, nameStart, 10, "US-ASCII"));
+			StringBuffer s = new StringBuffer(new String(((Patch) p).getSysex(), nameStart, 10, "US-ASCII"));
 			return s.toString();
 		} catch (UnsupportedEncodingException ex) {
 			return "-";
@@ -107,7 +107,7 @@ public class KorgX3BankDriver extends BankDriver {
 		try {
 			namebytes = name.getBytes("US-ASCII");
 			for (int i = 0; i < patchNameSize; i++)
-				((Patch) p).sysex[patchNameStart + i] = namebytes[i];
+				((Patch) p).getSysex()[patchNameStart + i] = namebytes[i];
 
 		} catch (UnsupportedEncodingException ex) {
 			return;
@@ -144,7 +144,7 @@ public class KorgX3BankDriver extends BankDriver {
 			return;
 		}
 
-		System.arraycopy(((Patch) p).sysex, KorgX3SingleDriver.EXTRA_HEADER, ((Patch) bank).sysex,
+		System.arraycopy(((Patch) p).getSysex(), KorgX3SingleDriver.EXTRA_HEADER, ((Patch) bank).getSysex(),
 				getPatchStart(patchNum), 164);
 	}
 
@@ -166,7 +166,7 @@ public class KorgX3BankDriver extends BankDriver {
 			sysex[03] = (byte) 0x35;
 			sysex[186] = (byte) 0xF7;
 
-			System.arraycopy(((Patch) bank).sysex, getPatchStart(patchNum), sysex,
+			System.arraycopy(((Patch) bank).getSysex(), getPatchStart(patchNum), sysex,
 					KorgX3SingleDriver.EXTRA_HEADER, 164);
 			return new Patch(sysex);
 		} catch (Exception e) {

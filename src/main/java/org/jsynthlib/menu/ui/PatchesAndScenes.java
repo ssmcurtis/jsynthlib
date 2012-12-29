@@ -26,9 +26,9 @@ public class PatchesAndScenes implements Transferable {
 		patches.add(patch);
 	}
 
-	public void add(Scene scene) {
-		patches.add(scene);
-	}
+//	public void add(Scene scene) {
+//		patches.add(scene);
+//	}
 
 	public boolean isDataFlavorSupported(DataFlavor dataFlavor) {
 		for (int i = 0; i < flavors.length; i++) {

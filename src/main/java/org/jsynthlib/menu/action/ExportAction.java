@@ -11,7 +11,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.preferences.AppConfig;
 import org.jsynthlib.menu.ui.ExtensionFilter;
 import org.jsynthlib.menu.ui.window.CompatibleFileDialog;
@@ -35,11 +35,11 @@ public class ExportAction extends AbstractAction {
 		File file = fc3.getSelectedFile();
 		try {
 			if (Actions.getSelectedFrame() == null) {
-				ErrorMsg.reportError("Error", "Patch to export must be hilighted\n"
-						+ "in the currently focuses Library");
+				ErrorMsg.reportError("Error", "Patch to export must be hilighted\n" + "in the currently focuses Library");
 			} else {
-				if (!file.getName().toUpperCase().endsWith(".SYX"))
+				if (!file.getName().toUpperCase().endsWith(".SYX")) {
 					file = new File(file.getPath() + ".syx");
+				}
 				if (file.exists())
 					if (JOptionPane.showConfirmDialog(null, "Are you sure?", "File Exists", JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION)
 						return;

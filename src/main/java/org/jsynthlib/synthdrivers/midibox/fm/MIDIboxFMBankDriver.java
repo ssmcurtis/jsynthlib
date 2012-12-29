@@ -68,9 +68,9 @@ public class MIDIboxFMBankDriver extends BankDriver {
 	public void storePatch(Patch p, int bankNum, int patchNum) {
 		for (int i = 0; i < num_patches; ++i) {
 			Patch ps = getPatch(p, i);
-			ps.sysex[8] = (byte) bankNum;
+			ps.getSysex()[8] = (byte) bankNum;
 			System.out.println("Sending Patch #" + i);
-			send(ps.sysex);
+			send(ps.getSysex());
 			try {
 				Thread.sleep(600);
 			} catch (Exception e) {
@@ -94,7 +94,7 @@ public class MIDIboxFMBankDriver extends BankDriver {
 			int nameStart = getPatchStart(patchNum);
 			nameStart += 0; // offset of name in patch data
 			try {
-				StringBuffer s = new StringBuffer(new String(((Patch) p).sysex, nameStart, 16, "US-ASCII"));
+				StringBuffer s = new StringBuffer(new String(((Patch) p).getSysex(), nameStart, 16, "US-ASCII"));
 				return s.toString();
 			} catch (UnsupportedEncodingException ex) {
 				return "-";
@@ -115,7 +115,7 @@ public class MIDIboxFMBankDriver extends BankDriver {
 			try {
 				namebytes = name.getBytes("US-ASCII");
 				for (int i = 0; i < patchNameSize; i++)
-					((Patch) p).sysex[patchNameStart + i] = namebytes[i];
+					((Patch) p).getSysex()[patchNameStart + i] = namebytes[i];
 			} catch (UnsupportedEncodingException ex) {
 				return;
 			}
@@ -129,7 +129,7 @@ public class MIDIboxFMBankDriver extends BankDriver {
 			return;
 		}
 
-		System.arraycopy(((Patch) p).sysex, 10, ((Patch) bank).sysex, getPatchStart(patchNum), 256);
+		System.arraycopy(((Patch) p).getSysex(), 10, ((Patch) bank).getSysex(), getPatchStart(patchNum), 256);
 		calculateChecksum(bank);
 	}
 
@@ -148,7 +148,7 @@ public class MIDIboxFMBankDriver extends BankDriver {
 			sysex[9] = (byte) (patchNum);
 			sysex[267] = (byte) 0xF7;
 
-			System.arraycopy(((Patch) bank).sysex, getPatchStart(patchNum), sysex, 10, 256);
+			System.arraycopy(((Patch) bank).getSysex(), getPatchStart(patchNum), sysex, 10, 256);
 			Patch p = new Patch(sysex, getDevice());
 			p.calculateChecksum();
 			return p;

@@ -77,11 +77,11 @@ public class RolandMT32TimbreMemoryDriver extends Driver {
 		int timbreAddr = patchNum * 0x100;
 		int timAddrM = (timbreAddr / 0x80) & 0x7F;
 		int timAddrL = timbreAddr & 0x7F;
-		p.sysex[0] = (byte) 0xF0;
+		p.getSysex()[0] = (byte) 0xF0;
 
-		p.sysex[5] = (byte) 0x08; // point to Timbre Memory
-		p.sysex[6] = (byte) timAddrM;
-		p.sysex[7] = (byte) timAddrL;
+		p.getSysex()[5] = (byte) 0x08; // point to Timbre Memory
+		p.getSysex()[6] = (byte) timAddrM;
+		p.getSysex()[7] = (byte) timAddrL;
 		calculateChecksum(p, 5, HSIZE + SSIZE - 2, HSIZE + SSIZE - 1);
 
 		try {
@@ -99,8 +99,8 @@ public class RolandMT32TimbreMemoryDriver extends Driver {
 	 */
 	public void sendPatch(Patch p) {
 
-		p.sysex[0] = (byte) 0xF0;
-		p.sysex[5] = (byte) 0x08;
+		p.getSysex()[0] = (byte) 0xF0;
+		p.getSysex()[5] = (byte) 0x08;
 
 		calculateChecksum(p, 5, HSIZE + SSIZE - 2, HSIZE + SSIZE - 1);
 		sendPatchWorker(p);
@@ -109,10 +109,10 @@ public class RolandMT32TimbreMemoryDriver extends Driver {
 	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
 		int sum = 0;
 		for (int i = start; i <= end; i++) {
-			sum += p.sysex[i];
+			sum += p.getSysex()[i];
 		}
 		sum = (0 - sum) & 0x7F;
-		p.sysex[ofs] = (byte) (sum % 128);
+		p.getSysex()[ofs] = (byte) (sum % 128);
 	}
 
 	// not used

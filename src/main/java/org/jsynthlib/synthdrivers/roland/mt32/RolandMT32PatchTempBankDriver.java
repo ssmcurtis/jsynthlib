@@ -70,7 +70,7 @@ public class RolandMT32PatchTempBankDriver extends BankDriver {
 		int nameStart = getPatchStart(patchNum);
 		nameStart += 0; // offset of name in patch data
 		try {
-			StringBuffer s = new StringBuffer(new String(p.sysex, nameStart, 10, "US-ASCII"));
+			StringBuffer s = new StringBuffer(new String(p.getSysex(), nameStart, 10, "US-ASCII"));
 			return s.toString();
 		} catch (UnsupportedEncodingException ex) {
 			return "-";
@@ -87,7 +87,7 @@ public class RolandMT32PatchTempBankDriver extends BankDriver {
 		try {
 			namebytes = name.getBytes("US-ASCII");
 			for (int i = 0; i < patchNameSize; i++)
-				p.sysex[patchNameStart + i] = namebytes[i];
+				p.getSysex()[patchNameStart + i] = namebytes[i];
 
 		} catch (UnsupportedEncodingException ex) {
 			return;
@@ -99,9 +99,9 @@ public class RolandMT32PatchTempBankDriver extends BankDriver {
 		int sum = 0;
 
 		for (i = start; i <= end; i++)
-			sum += p.sysex[i];
+			sum += p.getSysex()[i];
 		sum += 0xA5;
-		p.sysex[ofs] = (byte) (sum % 128);
+		p.getSysex()[ofs] = (byte) (sum % 128);
 		// p.sysex[ofs]=(byte)(p.sysex[ofs]^127);
 		// p.sysex[ofs]=(byte)(p.sysex[ofs]+1);
 	}
@@ -118,7 +118,7 @@ public class RolandMT32PatchTempBankDriver extends BankDriver {
 			return;
 		}
 
-		System.arraycopy(p.sysex, HSIZE, bank.sysex, getPatchStart(patchNum), SSIZE);
+		System.arraycopy(p.getSysex(), HSIZE, bank.getSysex(), getPatchStart(patchNum), SSIZE);
 		calculateChecksum(bank);
 	}
 
@@ -140,7 +140,7 @@ public class RolandMT32PatchTempBankDriver extends BankDriver {
 		sysex[11] = (byte) 0x76; // size LSB
 		sysex[12] = (byte) 0x04; // checksum
 		sysex[HSIZE + SSIZE] = (byte) 0xF7;
-		System.arraycopy(bank.sysex, getPatchStart(patchNum), sysex, HSIZE, SSIZE);
+		System.arraycopy(bank.getSysex(), getPatchStart(patchNum), sysex, HSIZE, SSIZE);
 		try {
 			// pass Single Driver !!!FIXIT!!!
 			Patch p = new Patch(sysex, getDevice());
@@ -183,10 +183,10 @@ public class RolandMT32PatchTempBankDriver extends BankDriver {
 			Thread.sleep(100);
 		} catch (Exception e) {
 		}
-		p.sysex[3] = (byte) 0x16;
+		p.getSysex()[3] = (byte) 0x16;
 		// p.sysex[6] = (byte) (bankNum << 1);
-		p.sysex[6] = (byte) bankNum;
-		p.sysex[7] = (byte) patchNum;
+		p.getSysex()[6] = (byte) bankNum;
+		p.getSysex()[7] = (byte) patchNum;
 		sendPatchWorker(p);
 		try {
 			Thread.sleep(100);

@@ -61,7 +61,7 @@ public class RolandD10PatchEditor extends RolandD10EditorFrame {
 	public RolandD10PatchEditor(Patch patch) {
 		super("Roland D-10 Patch Editor", patch);
 
-		EditSender.setDeviceId(patch.sysex[2]);
+		EditSender.setDeviceId(patch.getSysex()[2]);
 
 		JPanel panel;
 		GridBagConstraints constraints = new GridBagConstraints();

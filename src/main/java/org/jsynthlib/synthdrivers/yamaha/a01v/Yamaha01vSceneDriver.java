@@ -65,7 +65,7 @@ public class Yamaha01vSceneDriver extends Driver {
 			patchNum = 127;
 		setPatchNum(patchNum);
 		setBankNum(0);
-		p.sysex[15] = (byte) patchNum; // Location
+		p.getSysex()[15] = (byte) patchNum; // Location
 		calculateChecksum(p);
 
 		sendPatchWorker(p);
@@ -79,7 +79,7 @@ public class Yamaha01vSceneDriver extends Driver {
 	 * @see PatchSingle#send()
 	 */
 	protected void sendPatch(Patch p) {
-		p.sysex[15] = (byte) 127; // Location (use Edit Buffer)
+		p.getSysex()[15] = (byte) 127; // Location (use Edit Buffer)
 		calculateChecksum(p);
 
 		sendPatchWorker(p);

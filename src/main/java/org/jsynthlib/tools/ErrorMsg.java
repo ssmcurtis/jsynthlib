@@ -2,7 +2,7 @@ package org.jsynthlib.tools;
 
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.ui.window.ErrorDialog;
 
 /**
@@ -61,10 +61,13 @@ public class ErrorMsg {
 	public static void reportError(String errorTitle, String errorMSG) {
 		ErrorDialog.showMessageDialog(PatchBayApplication.getInstance()/* phil@muqus.com */, errorMSG, errorTitle,
 				JOptionPane.ERROR_MESSAGE);
-		if ((debugLevel & DEBUG_MSG) != 0)
+		if ((debugLevel & DEBUG_MSG) != 0) {
 			System.out.println("ERR> '" + errorMSG + "' reported.");
-		if ((debugLevel & DUMP_STACK) != 0)
+		}
+		if ((debugLevel & DUMP_STACK) != 0) {
+			System.out.println(" DEBUG - Stack >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 			Thread.dumpStack();
+		}
 	}
 
 	/**
@@ -78,7 +81,7 @@ public class ErrorMsg {
 	 *            an <code>Exception</code> value
 	 */
 	public static void reportError(String errorTitle, String errorMSG, Exception e) {
-		ErrorDialog.showMessageDialog(PatchBayApplication.getInstance()/* phil@muqus.com */, errorMSG, errorTitle,
+		ErrorDialog.showMessageDialog(PatchBayApplication.getInstance(), errorMSG, errorTitle,
 				JOptionPane.ERROR_MESSAGE, e);
 		if ((debugLevel & DEBUG_MSG) != 0) {
 			System.out.println("ERR> '" + errorMSG + "' reported.");

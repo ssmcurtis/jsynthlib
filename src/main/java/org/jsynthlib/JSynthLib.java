@@ -2,16 +2,14 @@ package org.jsynthlib;
 
 import java.util.ArrayList;
 
-import org.jsynthlib.menu.PatchBayApplication;
 
 public class JSynthLib {
 
-	private static int debugLevel = 0;
+	private static int debugLevel = 3;
 	private static ArrayList<String> fileList = new ArrayList<String>();
 
 	public static void main(String[] args) {
 		parseArgument(args);
-
 		@SuppressWarnings("unused")
 		PatchBayApplication frame = new PatchBayApplication(fileList, debugLevel);
 		// frame.setVisible(true);

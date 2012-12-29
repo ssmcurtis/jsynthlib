@@ -94,9 +94,9 @@ class DelayFineSpeedModel extends ParamModel {
 	 * value representing both the coarse speed and the fine speed.
 	 */
 	private int getBytesValue() {
-		int msB = (int) (0xFF & PatchBytes.getSysexByte(patch.sysex, 9, ofs - 2));
-		int midB = (int) (0xFF & PatchBytes.getSysexByte(patch.sysex, 9, ofs - 1));
-		int lsB = (int) (0xFF & PatchBytes.getSysexByte(patch.sysex, 9, ofs));
+		int msB = (int) (0xFF & PatchBytes.getSysexByte(patch.getSysex(), 9, ofs - 2));
+		int midB = (int) (0xFF & PatchBytes.getSysexByte(patch.getSysex(), 9, ofs - 1));
+		int lsB = (int) (0xFF & PatchBytes.getSysexByte(patch.getSysex(), 9, ofs));
 
 		int bytesValue = msB << 16;
 		bytesValue = bytesValue | midB << 8;

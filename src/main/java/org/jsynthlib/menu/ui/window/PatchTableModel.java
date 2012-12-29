@@ -73,7 +73,7 @@ public abstract class PatchTableModel extends AbstractTableModel {
 
 	public abstract void removeAt(int row);
 
-	public abstract ArrayList getList();
+	public abstract ArrayList<IPatch> getList();
 
-	public abstract void setList(ArrayList newList);
+	public abstract void setList(ArrayList<IPatch> newList);
 }

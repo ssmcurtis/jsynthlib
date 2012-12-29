@@ -82,13 +82,13 @@ public class WaldorfPulseSingleDriver extends Driver {
 
 	public void storePatch(Patch p, int bankNum, int patchNum) {
 		setPatchNum(patchNum);
-		((Patch) p).sysex[4] = (byte) 1;
-		((Patch) p).sysex[5] = (byte) patchNum;
+		((Patch) p).getSysex()[4] = (byte) 1;
+		((Patch) p).getSysex()[5] = (byte) patchNum;
 		super.sendPatch(p);
 	}
 
 	public void sendPatch(Patch p) {
-		((Patch) p).sysex[4] = (byte) 0;
+		((Patch) p).getSysex()[4] = (byte) 0;
 		super.sendPatch(p);
 	}
 
@@ -99,8 +99,8 @@ public class WaldorfPulseSingleDriver extends Driver {
 	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
 		int sum = 0;
 		for (int i = start; i <= end; i++)
-			sum += p.sysex[i];
-		p.sysex[ofs] = (byte) (sum & 0x7f);
+			sum += p.getSysex()[i];
+		p.getSysex()[ofs] = (byte) (sum & 0x7f);
 	}
 
 	public String[] getPatchNumbersForStore() {

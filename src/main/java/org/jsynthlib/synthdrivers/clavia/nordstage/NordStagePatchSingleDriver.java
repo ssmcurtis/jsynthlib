@@ -42,9 +42,9 @@ public class NordStagePatchSingleDriver extends Driver {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		p.sysex[3] = (byte) 0x20;
-		p.sysex[6] = (byte) (bankNum << 1);
-		p.sysex[7] = (byte) (patchNum);
+		p.getSysex()[3] = (byte) 0x20;
+		p.getSysex()[6] = (byte) (bankNum << 1);
+		p.getSysex()[7] = (byte) (patchNum);
 		sendPatchWorker(p);
 		try {
 			Thread.sleep(100);
@@ -56,8 +56,8 @@ public class NordStagePatchSingleDriver extends Driver {
 	}
 
 	public void sendPatch(Patch p) {
-		p.sysex[3] = (byte) 0x23;
-		p.sysex[7] = (byte) 0x00;
+		p.getSysex()[3] = (byte) 0x23;
+		p.getSysex()[7] = (byte) 0x00;
 		sendPatchWorker(p);
 	}
 
@@ -66,12 +66,12 @@ public class NordStagePatchSingleDriver extends Driver {
 		// Nord Stage checksum is defined in the documentation as being a sum of
 		// all bytes
 		for (int i = start; i <= end; i++) {
-			sum += p.sysex[i];
+			sum += p.getSysex()[i];
 		}
 		sum += 0xA5;
 		// do we need to mod / xor it with 128/127 (as data bytes have to be
 		// <128) ?
-		p.sysex[ofs] = (byte) (sum % 128);
+		p.getSysex()[ofs] = (byte) (sum % 128);
 		// p.sysex[ofs]=(byte)(p.sysex[ofs]^127);
 		// p.sysex[ofs]=(byte)(p.sysex[ofs]+1);
 	}

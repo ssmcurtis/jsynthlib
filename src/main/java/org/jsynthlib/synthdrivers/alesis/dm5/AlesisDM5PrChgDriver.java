@@ -114,9 +114,9 @@ public class AlesisDM5PrChgDriver extends Driver {
 		int sum = 0;
 
 		for (int i = start; i <= end; i++) {
-			sum += patch.sysex[i];
+			sum += patch.getSysex()[i];
 		}
-		patch.sysex[offset] = (byte) (sum % 128);
+		patch.getSysex()[offset] = (byte) (sum % 128);
 	}
 
 	/**

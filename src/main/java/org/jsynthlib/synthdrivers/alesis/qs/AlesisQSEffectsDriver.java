@@ -136,8 +136,8 @@ public class AlesisQSEffectsDriver extends Driver {
 		// default to simple case - set specified patch in the User bank
 		int location = patchNum;
 		byte opcode = QSConstants.OPCODE_MIDI_USER_EFFECTS_DUMP;
-		byte oldOpcode = ((Patch) p).sysex[QSConstants.POSITION_OPCODE];
-		byte oldLocation = ((Patch) p).sysex[QSConstants.POSITION_LOCATION];
+		byte oldOpcode = ((Patch) p).getSysex()[QSConstants.POSITION_OPCODE];
+		byte oldLocation = ((Patch) p).getSysex()[QSConstants.POSITION_LOCATION];
 
 		// if the patch number is > max location, get from Edit buffers
 		if (location > QSConstants.MAX_LOCATION_PROG) {
@@ -145,10 +145,10 @@ public class AlesisQSEffectsDriver extends Driver {
 			opcode = QSConstants.OPCODE_MIDI_EDIT_EFFECTS_DUMP;
 		}
 		// set the opcode and target location
-		((Patch) p).sysex[QSConstants.POSITION_OPCODE] = opcode;
-		((Patch) p).sysex[QSConstants.POSITION_LOCATION] = (byte) location;
+		((Patch) p).getSysex()[QSConstants.POSITION_OPCODE] = opcode;
+		((Patch) p).getSysex()[QSConstants.POSITION_LOCATION] = (byte) location;
 
-		ErrorMsg.reportStatus("foo", ((Patch) p).sysex);
+		ErrorMsg.reportStatus("foo", ((Patch) p).getSysex());
 		// setBankNum (bankNum);
 		// setPatchNum (patchNum);
 
@@ -156,7 +156,7 @@ public class AlesisQSEffectsDriver extends Driver {
 		sendPatchWorker(p);
 
 		// restore the old values
-		((Patch) p).sysex[QSConstants.POSITION_OPCODE] = oldOpcode;
-		((Patch) p).sysex[QSConstants.POSITION_LOCATION] = oldLocation;
+		((Patch) p).getSysex()[QSConstants.POSITION_OPCODE] = oldOpcode;
+		((Patch) p).getSysex()[QSConstants.POSITION_LOCATION] = oldLocation;
 	}
 }

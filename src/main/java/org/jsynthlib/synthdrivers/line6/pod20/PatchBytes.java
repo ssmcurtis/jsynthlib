@@ -49,8 +49,8 @@ class PatchBytes {
 		int offset = (ofs - hSize) * 2 + hSize;
 		int upper = (b & 0xF0) >>> 4;
 		int lower = b & 0x0F;
-		p.sysex[offset] = (byte) upper;
-		p.sysex[offset + 1] = (byte) lower;
+		p.getSysex()[offset] = (byte) upper;
+		p.getSysex()[offset + 1] = (byte) lower;
 	}
 
 	/**

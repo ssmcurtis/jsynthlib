@@ -9,7 +9,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.preferences.AppConfig;
 import org.jsynthlib.menu.ui.ExtensionFilter;
 import org.jsynthlib.menu.ui.window.CompatibleFileDialog;
@@ -20,9 +20,10 @@ public class OpenAction extends AbstractAction {
 	static final FileFilter filter;
 	static {
 		String lext = LibraryFrame.FILE_EXTENSION;
-		String sext = SceneFrame.FILE_EXTENSION;
-		filter = new ExtensionFilter("JSynthLib Library/Scene Files (*" + lext + ", *" + sext + ")", new String[] {
-				lext, sext });
+		// String sext = SceneFrame.FILE_EXTENSION;
+		// filter = new ExtensionFilter("JSynthLib Library/Scene Files (*" + lext + ", *" + sext + ")", new String[] {
+		// lext, sext });
+		filter = new ExtensionFilter("JSynthLib Library/Scene Files (*" + lext + ")", new String[] { lext });
 	}
 
 	public OpenAction(Map<Serializable, Integer> mnemonics) {

@@ -25,7 +25,7 @@ import java.io.UnsupportedEncodingException;
 
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.patch.BankDriver;
 import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.SysexHandler;
@@ -77,15 +77,15 @@ public class QuasimidiQuasarBankDriver extends BankDriver {
 			for (int patchNo = 0; patchNo < patchNumbers.length; patchNo++) {
 				temporaryOffset = deviceIDoffset + (patchNo * this.singleSize);
 
-				p.sysex[temporaryOffset] = (byte) deviceID;
-				p.sysex[temporaryOffset + QuasarConstants.ARRAY_PART_1_OFFSET] = (byte) deviceID;
-				p.sysex[temporaryOffset + QuasarConstants.ARRAY_PART_2_OFFSET] = (byte) deviceID;
-				p.sysex[temporaryOffset + QuasarConstants.ARRAY_PART_3_OFFSET] = (byte) deviceID;
-				p.sysex[temporaryOffset + QuasarConstants.ARRAY_PART_4_OFFSET] = (byte) deviceID;
-				p.sysex[temporaryOffset + QuasarConstants.ARRAY_NAME_OFFSET] = (byte) deviceID;
+				p.getSysex()[temporaryOffset] = (byte) deviceID;
+				p.getSysex()[temporaryOffset + QuasarConstants.ARRAY_PART_1_OFFSET] = (byte) deviceID;
+				p.getSysex()[temporaryOffset + QuasarConstants.ARRAY_PART_2_OFFSET] = (byte) deviceID;
+				p.getSysex()[temporaryOffset + QuasarConstants.ARRAY_PART_3_OFFSET] = (byte) deviceID;
+				p.getSysex()[temporaryOffset + QuasarConstants.ARRAY_PART_4_OFFSET] = (byte) deviceID;
+				p.getSysex()[temporaryOffset + QuasarConstants.ARRAY_NAME_OFFSET] = (byte) deviceID;
 			}
 
-			send(p.sysex);
+			send(p.getSysex());
 		}
 	}
 
@@ -122,7 +122,7 @@ public class QuasimidiQuasarBankDriver extends BankDriver {
 			return;
 		}
 
-		System.arraycopy(p.sysex, QuasarConstants.SYSEX_HEADER_OFFSET, bank.sysex, getPatchStart(patchNum)
+		System.arraycopy(p.getSysex(), QuasarConstants.SYSEX_HEADER_OFFSET, bank.getSysex(), getPatchStart(patchNum)
 				+ QuasarConstants.SYSEX_HEADER_OFFSET, this.singleSize - QuasarConstants.SYSEX_HEADER_OFFSET);
 	}
 
@@ -133,7 +133,7 @@ public class QuasimidiQuasarBankDriver extends BankDriver {
 		try {
 			byte[] sysex = new byte[this.singleSize];
 
-			System.arraycopy(bank.sysex, getPatchStart(patchNum), sysex, 0, this.singleSize);
+			System.arraycopy(bank.getSysex(), getPatchStart(patchNum), sysex, 0, this.singleSize);
 			Patch p = new Patch(sysex);
 
 			return p;
@@ -150,7 +150,7 @@ public class QuasimidiQuasarBankDriver extends BankDriver {
 		int nameStart = getPatchStart(patchNum);
 		nameStart += QuasarConstants.PATCH_NAME_START; // offset of name in patch data
 		try {
-			StringBuffer s = new StringBuffer(new String(p.sysex, nameStart, QuasarConstants.PATCH_NAME_SIZE,
+			StringBuffer s = new StringBuffer(new String(p.getSysex(), nameStart, QuasarConstants.PATCH_NAME_SIZE,
 					"US-ASCII"));
 			return s.toString();
 		} catch (UnsupportedEncodingException ex) {
@@ -169,7 +169,7 @@ public class QuasimidiQuasarBankDriver extends BankDriver {
 		try {
 			namebytes = name.getBytes("US-ASCII");
 			for (int i = 0; i < patchNameSize; i++)
-				p.sysex[tempPatchNameStart + i] = namebytes[i];
+				p.getSysex()[tempPatchNameStart + i] = namebytes[i];
 		} catch (UnsupportedEncodingException ex) {
 			return;
 		}
@@ -215,7 +215,7 @@ public class QuasimidiQuasarBankDriver extends BankDriver {
 		for (int patchNo = 0; patchNo < patchNumbers.length; patchNo++) {
 			tempPatch = QuasimidiQuasarSingleDriver.createNewPatch(patchNo, QuasarConstants.SYSEX_PERFORMANCE_OFFSET);
 
-			System.arraycopy(tempPatch.sysex, 0, sysex, (patchNo * singleSize), singleSize);
+			System.arraycopy(tempPatch.getSysex(), 0, sysex, (patchNo * singleSize), singleSize);
 		}
 
 		Patch p = new Patch(sysex);

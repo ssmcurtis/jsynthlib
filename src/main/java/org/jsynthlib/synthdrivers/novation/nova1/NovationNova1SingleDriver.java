@@ -53,11 +53,11 @@ public class NovationNova1SingleDriver extends Driver {
 
 	public void storePatch(Patch p, int bankNum, int patchNum) {
 		byte[] newsysex = new byte[297]; // a dump and write format is one byte longer than an edit buffer dump
-		System.arraycopy(((Patch) p).sysex, 0, newsysex, 0, 7);
+		System.arraycopy(((Patch) p).getSysex(), 0, newsysex, 0, 7);
 		newsysex[7] = (byte) 0x02;
 		newsysex[8] = (byte) (0x05 + bankNum);
 		newsysex[9] = (byte) (patchNum);
-		System.arraycopy(((Patch) p).sysex, 9, newsysex, 10, 296 - 9); // -10);
+		System.arraycopy(((Patch) p).getSysex(), 9, newsysex, 10, 296 - 9); // -10);
 		Patch patchtowrite = new Patch(newsysex, this);
 		// need to convert to a "patch dump and write" format
 		try {
@@ -121,7 +121,7 @@ class NovationNova1PatchSender extends JDialog {
 		super(Parent, "Nova1 Patch Sender", true);
 
 		byte[] newsysex = new byte[296];
-		System.arraycopy(p.sysex, 0, newsysex, 0, 296);
+		System.arraycopy(p.getSysex(), 0, newsysex, 0, 296);
 		localPatch = new Patch(newsysex, driver);
 
 		JPanel container = new JPanel();
@@ -226,7 +226,7 @@ class NovationNova1PatchSender extends JDialog {
 	void ProgPressed() {
 		this.setVisible(false);
 		if (deviceIDoffset > 0)
-			localPatch.sysex[deviceIDoffset] = (byte) (channel - 1);
+			localPatch.getSysex()[deviceIDoffset] = (byte) (channel - 1);
 		try {
 			localPatch.send();
 		} catch (Exception e) {
@@ -237,9 +237,9 @@ class NovationNova1PatchSender extends JDialog {
 
 	void SendPatchToPerfBufferPart(int partnumber) {
 
-		localPatch.sysex[8] = (byte) (partnumber - 1);
+		localPatch.getSysex()[8] = (byte) (partnumber - 1);
 		if (deviceIDoffset > 0)
-			localPatch.sysex[deviceIDoffset] = (byte) (channel - 1);
+			localPatch.getSysex()[deviceIDoffset] = (byte) (channel - 1);
 		try {
 			localPatch.send();
 		} catch (Exception e) {

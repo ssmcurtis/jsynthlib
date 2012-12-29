@@ -49,14 +49,14 @@ public class AlesisDMProEffectDriver extends Driver {
 	public void storePatch(Patch p, int bankNum, int patchNum) {
 		setBankNum(bankNum);
 		setPatchNum(patchNum);
-		((Patch) p).sysex[6] = (byte) patchNum;
+		((Patch) p).getSysex()[6] = (byte) patchNum;
 		sendPatchWorker(p);
 		setPatchNum(patchNum);
 	}
 
 	public void sendPatch(Patch p) {
 		// DM Pro editbuffer is named 64
-		((Patch) p).sysex[6] = 64;
+		((Patch) p).getSysex()[6] = 64;
 		sendPatchWorker(p);
 	}
 

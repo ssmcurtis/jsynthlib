@@ -2,6 +2,8 @@ package org.jsynthlib.menu.patch;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -18,6 +20,7 @@ import org.jsynthlib.menu.ui.PatchTransferHandler;
 import org.jsynthlib.model.ManufacturerLookup;
 import org.jsynthlib.tools.DriverUtil;
 import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.tools.HexDumpUtility;
 import org.jsynthlib.tools.Utility;
 import org.jsynthlib.tools.midi.MidiUtil;
 
@@ -52,9 +55,11 @@ public class Patch implements PatchSingle, PatchBank {
 	/**
 	 * MIDI System Exclusive Message byte array.
 	 */
-	public byte[] sysex;
+	private byte[] sysex;
 
 	private StringBuffer fileName;
+
+	private StringBuffer footprint;
 
 	private StringBuffer info;
 
@@ -90,8 +95,20 @@ public class Patch implements PatchSingle, PatchBank {
 		date = new StringBuffer(df.format(Calendar.getInstance().getTime()));
 		author = new StringBuffer(AppConfig.getRepositoryUser());
 		comment = new StringBuffer("");
-		sysex = gsysex;
+		setSysex(gsysex);
 		setPatchId(UUID.randomUUID().toString());
+		try {
+			MessageDigest md = MessageDigest.getInstance("SHA");
+			byte[] digest = md.digest("abd".getBytes());
+
+			String footprint = "";
+			for (byte d : digest) {
+				footprint += Integer.toHexString(d & 0xFF);
+			}
+			setFootprint(footprint);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
 		setFileName(fileName);
 		setDriver(driver);
 		// commented out not to break backward compatibility
@@ -110,13 +127,25 @@ public class Patch implements PatchSingle, PatchBank {
 		date = new StringBuffer(df.format(Calendar.getInstance().getTime()));
 		author = new StringBuffer(AppConfig.getRepositoryUser());
 		comment = new StringBuffer("");
-		sysex = gsysex;
+		setSysex(gsysex);
 		setPatchId(UUID.randomUUID().toString());
-		setFileName("unknown 1");
-		
-		setDriver((Driver) DriverUtil.chooseDriver(sysex, device));
+		try {
+			MessageDigest md = MessageDigest.getInstance("SHA");
+			byte[] digest = md.digest("abd".getBytes());
+
+			String footprint = "";
+			for (byte d : digest) {
+				footprint += Integer.toHexString(d & 0xFF);
+			}
+			setFootprint(footprint);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+
+		setDriver((Driver) DriverUtil.chooseDriver(getSysex(), device));
 		driver.trimSysex(this);
 	}
+
 	/**
 	 * Constructor - Either Device nor Driver is not known. Consider using <code>Patch(byte[], Driver)</code> or
 	 * <code>Patch(byte[],
@@ -131,10 +160,10 @@ public class Patch implements PatchSingle, PatchBank {
 		date = new StringBuffer(df.format(Calendar.getInstance().getTime()));
 		author = new StringBuffer(AppConfig.getRepositoryUser());
 		comment = new StringBuffer("");
-		sysex = gsysex;
+		setSysex(gsysex);
 		setPatchId(UUID.randomUUID().toString());
-		setFileName("unknown 2");
-		setDriver((Driver) DriverUtil.chooseDriver(sysex));
+
+		setDriver((Driver) DriverUtil.chooseDriver(getSysex()));
 		driver.trimSysex(this);
 	}
 
@@ -176,7 +205,7 @@ public class Patch implements PatchSingle, PatchBank {
 	}
 
 	public final void setDriver() {
-		setDriver((IPatchDriver) DriverUtil.chooseDriver(sysex));
+		setDriver((IPatchDriver) DriverUtil.chooseDriver(getSysex()));
 	}
 
 	public final boolean hasNullDriver() {
@@ -184,7 +213,7 @@ public class Patch implements PatchSingle, PatchBank {
 	}
 
 	public String getPatchHeader() {
-		return DriverUtil.getPatchHeader(sysex);
+		return DriverUtil.getPatchHeader(getSysex());
 	}
 
 	public final String getName() {
@@ -210,7 +239,7 @@ public class Patch implements PatchSingle, PatchBank {
 
 	public final SysexMessage[] getMessages() {
 		try {
-			return MidiUtil.byteArrayToSysexMessages(sysex);
+			return MidiUtil.byteArrayToSysexMessages(getSysex());
 		} catch (InvalidMidiDataException ex) {
 			return null;
 		}
@@ -218,15 +247,15 @@ public class Patch implements PatchSingle, PatchBank {
 
 	public final byte[] export() {
 		driver.calculateChecksum(this);
-		return this.sysex;
+		return this.getSysex();
 	}
 
 	public final byte[] getByteArray() {
-		return sysex;
+		return getSysex();
 	}
 
 	public int getSize() {
-		return sysex.length;
+		return getSysex().length;
 	}
 
 	public String getType() {
@@ -238,7 +267,7 @@ public class Patch implements PatchSingle, PatchBank {
 	}
 
 	public final String lookupManufacturer() {
-		return ManufacturerLookup.get(sysex[1], sysex[2], sysex[3]);
+		return ManufacturerLookup.get(getSysex()[1], getSysex()[2], getSysex()[3]);
 	}
 
 	public final boolean isSinglePatch() {
@@ -250,9 +279,9 @@ public class Patch implements PatchSingle, PatchBank {
 	}
 
 	public void useSysexFromPatch(IPatch ip) {
-		if (ip.getSize() != sysex.length)
+		if (ip.getSize() != getSysex().length)
 			throw new IllegalArgumentException();
-		sysex = ip.getByteArray();
+		setSysex(ip.getByteArray());
 	}
 
 	// end of IPatch interface methods
@@ -328,7 +357,7 @@ public class Patch implements PatchSingle, PatchBank {
 	public final Object clone() {
 		try {
 			Patch p = (Patch) super.clone();
-			p.sysex = (byte[]) sysex.clone();
+			p.setSysex((byte[]) getSysex().clone());
 			return p;
 		} catch (CloneNotSupportedException e) {
 			// Cannot happen -- we support clone, and so do arrays
@@ -352,7 +381,7 @@ public class Patch implements PatchSingle, PatchBank {
 	 */
 	public String toString() {
 		StringBuffer buf = new StringBuffer();
-		buf.append("[" + driver + "] " + Utility.hexDumpOneLine(sysex, 0, -1, 20));
+		buf.append("[" + driver + "] " + Utility.hexDumpOneLine(getSysex(), 0, -1, 20));
 		return buf.toString();
 	}
 
@@ -384,5 +413,23 @@ public class Patch implements PatchSingle, PatchBank {
 	@Override
 	public void setInfo(String info) {
 		this.info = new StringBuffer(info);
+	}
+
+	public String getFootprint() {
+		return footprint.toString();
+	}
+
+	public void setFootprint(String footprint) {
+		this.footprint = new StringBuffer(footprint);
+	}
+
+	public byte[] getSysex() {
+//		System.out.println("GET sysex in Patch " + Utility.hexDump(sysex, 0, -1, -1));
+		return sysex;
+	}
+
+	public void setSysex(byte[] sysex) {
+//		System.out.println("SET sysex in Patch" + Utility.hexDump(sysex, 0, -1, -1));
+		this.sysex = sysex;
 	}
 }

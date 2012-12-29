@@ -65,7 +65,7 @@ public class EnsoniqVFXBankDriver extends BankDriver {
 	 */
 	public String getPatchName(Patch p, int patchNum) {
 		int oPatchStart = getPatchStart(patchNum);
-		return EnsoniqVFXSingleDriver.getPatchName(((Patch) p).sysex, oPatchStart);
+		return EnsoniqVFXSingleDriver.getPatchName(((Patch) p).getSysex(), oPatchStart);
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class EnsoniqVFXBankDriver extends BankDriver {
 	 */
 	public void setPatchName(Patch p, int patchNum, String name) {
 		int oPatchStart = getPatchStart(patchNum);
-		EnsoniqVFXSingleDriver.setPatchName(((Patch) p).sysex, name, oPatchStart);
+		EnsoniqVFXSingleDriver.setPatchName(((Patch) p).getSysex(), name, oPatchStart);
 	}
 
 	// protected static void calculateChecksum(Patch p, int start, int end, int ofs)
@@ -107,7 +107,7 @@ public class EnsoniqVFXBankDriver extends BankDriver {
 			return;
 		}
 
-		System.arraycopy(((Patch) p).sysex, 6, ((Patch) bank).sysex, getPatchStart(patchNum),
+		System.arraycopy(((Patch) p).getSysex(), 6, ((Patch) bank).getSysex(), getPatchStart(patchNum),
 				EnsoniqVFXSingleDriver.PATCH_SIZE);
 	}
 
@@ -122,7 +122,7 @@ public class EnsoniqVFXBankDriver extends BankDriver {
 	 */
 	public Patch getPatch(Patch bank, int patchNum) {
 		try {
-			return EnsoniqVFXSingleDriver.newPatch(((Patch) bank).sysex, getPatchStart(patchNum));
+			return EnsoniqVFXSingleDriver.newPatch(((Patch) bank).getSysex(), getPatchStart(patchNum));
 		} catch (Exception e) {
 			ErrorMsg.reportError("Error", "Error in VFX Bank Driver", e);
 			return null;

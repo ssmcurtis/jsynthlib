@@ -46,7 +46,7 @@ public class P600ProgSingleDriver extends Driver {
 	// }
 
 	public String getPatchName(Patch ip) {
-		return "prog" + ((Patch) ip).sysex[PATCH_NUM_OFFSET];
+		return "prog" + ((Patch) ip).getSysex()[PATCH_NUM_OFFSET];
 	}
 
 	public void setPatchName(Patch p, String name) {
@@ -57,8 +57,8 @@ public class P600ProgSingleDriver extends Driver {
 	}
 
 	public void sendPatch(Patch p, int bankNum, int patchNum) {
-		Patch p2 = new Patch(p.sysex);
-		p2.sysex[PATCH_NUM_OFFSET] = 99; // program # 99
+		Patch p2 = new Patch(p.getSysex());
+		p2.getSysex()[PATCH_NUM_OFFSET] = 99; // program # 99
 		sendPatchWorker(p2);
 	}
 
@@ -70,7 +70,7 @@ public class P600ProgSingleDriver extends Driver {
 	// program 99 is being used for edit buffer
 	protected void playPatch(Patch p) {
 		byte sysex[] = new byte[patchSize];
-		System.arraycopy(((Patch) p).sysex, 0, sysex, 0, patchSize);
+		System.arraycopy(((Patch) p).getSysex(), 0, sysex, 0, patchSize);
 		sysex[PATCH_NUM_OFFSET] = 99; // program # 99
 		Patch p2 = new Patch(sysex);
 		try {

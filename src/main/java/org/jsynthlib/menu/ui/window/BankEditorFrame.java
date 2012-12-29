@@ -25,7 +25,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.action.Actions;
 import org.jsynthlib.menu.patch.IPatch;
 import org.jsynthlib.menu.patch.PatchBank;
@@ -38,8 +38,11 @@ import org.jsynthlib.menu.ui.JSLFrameListener;
 import org.jsynthlib.menu.ui.PatchTransferHandler;
 import org.jsynthlib.menu.ui.PatchesAndScenes;
 import org.jsynthlib.menu.ui.ProxyImportHandler;
+import org.jsynthlib.model.ImportFileType;
 import org.jsynthlib.tools.DriverUtil;
 import org.jsynthlib.tools.ErrorMsg;
+
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class BankEditorFrame extends MenuFrame implements PatchBasket {
 	/** This is the patch we are working on. */
@@ -93,17 +96,23 @@ public class BankEditorFrame extends MenuFrame implements PatchBasket {
 
 		table.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
-				if (e.isPopupTrigger())
+				if (e.isPopupTrigger()) {
+					System.out.println(">>> popup trigger pressed" );
+
 					Actions.showMenuPatchPopup(table, e.getX(), e.getY());
+				}
 			}
 
 			public void mouseReleased(MouseEvent e) {
-				if (e.isPopupTrigger())
+				if (e.isPopupTrigger()) {
+					System.out.println(">>> popup trigger released" );
 					Actions.showMenuPatchPopup(table, e.getX(), e.getY());
+				}
 			}
 
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2)
+					System.out.println(">>> popup trigger double" );
 					playSelectedPatch();
 			}
 		});
@@ -188,7 +197,9 @@ public class BankEditorFrame extends MenuFrame implements PatchBasket {
 		Actions.setEnabled(selectedOne && myModel.getPatchAt(0, 0).hasEditor(), Actions.EN_EDIT);
 
 		// enable paste if the clipboard has contents.
-		Actions.setEnabled(Toolkit.getDefaultToolkit().getSystemClipboard().getContents(this) != null, Actions.EN_PASTE);
+		Actions.setEnabled(
+				Toolkit.getDefaultToolkit().getSystemClipboard().getContents(this)
+						.isDataFlavorSupported(PatchTransferHandler.PATCHES_FLAVOR), Actions.EN_PASTE);
 	}
 
 	public int getPatchNum(int row, int col) {
@@ -196,13 +207,13 @@ public class BankEditorFrame extends MenuFrame implements PatchBasket {
 	}
 
 	private int getSelectedPatchNum() {
-		return getPatchNum(table.getSelectedRow(), table.getSelectedColumn());
+		return getPatchNum(table.convertRowIndexToModel(table.getSelectedRow()), table.getSelectedColumn());
 	}
 
 	// PatchBasket methods
 
 	// This needs to use some sort of factory so correct IPatch can be created.
-	public void importPatch(File file) throws IOException, FileNotFoundException {
+	public void importPatch(File file, ImportFileType type) throws IOException, FileNotFoundException {
 		FileInputStream fileIn = new FileInputStream(file);
 		byte[] buffer = new byte[(int) file.length()];
 		fileIn.read(buffer);
@@ -223,7 +234,7 @@ public class BankEditorFrame extends MenuFrame implements PatchBasket {
 		fileOut.close();
 	}
 
-	public void deleteSelectedPatch() {
+	public void deleteSelectedPatches() {
 		bankData.delete(getSelectedPatchNum());
 		myModel.fireTableDataChanged();
 	}
@@ -259,12 +270,12 @@ public class BankEditorFrame extends MenuFrame implements PatchBasket {
 	}
 
 	public void storeSelectedPatch() {
-		new SysexStoreDialog(getSelectedPatch(), 0, getSelectedPatchNum());// wirski@op.pl
+		new SysexStoreDialog(getSelectedPatch(), 0, getSelectedPatchNum());
 	}
 
 	public JSLFrame editSelectedPatch() {
 		PatchEditorFrame pf = (PatchEditorFrame) getSelectedPatch().edit();
-		pf.setBankEditorInformation(this, table.getSelectedRow(), table.getSelectedColumn());
+		pf.setBankEditorInformation(this, table.convertRowIndexToModel(table.getSelectedRow()), table.getSelectedColumn());
 		return pf;
 	}
 
@@ -274,11 +285,11 @@ public class BankEditorFrame extends MenuFrame implements PatchBasket {
 	}
 
 	public void pastePatch(IPatch p) {
-		myModel.setPatchAt(p, table.getSelectedRow(), table.getSelectedColumn());
+		myModel.setPatchAt(p, table.convertRowIndexToModel(table.getSelectedRow()), table.getSelectedColumn());
 	}
 
-	public void pastePatch(IPatch p, int bankNum, int patchNum) {// wirski@op.pl
-		myModel.setPatchAt(p, table.getSelectedRow(), table.getSelectedColumn());
+	public void pastePatch(IPatch p, int bankNum, int patchNum) {
+		myModel.setPatchAt(p, table.convertRowIndexToModel(table.getSelectedRow()), table.getSelectedColumn());
 	}
 
 	public ArrayList getPatchCollection() {
@@ -329,5 +340,16 @@ public class BankEditorFrame extends MenuFrame implements PatchBasket {
 			m.setPatchAt(p, t.getSelectedRow(), t.getSelectedColumn());
 			return true;
 		}
+	}
+
+	@Override
+	public void playAllPatches() {
+		throw new NotImplementedException();
+	}
+
+	@Override
+	public void splitSelectedPatches() {
+		// TODO Auto-generated method stub
+		
 	}
 }

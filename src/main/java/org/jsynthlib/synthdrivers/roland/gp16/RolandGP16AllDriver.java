@@ -57,7 +57,7 @@ public class RolandGP16AllDriver extends BankDriver {
 		int nameStart = getPatchStart(patchNum);
 		nameStart += 108; // offset of name in patch data
 		try {
-			StringBuffer s = new StringBuffer(new String(((Patch) p).sysex, nameStart, 16, "US-ASCII"));
+			StringBuffer s = new StringBuffer(new String(((Patch) p).getSysex(), nameStart, 16, "US-ASCII"));
 			return s.toString();
 		} catch (UnsupportedEncodingException ex) {
 			return "-";
@@ -82,14 +82,14 @@ public class RolandGP16AllDriver extends BankDriver {
 			return;
 		}
 
-		System.arraycopy(((Patch) p).sysex, 0, ((Patch) bank).sysex, getPatchStart(patchNum), singleSize);
+		System.arraycopy(((Patch) p).getSysex(), 0, ((Patch) bank).getSysex(), getPatchStart(patchNum), singleSize);
 		calculateChecksum(bank);
 	}
 
 	/** Extract a given group from a given memory patch. */
 	public Patch getPatch(Patch bank, int patchNum) {
 		byte[] sysex = new byte[singleSize];
-		System.arraycopy(((Patch) bank).sysex, getPatchStart(patchNum), sysex, 0, singleSize);
+		System.arraycopy(((Patch) bank).getSysex(), getPatchStart(patchNum), sysex, 0, singleSize);
 		try {
 			Patch p = new Patch(sysex, getDevice());
 			singleDriver.calcChecksum(p);
@@ -126,7 +126,7 @@ public class RolandGP16AllDriver extends BankDriver {
 			nVs[1] = new SysexHandler.NameValue("checksum", 0);
 			Patch p = new Patch(SYS_REQ.toByteArray(getChannel(), nVs));
 			calculateChecksum(p, 5, 10, 11); // the gp-16 requires correct checksum when requesting a patch
-			send(p.sysex);
+			send(p.getSysex());
 			try {
 				Thread.sleep(sleepTime);
 			} catch (Exception e) {
@@ -136,7 +136,7 @@ public class RolandGP16AllDriver extends BankDriver {
 
 	/** Worker for storePatch. */
 	public void storeSingleGroup(Patch p, int groupNum, int bankNum) {
-		byte[] gsysex = ((Patch) p).sysex;
+		byte[] gsysex = ((Patch) p).getSysex();
 		byte[] ggsysex = new byte[127];
 		for (int i = 0; i < 64; i++) {
 			gsysex[127 * i + 5] = (byte) 0x0F;
@@ -158,7 +158,7 @@ public class RolandGP16AllDriver extends BankDriver {
 		RolandGP16SingleDriver patchCreator = new RolandGP16SingleDriver();
 		Patch blankPatch = patchCreator.createNewPatch();
 		for (int i = 0; i < NS * 64; i++)
-			System.arraycopy(((Patch) blankPatch).sysex, 0, sysex, getPatchStart(i) / 64, singleSize / 64);
+			System.arraycopy(((Patch) blankPatch).getSysex(), 0, sysex, getPatchStart(i) / 64, singleSize / 64);
 		Patch p = new Patch(sysex, this);
 		calculateChecksum(p);
 		return p;

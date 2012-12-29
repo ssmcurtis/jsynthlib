@@ -101,8 +101,8 @@ public class VAmp2SingleDriver extends Driver {
 	 *            The patch to be sent.
 	 */
 	protected void sendPatch(Patch p) {
-		byte newSysex[] = new byte[p.sysex.length];
-		System.arraycopy(p.sysex, 0, newSysex, 0, p.sysex.length);
+		byte newSysex[] = new byte[p.getSysex().length];
+		System.arraycopy(p.getSysex(), 0, newSysex, 0, p.getSysex().length);
 		newSysex[7] = (byte) 0x7f; // Set the patch location to 127 (edit buffer)
 		sendPatchWorker(new Patch(newSysex, this));
 	}
@@ -119,7 +119,7 @@ public class VAmp2SingleDriver extends Driver {
 	 */
 	protected void storePatch(Patch p, int bankNum, int patchNum) {
 		int progNum = bankNum * 5 + patchNum;
-		p.sysex[7] = (byte) progNum;
+		p.getSysex()[7] = (byte) progNum;
 		sendPatchWorker(p);
 		try {
 			Thread.sleep(Constants.PATCH_SEND_INTERVAL); // Delay so VAmp can keep up (pauses between each patch when
@@ -166,7 +166,7 @@ public class VAmp2SingleDriver extends Driver {
 	 */
 	protected Patch createNewPatch() {
 		Patch p = new Patch(Constants.NEW_SINGLE_SYSEX, this);
-		p.sysex[4] = (byte) getChannel();
+		p.getSysex()[4] = (byte) getChannel();
 		return p;
 	}
 

@@ -72,10 +72,10 @@ public class RolandMT32RhythmSetupTempDriver extends Driver {
 		// ErrorMsg.reportStatus(e);
 		// }
 
-		p.sysex[0] = (byte) 0xF0;
-		p.sysex[5] = (byte) 0x03; // Point to setup Temp area
-		p.sysex[6] = (byte) 0x01;
-		p.sysex[7] = (byte) 0x10;
+		p.getSysex()[0] = (byte) 0xF0;
+		p.getSysex()[5] = (byte) 0x03; // Point to setup Temp area
+		p.getSysex()[6] = (byte) 0x01;
+		p.getSysex()[7] = (byte) 0x10;
 
 		// System.out.println ("store patchNum " + patchNum + " to patAddrM/L " + patAddrM + " / " + patAddrL);
 		// sendPatchWorker(p);
@@ -120,10 +120,10 @@ public class RolandMT32RhythmSetupTempDriver extends Driver {
 		// Calculate the checksum
 		int sum = 0;
 		for (int i = start; i <= end; i++) {
-			sum += p.sysex[i];
+			sum += p.getSysex()[i];
 		}
 		sum = (0 - sum) & 0x7F;
-		p.sysex[ofs] = (byte) (sum % 128);
+		p.getSysex()[ofs] = (byte) (sum % 128);
 	}
 
 	// not used

@@ -17,15 +17,16 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.patch.IPatch;
 import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.model.LibraryColumn;
 import org.jsynthlib.tools.ErrorMsg;
 import org.jsynthlib.tools.Utility;
 
 public class SearchDialog extends JDialog {
-	private JRadioButton button2;
-	private JRadioButton button3;
+	// private JRadioButton button2;
+	// private JRadioButton button3;
 
 	public SearchDialog(JFrame parent) {
 
@@ -45,38 +46,57 @@ public class SearchDialog extends JDialog {
 			searchFor.add(textField);
 			container.add(searchFor, BorderLayout.NORTH);
 			final ButtonGroup group = new ButtonGroup();
-			JRadioButton button1 = new JRadioButton("Patch Name");
-			button2 = new JRadioButton("Field 1");
-			button3 = new JRadioButton("Field 2");
-			JRadioButton button4 = new JRadioButton("Comment");
-			JRadioButton button5 = new JRadioButton("All Fields");
-			button1.setActionCommand("P");
-			button2.setActionCommand("1");
-			button3.setActionCommand("2");
-			button4.setActionCommand("C");
-			button5.setActionCommand("A");
-			group.add(button1);
-			group.add(button2);
-			group.add(button3);
-			group.add(button4);
-			group.add(button5);
 
-			if (PatchBayApplication.getDesktop().getSelectedFrame() instanceof SceneFrame) {
-				button2.setEnabled(false);
-				button3.setEnabled(false);
-			}
-
-			button1.setSelected(true);
 			JPanel radioPanel = new JPanel();
 			radioPanel.setLayout(new FlowLayout());
-			radioPanel.add(button1);
-			radioPanel.add(button2);
-			radioPanel.add(button3);
-			radioPanel.add(button4);
-			radioPanel.add(button5);
-			container.add(radioPanel, BorderLayout.CENTER);
-			JPanel buttonPanel = new JPanel();
 
+			for (LibraryColumn column : LibraryColumn.getSeachableColumn()) {
+				JRadioButton button = new JRadioButton(column.getTitle());
+				if (column.equals(LibraryColumn.FILENAME)) {
+					button.setSelected(true);
+				}
+				button.setActionCommand(column.getActionCommand());
+				group.add(button);
+				radioPanel.add(button);
+			}
+			JRadioButton buttonAll = new JRadioButton("All Fields");
+			group.add(buttonAll);
+			radioPanel.add(buttonAll);
+
+			container.add(radioPanel, BorderLayout.CENTER);
+
+			// JRadioButton button1 = new JRadioButton("Patch Name");
+			// button2 = new JRadioButton("Field 1");
+			// button3 = new JRadioButton("Field 2");
+			// JRadioButton button4 = new JRadioButton("Comment");
+			// JRadioButton button5 = new JRadioButton("All Fields");
+			// button1.setActionCommand("P");
+			// button2.setActionCommand("1");
+			// button3.setActionCommand("2");
+			// button4.setActionCommand("C");
+			// button5.setActionCommand("A");
+			// group.add(button1);
+			// group.add(button2);
+			// group.add(button3);
+			// group.add(button4);
+			// group.add(button5);
+
+			// if (PatchBayApplication.getDesktop().getSelectedFrame() instanceof SceneFrame) {
+			// button2.setEnabled(false);
+			// button3.setEnabled(false);
+			// }
+
+			// button1.setSelected(true);
+			// JPanel radioPanel = new JPanel();
+			// radioPanel.setLayout(new FlowLayout());
+			// radioPanel.add(button1);
+			// radioPanel.add(button2);
+			// radioPanel.add(button3);
+			// radioPanel.add(button4);
+			// radioPanel.add(button5);
+			// container.add(radioPanel, BorderLayout.CENTER);
+
+			JPanel buttonPanel = new JPanel();
 			buttonPanel.setLayout(new FlowLayout());
 			JButton findFirst = new JButton(" Find First ");
 			JButton findNext = new JButton(" Find Next ");
@@ -121,13 +141,13 @@ public class SearchDialog extends JDialog {
 
 	public void setVisible(boolean b) {
 		if (b) {
-			if (PatchBayApplication.getDesktop().getSelectedFrame() instanceof SceneFrame) {
-				button2.setEnabled(false);
-				button3.setEnabled(false);
-			} else {
-				button2.setEnabled(true);
-				button3.setEnabled(true);
-			}
+			// if (PatchBayApplication.getDesktop().getSelectedFrame() instanceof SceneFrame) {
+			// button2.setEnabled(false);
+			// button3.setEnabled(false);
+			// } else {
+			// button2.setEnabled(true);
+			// button3.setEnabled(true);
+			// }
 		}
 		super.setVisible(b);
 	}
@@ -140,59 +160,83 @@ public class SearchDialog extends JDialog {
 		}
 
 		AbstractLibraryFrame lf = (AbstractLibraryFrame) frame;
-		PatchTableModel tm = lf.getPatchTableModel();
-		if (tm.getRowCount() == 0)
+		PatchTableModel tableModel = lf.getPatchTableModel();
+		if (tableModel.getRowCount() == 0)
 			return;
+
 		int searchFrom;
+
 		if (restart || lf.getTable().getSelectedRow() == -1)
 			searchFrom = 0;
 		else
 			searchFrom = lf.getTable().getSelectedRow() + 1;
 
 		IPatch p;
-		int field = 0;
-		if (command.equals("P"))
-			field = 0;
-		if (command.equals("1"))
-			field = 1;
-		if (command.equals("2"))
-			field = 2;
-		if (command.equals("C"))
-			field = 3;
-		if (command.equals("A"))
-			field = 4;
+		// int field = 0;
+		// if (command.equals("P"))
+		// field = 0;
+		// if (command.equals("1"))
+		// field = 1;
+		// if (command.equals("2"))
+		// field = 2;
+		// if (command.equals("C"))
+		// field = 3;
+		// if (command.equals("A"))
+		// field = 4;
 		text = text.toLowerCase();
-		String s;
+		// String s;
 		int i;
 		boolean match = false;
-		for (i = searchFrom; i < tm.getRowCount(); i++) {
-			p = tm.getPatchAt(i);
+
+		LibraryColumn columnToSearch = LibraryColumn.getLibraryColumnForActionCommand(command);
+
+		for (i = searchFrom; i < tableModel.getRowCount(); i++) {
+			p = tableModel.getPatchAt(i);
 
 			match = false;
-			if (field == 0 || field == 4) {
-				s = p.getName().toLowerCase();
-				match = (s.indexOf(text) != -1);
-				if (match)
-					break;
+			if (columnToSearch != null) {
+				match = LibraryColumn.getPropertyValue(p, columnToSearch).toLowerCase().indexOf(text) != -1;
+			} else {
+				System.out.println("columnToSearch " + columnToSearch);
+				for (LibraryColumn col : LibraryColumn.values()) {
+					if (col.isVisible()) {
+						System.out.println("column " + col);
+						match = LibraryColumn.getPropertyValue(p, col).toLowerCase().indexOf(text) != -1;
+						if (match) {
+							break;
+						}
+					}
+				}
 			}
-			if ((field == 1 || field == 4) && (lf instanceof LibraryFrame)) {
-				s = p.getDate().toLowerCase();
-				match = (s.indexOf(text) != -1);
-				if (match)
-					break;
+
+			if (match) {
+				break;
 			}
-			if ((field == 2 || field == 4) && (lf instanceof LibraryFrame)) {
-				s = p.getAuthor().toLowerCase();
-				match = (s.indexOf(text) != -1);
-				if (match)
-					break;
-			}
-			if (field == 3 || field == 4) {
-				s = tm.getCommentAt(i).toLowerCase();
-				match = (s.indexOf(text) != -1);
-				if (match)
-					break;
-			}
+			// if (columnToSearch == null || LibraryColumn.SYNTH.equals(columnToSearch)) {
+			// s = p.getName().toLowerCase();
+			// match = (s.indexOf(text) != -1);
+			// if (match) {
+			// break;
+			// }
+			// }
+			// if ((field == 1 || field == 4) && (lf instanceof LibraryFrame)) {
+			// s = p.getDate().toLowerCase();
+			// match = (s.indexOf(text) != -1);
+			// if (match)
+			// break;
+			// }
+			// if ((field == 2 || field == 4) && (lf instanceof LibraryFrame)) {
+			// s = p.getAuthor().toLowerCase();
+			// match = (s.indexOf(text) != -1);
+			// if (match)
+			// break;
+			// }
+			// if (field == 3 || field == 4) {
+			// s = tableModel.getCommentAt(i).toLowerCase();
+			// match = (s.indexOf(text) != -1);
+			// if (match)
+			// break;
+			// }
 		}
 
 		if (!match) {

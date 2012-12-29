@@ -661,16 +661,16 @@ public class YamahaMotifNormalVoiceEditor extends PatchEditorFrame {
 
 		public void set(int value) {
 			if (twobytes)
-				YamahaMotifSysexUtility.setShortParameter(patch.sysex, ofs, value);
+				YamahaMotifSysexUtility.setShortParameter(patch.getSysex(), ofs, value);
 			else
-				YamahaMotifSysexUtility.setParameter(patch.sysex, ofs, value);
+				YamahaMotifSysexUtility.setParameter(patch.getSysex(), ofs, value);
 		}
 
 		public int get() {
 			if (twobytes)
-				return YamahaMotifSysexUtility.getShortParameter(patch.sysex, ofs);
+				return YamahaMotifSysexUtility.getShortParameter(patch.getSysex(), ofs);
 			else
-				return YamahaMotifSysexUtility.getParameter(patch.sysex, ofs);
+				return YamahaMotifSysexUtility.getParameter(patch.getSysex(), ofs);
 		}
 	}
 

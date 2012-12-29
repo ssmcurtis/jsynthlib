@@ -8,7 +8,10 @@ import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -18,8 +21,10 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.ui.window.CompatibleFileDialog;
+import org.jsynthlib.model.JSynthSequence;
+import org.jsynthlib.tools.midi.MidiUtil;
 
 /**
  * ConfigPanel for play note. Gives the user a way to change the note played... when the user changes something in a
@@ -35,12 +40,18 @@ public class NoteChooserConfigPanel extends ConfigPanel implements ActionListene
 	}
 
 	/* enable MIDI sequencer for test purpose? */
-	private static final boolean useSequencer = false;
+	private static final boolean useSequencer = true;
 
 	private JRadioButton seqButton;
 	private JRadioButton toneButton;
 	private JPanel sequencePanel;
-	private final JTextField t0 = new JTextField(null, 20);
+
+	private boolean sendPatchBeforePlay;
+	private JCheckBox sendPatchBeforePlayCheckBox;
+
+	// private final JTextField t0 = new JTextField(null, 20);
+
+	private JComboBox<String> comboBox = new JComboBox<String>(JSynthSequence.getNames());
 
 	// not used yet.
 	// private boolean sequencerEnable;
@@ -96,27 +107,27 @@ public class NoteChooserConfigPanel extends ConfigPanel implements ActionListene
 			/*
 			 * create own sequence panel for file chooser
 			 */
-			t0.setEditable(false);
+			// t0.setEditable(false);
 
-			JButton b0 = new JButton("Browse");
-			b0.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					CompatibleFileDialog fc = new CompatibleFileDialog();
-					fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-					if (t0.getText() != null)
-						fc.setSelectedFile(new File(t0.getText()));
-					fc.showDialog(PatchBayApplication.getInstance(), "Choose MIDI file");
-					if (fc.getSelectedFile() != null) {
-						t0.setText(fc.getSelectedFile().getPath());
-						setModified(true);
-					}
-				}
-			});
+			// JButton b0 = new JButton("Browse");
+			// b0.addActionListener(new ActionListener() {
+			// public void actionPerformed(ActionEvent e) {
+			// CompatibleFileDialog fc = new CompatibleFileDialog();
+			// fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+			// if (t0.getText() != null)
+			// fc.setSelectedFile(new File(t0.getText()));
+			// fc.showDialog(PatchBayApplication.getInstance(), "Choose MIDI file");
+			// if (fc.getSelectedFile() != null) {
+			// t0.setText(fc.getSelectedFile().getPath());
+			// setModified(true);
+			// }
+			// }
+			// });
 
 			sequencePanel = new JPanel();
-			sequencePanel.add(new JLabel("MIDI file to play: "));
-			sequencePanel.add(t0);
-			sequencePanel.add(b0);
+			sequencePanel.add(new JLabel("Sequence: "));
+			sequencePanel.add(comboBox);
+			// sequencePanel.add(b0);
 
 			c.gridy++;
 			add(sequencePanel, c);
@@ -189,6 +200,17 @@ public class NoteChooserConfigPanel extends ConfigPanel implements ActionListene
 		nc.gridx = 3;
 		notePanel.add(new JLabel("msec"), nc);
 
+		sendPatchBeforePlayCheckBox = new JCheckBox("Send selected patch before play");
+		sendPatchBeforePlayCheckBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				sendPatchBeforePlay = sendPatchBeforePlayCheckBox.isSelected();
+				setModified(true);
+			}
+		});
+		nc.gridy = 3;
+		nc.gridx = 1;
+		notePanel.add(sendPatchBeforePlayCheckBox, nc);
+
 		c.gridy++;
 		add(notePanel, c);
 	}
@@ -217,6 +239,11 @@ public class NoteChooserConfigPanel extends ConfigPanel implements ActionListene
 		s1.setValue(note);
 		s2.setValue(velocity);
 		s3.setValue(delay);
+
+		sendPatchBeforePlay = AppConfig.getSendPatchBeforePlay();
+		sendPatchBeforePlayCheckBox.setSelected(sendPatchBeforePlay);
+		sendPatchBeforePlayCheckBox.setEnabled(AppConfig.getMidiEnable());
+
 		refreshTextFields();
 
 		if (useSequencer == true) {
@@ -224,7 +251,7 @@ public class NoteChooserConfigPanel extends ConfigPanel implements ActionListene
 			boolean isSeq = AppConfig.getSequencerEnable();
 			seqButton.setSelected(isSeq);
 			toneButton.setSelected(!isSeq);
-			t0.setText(AppConfig.getSequencePath());
+			comboBox.setSelectedIndex(AppConfig.getSequenceOrdinal());
 
 			setContainerEnabled(sequencePanel, isSeq);
 			setContainerEnabled(notePanel, !isSeq);
@@ -235,8 +262,10 @@ public class NoteChooserConfigPanel extends ConfigPanel implements ActionListene
 		if (useSequencer == true) {
 			/* Sequencer related parts */
 			AppConfig.setSequencerEnable(seqButton.isSelected());
-			AppConfig.setSequencePath(t0.getText());
+			AppConfig.setSequenceOrdinal(comboBox.getSelectedIndex());
+
 		}
+		AppConfig.setSendPatchBeforePlay(sendPatchBeforePlay);
 
 		AppConfig.setNote(note);
 		AppConfig.setVelocity(velocity);

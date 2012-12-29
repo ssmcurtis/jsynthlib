@@ -400,11 +400,11 @@ class BossDR660DrumkitEditor extends PatchEditorFrame {
 		}
 
 		public void set(int i) {
-			patch.sysex[ofs + drum * 23] = (byte) (i);
+			patch.getSysex()[ofs + drum * 23] = (byte) (i);
 		}
 
 		public int get() {
-			return ((patch.sysex[ofs + drum * 23]));
+			return ((patch.getSysex()[ofs + drum * 23]));
 		}
 
 	}
@@ -416,11 +416,11 @@ class BossDR660DrumkitEditor extends PatchEditorFrame {
 		}
 
 		public void set(int i) {
-			patch.sysex[ofs + drum] = (byte) (i);
+			patch.getSysex()[ofs + drum] = (byte) (i);
 		}
 
 		public int get() {
-			return ((patch.sysex[ofs + drum]));
+			return ((patch.getSysex()[ofs + drum]));
 		}
 
 	}
@@ -432,12 +432,12 @@ class BossDR660DrumkitEditor extends PatchEditorFrame {
 		}
 
 		public void set(int i) {
-			patch.sysex[ofs + drum * 23] = (byte) (i / 128);
-			patch.sysex[ofs + drum * 23 + 1] = (byte) (i % 128);
+			patch.getSysex()[ofs + drum * 23] = (byte) (i / 128);
+			patch.getSysex()[ofs + drum * 23 + 1] = (byte) (i % 128);
 		}
 
 		public int get() {
-			return ((patch.sysex[ofs + drum * 23] * 128 + patch.sysex[ofs + 1 + drum * 23]));
+			return ((patch.getSysex()[ofs + drum * 23] * 128 + patch.getSysex()[ofs + 1 + drum * 23]));
 		}
 
 	}
@@ -449,12 +449,12 @@ class BossDR660DrumkitEditor extends PatchEditorFrame {
 		}
 
 		public void set(int i) {
-			patch.sysex[ofs + drum * 23] = (byte) (i / 16);
-			patch.sysex[ofs + drum * 23 + 1] = (byte) (i % 16);
+			patch.getSysex()[ofs + drum * 23] = (byte) (i / 16);
+			patch.getSysex()[ofs + drum * 23 + 1] = (byte) (i % 16);
 		}
 
 		public int get() {
-			return ((patch.sysex[ofs + drum * 23] * 16 + patch.sysex[ofs + 1 + drum * 23]));
+			return ((patch.getSysex()[ofs + drum * 23] * 16 + patch.getSysex()[ofs + 1 + drum * 23]));
 		}
 
 	}

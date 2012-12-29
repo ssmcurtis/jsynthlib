@@ -44,7 +44,7 @@ public class RolandD10ToneEditor extends RolandD10EditorFrame {
 	public RolandD10ToneEditor(Patch patch) {
 		super("Roland D-10 Tone Editor", patch);
 
-		EditSender.setDeviceId(patch.sysex[2]);
+		EditSender.setDeviceId(patch.getSysex()[2]);
 
 		GridBagConstraints gbc = new GridBagConstraints();
 

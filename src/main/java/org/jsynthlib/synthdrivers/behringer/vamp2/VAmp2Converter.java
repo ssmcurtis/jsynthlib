@@ -116,9 +116,9 @@ public class VAmp2Converter extends Converter {
 		Patch[] newPatchArray = new Patch[1];
 		newPatchArray[0] = new Patch(sysex, new VAmp2SingleDriver());
 
-		ErrorMsg.reportStatus(">>>>>>> Patch From Device <<<<<<<<<");
-		ErrorMsg.reportStatus("  " + Utility.hexDump(newPatchArray[0].sysex, 0, -1, 16));
-		ErrorMsg.reportStatus(">>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<");
+//		ErrorMsg.reportStatus(">>>>>>> Patch From Device <<<<<<<<<");
+		ErrorMsg.reportStatus("  " + Utility.hexDump(newPatchArray[0].getSysex(), 0, -1, 16));
+//		ErrorMsg.reportStatus(">>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<");
 
 		return newPatchArray;
 	}

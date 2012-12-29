@@ -40,8 +40,10 @@ import javax.sound.midi.Synthesizer;
 import javax.sound.midi.SysexMessage;
 import javax.sound.midi.Transmitter;
 
+import org.jsynthlib.JSynthResource;
 import org.jsynthlib.menu.action.Actions;
 import org.jsynthlib.menu.preferences.AppConfig;
+import org.jsynthlib.model.JSynthSequence;
 import org.jsynthlib.tools.ErrorMsg;
 import org.jsynthlib.tools.Utility;
 
@@ -82,8 +84,8 @@ public final class MidiUtil {
 
 	private static MidiDevice.Info[] outputMidiDeviceInfo;
 	private static MidiDevice.Info[] inputMidiDeviceInfo;
-	private static String[] outputNames; // wirski@op.pl
-	private static String[] inputNames; // wirski@op.pl
+	private static String[] outputNames;
+	private static String[] inputNames;
 	private static Receiver[] midiOutRcvr;
 	private static MidiUtil.SysexInputQueue[] sysexInputQueue;
 
@@ -110,7 +112,7 @@ public final class MidiUtil {
 			isOutputAvailable = false;
 			isInputAvailable = false;
 		}
-		createNames(); // wirski@op.pl
+		createNames();
 
 		midiOutRcvr = new Receiver[outputMidiDeviceInfo.length];
 		sysexInputQueue = new MidiUtil.SysexInputQueue[inputMidiDeviceInfo.length];
@@ -143,8 +145,7 @@ public final class MidiUtil {
 		for (int i = 0; i < infos.length; i++) {
 			// throws MidiUnavailableException
 			MidiDevice device = MidiSystem.getMidiDevice(infos[i]);
-			if (device.getMaxReceivers() != 0 && !(device instanceof Synthesizer) && !(device instanceof Sequencer)
-					&& !EMULATE_NO_MIDI_OUT)
+			if (device.getMaxReceivers() != 0 && !(device instanceof Synthesizer) && !(device instanceof Sequencer) && !EMULATE_NO_MIDI_OUT)
 				list.add(infos[i]);
 		}
 		return (MidiDevice.Info[]) list.toArray(new MidiDevice.Info[0]);
@@ -153,7 +154,7 @@ public final class MidiUtil {
 	/**
 	 * Fills outputNames and inputNames, with the names of devices made from their descriptions and names
 	 */
-	private static void createNames() { // wirski@op.pl
+	private static void createNames() {
 		outputNames = new String[outputMidiDeviceInfo.length];
 		for (int i = 0; i < outputMidiDeviceInfo.length; i++) {
 			outputNames[i] = outputMidiDeviceInfo[i].getDescription() + outputMidiDeviceInfo[i].getName();
@@ -216,19 +217,19 @@ public final class MidiUtil {
 		return inputMidiDeviceInfo;
 	}
 
-	public static String[] getOutputNames() { // wirski@op.pl
+	public static String[] getOutputNames() {
 		return outputNames;
 	}
 
-	public static String getOutputName(int port) { // wirski@op.pl
+	public static String getOutputName(int port) {
 		return outputNames[port];
 	}
 
-	public static String[] getInputNames() { // wirski@op.pl
+	public static String[] getInputNames() {
 		return inputNames;
 	}
 
-	public static String getInputName(int port) { // wirski@op.pl
+	public static String getInputName(int port) {
 		return inputNames[port];
 	}
 
@@ -257,7 +258,7 @@ public final class MidiUtil {
 	/** for SynthTabelModel (will be obsoleted). */
 	public static int getOutPort(String info) {
 		for (int i = 0; i < outputMidiDeviceInfo.length; i++) {
-			if (outputNames[i] == info) // wirski@op.pl
+			if (outputNames[i] == info)
 				return i;
 		}
 		return -1;
@@ -266,7 +267,7 @@ public final class MidiUtil {
 	/** for SynthTabelModel (will be obsoleted). */
 	public static int getInPort(String info) {
 		for (int i = 0; i < inputMidiDeviceInfo.length; i++) {
-			if (inputNames[i] == info) // wirski@op.pl
+			if (inputNames[i] == info)
 				return i;
 		}
 		return -1;
@@ -307,7 +308,7 @@ public final class MidiUtil {
 	 * @throws MidiUnavailableException
 	 */
 	public static Receiver getReceiver(int port) throws MidiUnavailableException {
-		if (outputMidiDeviceInfo.length == 0)
+		if (outputMidiDeviceInfo.length == 0 || outputMidiDeviceInfo.length <= port)
 			return null;
 
 		if (midiOutRcvr[port] != null)
@@ -376,16 +377,18 @@ public final class MidiUtil {
 	 * @see #clearSysexInputQueue
 	 */
 	public static void setSysexInputQueue(int port) {
-		if (sysexInputQueue[port] != null) // already ready
-			return;
-		MidiUtil.SysexInputQueue rcvr = new MidiUtil.SysexInputQueue();
-		Transmitter trns;
-		try {
-			trns = getInputMidiDevice(port).getTransmitter();
-			trns.setReceiver(rcvr);
-			sysexInputQueue[port] = rcvr;
-		} catch (MidiUnavailableException e) {
-			ErrorMsg.reportStatus(e);
+		if (sysexInputQueue.length > port) {
+			if (sysexInputQueue[port] != null) // already ready
+				return;
+			MidiUtil.SysexInputQueue rcvr = new MidiUtil.SysexInputQueue();
+			Transmitter trns;
+			try {
+				trns = getInputMidiDevice(port).getTransmitter();
+				trns.setReceiver(rcvr);
+				sysexInputQueue[port] = rcvr;
+			} catch (MidiUnavailableException e) {
+				ErrorMsg.reportStatus(e);
+			}
 		}
 	}
 
@@ -416,8 +419,7 @@ public final class MidiUtil {
 	 * @see #getInputMidiDeviceInfo()
 	 * @see #clearSysexInputQueue
 	 */
-	public static MidiMessage getMessage(int port, long timeout) throws MidiUtil.TimeoutException,
-			InvalidMidiDataException {
+	public static MidiMessage getMessage(int port, long timeout) throws MidiUtil.TimeoutException, InvalidMidiDataException {
 		return sysexInputQueue[port].getMessage(timeout);
 	}
 
@@ -1063,7 +1065,6 @@ public final class MidiUtil {
 		MidiDevice outPort;
 		Transmitter seqTrans;
 		Receiver outRcvr;
-
 		try {
 			sequencer = MidiSystem.getSequencer();
 
@@ -1079,8 +1080,12 @@ public final class MidiUtil {
 		}
 
 		try {
-			File myMidiFile = new File(AppConfig.getSequencePath());
-			Sequence mySeq = MidiSystem.getSequence(myMidiFile);
+			int sequenceOrdinal = AppConfig.getSequenceOrdinal();
+			Sequence mySeq = MidiSystem.getSequence(MidiUtil.class.getResource(JSynthResource.RESOURCES_PACKAGE_MIDI.getUri()
+					+ JSynthSequence.getSequenceId(sequenceOrdinal) + ".mid"));
+			sequencer.setTempoInBPM(140);
+			// TODO ssmcurtis
+			// sequencer.setLoopCount(10);
 			sequencer.setSequence(mySeq);
 		} catch (Exception e) {
 			ErrorMsg.reportWarning("MidiSystem Error", "Can't access MIDI file for sequencer", e);

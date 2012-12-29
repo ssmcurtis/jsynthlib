@@ -74,7 +74,7 @@ public class KawaiK5000CombiBankDriver extends BankDriver {
 	// ----------------------------------------------------------------------------------------------------------------------
 
 	public String getPatchName(Patch ip) {
-		return (((Patch) ip).sysex.length / 1024) + " Kilobytes";
+		return (((Patch) ip).getSysex().length / 1024) + " Kilobytes";
 	}
 
 	// ----------------------------------------------------------------------------------------------------------------------
@@ -92,7 +92,7 @@ public class KawaiK5000CombiBankDriver extends BankDriver {
 	public String getPatchName(Patch p, int patchNum) {
 		// ErrorMsg.reportStatus("KawaiK5000CombiBankDriver->getPatchName: " + patchNum);
 		try {
-			return new String(((Patch) p).sysex, getPatchNameStart(patchNum), 8, "US-ASCII");
+			return new String(((Patch) p).getSysex(), getPatchNameStart(patchNum), 8, "US-ASCII");
 		} catch (UnsupportedEncodingException ex) {
 			return "-??????-";
 		}
@@ -116,7 +116,7 @@ public class KawaiK5000CombiBankDriver extends BankDriver {
 	public Patch getPatch(Patch bank, int patchNum) {
 		// ErrorMsg.reportStatus("KawaiK5000CombiBankDriver->getPatch: " + patchNum);
 		try {
-			return KawaiK5000CombiDriver.createPatchFromData(((Patch) bank).sysex, patchIndex(patchNum),
+			return KawaiK5000CombiDriver.createPatchFromData(((Patch) bank).getSysex(), patchIndex(patchNum),
 					KawaiK5000CombiDriver.PATCH_DATA_SIZE);
 		} catch (Exception ex) {
 			ErrorMsg.reportError("Error", "Error in K5000 Combi Bank Driver", ex);
@@ -130,9 +130,9 @@ public class KawaiK5000CombiBankDriver extends BankDriver {
 
 	public void putPatch(Patch bank, Patch p, int patchNum) {
 		// ErrorMsg.reportStatus("KawaiK5000CombiBankDriver->putPatch: " + patchNum);
-		((Patch) bank).sysex = Utility.byteArrayReplace(((Patch) bank).sysex, patchIndex(patchNum),
-				KawaiK5000CombiDriver.PATCH_DATA_SIZE, ((Patch) p).sysex,
-				KawaiK5000CombiDriver.PATCH_DATA_START, KawaiK5000CombiDriver.PATCH_DATA_SIZE);
+		((Patch) bank).setSysex(Utility.byteArrayReplace(((Patch) bank).getSysex(), patchIndex(patchNum),
+				KawaiK5000CombiDriver.PATCH_DATA_SIZE, ((Patch) p).getSysex(),
+				KawaiK5000CombiDriver.PATCH_DATA_START, KawaiK5000CombiDriver.PATCH_DATA_SIZE));
 	}
 
 }

@@ -13,6 +13,7 @@ import java.io.PrintStream;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 
+import org.jsynthlib.JSynthResource;
 import org.jsynthlib.tools.Utility;
 
 /**
@@ -126,7 +127,7 @@ public class ErrorDialog extends JDialog {
 
 		// I put this in a try/catch block because, if the image was missing, it threw an exception - emenaker 3/12/2003
 		try {
-			iconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Error.gif")));
+			iconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(JSynthResource.RESOURCES_PACKAGE.getUri() +"images/Error.gif")));
 		} catch (NullPointerException e) {
 		}
 		jPanel3.add(iconLabel, java.awt.BorderLayout.WEST);

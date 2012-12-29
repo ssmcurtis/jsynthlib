@@ -67,7 +67,7 @@ public class CasioCZ1000SingleDriver extends Driver {
 
 	public void storePatch(Patch p, int bankNum, int patchNum) {
 		byte[] newsysex = new byte[264];
-		System.arraycopy(((Patch) p).sysex, 0, newsysex, 0, 264);
+		System.arraycopy(((Patch) p).getSysex(), 0, newsysex, 0, 264);
 		newsysex[4] = (byte) (0x70 + getChannel() - 1); // must do it ourselve since sendPatchWorker didn't support
 		// adding midi channel info in half a byte
 		newsysex[5] = (byte) (0x20); // 20 is to send data to the Casio
@@ -92,7 +92,7 @@ public class CasioCZ1000SingleDriver extends Driver {
 
 	public void sendPatch(Patch p) {
 		byte[] newsysex = new byte[264];
-		System.arraycopy(((Patch) p).sysex, 0, newsysex, 0, 264);
+		System.arraycopy(((Patch) p).getSysex(), 0, newsysex, 0, 264);
 		newsysex[4] = (byte) (0x70 + getChannel() - 1); // must do it ourselve since sendPatchWorker didn't support
 		// adding midi channel info in half a byte
 		newsysex[5] = (byte) (0x20); // 0x20 is to send data to the Casio
@@ -165,9 +165,9 @@ public class CasioCZ1000SingleDriver extends Driver {
 		;
 	}
 
-	public JSLFrame editPatch(Patch p) {
-		return new CasioCZ1000SingleEditor(p);
-	}
+//	public JSLFrame editPatch(Patch p) {
+//		return new CasioCZ1000SingleEditor(p);
+//	}
 
 	/** No support, so ignore quietly. */
 	protected void setPatchName(Patch p, String name) {

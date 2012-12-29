@@ -570,11 +570,11 @@ class X3Model extends ParamModel {
 	public void set(int i) {
 		if (bit == -1) {
 			// using all 8 bits of byte
-			patch.sysex[ofs + KorgX3SingleDriver.EXTRA_HEADER] = (byte) i;
+			patch.getSysex()[ofs + KorgX3SingleDriver.EXTRA_HEADER] = (byte) i;
 		} else {
 			if (bits == -1) {
 				// using just one bit of byte
-				patch.sysex[ofs + KorgX3SingleDriver.EXTRA_HEADER] = (byte) ((patch.sysex[ofs
+				patch.getSysex()[ofs + KorgX3SingleDriver.EXTRA_HEADER] = (byte) ((patch.getSysex()[ofs
 						+ KorgX3SingleDriver.EXTRA_HEADER] & ~(1 << bit))
 						+ i << bit);
 			} else {
@@ -588,7 +588,7 @@ class X3Model extends ParamModel {
 				// now we have a mask for example 11100011.
 				// and the appropriate addition ex. 00011000.
 
-				patch.sysex[ofs + KorgX3SingleDriver.EXTRA_HEADER] = (byte) ((patch.sysex[ofs
+				patch.getSysex()[ofs + KorgX3SingleDriver.EXTRA_HEADER] = (byte) ((patch.getSysex()[ofs
 						+ KorgX3SingleDriver.EXTRA_HEADER] & mask)
 						+ i << bit);
 			}
@@ -602,18 +602,18 @@ class X3Model extends ParamModel {
 	 */
 	public int get() {
 		if (bit == -1) {
-			return patch.sysex[ofs + KorgX3SingleDriver.EXTRA_HEADER];
+			return patch.getSysex()[ofs + KorgX3SingleDriver.EXTRA_HEADER];
 		} else {
 			if (bits == -1) {
 				// using just one bit of byte
-				return (byte) ((patch.sysex[ofs + KorgX3SingleDriver.EXTRA_HEADER] & (byte) (1 << bit)) >> bit);
+				return (byte) ((patch.getSysex()[ofs + KorgX3SingleDriver.EXTRA_HEADER] & (byte) (1 << bit)) >> bit);
 			} else {
 				// using 'bits' bits
 				byte mask = (byte) 0x00;
 				for (int j = 0; j < bits; j++) {
 					mask += (byte) (1 << (bit + j));
 				}
-				return (byte) ((patch.sysex[ofs + KorgX3SingleDriver.EXTRA_HEADER] & mask) >> bit);
+				return (byte) ((patch.getSysex()[ofs + KorgX3SingleDriver.EXTRA_HEADER] & mask) >> bit);
 			}
 		}
 	}
@@ -630,12 +630,12 @@ class MultiSoundModel extends ParamModel {
 	// ofs+EXTRA_HEADER+1 has the MSB and ofs+EXTRA_HEADER has the LSB
 	// example: 314 = 0x13A = 1 00111010
 	public void set(int i) {
-		patch.sysex[ofs + KorgX3SingleDriver.EXTRA_HEADER] = (byte) (i & 0xFF); // LSB
-		patch.sysex[ofs + KorgX3SingleDriver.EXTRA_HEADER + 1] = (byte) (i >> 8); // MSB
+		patch.getSysex()[ofs + KorgX3SingleDriver.EXTRA_HEADER] = (byte) (i & 0xFF); // LSB
+		patch.getSysex()[ofs + KorgX3SingleDriver.EXTRA_HEADER + 1] = (byte) (i >> 8); // MSB
 	}
 
 	public int get() {
-		return ((patch.sysex[ofs + KorgX3SingleDriver.EXTRA_HEADER + 1] << 8) + ((patch.sysex[ofs
+		return ((patch.getSysex()[ofs + KorgX3SingleDriver.EXTRA_HEADER + 1] << 8) + ((patch.getSysex()[ofs
 				+ KorgX3SingleDriver.EXTRA_HEADER] + 256) % 256));
 	}
 }

@@ -99,14 +99,14 @@ public class RolandJV80PerformanceDriver extends Driver {
 	}
 
 	public void storePatch(Patch p, int bankNum, int performanceNum) {
-		setPerformanceNum(p.sysex, bankNum, performanceNum);
+		setPerformanceNum(p.getSysex(), bankNum, performanceNum);
 		calculateChecksum(p);
 		sendPatchWorker(p);
 	}
 
 	// Sends a patch to the synth's edit buffer.
 	public void sendPatch(Patch p) {
-		setPerformanceNum(p.sysex, -1, 0);
+		setPerformanceNum(p.getSysex(), -1, 0);
 		calculateChecksum(p);
 		sendPatchWorker(p);
 	}
@@ -116,9 +116,9 @@ public class RolandJV80PerformanceDriver extends Driver {
 	}
 
 	public void calculateChecksum(Patch p, int offset) {
-		JV80Constants.calculateChecksum(p.sysex, offset, performanceCommonLength - SYSEX_OVERHEAD);
+		JV80Constants.calculateChecksum(p.getSysex(), offset, performanceCommonLength - SYSEX_OVERHEAD);
 		for (int i = 0; i < 8; i++) {
-			JV80Constants.calculateChecksum(p.sysex, offset + performancePartOffsets[i], performancePartLength
+			JV80Constants.calculateChecksum(p.getSysex(), offset + performancePartOffsets[i], performancePartLength
 					- SYSEX_OVERHEAD);
 		}
 	}

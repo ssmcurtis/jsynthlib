@@ -24,8 +24,8 @@ import javax.swing.JScrollPane;
 import javax.swing.UIManager;
 
 import org.jsynthlib.Constants;
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib._widgets.SysexWidget;
-import org.jsynthlib.menu.PatchBayApplication;
 import org.jsynthlib.menu.action.Actions;
 import org.jsynthlib.menu.patch.IPatch;
 import org.jsynthlib.menu.patch.PatchBasket;
@@ -34,9 +34,13 @@ import org.jsynthlib.menu.preferences.AppConfig;
 import org.jsynthlib.menu.ui.JSLFrame;
 import org.jsynthlib.menu.ui.JSLFrameEvent;
 import org.jsynthlib.menu.ui.JSLFrameListener;
+import org.jsynthlib.menu.ui.PatchTransferHandler;
+import org.jsynthlib.model.ImportFileType;
 import org.jsynthlib.tools.ClipboardUtil;
 import org.jsynthlib.tools.ErrorMsg;
 import org.jsynthlib.tools.midi.MidiUtil;
+
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * A base class of a patch editor.
@@ -44,7 +48,6 @@ import org.jsynthlib.tools.midi.MidiUtil;
  * @author ???
  * @version $Id$
  */
-@Deprecated
 public class PatchEditorFrame extends MenuFrame implements PatchBasket {
 	/** This is the patch we are working on. */
 	public PatchSingle p;
@@ -93,7 +96,7 @@ public class PatchEditorFrame extends MenuFrame implements PatchBasket {
 	 * @param patch
 	 *            a reference to <code>ISinglePatch</code> object stored in a patch library or a bank patch.
 	 */
-	protected PatchEditorFrame(String name, PatchSingle patch) {
+	public PatchEditorFrame(String name, PatchSingle patch) {
 		this(name, patch, new JPanel(new GridBagLayout()));
 	}
 
@@ -116,6 +119,8 @@ public class PatchEditorFrame extends MenuFrame implements PatchBasket {
 			}
 
 			public void mouseReleased(MouseEvent e) {
+//				System.out.println(">>> repaint scroller released vert" );
+
 				repaint();
 			}
 		});
@@ -124,6 +129,7 @@ public class PatchEditorFrame extends MenuFrame implements PatchBasket {
 			}
 
 			public void mouseReleased(MouseEvent e) {
+//				System.out.println(">>> repaint scroller released hori" );
 				repaint();
 			}
 		});
@@ -247,7 +253,10 @@ public class PatchEditorFrame extends MenuFrame implements PatchBasket {
 				| Actions.EN_SEND_TO | Actions.EN_REASSIGN);
 
 		// enable paste if the clipboard has contents.
-		Actions.setEnabled(Toolkit.getDefaultToolkit().getSystemClipboard().getContents(this) != null, Actions.EN_PASTE);
+		
+		Actions.setEnabled(
+				Toolkit.getDefaultToolkit().getSystemClipboard().getContents(this)
+						.isDataFlavorSupported(PatchTransferHandler.PATCHES_FLAVOR), Actions.EN_PASTE);
 	}
 
 	/**
@@ -263,13 +272,13 @@ public class PatchEditorFrame extends MenuFrame implements PatchBasket {
 		return null;
 	}
 
-	public void importPatch(File file) throws FileNotFoundException {
+	public void importPatch(File file, ImportFileType type) throws FileNotFoundException {
 	}
 
 	public void exportPatch(File file) throws FileNotFoundException {
 	}
 
-	public void deleteSelectedPatch() {
+	public void deleteSelectedPatches() {
 	}
 
 	public void copySelectedPatch() {
@@ -310,7 +319,7 @@ public class PatchEditorFrame extends MenuFrame implements PatchBasket {
 	public void pastePatch(IPatch _p) {
 	}
 
-	public void pastePatch(IPatch _p, int bankNum, int patchNum) {// wirski@op.pl
+	public void pastePatch(IPatch _p, int bankNum, int patchNum) {
 	}
 
 	// end of PatchBasket methods
@@ -599,5 +608,15 @@ public class PatchEditorFrame extends MenuFrame implements PatchBasket {
 	 */
 	public IPatch getPatch() {
 		return p;
+	}
+	@Override
+	public void playAllPatches() {
+		throw new NotImplementedException();
+	}
+
+	@Override
+	public void splitSelectedPatches() {
+		// TODO Auto-generated method stub
+		
 	}
 }

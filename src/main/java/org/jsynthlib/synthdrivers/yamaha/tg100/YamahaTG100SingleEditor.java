@@ -72,7 +72,7 @@ public class YamahaTG100SingleEditor extends PatchEditorFrame {
 		}
 
 		// Needed for initial tab enabling/disabling
-		changeVoiceMode((int) patch.sysex[7]);
+		changeVoiceMode((int) patch.getSysex()[7]);
 
 		setSize(500, 600);
 		// pack();

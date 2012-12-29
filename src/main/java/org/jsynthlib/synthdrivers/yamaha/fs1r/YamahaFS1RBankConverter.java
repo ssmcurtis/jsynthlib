@@ -31,42 +31,42 @@ public class YamahaFS1RBankConverter extends Converter {
 		int oIndex = 26;
 		int oIDest = YamahaFS1RBankDriver.DATA_START;
 		for (int p = 0; p < 128; p++) {
-			oBank.sysex[oIDest++] = (byte) 0xF0;
-			oBank.sysex[oIDest++] = (byte) 0x43;
-			oBank.sysex[oIDest++] = (byte) 0x0;
-			oBank.sysex[oIDest++] = (byte) 0x5E;
+			oBank.getSysex()[oIDest++] = (byte) 0xF0;
+			oBank.getSysex()[oIDest++] = (byte) 0x43;
+			oBank.getSysex()[oIDest++] = (byte) 0x0;
+			oBank.getSysex()[oIDest++] = (byte) 0x5E;
 			int oCSStart = oIDest;
-			oBank.sysex[oIDest++] = (byte) 0x03;
-			oBank.sysex[oIDest++] = (byte) 0x10;
-			oBank.sysex[oIDest++] = (byte) 0x11;
-			oBank.sysex[oIDest++] = (byte) 0;
-			oBank.sysex[oIDest++] = (byte) p;
+			oBank.getSysex()[oIDest++] = (byte) 0x03;
+			oBank.getSysex()[oIDest++] = (byte) 0x10;
+			oBank.getSysex()[oIDest++] = (byte) 0x11;
+			oBank.getSysex()[oIDest++] = (byte) 0;
+			oBank.getSysex()[oIDest++] = (byte) p;
 			for (int b = 0; b < YamahaFS1RPerformanceDriver.PATCH_SIZE; b++) {
-				oBank.sysex[oIDest++] = aBuffer[oIndex++];
+				oBank.getSysex()[oIDest++] = aBuffer[oIndex++];
 			}
 			int oCSEnd = oIDest - 1;
 			oIDest++;
-			oBank.sysex[oIDest++] = (byte) 0xF7;
-			DriverUtil.calculateChecksum(oBank.sysex, oCSStart, oCSEnd, oCSEnd + 1);
+			oBank.getSysex()[oIDest++] = (byte) 0xF7;
+			DriverUtil.calculateChecksum(oBank.getSysex(), oCSStart, oCSEnd, oCSEnd + 1);
 		}
 		for (int v = 0; v < 128; v++) {
-			oBank.sysex[oIDest++] = (byte) 0xF0;
-			oBank.sysex[oIDest++] = (byte) 0x43;
-			oBank.sysex[oIDest++] = (byte) 0x0;
-			oBank.sysex[oIDest++] = (byte) 0x5E;
+			oBank.getSysex()[oIDest++] = (byte) 0xF0;
+			oBank.getSysex()[oIDest++] = (byte) 0x43;
+			oBank.getSysex()[oIDest++] = (byte) 0x0;
+			oBank.getSysex()[oIDest++] = (byte) 0x5E;
 			int oCSStart = oIDest;
-			oBank.sysex[oIDest++] = (byte) 0x04;
-			oBank.sysex[oIDest++] = (byte) 0x60;
-			oBank.sysex[oIDest++] = (byte) 0x51;
-			oBank.sysex[oIDest++] = (byte) 0;
-			oBank.sysex[oIDest++] = (byte) v;
+			oBank.getSysex()[oIDest++] = (byte) 0x04;
+			oBank.getSysex()[oIDest++] = (byte) 0x60;
+			oBank.getSysex()[oIDest++] = (byte) 0x51;
+			oBank.getSysex()[oIDest++] = (byte) 0;
+			oBank.getSysex()[oIDest++] = (byte) v;
 			for (int b = 0; b < YamahaFS1RVoiceDriver.PATCH_SIZE; b++) {
-				oBank.sysex[oIDest++] = aBuffer[oIndex++];
+				oBank.getSysex()[oIDest++] = aBuffer[oIndex++];
 			}
 			int oCSEnd = oIDest - 1;
 			oIDest++;
-			oBank.sysex[oIDest++] = (byte) 0xF7;
-			DriverUtil.calculateChecksum(oBank.sysex, oCSStart, oCSEnd, oCSEnd + 1);
+			oBank.getSysex()[oIDest++] = (byte) 0xF7;
+			DriverUtil.calculateChecksum(oBank.getSysex(), oCSStart, oCSEnd, oCSEnd + 1);
 		}
 		return oBank;
 	}

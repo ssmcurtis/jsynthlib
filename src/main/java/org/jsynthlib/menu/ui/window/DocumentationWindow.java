@@ -17,7 +17,7 @@ import javax.swing.JScrollPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.ui.JSLDialog;
 import org.jsynthlib.tools.ErrorMsg;
 import org.jsynthlib.tools.Utility;

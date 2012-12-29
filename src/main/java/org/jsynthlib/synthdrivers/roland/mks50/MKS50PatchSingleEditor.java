@@ -116,11 +116,11 @@ class MKSOfsModel extends ParamModel {
 	}
 
 	public void set(int i) {
-		patch.sysex[ofs] = (byte) (i + pofs);
+		patch.getSysex()[ofs] = (byte) (i + pofs);
 	}
 
 	public int get() {
-		int i = patch.sysex[ofs] - pofs;
+		int i = patch.getSysex()[ofs] - pofs;
 		if (i >= 0)
 			return i;
 		else
@@ -158,15 +158,15 @@ class MKSBitModel extends ParamModel {
 
 	public void set(int i) {
 		int mask = ~(1 << bit);
-		int value = patch.sysex[ofs] & mask;
+		int value = patch.getSysex()[ofs] & mask;
 		if (i == 0)
 			value |= (1 << bit);
-		patch.sysex[ofs] = (byte) value;
+		patch.getSysex()[ofs] = (byte) value;
 	}
 
 	public int get() {
 		int mask = 1 << bit;
-		if ((patch.sysex[ofs] & mask) > 0)
+		if ((patch.getSysex()[ofs] & mask) > 0)
 			return 0;
 		else
 			return 1;
@@ -189,7 +189,7 @@ class MKSBitSender extends SysexSender {
 
 	public byte[] generate(int value) {
 		int mask = ~(1 << bit);
-		int bitfield = patch.sysex[ofs] & mask;
+		int bitfield = patch.getSysex()[ofs] & mask;
 		if (value == 0)
 			bitfield |= (1 << bit);
 		b[3] = (byte) (channel - 1);
@@ -210,11 +210,11 @@ class MKS2sCompModel extends ParamModel {
 	}
 
 	public void set(int i) {
-		patch.sysex[ofs] = (byte) ((i - max) & 0x7F);
+		patch.getSysex()[ofs] = (byte) ((i - max) & 0x7F);
 	}
 
 	public int get() {
-		return (patch.sysex[ofs] + max) & 0x7F;
+		return (patch.getSysex()[ofs] + max) & 0x7F;
 	}
 }
 

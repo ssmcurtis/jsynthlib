@@ -49,6 +49,6 @@ public class CasioCZ1000RcvConverter extends Converter {
 	}
 
 	public Patch[] extractPatch(Patch p) {
-		return new Patch[] { (Patch) createPatch(p.sysex) };
+		return new Patch[] { (Patch) createPatch(p.getSysex()) };
 	}
 }

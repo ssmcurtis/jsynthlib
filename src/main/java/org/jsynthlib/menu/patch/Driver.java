@@ -8,10 +8,13 @@ import javax.sound.midi.ShortMessage;
 import javax.sound.midi.SysexMessage;
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.preferences.AppConfig;
 import org.jsynthlib.menu.ui.JSLFrame;
 import org.jsynthlib.menu.ui.window.HexDumpEditorFrame;
+import org.jsynthlib.menu.ui.window.HexDumpEditorHighlighted;
+import org.jsynthlib.menu.ui.window.MenuFrame;
+import org.jsynthlib.menu.ui.window.PatchEditorFrame;
 import org.jsynthlib.tools.DriverUtil;
 import org.jsynthlib.tools.ErrorMsg;
 import org.jsynthlib.tools.midi.MidiUtil;
@@ -306,15 +309,11 @@ abstract public class Driver implements IPatchDriver {
 		return new Patch(sysex, this, filename);
 	}
 
-	// TODO ssmcurtis opata
+	// TODO ssmcurtis 
 	public IPatch[] createPatches(SysexMessage[] msgs) {
 		byte[] sysex = MidiUtil.sysexMessagesToByteArray(msgs);
 		IPatch[] patarray = DriverUtil.createPatches(sysex, getDevice(), "");
 
-		// Maybe you don't get the expected patch!
-		// Check all devices/drivers again! Call fixpatch() if supportsPatch
-		// returns false.
-		// XXX Why don't we simply cause error? Hiroo
 		for (int k = 0; k < patarray.length; k++) {
 			IPatch pk = patarray[k];
 			String patchString = pk.getPatchHeader();
@@ -344,9 +343,8 @@ abstract public class Driver implements IPatchDriver {
 					Driver driver = (Driver) d;
 					pk.setDriver(driver);
 					driver.trimSysex(pk);
-					JOptionPane.showMessageDialog(null, "You requested a " + driver.toString() + " patch!"
-							+ "\nBut you got a " + pk.getDriver().toString() + " patch.", "Warning",
-							JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(null, "You requested a " + driver.toString() + " patch!" + "\nBut you got a "
+							+ pk.getDriver().toString() + " patch.", "Warning", JOptionPane.WARNING_MESSAGE);
 					return pk;
 				}
 			} // end of driver (j) loop
@@ -355,8 +353,8 @@ abstract public class Driver implements IPatchDriver {
 		// driver not found
 		pk.setDriver(null); // reset
 		pk.setComment("Probably a " + pk.lookupManufacturer() + " Patch, Size: " + pk.getByteArray().length);
-		JOptionPane.showMessageDialog(null, "You requested a " + this.toString() + " patch!"
-				+ "\nBut you got a not supported patch!\n" + pk.getComment(), "Warning", JOptionPane.WARNING_MESSAGE);
+		JOptionPane.showMessageDialog(null, "You requested a " + this.toString() + " patch!" + "\nBut you got a not supported patch!\n"
+				+ pk.getComment(), "Warning", JOptionPane.WARNING_MESSAGE);
 		return pk;
 	}
 
@@ -372,12 +370,12 @@ abstract public class Driver implements IPatchDriver {
 	 * @see IPatchDriver#createPatches(SysexMessage[])
 	 */
 	protected int trimSysex(Patch patch) { // no driver overrides this now.
-		if (trimSize > 0 && patch.sysex.length > trimSize && patch.sysex[trimSize - 1] == (byte) 0xf7) {
+		if (trimSize > 0 && patch.getSysex().length > trimSize && patch.getSysex()[trimSize - 1] == (byte) 0xf7) {
 			byte[] sysex = new byte[trimSize];
-			System.arraycopy(patch.sysex, 0, sysex, 0, trimSize);
-			patch.sysex = sysex;
+			System.arraycopy(patch.getSysex(), 0, sysex, 0, trimSize);
+			patch.setSysex(sysex);
 		}
-		return patch.sysex.length; // == trimSize
+		return patch.getSysex().length; // == trimSize
 	}
 
 	/**
@@ -393,11 +391,11 @@ abstract public class Driver implements IPatchDriver {
 		setPatchNum(patchNum);
 		if (sysexRequestDump == null) {
 			JOptionPane.showMessageDialog(PatchBayApplication.getInstance(), "The " + toString()
-					+ " driver does not support patch getting.\n\n" + "Please start the patch dump manually...",
-					"Get Patch", JOptionPane.WARNING_MESSAGE);
+					+ " driver does not support patch getting.\n\n" + "Please start the patch dump manually...", "Get Patch",
+					JOptionPane.WARNING_MESSAGE);
 		} else
-			send(sysexRequestDump.toSysexMessage(getDeviceID(), new SysexHandler.NameValue("bankNum", bankNum),
-					new SysexHandler.NameValue("patchNum", patchNum)));
+			send(sysexRequestDump.toSysexMessage(getDeviceID(), new SysexHandler.NameValue("bankNum", bankNum), new SysexHandler.NameValue(
+					"patchNum", patchNum)));
 	}
 
 	// MIDI in/out mothods to encapsulate lower MIDI layer
@@ -423,7 +421,7 @@ abstract public class Driver implements IPatchDriver {
 		if (patchNameSize == 0)
 			return ("-");
 		try {
-			return new String(p.sysex, patchNameStart, patchNameSize, "US-ASCII");
+			return new String(p.getSysex(), patchNameStart, patchNameSize, "US-ASCII");
 		} catch (UnsupportedEncodingException ex) {
 			return "-";
 		}
@@ -449,7 +447,7 @@ abstract public class Driver implements IPatchDriver {
 		try {
 			namebytes = name.getBytes("US-ASCII");
 			for (int i = 0; i < patchNameSize; i++)
-				p.sysex[patchNameStart + i] = namebytes[i];
+				p.getSysex()[patchNameStart + i] = namebytes[i];
 		} catch (UnsupportedEncodingException ex) {
 			return;
 		}
@@ -525,7 +523,7 @@ abstract public class Driver implements IPatchDriver {
 	 * @see Patch#edit()
 	 */
 	protected JSLFrame editPatch(Patch p) {
-		return (new HexDumpEditorFrame(p));
+		return (new HexDumpEditorHighlighted(p));
 	}
 
 	//
@@ -552,9 +550,9 @@ abstract public class Driver implements IPatchDriver {
 	 */
 	protected final void sendPatchWorker(Patch p) {
 		if (deviceIDoffset > 0)
-			p.sysex[deviceIDoffset] = (byte) (getDeviceID() - 1);
+			p.getSysex()[deviceIDoffset] = (byte) (getDeviceID() - 1);
 
-		send(p.sysex);
+		send(p.getSysex());
 	}
 
 	/**
@@ -565,10 +563,11 @@ abstract public class Driver implements IPatchDriver {
 	 * @see PatchSingle#play()
 	 */
 	protected void playPatch(Patch p) {
-		if (AppConfig.getSequencerEnable())
+		if (AppConfig.getSequencerEnable()) {
 			playSequence();
-		else
+		} else {
 			playNote();
+		}
 	}
 
 	private void playNote() {
@@ -576,14 +575,17 @@ abstract public class Driver implements IPatchDriver {
 			// sendPatch(p);
 			Thread.sleep(100);
 			ShortMessage msg = new ShortMessage();
-			msg.setMessage(ShortMessage.NOTE_ON, getChannel() - 1, AppConfig.getNote(), AppConfig.getVelocity());
+			int note = AppConfig.getNote();
+			int velocity = AppConfig.getVelocity();
+			int channel = getChannel() - 1;
+			msg.setMessage(ShortMessage.NOTE_ON, channel, note, velocity);
 			send(msg);
+			int noteLength = AppConfig.getDelay();
+			Thread.sleep(noteLength);
 
-			Thread.sleep(AppConfig.getDelay());
+			// expecting running status
+			msg.setMessage(ShortMessage.NOTE_OFF, channel, note, 0);
 
-			msg.setMessage(ShortMessage.NOTE_ON, getChannel() - 1, AppConfig.getNote(), 0); // expecting
-																							// running
-																							// status
 			send(msg);
 		} catch (Exception e) {
 			ErrorMsg.reportStatus(e);
@@ -663,7 +665,7 @@ abstract public class Driver implements IPatchDriver {
 	 * @see #calculateChecksum(Patch)
 	 */
 	protected void calculateChecksum(Patch patch, int start, int end, int offset) {
-		DriverUtil.calculateChecksum(patch.sysex, start, end, offset);
+		DriverUtil.calculateChecksum(patch.getSysex(), start, end, offset);
 	}
 
 	/**
@@ -706,7 +708,6 @@ abstract public class Driver implements IPatchDriver {
 	 * Returns String .. full name for referring to this patch for debugging purposes.
 	 */
 	protected String getFullPatchName(Patch p) {
-		return getManufacturerName() + " | " + getModelName() + " | " + p.getType() + " | " + getSynthName() + " | "
-				+ getPatchName(p);
+		return getManufacturerName() + " | " + getModelName() + " | " + p.getType() + " | " + getSynthName() + " | " + getPatchName(p);
 	}
 }

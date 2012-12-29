@@ -14,7 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.patch.IPatch;
 import org.jsynthlib.menu.ui.ColumnLayout;
 import org.jsynthlib.tools.ErrorMsg;

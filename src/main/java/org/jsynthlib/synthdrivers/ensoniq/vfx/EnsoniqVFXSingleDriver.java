@@ -54,7 +54,7 @@ public class EnsoniqVFXSingleDriver extends Driver {
 	 * @return The patchName value
 	 */
 	public String getPatchName(Patch ip) {
-		return getPatchName(((Patch) ip).sysex, 6);
+		return getPatchName(((Patch) ip).getSysex(), 6);
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class EnsoniqVFXSingleDriver extends Driver {
 	 *            The new patch Name value
 	 */
 	public void setPatchName(Patch p, String name) {
-		setPatchName(((Patch) p).sysex, name, HEADER_SIZE - 1);
+		setPatchName(((Patch) p).getSysex(), name, HEADER_SIZE - 1);
 	}
 
 	/**
@@ -174,7 +174,7 @@ public class EnsoniqVFXSingleDriver extends Driver {
 		sysex[PATCH_AND_HEADER_SIZE - 1] = (byte) 0xF7;
 		// Patch oPatch = new Patch(sysex, this);
 		Patch oPatch = new Patch(sysex);
-		setPatchName(oPatch.sysex, "NEWSND", HEADER_SIZE - 1);
+		setPatchName(oPatch.getSysex(), "NEWSND", HEADER_SIZE - 1);
 		return oPatch;
 	}
 
@@ -187,7 +187,7 @@ public class EnsoniqVFXSingleDriver extends Driver {
 	 */
 	static Patch newPatch(byte aSysex[], int aOffset) {
 		Patch oNewPatch = newPatch();
-		System.arraycopy(aSysex, aOffset, oNewPatch.sysex, HEADER_SIZE - 1, PATCH_SIZE);
+		System.arraycopy(aSysex, aOffset, oNewPatch.getSysex(), HEADER_SIZE - 1, PATCH_SIZE);
 		return oNewPatch;
 	}
 

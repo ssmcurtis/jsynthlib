@@ -18,39 +18,39 @@ import org.jsynthlib.tools.ErrorMsg;
  * scenes to be inserted into the JTable as *scenes* and not just as the inner patch data (which is the default
  * behavior of PatchTransferHandler) - Emenaker - 2006-02-27
  */
-public class SceneListTransferHandler extends PatchTransferHandler {
+public class SceneListTransferHandler {// extends PatchTransferHandler {
 
-	protected Transferable createTransferable(JComponent c) {
-		PatchesAndScenes patchesAndScenes = new PatchesAndScenes();
-		if (c instanceof JTable) {
-			JTable table = (JTable) c;
-			SceneListModel slm = (SceneListModel) table.getModel();
-			int[] rowIdxs = table.getSelectedRows();
-			for (int i = 0; i < rowIdxs.length; i++) {
-				Scene scene = slm.getSceneAt(rowIdxs[i]);
-				patchesAndScenes.add(scene);
-			}
-		} else {
-			ErrorMsg.reportStatus("PatchTransferHandler.createTransferable doesn't recognize the component it was given");
-		}
-		return (patchesAndScenes);
-	}
-
-	protected boolean storeScene(Scene s, JComponent c) {
-		SceneListModel model = (SceneListModel) ((JTable) c).getModel();
-		model.addScene(s);
-		ErrorMsg.reportStatus("Stored a Scene into a SceneList");
-		// TODO This method shouldn't have to worry about calling fireTableDataChanged(). Find a better way.
-		model.fireTableDataChanged();
-		return true;
-	}
-
-	protected boolean storePatch(IPatch p, JComponent c) {
-		SceneListModel model = (SceneListModel) ((JTable) c).getModel();
-		model.addPatch(p);
-		// TODO This method shouldn't have to worry about calling fireTableDataChanged(). Find a better way.
-		model.fireTableDataChanged();
-		return true;
-		// return false;
-	}
+//	protected Transferable createTransferable(JComponent c) {
+//		PatchesAndScenes patchesAndScenes = new PatchesAndScenes();
+//		if (c instanceof JTable) {
+//			JTable table = (JTable) c;
+//			SceneListModel slm = (SceneListModel) table.getModel();
+//			int[] rowIdxs = table.getSelectedRows();
+//			for (int i = 0; i < rowIdxs.length; i++) {
+//				Scene scene = slm.getSceneAt(rowIdxs[i]);
+//				patchesAndScenes.add(scene);
+//			}
+//		} else {
+//			ErrorMsg.reportStatus("PatchTransferHandler.createTransferable doesn't recognize the component it was given");
+//		}
+//		return (patchesAndScenes);
+//	}
+//
+//	protected boolean storeScene(Scene s, JComponent c) {
+//		SceneListModel model = (SceneListModel) ((JTable) c).getModel();
+//		model.addScene(s);
+//		ErrorMsg.reportStatus("Stored a Scene into a SceneList");
+//		// TODO This method shouldn't have to worry about calling fireTableDataChanged(). Find a better way.
+//		model.fireTableDataChanged();
+//		return true;
+//	}
+//
+//	protected boolean storePatch(IPatch p, JComponent c) {
+//		SceneListModel model = (SceneListModel) ((JTable) c).getModel();
+//		model.addPatch(p);
+//		// TODO This method shouldn't have to worry about calling fireTableDataChanged(). Find a better way.
+//		model.fireTableDataChanged();
+//		return true;
+//		// return false;
+//	}
 }

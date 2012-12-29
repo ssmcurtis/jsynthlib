@@ -57,7 +57,7 @@ public class RolandD10TimbreDriver extends Driver {
 	protected String getPatchName(Patch patch) {
 
 		// Patch has no name in data so we generate a name.
-		D10DataSetMessage message = new D10DataSetMessage(patch.sysex);
+		D10DataSetMessage message = new D10DataSetMessage(patch.getSysex());
 
 		byte toneGroup = message.getData(TIMBRE_TONE_GROUP.getIntValue());
 		byte toneNumber = message.getData(TIMBRE_TONE_NUMBER.getIntValue());
@@ -79,7 +79,7 @@ public class RolandD10TimbreDriver extends Driver {
 	}
 
 	protected void sendPatch(Patch patch) {
-		D10DataSetMessage message = new D10DataSetMessage(patch.sysex);
+		D10DataSetMessage message = new D10DataSetMessage(patch.getSysex());
 		message.setAddress(BASE_TIMBRE_TEMP_AREA);
 		send(message.getBytes());
 	}

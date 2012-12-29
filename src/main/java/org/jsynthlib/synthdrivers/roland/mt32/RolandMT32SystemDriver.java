@@ -70,10 +70,10 @@ public class RolandMT32SystemDriver extends Driver {
 			ErrorMsg.reportStatus(e);
 		}
 
-		p.sysex[0] = (byte) 0xF0;
-		p.sysex[5] = (byte) 0x10; // point to System Area
-		p.sysex[6] = (byte) 0x00;
-		p.sysex[7] = (byte) 0x00;
+		p.getSysex()[0] = (byte) 0xF0;
+		p.getSysex()[5] = (byte) 0x10; // point to System Area
+		p.getSysex()[6] = (byte) 0x00;
+		p.getSysex()[7] = (byte) 0x00;
 
 		calculateChecksum(p, HSIZE, HSIZE + SSIZE - 2, HSIZE + SSIZE - 1);
 
@@ -106,10 +106,10 @@ public class RolandMT32SystemDriver extends Driver {
 	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
 		int sum = 0;
 		for (int i = start; i <= end; i++) {
-			sum += p.sysex[i];
+			sum += p.getSysex()[i];
 		}
 		sum = (0 - sum) & 0x7F;
-		p.sysex[ofs] = (byte) (sum % 128);
+		p.getSysex()[ofs] = (byte) (sum % 128);
 	}
 
 	// not used

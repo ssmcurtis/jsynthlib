@@ -84,21 +84,21 @@ class KawaiK4EffectEditor extends PatchEditorFrame {
 		 * if (patch.sysex[8]>=9) picture.setIcon (algoIcon2); else picture.setIcon (algoIcon1);
 		 */
 
-		scroll1.setEnabled(patch.sysex[8] >= 9);
-		scroll2.setEnabled(patch.sysex[8] >= 9);
-		scroll3.setEnabled(patch.sysex[8] >= 9);
-		scroll4.setEnabled(patch.sysex[8] >= 9);
-		scroll5.setEnabled(patch.sysex[8] >= 9);
-		scroll6.setEnabled(patch.sysex[8] >= 9);
-		scroll7.setEnabled(patch.sysex[8] >= 9);
-		scroll8.setEnabled(patch.sysex[8] >= 9);
+		scroll1.setEnabled(patch.getSysex()[8] >= 9);
+		scroll2.setEnabled(patch.getSysex()[8] >= 9);
+		scroll3.setEnabled(patch.getSysex()[8] >= 9);
+		scroll4.setEnabled(patch.getSysex()[8] >= 9);
+		scroll5.setEnabled(patch.getSysex()[8] >= 9);
+		scroll6.setEnabled(patch.getSysex()[8] >= 9);
+		scroll7.setEnabled(patch.getSysex()[8] >= 9);
+		scroll8.setEnabled(patch.getSysex()[8] >= 9);
 		/*
 		 * parameter1.setText(effectParam1[patch.sysex[8]]); parameter2.setText(effectParam2[patch.sysex[8]]);
 		 * parameter3.setText(effectParam3[patch.sysex[8]]);
 		 */
-		parameter1.setLabel(effectParam1[patch.sysex[8]]);
-		parameter2.setLabel(effectParam2[patch.sysex[8]]);
-		parameter3.setLabel(effectParam3[patch.sysex[8]]);
+		parameter1.setLabel(effectParam1[patch.getSysex()[8]]);
+		parameter2.setLabel(effectParam2[patch.getSysex()[8]]);
+		parameter3.setLabel(effectParam3[patch.getSysex()[8]]);
 
 		ComboBoxWidget effectTypeWidget = new ComboBoxWidget("Effect Type", patch, new K4Model(patch, 0), new K4Sender(
 				82), effectName);
@@ -132,7 +132,7 @@ class KawaiK4EffectEditor extends PatchEditorFrame {
 		});
 
 		// Common Pane
-		picturePanel.setEffectNumber(patch.sysex[8]);
+		picturePanel.setEffectNumber(patch.getSysex()[8]);
 		gbc.weightx = 0;
 
 		gbc.gridx = 1;

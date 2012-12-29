@@ -39,7 +39,7 @@ class YamahaDX100SingleEditor extends PatchEditorFrame {
 		algoIcon[5] = new ImageIcon(getClass().getResource("6.gif"));
 		algoIcon[6] = new ImageIcon(getClass().getResource("7.gif"));
 		algoIcon[7] = new ImageIcon(getClass().getResource("8.gif"));
-		final JLabel l = new JLabel(algoIcon[patch.sysex[99 - 41]]);
+		final JLabel l = new JLabel(algoIcon[patch.getSysex()[99 - 41]]);
 
 		JPanel lfoPane = new JPanel();
 		lfoPane.setLayout(new GridBagLayout());

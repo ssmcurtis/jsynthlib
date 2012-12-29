@@ -25,7 +25,7 @@ import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.ShortMessage;
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.Driver;
 import org.jsynthlib.menu.patch.PatchSingle;
@@ -73,7 +73,7 @@ public class WaldorfMW2SingleDriver extends Driver {
 	}
 
 	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
-		calculateChecksum(p.sysex, start, end, ofs);
+		calculateChecksum(p.getSysex(), start, end, ofs);
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class WaldorfMW2SingleDriver extends Driver {
 	 *            a <code>Patch</code> value
 	 */
 	protected void calculateChecksum(Patch p) {
-		calculateChecksum(p.sysex, this.checksumStart, this.checksumEnd, this.checksumOffset);
+		calculateChecksum(p.getSysex(), this.checksumStart, this.checksumEnd, this.checksumOffset);
 	}
 
 	/**
@@ -113,8 +113,8 @@ public class WaldorfMW2SingleDriver extends Driver {
 		setBankNum(bankNum);
 		setPatchNum(patchNum);
 
-		p.sysex[5] = (byte) bankNum; // Location
-		p.sysex[6] = (byte) patchNum; // Location
+		p.getSysex()[5] = (byte) bankNum; // Location
+		p.getSysex()[6] = (byte) patchNum; // Location
 		calculateChecksum(p);
 
 		sendPatchWorker(p);
@@ -128,23 +128,23 @@ public class WaldorfMW2SingleDriver extends Driver {
 	 * @see PatchSingle#send()
 	 */
 	protected void sendPatch(Patch p) {
-		p.sysex[5] = (byte) 0x20; // Location (use Edit Buffer)
-		p.sysex[6] = (byte) 0x00; // Location (use Edit Buffer)
+		p.getSysex()[5] = (byte) 0x20; // Location (use Edit Buffer)
+		p.getSysex()[6] = (byte) 0x00; // Location (use Edit Buffer)
 		calculateChecksum(p);
 
 		sendPatchWorker(p);
 	}
 
 	protected static void createPatchHeader(Patch tempPatch, int bankNo, int patchNo) {
-		if (tempPatch.sysex.length > 8) {
-			tempPatch.sysex[0] = MW2Constants.SYSEX_START_BYTE;
-			tempPatch.sysex[1] = (byte) 0x3E; // Waldorf Electronics GmbH ID
-			tempPatch.sysex[2] = (byte) 0x0E; // Microwave 2 ID
-			tempPatch.sysex[3] = (byte) tempPatch.getDevice().getDeviceID(); // Device ID
-			tempPatch.sysex[4] = (byte) 0x10; // Sound Dump
-			tempPatch.sysex[5] = (byte) bankNo; // Location
-			tempPatch.sysex[6] = (byte) patchNo; // Location
-			tempPatch.sysex[7] = (byte) 0x01; // Sound format (has to be 1, as 0 doesn't work!)
+		if (tempPatch.getSysex().length > 8) {
+			tempPatch.getSysex()[0] = MW2Constants.SYSEX_START_BYTE;
+			tempPatch.getSysex()[1] = (byte) 0x3E; // Waldorf Electronics GmbH ID
+			tempPatch.getSysex()[2] = (byte) 0x0E; // Microwave 2 ID
+			tempPatch.getSysex()[3] = (byte) tempPatch.getDevice().getDeviceID(); // Device ID
+			tempPatch.getSysex()[4] = (byte) 0x10; // Sound Dump
+			tempPatch.getSysex()[5] = (byte) bankNo; // Location
+			tempPatch.getSysex()[6] = (byte) patchNo; // Location
+			tempPatch.getSysex()[7] = (byte) 0x01; // Sound format (has to be 1, as 0 doesn't work!)
 		}
 	}
 
@@ -173,7 +173,7 @@ public class WaldorfMW2SingleDriver extends Driver {
 			createPatchHeader(p);
 			// createPatchFooter(p);
 			// p.sysex[263] = (byte) 0x00; // Checksum
-			p.sysex[264] = MW2Constants.SYSEX_END_BYTE;
+			p.getSysex()[264] = MW2Constants.SYSEX_END_BYTE;
 			setPatchName(p, "New program");
 			calculateChecksum(p);
 		}

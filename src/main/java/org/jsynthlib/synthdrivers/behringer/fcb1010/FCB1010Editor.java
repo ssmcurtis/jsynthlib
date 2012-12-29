@@ -267,7 +267,7 @@ public class FCB1010Editor extends PatchEditorFrame implements ActionListener {
 		int bank = bankSelect.getSelectedIndex();
 		int preset = presetSelect.getSelectedIndex();
 		Patch patch = (Patch) p;
-		byte[] deNibblizedSysex = FCB1010ParamModel.deNibblize(patch.sysex, Constants.HDR_SIZE);
+		byte[] deNibblizedSysex = FCB1010ParamModel.deNibblize(patch.getSysex(), Constants.HDR_SIZE);
 		int startPos = Constants.HDR_SIZE + (bank * BANK_LENGTH) + (preset * PRESET_LENGTH);
 		localScrap = new byte[PRESET_LENGTH];
 		System.arraycopy(deNibblizedSysex, startPos, localScrap, 0, PRESET_LENGTH);
@@ -283,7 +283,7 @@ public class FCB1010Editor extends PatchEditorFrame implements ActionListener {
 
 		int bank = bankSelect.getSelectedIndex();
 		Patch patch = (Patch) p;
-		byte[] deNibblizedSysex = FCB1010ParamModel.deNibblize(patch.sysex, Constants.HDR_SIZE);
+		byte[] deNibblizedSysex = FCB1010ParamModel.deNibblize(patch.getSysex(), Constants.HDR_SIZE);
 		int startPos = Constants.HDR_SIZE + (bank * BANK_LENGTH);
 		localScrap = new byte[BANK_LENGTH];
 		System.arraycopy(deNibblizedSysex, startPos, localScrap, 0, BANK_LENGTH);
@@ -308,12 +308,12 @@ public class FCB1010Editor extends PatchEditorFrame implements ActionListener {
 
 		if (startPos != 0) {
 			Patch patch = (Patch) p;
-			byte[] denibblizedArray = FCB1010ParamModel.deNibblize(patch.sysex, Constants.HDR_SIZE);
+			byte[] denibblizedArray = FCB1010ParamModel.deNibblize(patch.getSysex(), Constants.HDR_SIZE);
 
 			System.arraycopy(localScrap, 0, denibblizedArray, startPos, localScrap.length);
 
 			byte[] renibblizedArray = FCB1010ParamModel.reNibblize(denibblizedArray, Constants.HDR_SIZE);
-			System.arraycopy(renibblizedArray, 0, patch.sysex, 0, patch.sysex.length);
+			System.arraycopy(renibblizedArray, 0, patch.getSysex(), 0, patch.getSysex().length);
 
 			SelectedPresetModel.setPreset(bankSelect.getSelectedIndex(), presetSelect.getSelectedIndex());
 			// FCB1010ParamModel.dump(denibblizedArray); //Test Code

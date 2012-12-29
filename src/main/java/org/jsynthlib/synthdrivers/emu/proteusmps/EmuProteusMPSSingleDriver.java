@@ -36,7 +36,7 @@ public class EmuProteusMPSSingleDriver extends Driver {
 		if (patchNameSize == 0)
 			return ("-");
 		try {
-			StringBuffer s = new StringBuffer(new String(((Patch) ip).sysex, patchNameStart,
+			StringBuffer s = new StringBuffer(new String(((Patch) ip).getSysex(), patchNameStart,
 					patchNameSize * 2 - 1, "US-ASCII"));
 			for (int i = 1; i < s.length(); i++)
 				s.deleteCharAt(i);
@@ -58,7 +58,7 @@ public class EmuProteusMPSSingleDriver extends Driver {
 		try {
 			namebytes = name.getBytes("US-ASCII");
 			for (int i = 0; i < patchNameSize; i++)
-				((Patch) p).sysex[patchNameStart + (i * 2)] = namebytes[i];
+				((Patch) p).getSysex()[patchNameStart + (i * 2)] = namebytes[i];
 
 		} catch (UnsupportedEncodingException ex) {
 			return;
@@ -67,8 +67,8 @@ public class EmuProteusMPSSingleDriver extends Driver {
 	}
 
 	public void storePatch(Patch p, int bankNum, int patchNum) {
-		((Patch) p).sysex[5] = (byte) ((bankNum * 100 + patchNum) % 128);
-		((Patch) p).sysex[6] = (byte) ((bankNum * 100 + patchNum) / 128);
+		((Patch) p).getSysex()[5] = (byte) ((bankNum * 100 + patchNum) % 128);
+		((Patch) p).getSysex()[6] = (byte) ((bankNum * 100 + patchNum) / 128);
 		setBankNum(bankNum);
 		setPatchNum(patchNum);
 		sendPatchWorker(p);
@@ -87,8 +87,8 @@ public class EmuProteusMPSSingleDriver extends Driver {
 	public void sendPatch(Patch p) {
 
 		Integer patchNum = new Integer(100);
-		((Patch) p).sysex[5] = (byte) (patchNum.intValue() % 128);
-		((Patch) p).sysex[6] = (byte) (patchNum.intValue() / 128);
+		((Patch) p).getSysex()[5] = (byte) (patchNum.intValue() % 128);
+		((Patch) p).getSysex()[6] = (byte) (patchNum.intValue() / 128);
 		setBankNum(patchNum.intValue() / 100);
 		setPatchNum(patchNum.intValue() % 100);
 		sendPatchWorker(p);
@@ -100,8 +100,8 @@ public class EmuProteusMPSSingleDriver extends Driver {
 		int sum = 0;
 
 		for (i = 7; i <= 316; i++)
-			sum += p.sysex[i];
-		p.sysex[checksumOffset] = (byte) (sum % 128);
+			sum += p.getSysex()[i];
+		p.getSysex()[checksumOffset] = (byte) (sum % 128);
 
 	}
 

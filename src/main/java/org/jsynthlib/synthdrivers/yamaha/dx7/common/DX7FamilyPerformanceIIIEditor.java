@@ -501,13 +501,13 @@ public class DX7FamilyPerformanceIIIEditor extends PatchEditorFrame {
 		}
 
 		public void set(int i) {
-			patch.sysex[ofs] = (byte) (DX7FamilyByteEncoding.Value2AsciiHexHigh(i));
-			patch.sysex[ofs + 1] = (byte) (DX7FamilyByteEncoding.Value2AsciiHexLow(i));
+			patch.getSysex()[ofs] = (byte) (DX7FamilyByteEncoding.Value2AsciiHexHigh(i));
+			patch.getSysex()[ofs + 1] = (byte) (DX7FamilyByteEncoding.Value2AsciiHexLow(i));
 		}
 
 		public int get() {
-			return ((byte) (DX7FamilyByteEncoding.AsciiHex2Value(patch.sysex[ofs]) * 16 + DX7FamilyByteEncoding
-					.AsciiHex2Value(patch.sysex[ofs + 1])));
+			return ((byte) (DX7FamilyByteEncoding.AsciiHex2Value(patch.getSysex()[ofs]) * 16 + DX7FamilyByteEncoding
+					.AsciiHex2Value(patch.getSysex()[ofs + 1])));
 		}
 	}
 

@@ -143,9 +143,9 @@ public class YamahaFS1RVoiceDriver extends Driver {
 	 *            1..4
 	 */
 	public void sendPatch(Patch p, int aPart) {
-		p.sysex[6] = (byte) (0x40 + aPart - 1);
-		p.sysex[7] = (byte) 0;
-		p.sysex[8] = (byte) 0;
+		p.getSysex()[6] = (byte) (0x40 + aPart - 1);
+		p.getSysex()[7] = (byte) 0;
+		p.getSysex()[8] = (byte) 0;
 		calculateChecksum(p);
 		sendPatch(p);
 	}
@@ -153,9 +153,9 @@ public class YamahaFS1RVoiceDriver extends Driver {
 	/** Sends a patch to a set location on a synth. */
 	public void storePatch(Patch p, int bankNum, int patchNum) {
 		// change the address to internal voice
-		((Patch) p).sysex[6] = (byte) 0x51;
-		((Patch) p).sysex[7] = (byte) 0;
-		((Patch) p).sysex[8] = (byte) patchNum;
+		((Patch) p).getSysex()[6] = (byte) 0x51;
+		((Patch) p).getSysex()[7] = (byte) 0;
+		((Patch) p).getSysex()[8] = (byte) patchNum;
 		calculateChecksum(p);
 		sendPatch(p);
 	}
@@ -181,7 +181,7 @@ public class YamahaFS1RVoiceDriver extends Driver {
 		if (patchNameSize == 0)
 			return ("-");
 		try {
-			String s = new String(p.sysex, aPatchOffset + patchNameStart, patchNameSize, "US-ASCII");
+			String s = new String(p.getSysex(), aPatchOffset + patchNameStart, patchNameSize, "US-ASCII");
 			return s;
 		} catch (UnsupportedEncodingException ex) {
 			return "-";
@@ -201,7 +201,7 @@ public class YamahaFS1RVoiceDriver extends Driver {
 		try {
 			namebytes = name.getBytes("US-ASCII");
 			for (int i = 0; i < patchNameSize; i++)
-				p.sysex[aPatchOffset + patchNameStart + i] = namebytes[i];
+				p.getSysex()[aPatchOffset + patchNameStart + i] = namebytes[i];
 
 		} catch (UnsupportedEncodingException ex) {
 			return;

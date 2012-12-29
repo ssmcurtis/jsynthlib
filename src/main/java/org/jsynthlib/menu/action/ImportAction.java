@@ -10,40 +10,49 @@ import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.preferences.AppConfig;
 import org.jsynthlib.menu.ui.ExtensionFilter;
 import org.jsynthlib.menu.ui.window.CompatibleFileDialog;
+import org.jsynthlib.model.ImportFileType;
 import org.jsynthlib.tools.ErrorMsg;
 
+@SuppressWarnings("serial")
 public class ImportAction extends AbstractAction {
 	public ImportAction(Map<Serializable, Integer> mnemonics) {
-		super("Import...", null);
+		super("Import", null);
 		mnemonics.put(this, new Integer('I'));
 		this.setEnabled(false);
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		CompatibleFileDialog fc2 = new CompatibleFileDialog();
+		CompatibleFileDialog fileDialog = new CompatibleFileDialog();
 
-		FileFilter type1 = new ExtensionFilter("Sysex Files (*.syx)", ".syx");
-		// core.ImportMidiFile extracts Sysex Messages from MidiFile
-		FileFilter type2 = new ExtensionFilter("MIDI Files (*.mid)", ".mid");
+		for (ImportFileType importFileType : ImportFileType.values()) {
+			FileFilter type = new ExtensionFilter(importFileType.getDescription(), importFileType.getExtension());
+			fileDialog.addChoosableFileFilter(type);
 
-		fc2.addChoosableFileFilter(type1);
-		fc2.addChoosableFileFilter(type2);
+			if (importFileType.isDefaultFilter()) {
+				fileDialog.setFileFilter(type);
+			}
+		}
 
-		fc2.setFileFilter(type1);
-		fc2.setCurrentDirectory(new File(AppConfig.getSysexPath()));
+		fileDialog.setCurrentDirectory(new File(AppConfig.getSysexPath()));
 
-		if (fc2.showOpenDialog(PatchBayApplication.getInstance()) != JFileChooser.APPROVE_OPTION)
+		if (fileDialog.showOpenDialog(PatchBayApplication.getInstance()) != JFileChooser.APPROVE_OPTION) {
 			return;
-		File file = fc2.getSelectedFile();
+		}
+		File file = fileDialog.getSelectedFile();
+		
 		try {
 			if (Actions.getSelectedFrame() == null) {
 				ErrorMsg.reportError("Error", "Library to Import Patch\n into Must be in Focus");
 			} else {
-				Actions.getSelectedFrame().importPatch(file);
+				String name = file.getName();
+				final int lastPeriodPos = name.lastIndexOf('.');
+				String extension = name.substring(lastPeriodPos);
+				ImportFileType fileType = ImportFileType.getImportFileTypeForExtension(extension);
+				Actions.getSelectedFrame().importPatch(file, fileType);
 			}
 		} catch (IOException ex) {
 			ErrorMsg.reportError("Error", "Unable to Load Sysex Data", ex);

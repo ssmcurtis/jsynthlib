@@ -47,7 +47,7 @@ public class MKS50ToneSingleDriver extends Driver {
 		try {
 			char c[] = new char[patchNameSize];
 			for (int i = 0; i < patchNameSize; i++)
-				c[i] = nameChars[((Patch) ip).sysex[i + patchNameStart]];
+				c[i] = nameChars[((Patch) ip).getSysex()[i + patchNameStart]];
 			return new String(c);
 		} catch (Exception ex) {
 			return "-";
@@ -64,7 +64,7 @@ public class MKS50ToneSingleDriver extends Driver {
 					j = 62; // convert invalid character to space
 			} else
 				j = 62; // pad with spaces
-			((Patch) p).sysex[i + patchNameStart] = (byte) j;
+			((Patch) p).getSysex()[i + patchNameStart] = (byte) j;
 		}
 	}
 

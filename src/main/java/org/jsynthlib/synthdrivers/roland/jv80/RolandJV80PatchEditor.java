@@ -62,12 +62,12 @@ public class RolandJV80PatchEditor extends PatchEditorFrame {
 		}
 
 		public int get() {
-			return (patch.sysex[ofs] << 4) + (patch.sysex[ofs + 1]);
+			return (patch.getSysex()[ofs] << 4) + (patch.getSysex()[ofs + 1]);
 		}
 
 		public void set(int value) {
-			patch.sysex[ofs] = (byte) (value >> 4);
-			patch.sysex[ofs + 1] = (byte) (value & 0x0F);
+			patch.getSysex()[ofs] = (byte) (value >> 4);
+			patch.getSysex()[ofs + 1] = (byte) (value & 0x0F);
 		}
 	}
 
@@ -139,7 +139,7 @@ public class RolandJV80PatchEditor extends PatchEditorFrame {
 	public RolandJV80PatchEditor(final Patch patch) {
 		super("Roland JV80 Patch Editor", patch);
 
-		((RolandJV80Device) patch.getDevice()).getPatchDriver().setPatchNum(patch.sysex, -1, -1);
+		((RolandJV80Device) patch.getDevice()).getPatchDriver().setPatchNum(patch.getSysex(), -1, -1);
 
 		isJV80 = ((RolandJV80PatchDriver) p.getDriver()).isJV80;
 

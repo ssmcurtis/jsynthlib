@@ -35,7 +35,7 @@ public class RolandD10TimbreEditor extends RolandD10EditorFrame {
 	protected RolandD10TimbreEditor(Patch patch) {
 		super("Roland D-10 Timbre Editor", patch);
 
-		EditSender.setDeviceId(patch.sysex[2]);
+		EditSender.setDeviceId(patch.getSysex()[2]);
 
 		String name = "Timbre";
 		int[] offsets = new int[] { TIMBRE_TONE_GROUP.getIntValue(), TIMBRE_TONE_NUMBER.getIntValue(),

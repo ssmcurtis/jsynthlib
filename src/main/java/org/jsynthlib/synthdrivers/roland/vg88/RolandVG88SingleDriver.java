@@ -104,7 +104,7 @@ public final class RolandVG88SingleDriver extends Driver {
 			// create a Patch data for each packet
 			size = PKT_SIZE[i];
 			byte[] tmpSysex = new byte[size];
-			System.arraycopy(p.sysex, offset, tmpSysex, 0, size);
+			System.arraycopy(p.getSysex(), offset, tmpSysex, 0, size);
 			try {
 				send(tmpSysex);
 			} catch (Exception e) {
@@ -127,10 +127,10 @@ public final class RolandVG88SingleDriver extends Driver {
 		for (int i = 0; i < NUM_PKT; i++, offset += size) {
 			// calculate data for each packet
 			size = PKT_SIZE[i];
-			p.sysex[offset + 2] = (byte) (getDeviceID() - 1);
-			p.sysex[offset + 6] = (byte) 0x0c;
-			p.sysex[offset + 7] = (byte) patchNum;
-			p.sysex[offset + 8] = (byte) i;
+			p.getSysex()[offset + 2] = (byte) (getDeviceID() - 1);
+			p.getSysex()[offset + 6] = (byte) 0x0c;
+			p.getSysex()[offset + 7] = (byte) patchNum;
+			p.getSysex()[offset + 8] = (byte) i;
 			calculateChecksum(p, offset + 6, offset + size - 3, offset + size - 2);
 		}
 	}
@@ -185,8 +185,8 @@ public final class RolandVG88SingleDriver extends Driver {
 			int k = 0;
 			char c[] = new char[patchNameSize];
 			for (int i = 0; i < (patchNameSize); i++) {
-				c[i] = (char) p.sysex[k + patchNameStart];
-				c[i] = (char) ((c[i] * 16) + p.sysex[k + 1 + patchNameStart]);
+				c[i] = (char) p.getSysex()[k + patchNameStart];
+				c[i] = (char) ((c[i] * 16) + p.getSysex()[k + 1 + patchNameStart]);
 				k = k + 2;
 			}
 			return new String(c);
@@ -209,8 +209,8 @@ public final class RolandVG88SingleDriver extends Driver {
 					c = 0x20; // convert invalid character to space
 			} else
 				c = 0x20; // pad with spaces
-			p.sysex[k + patchNameStart] = (byte) (c / 16);
-			p.sysex[k + 1 + patchNameStart] = (byte) (c % 16);
+			p.getSysex()[k + patchNameStart] = (byte) (c / 16);
+			p.getSysex()[k + 1 + patchNameStart] = (byte) (c % 16);
 			k = k + 2;
 		}
 	}

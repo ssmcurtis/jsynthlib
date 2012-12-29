@@ -192,11 +192,11 @@ class MKSShiftModel extends ParamModel {
 	}
 
 	public void set(int i) {
-		patch.sysex[ofs] = (byte) (i << 3);
+		patch.getSysex()[ofs] = (byte) (i << 3);
 	}
 
 	public int get() {
-		return patch.sysex[ofs] >> 3;
+		return patch.getSysex()[ofs] >> 3;
 	}
 }
 

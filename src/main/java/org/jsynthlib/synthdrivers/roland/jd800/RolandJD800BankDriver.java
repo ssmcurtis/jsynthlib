@@ -82,7 +82,7 @@ public class RolandJD800BankDriver extends BankDriver {
 	public String getPatchName(Patch p, int patchNum) {
 		int nameStart = getPatchStart(patchNum);
 		try {
-			StringBuffer s = new StringBuffer(new String(p.sysex, nameStart, patchNameSize, "US-ASCII"));
+			StringBuffer s = new StringBuffer(new String(p.getSysex(), nameStart, patchNameSize, "US-ASCII"));
 			return s.toString();
 		} catch (UnsupportedEncodingException ex) {
 			return "-";
@@ -100,7 +100,7 @@ public class RolandJD800BankDriver extends BankDriver {
 		try {
 			namebytes = name.getBytes("US-ASCII");
 			for (int i = 0; i < patchNameSize; i++)
-				p.sysex[patchNameStart + i] = namebytes[i];
+				p.getSysex()[patchNameStart + i] = namebytes[i];
 
 		} catch (UnsupportedEncodingException ex) {
 			return;
@@ -116,7 +116,7 @@ public class RolandJD800BankDriver extends BankDriver {
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-		System.arraycopy(p.sysex, JD800.SizeOfSyxHeader, bank.sysex, getPatchStart(patchNum), JD800.SizeOfSinglePatch);
+		System.arraycopy(p.getSysex(), JD800.SizeOfSyxHeader, bank.getSysex(), getPatchStart(patchNum), JD800.SizeOfSinglePatch);
 	}
 
 	/**
@@ -173,7 +173,7 @@ public class RolandJD800BankDriver extends BankDriver {
 		sysex[5] = (byte) RolandJD800SinglePatchDriver.AddrMSB[patchNum];
 		sysex[6] = (byte) RolandJD800SinglePatchDriver.Addr[patchNum];
 		sysex[7] = 0;
-		System.arraycopy(bank.sysex, getPatchStart(patchNum), sysex, JD800.SizeOfSyxHeader, JD800.SizeOfSinglePatch);
+		System.arraycopy(bank.getSysex(), getPatchStart(patchNum), sysex, JD800.SizeOfSyxHeader, JD800.SizeOfSinglePatch);
 		return new Patch(sysex, getDevice());
 	}
 
@@ -232,7 +232,7 @@ public class RolandJD800BankDriver extends BankDriver {
 			s[5] = (byte) AddrMSB;
 			s[6] = (byte) Addr;
 			s[7] = (byte) 0x00;
-			System.arraycopy(p.sysex, JD800.SizeOfSyxHeader + i * JD800.MaxSyxDataBlock, s, JD800.SizeOfSyxHeader,
+			System.arraycopy(p.getSysex(), JD800.SizeOfSyxHeader + i * JD800.MaxSyxDataBlock, s, JD800.SizeOfSyxHeader,
 					JD800.MaxSyxDataBlock);
 			DriverUtil.calculateChecksum(s, JD800.checksumStartSyx1, JD800.checksumEndSyx1, JD800.checksumOffsetSyx1);
 			sendPatchWorker(new Patch(s, this));

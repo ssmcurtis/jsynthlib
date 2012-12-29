@@ -560,7 +560,7 @@ class WaldorfPulseSingleEditor extends PatchEditorFrame {
 						2, // grid width
 						1, // grid height
 						id++);
-				if (patch.sysex[24] >= 5) {
+				if (patch.getSysex()[24] >= 5) {
 					lfo1Speed.changeOptions(lfo1SpeedStrSync);
 				} else {
 					lfo1Speed.changeOptions(lfo1SpeedStrNormal);
@@ -747,11 +747,11 @@ class WaldorfPulseSingleEditor extends PatchEditorFrame {
 		}
 
 		public void set(int i) {
-			patch.sysex[ofs] = (byte) (i * 2);
+			patch.getSysex()[ofs] = (byte) (i * 2);
 		}
 
 		public int get() {
-			return patch.sysex[ofs] / 2;
+			return patch.getSysex()[ofs] / 2;
 		}
 	}
 

@@ -17,7 +17,7 @@ public class DeleteAction extends AbstractAction {
 
 	public void actionPerformed(ActionEvent e) {
 		try {
-			Actions.getSelectedFrame().deleteSelectedPatch();
+			Actions.getSelectedFrame().deleteSelectedPatches();
 		} catch (Exception ex) {
 			ErrorMsg.reportError("Error", "Patch to delete must be hilighted\nin the focused Window.", ex);
 		}

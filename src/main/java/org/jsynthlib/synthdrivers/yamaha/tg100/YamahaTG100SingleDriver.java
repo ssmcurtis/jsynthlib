@@ -70,8 +70,8 @@ public class YamahaTG100SingleDriver extends Driver {
 	private void storePatch(Patch p, int patchNum) {
 		int iTemp = TG100Constants.SYSEX_VOICE_START_ADDRESS3 + (patchNum * TG100Constants.SYSEX_SINGLE_VOICE_SIZE);
 
-		((Patch) p).sysex[5] = (byte) ((iTemp / 128) + TG100Constants.SYSEX_VOICE_START_ADDRESS2);
-		((Patch) p).sysex[6] = (byte) (iTemp % 128);
+		((Patch) p).getSysex()[5] = (byte) ((iTemp / 128) + TG100Constants.SYSEX_VOICE_START_ADDRESS2);
+		((Patch) p).getSysex()[6] = (byte) (iTemp % 128);
 
 		calculateChecksum(p);
 		sendPatchWorker(p);

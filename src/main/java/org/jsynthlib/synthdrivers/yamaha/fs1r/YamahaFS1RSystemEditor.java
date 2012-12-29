@@ -73,11 +73,11 @@ class YamahaFS1RSystemEditor extends PatchEditorFrame {
 		}
 
 		public void set(int i) {
-			patch.sysex[ofs] = (byte) (i & 127);
+			patch.getSysex()[ofs] = (byte) (i & 127);
 		}
 
 		public int get() {
-			return patch.sysex[ofs];
+			return patch.getSysex()[ofs];
 		}
 
 	}

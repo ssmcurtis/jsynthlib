@@ -18,7 +18,7 @@ public class TransferSceneAction extends AbstractAction {
 
 	public void actionPerformed(ActionEvent e) {
 		try {
-			((SceneFrame) Actions.getSelectedFrame()).sendScene();
+			// ((SceneFrame) Actions.getSelectedFrame()).sendScene();
 		} catch (Exception ex) {
 			ErrorMsg.reportError("Error", "Scene Library must be the selected window.", ex);
 		}

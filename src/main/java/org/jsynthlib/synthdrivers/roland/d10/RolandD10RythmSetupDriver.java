@@ -69,7 +69,7 @@ public class RolandD10RythmSetupDriver extends Driver {
 	protected String getPatchName(Patch patch) {
 
 		// Patch has no name in data so we generate a name.
-		D10DataSetMessage message = new D10DataSetMessage(patch.sysex);
+		D10DataSetMessage message = new D10DataSetMessage(patch.getSysex());
 
 		byte tone = message.getData(RYTHM_SETUP_TONE.getIntValue());
 
@@ -94,13 +94,13 @@ public class RolandD10RythmSetupDriver extends Driver {
 	}
 
 	protected void sendPatch(Patch patch) {
-		D10DataSetMessage message = new D10DataSetMessage(patch.sysex);
+		D10DataSetMessage message = new D10DataSetMessage(patch.getSysex());
 		message.setAddress(Entity.createFromIntValue(1).multiply(RYTHM_SETUP_SIZE).add(BASE_RYTHM_SETUP_TEMP_AREA));
 		send(message.getBytes());
 	}
 
 	protected void storePatch(Patch patch, int bankNum, int patchNum) {
-		D10DataSetMessage message = new D10DataSetMessage(patch.sysex);
+		D10DataSetMessage message = new D10DataSetMessage(patch.getSysex());
 		message.setAddress(Entity.createFromIntValue(patchNum).multiply(RYTHM_SETUP_SIZE).add(BASE_RYTHM_SETUP));
 		send(message.getBytes());
 	}

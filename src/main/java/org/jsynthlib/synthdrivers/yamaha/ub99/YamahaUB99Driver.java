@@ -81,7 +81,7 @@ public class YamahaUB99Driver extends Driver {
 			buf[12] = (byte) 0x00;
 			buf[13] = (byte) 0x00;
 			for (int i = 14; i <= 44; i++) {
-				buf[i] = p.sysex[i - 13];
+				buf[i] = p.getSysex()[i - 13];
 			}
 			buf[45] = (byte) 0x00;
 			buf[46] = (byte) 0xF7;
@@ -108,7 +108,7 @@ public class YamahaUB99Driver extends Driver {
 			buf[11] = (byte) 0x01;
 			buf[12] = (byte) 0x00;
 			for (int i = 13; i <= 139; i++) {
-				buf[i] = p.sysex[i + 19];
+				buf[i] = p.getSysex()[i + 19];
 			}
 			buf[140] = (byte) 0x00;
 			buf[141] = (byte) 0xF7;
@@ -168,9 +168,9 @@ public class YamahaUB99Driver extends Driver {
 			if (fileIn != null) {
 				fileIn.read(buffer);
 				fileIn.close();
-				System.arraycopy(buffer, patchno * size, p.sysex, 0, YamahaUB99Const.NAME_OFFSET);
+				System.arraycopy(buffer, patchno * size, p.getSysex(), 0, YamahaUB99Const.NAME_OFFSET);
 				System.arraycopy(buffer, patchno * size + (YamahaUB99Const.NAME_OFFSET + YamahaUB99Const.NAME_SIZE),
-						p.sysex, YamahaUB99Const.NAME_OFFSET + YamahaUB99Const.NAME_SIZE, size
+						p.getSysex(), YamahaUB99Const.NAME_OFFSET + YamahaUB99Const.NAME_SIZE, size
 								- (YamahaUB99Const.NAME_OFFSET + YamahaUB99Const.NAME_SIZE));
 				return p;
 			} else {

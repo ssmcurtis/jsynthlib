@@ -18,7 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.patch.Device;
 import org.jsynthlib.menu.patch.IDriver;
 import org.jsynthlib.menu.patch.IPatchDriver;
@@ -90,7 +90,7 @@ public class DevDrvPatchSelector extends JDialog {
 		sysex = patch.getByteArray();
 		patchString = patch.getPatchHeader();
 		this.patchNum = patchnum;
-		this.bankNum = banknum; // wirski@op.pl
+		this.bankNum = banknum; 
 		initDialog(action, true);
 	}
 
@@ -248,7 +248,7 @@ public class DevDrvPatchSelector extends JDialog {
 					for (int i = 0; i < bankNumbers.length; i++) {
 						bankComboBox.addItem(bankNumbers[i]);
 					}
-					bankComboBox.setSelectedIndex(Math.min(bankNum, // wirski@op.pl
+					bankComboBox.setSelectedIndex(Math.min(bankNum, 
 							bankComboBox.getItemCount() - 1));
 				}
 				if (driver.isSingleDriver()) {

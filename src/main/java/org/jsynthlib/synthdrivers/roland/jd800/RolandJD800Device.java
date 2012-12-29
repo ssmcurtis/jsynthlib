@@ -35,7 +35,7 @@ public class RolandJD800Device extends Device {
 			+ "and a bank operation. It does not support the Multi Mode as in author's "
 			+ "opinion the unit does not perform well when compared to the Single Mode. "
 			+ "If you need the Multi Mode contact me, please so we could discuss "
-			+ "details. Write to wirski@op.pl. Do not forget to set correct Device ID (17 to 32).";
+			+ "details. Write to . Do not forget to set correct Device ID (17 to 32).";
 
 	/**
 	 * Constructor for DeviceListWriter.

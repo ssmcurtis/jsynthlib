@@ -89,7 +89,7 @@ public class AlesisDM5PrChgEditor extends PatchEditorFrame {
 		 */
 		public byte[] generate(int value) {
 			((AlesisDM5PrChgDriver) (patch.getDriver())).calculateChecksum(patch);
-			return patch.sysex;
+			return patch.getSysex();
 		}
 	}
 }

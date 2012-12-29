@@ -39,11 +39,11 @@ public class KorgWavestationWaveSequenceDriver extends Driver {
 		} catch (Exception e) {
 		}
 
-		((Patch) p).sysex[2] = (byte) (0x30 + getChannel() - 1);
-		((Patch) p).sysex[05] = (byte) bankNum;
+		((Patch) p).getSysex()[2] = (byte) (0x30 + getChannel() - 1);
+		((Patch) p).getSysex()[05] = (byte) bankNum;
 
 		try {
-			send(((Patch) p).sysex);
+			send(((Patch) p).getSysex());
 		} catch (Exception e) {
 			ErrorMsg.reportStatus(e);
 		}
@@ -51,11 +51,11 @@ public class KorgWavestationWaveSequenceDriver extends Driver {
 	}
 
 	public void sendPatch(Patch p) {
-		((Patch) p).sysex[2] = (byte) (0x30 + getChannel() - 1); // the only thing to do is to set the byte to 3n
+		((Patch) p).getSysex()[2] = (byte) (0x30 + getChannel() - 1); // the only thing to do is to set the byte to 3n
 																		// (n = channel)
 
 		try {
-			send(((Patch) p).sysex);
+			send(((Patch) p).getSysex());
 		} catch (Exception e) {
 			ErrorMsg.reportStatus(e);
 		}
@@ -85,9 +85,9 @@ public class KorgWavestationWaveSequenceDriver extends Driver {
 
 		// System.out.println("Checksum was" + p.sysex[ofs]);
 		for (i = start; i <= end; i++) {
-			sum += p.sysex[i];
+			sum += p.getSysex()[i];
 		}
-		p.sysex[ofs] = (byte) (sum % 128);
+		p.getSysex()[ofs] = (byte) (sum % 128);
 		// System.out.println("Checksum new is" + p.sysex[ofs]);
 	}
 

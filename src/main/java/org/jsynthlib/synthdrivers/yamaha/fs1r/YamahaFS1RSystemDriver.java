@@ -76,7 +76,7 @@ public class YamahaFS1RSystemDriver extends Driver {
 	 */
 	static Patch newPatch(byte aSysex[], int aOffset) {
 		Patch oNewPatch = newPatch();
-		System.arraycopy(aSysex, aOffset, oNewPatch.sysex, HEADER_SIZE - 1, PATCH_SIZE);
+		System.arraycopy(aSysex, aOffset, oNewPatch.getSysex(), HEADER_SIZE - 1, PATCH_SIZE);
 		return oNewPatch;
 	}
 

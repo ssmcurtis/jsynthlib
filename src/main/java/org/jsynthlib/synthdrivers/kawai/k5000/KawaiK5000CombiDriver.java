@@ -71,8 +71,8 @@ public class KawaiK5000CombiDriver extends Driver {
 			Thread.sleep(300);
 		} catch (Exception e) {
 		}
-		((Patch) p).sysex[3] = (byte) 0x20;
-		((Patch) p).sysex[7] = (byte) (patchNum);
+		((Patch) p).getSysex()[3] = (byte) 0x20;
+		((Patch) p).getSysex()[7] = (byte) (patchNum);
 
 		sendPatchWorker(p);
 		try {
@@ -113,9 +113,9 @@ public class KawaiK5000CombiDriver extends Driver {
 		// ErrorMsg.reportStatus("KawaiK5000CombiDriver->calculateChecksum");
 		int sum = 0;
 		for (int i = start; i <= end; i++)
-			sum += p.sysex[i];
+			sum += p.getSysex()[i];
 		sum += (byte) 0xA5;
-		p.sysex[ofs] = (byte) (sum % 128);
+		p.getSysex()[ofs] = (byte) (sum % 128);
 	}
 
 	// ----------------------------------------------------------------------------------------------------------------------

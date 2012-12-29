@@ -48,11 +48,11 @@ public class AlesisDMProParser {
 		int nShiftDown = 8 - nBitNumber;
 		int nRemain = (nBits + nBitNumber) - 7;
 
-		int n1 = (m_p.sysex[nStartByte] >> nBitNumber) & LengthBitMask(nShiftDown);
+		int n1 = (m_p.getSysex()[nStartByte] >> nBitNumber) & LengthBitMask(nShiftDown);
 		int n2 = 0;
 
 		if (nRemain > 0)
-			n2 = (m_p.sysex[nStartByte + 1] & LengthBitMask(nRemain)) << (nShiftDown - 1);
+			n2 = (m_p.getSysex()[nStartByte + 1] & LengthBitMask(nRemain)) << (nShiftDown - 1);
 
 		int nValue = (n1 | n2) & LengthBitMask(nBits);
 
@@ -111,10 +111,10 @@ public class AlesisDMProParser {
 		nClear ^= 0xFFFF; // Invert
 
 		// Current value
-		int nTarget = m_p.sysex[nStartByte];
+		int nTarget = m_p.getSysex()[nStartByte];
 
 		if (nRemain > 0)
-			nTarget |= (m_p.sysex[nStartByte + 1] << 8);
+			nTarget |= (m_p.getSysex()[nStartByte + 1] << 8);
 
 		// Clear and set value
 		nTarget &= nClear;
@@ -128,10 +128,10 @@ public class AlesisDMProParser {
 		nTarget |= (nValue & 0xFF80) << 1;
 
 		// Insert new value
-		m_p.sysex[nStartByte] = (byte) (nTarget & 127);
+		m_p.getSysex()[nStartByte] = (byte) (nTarget & 127);
 
 		if (nRemain > 0)
-			m_p.sysex[nStartByte + 1] = (byte) ((nTarget >> 8) & 127);
+			m_p.getSysex()[nStartByte + 1] = (byte) ((nTarget >> 8) & 127);
 
 	}
 

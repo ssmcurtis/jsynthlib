@@ -47,9 +47,9 @@ public class KawaiK4EffectDriver extends Driver {
 			Thread.sleep(100);
 		} catch (Exception e) {
 		}
-		p.sysex[3] = (byte) 0x20;
-		p.sysex[6] = (byte) ((bankNum << 1) + 1);
-		p.sysex[7] = (byte) (patchNum);
+		p.getSysex()[3] = (byte) 0x20;
+		p.getSysex()[6] = (byte) ((bankNum << 1) + 1);
+		p.getSysex()[7] = (byte) (patchNum);
 		sendPatchWorker(p);
 		try {
 			Thread.sleep(100);
@@ -59,18 +59,18 @@ public class KawaiK4EffectDriver extends Driver {
 	}
 
 	public void sendPatch(Patch p) {
-		p.sysex[3] = (byte) 0x23;
-		p.sysex[7] = (byte) 0x00;
+		p.getSysex()[3] = (byte) 0x23;
+		p.getSysex()[7] = (byte) 0x00;
 		sendPatchWorker(p);
 	}
 
 	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
 		int sum = 0;
 		for (int i = start; i <= end; i++) {
-			sum += p.sysex[i];
+			sum += p.getSysex()[i];
 		}
 		sum += 0xA5;
-		p.sysex[ofs] = (byte) (sum % 128);
+		p.getSysex()[ofs] = (byte) (sum % 128);
 	}
 
 	public Patch createNewPatch() {
@@ -104,7 +104,7 @@ public class KawaiK4EffectDriver extends Driver {
 	}
 
 	public String getPatchName(Patch p) {
-		String s = "Effect Type " + (p.sysex[HSIZE] + 1);
+		String s = "Effect Type " + (p.getSysex()[HSIZE] + 1);
 		return s;
 	}
 

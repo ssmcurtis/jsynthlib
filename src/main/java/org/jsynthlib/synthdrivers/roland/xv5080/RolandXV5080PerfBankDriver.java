@@ -85,7 +85,7 @@ public class RolandXV5080PerfBankDriver extends BankDriver {
 
 	public String getPatchName(Patch p, int patchNum) {
 		try {
-			return new String(((Patch) p).sysex, RolandXV5080PerfDriver.PATCH_SIZE * patchNum
+			return new String(((Patch) p).getSysex(), RolandXV5080PerfDriver.PATCH_SIZE * patchNum
 					+ RolandXV5080PerfDriver.PATCH_NAME_START, RolandXV5080PerfDriver.PATCH_NAME_SIZE, "US-ASCII");
 		} catch (UnsupportedEncodingException ex) {
 			return "-??????-";
@@ -110,7 +110,7 @@ public class RolandXV5080PerfBankDriver extends BankDriver {
 	public Patch getPatch(Patch bank, int patchNum) {
 		try {
 			byte[] sysex = new byte[RolandXV5080PerfDriver.PATCH_SIZE];
-			System.arraycopy(((Patch) bank).sysex, RolandXV5080PerfDriver.PATCH_SIZE * patchNum, sysex, 0,
+			System.arraycopy(((Patch) bank).getSysex(), RolandXV5080PerfDriver.PATCH_SIZE * patchNum, sysex, 0,
 					RolandXV5080PerfDriver.PATCH_SIZE);
 			return new Patch(sysex, getDevice());
 		} catch (Exception ex) {
@@ -124,14 +124,14 @@ public class RolandXV5080PerfBankDriver extends BankDriver {
 	// ----------------------------------------------------------------------------------------------------------------------
 
 	public void putPatch(Patch bank, Patch p, int patchNum) {
-		Patch pInsert = new Patch(((Patch) p).sysex);
+		Patch pInsert = new Patch(((Patch) p).getSysex());
 		RolandXV5080PerfDriver singleDriver = (RolandXV5080PerfDriver) pInsert.getDriver();
 		singleDriver.updatePatchNum(pInsert, patchNum);
 		singleDriver.calculateChecksum(pInsert);
 
-		((Patch) bank).sysex = Utility.byteArrayReplace(((Patch) bank).sysex,
-				RolandXV5080PerfDriver.PATCH_SIZE * patchNum, RolandXV5080PerfDriver.PATCH_SIZE, pInsert.sysex, 0,
-				RolandXV5080PerfDriver.PATCH_SIZE);
+		((Patch) bank).setSysex(Utility.byteArrayReplace(((Patch) bank).getSysex(),
+				RolandXV5080PerfDriver.PATCH_SIZE * patchNum, RolandXV5080PerfDriver.PATCH_SIZE, pInsert.getSysex(), 0,
+				RolandXV5080PerfDriver.PATCH_SIZE));
 	}
 
 	// ----------------------------------------------------------------------------------------------------------------------

@@ -53,9 +53,9 @@ public class KorgER1SingleDriver extends Driver {
 		} catch (Exception e) {
 		}
 
-		((Patch) p).sysex[2] = (byte) (0x30 + getChannel() - 1);
+		((Patch) p).getSysex()[2] = (byte) (0x30 + getChannel() - 1);
 		try {
-			send(((Patch) p).sysex);
+			send(((Patch) p).getSysex());
 		} catch (Exception e) {
 			ErrorMsg.reportStatus(e);
 		}
@@ -84,11 +84,11 @@ public class KorgER1SingleDriver extends Driver {
 	}
 
 	public void sendPatch(Patch p) {
-		((Patch) p).sysex[2] = (byte) (0x30 + getChannel() - 1); // the only thing to do is to set the byte to 3n
+		((Patch) p).getSysex()[2] = (byte) (0x30 + getChannel() - 1); // the only thing to do is to set the byte to 3n
 																		// (n = channel)
 
 		try {
-			send(((Patch) p).sysex);
+			send(((Patch) p).getSysex());
 		} catch (Exception e) {
 			ErrorMsg.reportStatus(e);
 		}

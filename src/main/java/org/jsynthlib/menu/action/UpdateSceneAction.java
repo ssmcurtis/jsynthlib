@@ -9,7 +9,7 @@ import javax.swing.AbstractAction;
 import org.jsynthlib.menu.ui.window.SceneFrame;
 import org.jsynthlib.tools.ErrorMsg;
 
-public class UpdateSceneAction extends AbstractAction {// wirski@op.pl
+public class UpdateSceneAction extends AbstractAction {
 	public UpdateSceneAction(Map<Serializable, Integer> mnemonics) {
 		super("Update Scene", null);
 		setEnabled(false);
@@ -17,7 +17,7 @@ public class UpdateSceneAction extends AbstractAction {// wirski@op.pl
 
 	public void actionPerformed(ActionEvent e) {
 		try {
-			((SceneFrame) Actions.getSelectedFrame()).updateScene();
+			// ((SceneFrame) Actions.getSelectedFrame()).updateScene();
 		} catch (Exception ex) {
 			ErrorMsg.reportError("Error", "Scene Library must be the selected window.", ex);
 		}

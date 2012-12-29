@@ -73,10 +73,10 @@ public class RolandMT32DisplayDriver extends Driver {
 		} catch (Exception e) {
 			ErrorMsg.reportStatus(e);
 		}
-		p.sysex[0] = (byte) 0xF0;
-		p.sysex[5] = (byte) 0x20; // Point to Display area
-		p.sysex[6] = (byte) 0x00;
-		p.sysex[7] = (byte) 0x00;
+		p.getSysex()[0] = (byte) 0xF0;
+		p.getSysex()[5] = (byte) 0x20; // Point to Display area
+		p.getSysex()[6] = (byte) 0x00;
+		p.getSysex()[7] = (byte) 0x00;
 		calculateChecksum(p, 5, HSIZE + SSIZE - 2, HSIZE + SSIZE - 1);
 
 		try {
@@ -102,10 +102,10 @@ public class RolandMT32DisplayDriver extends Driver {
 		// Calculate the checksum
 		int sum = 0;
 		for (int i = start; i <= end; i++) {
-			sum += p.sysex[i];
+			sum += p.getSysex()[i];
 		}
 		sum = (0 - sum) & 0x7F;
-		p.sysex[ofs] = (byte) (sum % 128);
+		p.getSysex()[ofs] = (byte) (sum % 128);
 	}
 
 	// not used

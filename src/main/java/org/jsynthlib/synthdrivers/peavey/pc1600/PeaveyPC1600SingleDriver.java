@@ -78,7 +78,7 @@ public class PeaveyPC1600SingleDriver extends Driver {
 	// ----------------------------------------------------------------------------------------------------------------------
 
 	public String getPatchName(Patch ip) {
-		NibbleSysex nibbleSysex = new NibbleSysex(((Patch) ip).sysex, PATCH_NAME_START);
+		NibbleSysex nibbleSysex = new NibbleSysex(((Patch) ip).getSysex(), PATCH_NAME_START);
 		return nibbleSysex.getNibbleStr(PATCH_NAME_SIZE, PATCH_NAME_CHAR_BYTES, NIBBLE_MULTIPLIER);
 	}
 
@@ -87,7 +87,7 @@ public class PeaveyPC1600SingleDriver extends Driver {
 	// ----------------------------------------------------------------------------------------------------------------------
 
 	public void setPatchName(Patch p, String name) {
-		NibbleSysex nibbleSysex = new NibbleSysex(((Patch) p).sysex, PATCH_NAME_START);
+		NibbleSysex nibbleSysex = new NibbleSysex(((Patch) p).getSysex(), PATCH_NAME_START);
 		nibbleSysex.putNibbleStr(name, PATCH_NAME_SIZE, PATCH_NAME_CHAR_BYTES, NIBBLE_MULTIPLIER);
 	}
 

@@ -6,7 +6,7 @@ import java.util.Map;
 
 import javax.swing.AbstractAction;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.PatchBayApplication;
 
 public class PrefsAction extends AbstractAction {
 	public PrefsAction(Map<Serializable, Integer> mnemonics) {

@@ -71,8 +71,8 @@ public class DX7FamilyMicroTuningSingleDriver extends Driver {
 
 	public void sendPatch(Patch p) {
 		// This is an edit buffer patch!
-		((Patch) p).sysex[14] = (byte) (0x45);
-		((Patch) p).sysex[15] = (byte) (0x20);
+		((Patch) p).getSysex()[14] = (byte) (0x45);
+		((Patch) p).getSysex()[15] = (byte) (0x20);
 
 		super.sendPatch(p);
 	}
@@ -80,11 +80,11 @@ public class DX7FamilyMicroTuningSingleDriver extends Driver {
 	public void storePatch(Patch p, int bankNum, int patchNum) {
 		// Is it necessary to switch off Memory Protection for edit buffer and/or User 1,2?
 		if (patchNum == 0) { // edit buffer
-			((Patch) p).sysex[14] = (byte) (0x45);
-			((Patch) p).sysex[15] = (byte) (0x20);
+			((Patch) p).getSysex()[14] = (byte) (0x45);
+			((Patch) p).getSysex()[15] = (byte) (0x20);
 		} else { // User 1,2
-			((Patch) p).sysex[14] = (byte) (0x4D);
-			((Patch) p).sysex[15] = (byte) (0x00 + patchNum - 1);
+			((Patch) p).getSysex()[14] = (byte) (0x4D);
+			((Patch) p).getSysex()[15] = (byte) (0x00 + patchNum - 1);
 		}
 
 		super.sendPatch(p);

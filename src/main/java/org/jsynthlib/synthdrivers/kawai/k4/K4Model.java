@@ -35,10 +35,10 @@ class K4Model extends ParamModel {
 	}
 
 	public void set(int i) {
-		patch.sysex[ofs] = (byte) ((i * mult) + (patch.sysex[ofs] & (~bitmask)));
+		patch.getSysex()[ofs] = (byte) ((i * mult) + (patch.getSysex()[ofs] & (~bitmask)));
 	}
 
 	public int get() {
-		return ((patch.sysex[ofs] & bitmask) / mult);
+		return ((patch.getSysex()[ofs] & bitmask) / mult);
 	}
 }

@@ -14,6 +14,7 @@ package org.jsynthlib.model;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -23,6 +24,16 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.prefs.Preferences;
 
+import org.apache.commons.lang3.text.WordUtils;
+import org.clapper.util.classutil.AbstractClassFilter;
+import org.clapper.util.classutil.AndClassFilter;
+import org.clapper.util.classutil.ClassFilter;
+import org.clapper.util.classutil.ClassFinder;
+import org.clapper.util.classutil.ClassInfo;
+import org.clapper.util.classutil.InterfaceOnlyClassFilter;
+import org.clapper.util.classutil.MethodInfo;
+import org.clapper.util.classutil.NotClassFilter;
+import org.clapper.util.classutil.SubclassClassFilter;
 import org.jsynthlib.Constants;
 import org.jsynthlib.JSynthResource;
 import org.jsynthlib.menu.patch.Device;
@@ -56,10 +67,54 @@ public class DevicesConfig {
 	 * Constructor
 	 */
 	public DevicesConfig() {
-		readDevicesFromPropertiesFile();
-		//readDevicesFromXMLFile();
+		readDevicesFromClasspath();
+		// readDevicesFromPropertiesFile();
+		// readDevicesFromXMLFile();
 	}
 
+	private void readDevicesFromClasspath() {
+		// find all classes extends class Device.class
+		ClassFinder finder = new ClassFinder();
+		finder.addClassPath();
+
+		ClassFilter filter = new AndClassFilter(new NotClassFilter(new InterfaceOnlyClassFilter()), new SubclassClassFilter(Device.class),
+				new NotClassFilter(new AbstractClassFilter()));
+
+		Collection<ClassInfo> foundClasses = new ArrayList<ClassInfo>();
+		finder.findClasses(foundClasses, filter);
+
+		String classPrefix = "org.jsynthlib.synthdrivers.";
+		for (ClassInfo classInfo : foundClasses) {
+			String IDString = "NONE";
+
+			if (classInfo.getClassName().startsWith(classPrefix)) {
+				String deviceString = classInfo.getClassName().substring(classPrefix.length());
+				// System.out.println("deviceClass " + deviceString);
+				String[] deviceArr = deviceString.split("\\.");
+				if (deviceArr.length >= 2) {
+					deviceArr[0] = WordUtils.capitalize(deviceArr[0]);
+					deviceArr[1] = WordUtils.capitalize(deviceArr[1]);
+
+					String shortName = deviceArr[0] + deviceArr[1];
+					String deviceName = deviceArr[1];
+					String deviceClass = classInfo.getClassName();
+					String manufacturer = deviceArr[0];
+					String type = manufacturer.substring(0, 1);
+					addDevice(deviceName, shortName, deviceClass, IDString, manufacturer, type);
+				} else {
+					// no org.jsynthlib.synthdrivers.<vendor>.<type> convention
+					addDevice(classInfo.getClassName(), classInfo.getClassName(), classInfo.getClassName(), IDString, "Unknown", "U");
+				}
+			} else {
+				// no org.jsynthlib.synthdrivers.<vendor>.<type> convention
+				addDevice(classInfo.getClassName(), classInfo.getClassName(), classInfo.getClassName(), IDString, "Unknown", "U");
+			}
+
+		}
+
+	}
+
+	@Deprecated
 	private void readDevicesFromPropertiesFile() {
 		// Load properties file
 		InputStream in = this.getClass().getResourceAsStream(JSynthResource.RESOURCE_NAME_DEVICES_CONFIG.getUri());
@@ -100,39 +155,17 @@ public class DevicesConfig {
 				if ((deviceClass != null) && (IDString != null)) {
 					addDevice(deviceName, shortName, deviceClass, IDString, manufacturer, type);
 				} else {
-					ErrorMsg.reportError("Failed loading Devices", "Config file inconsistency found " + "for '"
-							+ shortName + "' ID string");
+					ErrorMsg.reportError("Failed loading Devices", "Config file inconsistency found " + "for '" + shortName + "' ID string");
 				}
 			}
 		}
 	}
 
-//	private void readDevicesFromXMLFile() {
-//		String[][] xmldevices = useXMLDevice ? XMLDeviceFactory.getDeviceNames() : null;
-//		if (xmldevices != null) {
-//			for (int i = 0; i < xmldevices.length; i++) {
-//				String deviceName = xmldevices[i][0];
-//				String deviceClass = XML_FILE_SEPARATOR + xmldevices[i][2];
-//				deviceClass = deviceClass.replace(File.separatorChar, XML_FILE_SEPARATOR);
-//				String shortName = getShortNameForClassName(deviceClass);
-//				addDevice(deviceName, // DeviceName
-//						shortName, // ShortName
-//						deviceClass, // DeviceClass
-//						xmldevices[i][1], // IDString
-//						xmldevices[i][3], // Manufacturer
-//						xmldevices[i][3].substring(0, 1) // Type
-//				);
-//			}
-//		}
-//	}
-
 	/**
 	 * This method makes a descriptor from the given parameters and adds it to the list of device descriptors
 	 */
-	private void addDevice(String deviceName, String shortName, String deviceClass, String IDString,
-			String manufacturer, String type) {
-		DeviceDescriptor descriptor = createDeviceDescriptor(deviceName, shortName, deviceClass, IDString,
-				manufacturer, type);
+	private void addDevice(String deviceName, String shortName, String deviceClass, String IDString, String manufacturer, String type) {
+		DeviceDescriptor descriptor = createDeviceDescriptor(deviceName, shortName, deviceClass, IDString, manufacturer, type);
 		descriptors.add(descriptor);
 		devicenameList.add(deviceName);
 		IDStringList.add(IDString);
@@ -140,8 +173,8 @@ public class DevicesConfig {
 		typeList.putIntoList(type, descriptor);
 	}
 
-	private DeviceDescriptor createDeviceDescriptor(String deviceName, String shortName, String deviceClass,
-			String IDString, String manufacturer, String type) {
+	private DeviceDescriptor createDeviceDescriptor(String deviceName, String shortName, String deviceClass, String IDString,
+			String manufacturer, String type) {
 		DeviceDescriptor descriptor = new DeviceDescriptor();
 		descriptor.setDeviceName(deviceName);
 		descriptor.setShortName(shortName);
@@ -229,9 +262,10 @@ public class DevicesConfig {
 
 	private DeviceDescriptor getDeviceDescriptorForShortName(String shortName) {
 		DeviceDescriptor descriptor;
+		shortName = shortName.toUpperCase();
 		for (Iterator i = descriptors.iterator(); i.hasNext();) {
 			descriptor = (DeviceDescriptor) i.next();
-			if (descriptor.getShortName().equals(shortName)) {
+			if (descriptor.getShortName().toUpperCase().equals(shortName)) {
 				return (descriptor);
 			}
 		}
@@ -292,7 +326,8 @@ public class DevicesConfig {
 	public String getClassNameForShortName(String shortName) {
 		DeviceDescriptor descriptor = getDeviceDescriptorForShortName(shortName);
 		if (descriptor == null) {
-			return (NOT_FOUND_STRING);
+			ErrorMsg.reportStatus("not found " + shortName);
+			return null;
 		}
 		return (descriptor.getDeviceClass());
 	}
@@ -329,8 +364,8 @@ public class DevicesConfig {
 
 	public Device createDevice(String className, Preferences prefs) {
 		if (className.charAt(0) == XML_FILE_SEPARATOR) {
-//			className = className.replace(XML_FILE_SEPARATOR, File.separatorChar);
-//			return XMLDeviceFactory.createDevice(className.substring(1), prefs);
+			// className = className.replace(XML_FILE_SEPARATOR, File.separatorChar);
+			// return XMLDeviceFactory.createDevice(className.substring(1), prefs);
 			return null;
 		} else {
 			try {
@@ -341,8 +376,7 @@ public class DevicesConfig {
 				device = (Device) con.newInstance(new Object[] { prefs });
 				return device;
 			} catch (Exception e) {
-				ErrorMsg.reportError("Failed to create device", "Failed to create device of class '" + className + "'",
-						e);
+				ErrorMsg.reportError("Failed to create device", "Failed to create device of class '" + className + "'", e);
 				return null;
 			}
 		}

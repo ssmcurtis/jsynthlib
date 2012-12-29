@@ -116,7 +116,7 @@ public class RolandXV5080PatchDriver extends Driver {
 
 	public void updatePatchNum(Patch p, int patchNum) {
 		for (int i = 0; i < PATCH_SYSEX_START.length; i++)
-			p.sysex[PATCH_SYSEX_START[i] + PATCH_NUMBER_OFFSET] = (byte) (patchNum);
+			p.getSysex()[PATCH_SYSEX_START[i] + PATCH_NUMBER_OFFSET] = (byte) (patchNum);
 	}
 
 	// ----------------------------------------------------------------------------------------------------------------------
@@ -128,7 +128,7 @@ public class RolandXV5080PatchDriver extends Driver {
 			int checksumStart = PATCH_SYSEX_START[i] + CHECKSUM_START;
 			int checksumEnd = PATCH_SYSEX_START[i] + PATCH_SYSEX_SIZE[i] - 3;
 			int checksumOffset = checksumEnd + 1;
-			calculateChecksum(((Patch) p).sysex, checksumStart, checksumEnd, checksumOffset);
+			calculateChecksum(((Patch) p).getSysex(), checksumStart, checksumEnd, checksumOffset);
 		}
 	}
 

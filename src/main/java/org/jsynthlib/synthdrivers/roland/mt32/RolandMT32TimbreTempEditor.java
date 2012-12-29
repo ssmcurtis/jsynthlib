@@ -124,12 +124,12 @@ class RolandMT32TimbreTempEditor extends PatchEditorFrame {
 		algoIcon[10] = new ImageIcon(getClass().getResource("11_ps-r.gif"));
 		algoIcon[11] = new ImageIcon(getClass().getResource("12_sp-r.gif"));
 		algoIcon[12] = new ImageIcon(getClass().getResource("13_pp-r.gif"));
-		int algoVal12 = patch.sysex[0x0A];
+		int algoVal12 = patch.getSysex()[0x0A];
 		if (algoVal12 > 12 || algoVal12 < 0) {
 			algoVal12 = 0;
 		}
 		final JLabel structImg12 = new JLabel(algoIcon[algoVal12]);
-		int algoVal34 = patch.sysex[0x0B];
+		int algoVal34 = patch.getSysex()[0x0B];
 		if (algoVal34 > 12 || algoVal34 < 0) {
 			algoVal34 = 0;
 		}

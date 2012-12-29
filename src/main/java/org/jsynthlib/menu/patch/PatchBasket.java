@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.model.ImportFileType;
 
 /**
  * This interface should be implemented by any window which serves as a holder or "basket" for patches.
@@ -13,14 +14,16 @@ import org.jsynthlib.menu.ui.JSLFrame;
  */
 public interface PatchBasket {
 	/** Import a patch from a file. */
-	void importPatch(File file) throws IOException;
+	void importPatch(File file, ImportFileType type) throws IOException;
 
 	/** Export a patch to a file. */
 	void exportPatch(File file) throws IOException;
 
 	/** Delete the selected patch. */
-	void deleteSelectedPatch();
+	void deleteSelectedPatches();
 
+	void splitSelectedPatches();
+	
 	/** Copy the selected patch. */
 	void copySelectedPatch();
 
@@ -31,7 +34,7 @@ public interface PatchBasket {
 	void pastePatch(IPatch p); // XXX Shall we rename?
 
 	/** Add a patch into the table of patches including bank and patch numbers. */
-	void pastePatch(IPatch p, int bankNum, int patchNum); // wirski@op.pl
+	void pastePatch(IPatch p, int bankNum, int patchNum); 
 
 	/** Get the selected patch. */
 	IPatch getSelectedPatch();
@@ -56,6 +59,9 @@ public interface PatchBasket {
 
 	/** Play the selected patch. */
 	void playSelectedPatch();
+
+	/** Play the selected patch. */
+	void playAllPatches();
 
 	/** Invoke an editor for the selected patch. */
 	JSLFrame editSelectedPatch();

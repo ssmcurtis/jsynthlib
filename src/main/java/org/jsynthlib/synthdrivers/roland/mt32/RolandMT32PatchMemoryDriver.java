@@ -79,11 +79,11 @@ public class RolandMT32PatchMemoryDriver extends Driver {
 		int patAddrM = patchAddr / 0x80;
 		int patAddrL = patchAddr & 0x7F;
 
-		p.sysex[0] = (byte) 0xF0;
+		p.getSysex()[0] = (byte) 0xF0;
 		// p.sysex[2] = (byte) 0x10;
-		p.sysex[5] = (byte) 0x05; // point to Patch Temp Area
-		p.sysex[6] = (byte) patAddrM;
-		p.sysex[7] = (byte) patAddrL;
+		p.getSysex()[5] = (byte) 0x05; // point to Patch Temp Area
+		p.getSysex()[6] = (byte) patAddrM;
+		p.getSysex()[7] = (byte) patAddrL;
 
 		calculateChecksum(p, HSIZE, HSIZE + SSIZE - 2, HSIZE + SSIZE - 1);
 
@@ -112,10 +112,10 @@ public class RolandMT32PatchMemoryDriver extends Driver {
 	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
 		int sum = 0;
 		for (int i = start; i <= end; i++) {
-			sum += p.sysex[i];
+			sum += p.getSysex()[i];
 		}
 		sum = (0 - sum) & 0x7F;
-		p.sysex[ofs] = (byte) (sum % 128);
+		p.getSysex()[ofs] = (byte) (sum % 128);
 	}
 
 	// New Patch has Data set format DT1

@@ -138,9 +138,9 @@ public class YamahaFS1RPerformanceDriver extends Driver {
 	/** Sends a patch to a set location on a synth. */
 	public void storePatch(Patch p, int bankNum, int patchNum) {
 		// change the address to internal performance
-		((Patch) p).sysex[6] = (byte) 0x11;
-		((Patch) p).sysex[7] = (byte) 0;
-		((Patch) p).sysex[8] = (byte) patchNum;
+		((Patch) p).getSysex()[6] = (byte) 0x11;
+		((Patch) p).getSysex()[7] = (byte) 0;
+		((Patch) p).getSysex()[8] = (byte) patchNum;
 		calculateChecksum(p);
 		sendPatch(p);
 	}
@@ -155,7 +155,7 @@ public class YamahaFS1RPerformanceDriver extends Driver {
 		if (patchNameSize == 0)
 			return ("-");
 		try {
-			String s = new String(p.sysex, aPatchOffset + patchNameStart, patchNameSize, "US-ASCII");
+			String s = new String(p.getSysex(), aPatchOffset + patchNameStart, patchNameSize, "US-ASCII");
 			return s;
 		} catch (UnsupportedEncodingException ex) {
 			return "-";
@@ -175,7 +175,7 @@ public class YamahaFS1RPerformanceDriver extends Driver {
 		try {
 			namebytes = name.getBytes("US-ASCII");
 			for (int i = 0; i < patchNameSize; i++)
-				p.sysex[aPatchOffset + patchNameStart + i] = namebytes[i];
+				p.getSysex()[aPatchOffset + patchNameStart + i] = namebytes[i];
 
 		} catch (UnsupportedEncodingException ex) {
 			return;
@@ -210,9 +210,9 @@ public class YamahaFS1RPerformanceDriver extends Driver {
 		Patch p = (Patch) ip;
 		// set the address to "current performance" so when patch is sent
 		// the FS1R display show this "in edit" performance whenever it comes from.
-		p.sysex[6] = (byte) 0x10;
-		p.sysex[7] = (byte) 0;
-		p.sysex[8] = (byte) 0;
+		p.getSysex()[6] = (byte) 0x10;
+		p.getSysex()[7] = (byte) 0;
+		p.getSysex()[8] = (byte) 0;
 		calculateChecksum(p);
 		return new YamahaFS1RPerformanceEditor((Patch) p);
 	}
@@ -297,18 +297,18 @@ public class YamahaFS1RPerformanceDriver extends Driver {
 
 		public void set(int i) {
 			if (mIs16Bits) {
-				patch.sysex[ofs] = (byte) ((i >> 7) & 127);
-				patch.sysex[ofs + 1] = (byte) (i & 127);
+				patch.getSysex()[ofs] = (byte) ((i >> 7) & 127);
+				patch.getSysex()[ofs + 1] = (byte) (i & 127);
 			} else {
-				patch.sysex[ofs] = (byte) (i & 127);
+				patch.getSysex()[ofs] = (byte) (i & 127);
 			}
 			// System.out.println("set part = "+mPart+" ofs = "+Integer.toHexString(mOffset)+" valL = "+Integer.toHexString(patch.sysex[ofs])+" valH = "+Integer.toHexString(patch.sysex[ofs+1]));
 		}
 
 		public int get() {
-			int oRet = patch.sysex[ofs];
+			int oRet = patch.getSysex()[ofs];
 			if (mIs16Bits) {
-				oRet = patch.sysex[ofs + 1] | (patch.sysex[ofs] << 7);
+				oRet = patch.getSysex()[ofs + 1] | (patch.getSysex()[ofs] << 7);
 			}
 			// System.out.println("get part = "+mPart+" ofs = "+Integer.toHexString(mOffset)+" = "+oRet);
 			return oRet;
@@ -337,12 +337,12 @@ public class YamahaFS1RPerformanceDriver extends Driver {
 		}
 
 		public void set(int i) {
-			patch.sysex[ofs] &= ~mMask;
-			patch.sysex[ofs] |= (i << mShift);
+			patch.getSysex()[ofs] &= ~mMask;
+			patch.getSysex()[ofs] |= (i << mShift);
 		}
 
 		public int get() {
-			return (patch.sysex[ofs] & mMask) >> mShift;
+			return (patch.getSysex()[ofs] & mMask) >> mShift;
 		}
 	}
 
@@ -369,9 +369,9 @@ public class YamahaFS1RPerformanceDriver extends Driver {
 		public byte[] generate(int value) {
 			// on recupere la valeur directement dans le patch
 			// DATA_START est le decalage de l'entete sysex
-			int oValue = mPatch.sysex[parameter + DATA_START];
+			int oValue = mPatch.getSysex()[parameter + DATA_START];
 			if (mPart > 0) {
-				oValue = mPatch.sysex[COMMON_SIZE + PART_SIZE * (mPart - 1) + parameter + DATA_START];
+				oValue = mPatch.getSysex()[COMMON_SIZE + PART_SIZE * (mPart - 1) + parameter + DATA_START];
 			}
 			b[7] = 0;
 			b[8] = (byte) (oValue & 127);

@@ -203,7 +203,7 @@ class MKSToneSenderDirect extends SysexSender {
 
 	public byte[] generate(int value) {
 		b[3] = (byte) (channel - 1);
-		b[5] = patch.sysex[patch_off];
+		b[5] = patch.getSysex()[patch_off];
 		return b;
 	}
 }
@@ -227,11 +227,11 @@ class ParamModelBit extends ParamModel {
 	}
 
 	public void set(int i) {
-		patch.sysex[ofs] = (byte) ((patch.sysex[ofs] & (~mask)) | ((i << power) & mask));
+		patch.getSysex()[ofs] = (byte) ((patch.getSysex()[ofs] & (~mask)) | ((i << power) & mask));
 	}
 
 	public int get() {
-		return ((patch.sysex[ofs] & mask) >> power);
+		return ((patch.getSysex()[ofs] & mask) >> power);
 	}
 }
 
@@ -255,11 +255,11 @@ class ParamModelBitExp extends ParamModel {
 	}
 
 	public void set(int i) {
-		patch.sysex[ofs] = (byte) ((patch.sysex[ofs] & (~mask)) | (((1 << i) << power) & mask));
+		patch.getSysex()[ofs] = (byte) ((patch.getSysex()[ofs] & (~mask)) | (((1 << i) << power) & mask));
 	}
 
 	public int get() {
-		int r = ((patch.sysex[ofs] & mask) >> power);
+		int r = ((patch.getSysex()[ofs] & mask) >> power);
 		return ((r <= 1) ? 0 : (r <= 2) ? 1 : (r <= 4) ? 2 : (r <= 8) ? 3 : (r <= 16) ? 4 : (r <= 32) ? 5
 				: (r <= 64) ? 6 : 7);
 	}

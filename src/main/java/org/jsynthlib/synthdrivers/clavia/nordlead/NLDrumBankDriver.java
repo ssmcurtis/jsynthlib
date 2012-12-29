@@ -4,7 +4,7 @@ package org.jsynthlib.synthdrivers.clavia.nordlead;
 
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.patch.BankDriver;
 import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.SysexHandler;
@@ -54,13 +54,13 @@ public class NLDrumBankDriver extends BankDriver {
 			return;
 		}
 
-		System.arraycopy(((Patch) p).sysex, 0, ((Patch) bank).sysex, patchNum * singleSize, singleSize);
-		((Patch) bank).sysex[patchNum * singleSize + PATCH_NUM_OFFSET] = (byte) (patchNum + 99); // set program #
+		System.arraycopy(((Patch) p).getSysex(), 0, ((Patch) bank).getSysex(), patchNum * singleSize, singleSize);
+		((Patch) bank).getSysex()[patchNum * singleSize + PATCH_NUM_OFFSET] = (byte) (patchNum + 99); // set program #
 	}
 
 	public Patch getPatch(Patch bank, int patchNum) {
 		byte sysex[] = new byte[singleSize];
-		System.arraycopy(((Patch) bank).sysex, patchNum * singleSize, sysex, 0, singleSize);
+		System.arraycopy(((Patch) bank).getSysex(), patchNum * singleSize, sysex, 0, singleSize);
 		return new Patch(sysex);
 	}
 
@@ -80,7 +80,7 @@ public class NLDrumBankDriver extends BankDriver {
 		try {
 			PatchBayApplication.showWaitDialog();
 			for (int i = 0; i < NUM_IN_BANK; i++) {
-				System.arraycopy(p.sysex, i * singleSize, tmp, 0, singleSize);
+				System.arraycopy(p.getSysex(), i * singleSize, tmp, 0, singleSize);
 				tmp[deviceIDoffset] = (byte) (((NordLeadDevice) getDevice()).getGlobalChannel() - 1);
 				tmp[BANK_NUM_OFFSET] = (byte) (bankNum + 1);
 				tmp[PATCH_NUM_OFFSET] = (byte) (i + 99); // program #

@@ -199,14 +199,14 @@ class P6001ByteModel extends ParamModel {
 	}
 
 	public void set(int i) {
-		int dat = patch.sysex[ofs * 2 + HDRLEN] | (patch.sysex[ofs * 2 + HDRLEN + 1] << 4);
+		int dat = patch.getSysex()[ofs * 2 + HDRLEN] | (patch.getSysex()[ofs * 2 + HDRLEN + 1] << 4);
 		dat = (dat & ~mask) | ((i << shft) & mask);
-		patch.sysex[ofs * 2 + HDRLEN] = (byte) (dat & 0x0F);
-		patch.sysex[ofs * 2 + HDRLEN + 1] = (byte) (dat >> 4);
+		patch.getSysex()[ofs * 2 + HDRLEN] = (byte) (dat & 0x0F);
+		patch.getSysex()[ofs * 2 + HDRLEN + 1] = (byte) (dat >> 4);
 	}
 
 	public int get() {
-		int dat = patch.sysex[ofs * 2 + HDRLEN] | (patch.sysex[ofs * 2 + HDRLEN + 1] << 4);
+		int dat = patch.getSysex()[ofs * 2 + HDRLEN] | (patch.getSysex()[ofs * 2 + HDRLEN + 1] << 4);
 		return (dat & mask) >> shft;
 	}
 }
@@ -230,19 +230,19 @@ class P6002ByteModel extends ParamModel {
 	}
 
 	public void set(int i) {
-		int dat1 = patch.sysex[ofs * 2 + HDRLEN] | (patch.sysex[ofs * 2 + HDRLEN + 1] << 4);
-		int dat2 = patch.sysex[ofs * 2 + HDRLEN + 2] | (patch.sysex[ofs * 2 + HDRLEN + 3] << 4);
+		int dat1 = patch.getSysex()[ofs * 2 + HDRLEN] | (patch.getSysex()[ofs * 2 + HDRLEN + 1] << 4);
+		int dat2 = patch.getSysex()[ofs * 2 + HDRLEN + 2] | (patch.getSysex()[ofs * 2 + HDRLEN + 3] << 4);
 		dat1 = (dat1 & ~mask1) | ((i << shft1) & mask1);
 		dat2 = (dat2 & ~mask2) | ((i >> shft2) & mask2);
-		patch.sysex[ofs * 2 + HDRLEN] = (byte) (dat1 & 0x0F);
-		patch.sysex[ofs * 2 + HDRLEN + 1] = (byte) (dat1 >> 4);
-		patch.sysex[ofs * 2 + HDRLEN + 2] = (byte) (dat2 & 0x0F);
-		patch.sysex[ofs * 2 + HDRLEN + 3] = (byte) (dat2 >> 4);
+		patch.getSysex()[ofs * 2 + HDRLEN] = (byte) (dat1 & 0x0F);
+		patch.getSysex()[ofs * 2 + HDRLEN + 1] = (byte) (dat1 >> 4);
+		patch.getSysex()[ofs * 2 + HDRLEN + 2] = (byte) (dat2 & 0x0F);
+		patch.getSysex()[ofs * 2 + HDRLEN + 3] = (byte) (dat2 >> 4);
 	}
 
 	public int get() {
-		int dat1 = patch.sysex[ofs * 2 + HDRLEN] | (patch.sysex[ofs * 2 + HDRLEN + 1] << 4);
-		int dat2 = patch.sysex[ofs * 2 + HDRLEN + 2] | (patch.sysex[ofs * 2 + HDRLEN + 3] << 4);
+		int dat1 = patch.getSysex()[ofs * 2 + HDRLEN] | (patch.getSysex()[ofs * 2 + HDRLEN + 1] << 4);
+		int dat2 = patch.getSysex()[ofs * 2 + HDRLEN + 2] | (patch.getSysex()[ofs * 2 + HDRLEN + 3] << 4);
 		return ((dat1 & mask1) >> shft1) | ((dat2 & mask2) << shft2);
 	}
 }
@@ -266,15 +266,15 @@ class P6002FieldModel extends ParamModel {
 	}
 
 	public void set(int i) {
-		int dat = patch.sysex[ofs * 2 + HDRLEN] | (patch.sysex[ofs * 2 + HDRLEN + 1] << 4);
+		int dat = patch.getSysex()[ofs * 2 + HDRLEN] | (patch.getSysex()[ofs * 2 + HDRLEN + 1] << 4);
 		dat = (dat & ~mask1) | ((i << shft1) & mask1);
 		dat = (dat & ~mask2) | ((i << shft2) & mask2);
-		patch.sysex[ofs * 2 + HDRLEN] = (byte) (dat & 0x0F);
-		patch.sysex[ofs * 2 + HDRLEN + 1] = (byte) (dat >> 4);
+		patch.getSysex()[ofs * 2 + HDRLEN] = (byte) (dat & 0x0F);
+		patch.getSysex()[ofs * 2 + HDRLEN + 1] = (byte) (dat >> 4);
 	}
 
 	public int get() {
-		int dat = patch.sysex[ofs * 2 + HDRLEN] | (patch.sysex[ofs * 2 + HDRLEN + 1] << 4);
+		int dat = patch.getSysex()[ofs * 2 + HDRLEN] | (patch.getSysex()[ofs * 2 + HDRLEN + 1] << 4);
 		return ((dat & mask1) >> shft1) | ((dat & mask2) >> shft2);
 	}
 }

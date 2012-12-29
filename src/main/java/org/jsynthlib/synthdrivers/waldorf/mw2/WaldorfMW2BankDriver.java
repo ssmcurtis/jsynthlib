@@ -86,8 +86,8 @@ public class WaldorfMW2BankDriver extends BankDriver {
 		int offset = patchNo * this.singleSize;
 
 		for (int i = this.checksumStart; i <= this.checksumEnd; i++)
-			sum += p.sysex[offset + i];
-		p.sysex[offset + this.checksumOffset] = (byte) (sum & 0x7F);
+			sum += p.getSysex()[offset + i];
+		p.getSysex()[offset + this.checksumOffset] = (byte) (sum & 0x7F);
 	}
 
 	/**
@@ -116,7 +116,7 @@ public class WaldorfMW2BankDriver extends BankDriver {
 		int nameStart = getPatchStart(patchNum) + MW2Constants.PATCH_NAME_START - MW2Constants.SYSEX_HEADER_OFFSET;
 
 		try {
-			StringBuffer s = new StringBuffer(new String(p.sysex, nameStart, MW2Constants.PATCH_NAME_SIZE, "US-ASCII"));
+			StringBuffer s = new StringBuffer(new String(p.getSysex(), nameStart, MW2Constants.PATCH_NAME_SIZE, "US-ASCII"));
 			return s.toString();
 		} catch (UnsupportedEncodingException ex) {
 			return "-";
@@ -125,7 +125,7 @@ public class WaldorfMW2BankDriver extends BankDriver {
 
 	/** Set the name of the patch at the given number <code>patchNum</code>. */
 	protected void setPatchName(Patch p, int patchNum, String name) {
-		setPatchName(p.sysex, patchNum, name);
+		setPatchName(p.getSysex(), patchNum, name);
 		calculateChecksum(p, patchNum);
 	}
 
@@ -157,7 +157,7 @@ public class WaldorfMW2BankDriver extends BankDriver {
 			return;
 		}
 
-		System.arraycopy(p.sysex, MW2Constants.SYSEX_HEADER_OFFSET, bank.sysex, getPatchStart(patchNum),
+		System.arraycopy(p.getSysex(), MW2Constants.SYSEX_HEADER_OFFSET, bank.getSysex(), getPatchStart(patchNum),
 		// The SYSEX_FOOTER_SIZE is for that the checksum is copied, too!
 				MW2Constants.PURE_PATCH_SIZE + MW2Constants.SYSEX_FOOTER_SIZE);
 	}
@@ -173,9 +173,9 @@ public class WaldorfMW2BankDriver extends BankDriver {
 	 * @see PatchSingle#send()
 	 */
 	protected void sendPatch(Patch p) {
-		p.sysex[MW2Constants.DEVICE_ID_OFFSET] = (byte) (getDeviceID() - 1);
+		p.getSysex()[MW2Constants.DEVICE_ID_OFFSET] = (byte) (getDeviceID() - 1);
 
-		send(p.sysex);
+		send(p.getSysex());
 	}
 
 	/**
@@ -210,12 +210,12 @@ public class WaldorfMW2BankDriver extends BankDriver {
 		try {
 			byte[] sysex = new byte[this.singleSize];
 
-			System.arraycopy(bank.sysex, getPatchStart(patchNum), sysex, MW2Constants.SYSEX_HEADER_OFFSET,
+			System.arraycopy(bank.getSysex(), getPatchStart(patchNum), sysex, MW2Constants.SYSEX_HEADER_OFFSET,
 					MW2Constants.PURE_PATCH_SIZE);
 			Patch p = new Patch(sysex);
 			WaldorfMW2SingleDriver.createPatchHeader(p, bankNum, patchNum);
-			p.sysex[264] = MW2Constants.SYSEX_END_BYTE;
-			WaldorfMW2SingleDriver.calculateChecksum(p.sysex, MW2Constants.SYSEX_HEADER_OFFSET,
+			p.getSysex()[264] = MW2Constants.SYSEX_END_BYTE;
+			WaldorfMW2SingleDriver.calculateChecksum(p.getSysex(), MW2Constants.SYSEX_HEADER_OFFSET,
 					MW2Constants.SYSEX_HEADER_OFFSET + MW2Constants.PURE_PATCH_SIZE - 1,
 					MW2Constants.SYSEX_HEADER_OFFSET + MW2Constants.PURE_PATCH_SIZE);
 
@@ -263,7 +263,7 @@ public class WaldorfMW2BankDriver extends BankDriver {
 		for (int patchNo = 0; patchNo < patchNumbers.length; patchNo++) {
 			tempPatch = new Patch(patchSysex, getDevice());
 			WaldorfMW2SingleDriver.createPatchHeader(tempPatch, 0, patchNo);
-			tempPatch.sysex[264] = MW2Constants.SYSEX_END_BYTE;
+			tempPatch.getSysex()[264] = MW2Constants.SYSEX_END_BYTE;
 			System.arraycopy(patchSysex, 0, bankSysex, getPatchStart(patchNo) - MW2Constants.SYSEX_HEADER_OFFSET,
 					MW2Constants.PATCH_SIZE);
 			setPatchName(bankSysex, patchNo, "New sound " + patchNo);
@@ -272,7 +272,7 @@ public class WaldorfMW2BankDriver extends BankDriver {
 		p = new Patch(bankSysex);
 
 		for (int patchNo = 0; patchNo < patchNumbers.length; patchNo++) {
-			WaldorfMW2SingleDriver.calculateChecksum(p.sysex, offset + this.checksumStart, offset + this.checksumEnd,
+			WaldorfMW2SingleDriver.calculateChecksum(p.getSysex(), offset + this.checksumStart, offset + this.checksumEnd,
 					offset + this.checksumOffset);
 			offset += this.singleSize;
 		}

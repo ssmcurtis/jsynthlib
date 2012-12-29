@@ -184,8 +184,8 @@ public class KorgX3SingleDriver extends Driver {
 			byte b7 = (byte) 0x00;
 			for (int k = 0; k < 7; k++) {
 				if (i + k < 164) {
-					b7 += (((Patch) p).sysex[i + k + EXTRA_HEADER] & 128) >> (7 - k);
-					pd[j + k + 1 + 5] = (byte) (((Patch) p).sysex[i + k + EXTRA_HEADER] & (byte) 0x7F);
+					b7 += (((Patch) p).getSysex()[i + k + EXTRA_HEADER] & 128) >> (7 - k);
+					pd[j + k + 1 + 5] = (byte) (((Patch) p).getSysex()[i + k + EXTRA_HEADER] & (byte) 0x7F);
 				}
 			}
 			pd[j + 5] = b7;

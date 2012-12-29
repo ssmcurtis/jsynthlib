@@ -44,7 +44,7 @@ class CZModel extends ParamModel {
 	 * @return byte value, 0..255
 	 */
 	public int getByte(int offset) {
-		int b = patch.sysex[offset] + (patch.sysex[offset + 1] << 4);
+		int b = patch.getSysex()[offset] + (patch.getSysex()[offset + 1] << 4);
 		return b;
 	}
 
@@ -57,8 +57,8 @@ class CZModel extends ParamModel {
 	 *            0..255
 	 */
 	public void setByte(int offset, int value) {
-		patch.sysex[offset] = (byte) ((value) & 0x0F);
-		patch.sysex[offset + 1] = (byte) ((value >> 4) & 0x0F);
+		patch.getSysex()[offset] = (byte) ((value) & 0x0F);
+		patch.getSysex()[offset + 1] = (byte) ((value >> 4) & 0x0F);
 	}
 
 	/**
@@ -69,8 +69,8 @@ class CZModel extends ParamModel {
 	 * @return word value, 0..64K
 	 */
 	public int getWordL(int offset) {
-		int w = patch.sysex[offset] + (patch.sysex[offset + 1] << 4) + (patch.sysex[offset + 2] << 8)
-				+ (patch.sysex[offset + 3] << 12);
+		int w = patch.getSysex()[offset] + (patch.getSysex()[offset + 1] << 4) + (patch.getSysex()[offset + 2] << 8)
+				+ (patch.getSysex()[offset + 3] << 12);
 		return w;
 	}
 
@@ -83,10 +83,10 @@ class CZModel extends ParamModel {
 	 *            0..64K
 	 */
 	public void setWordL(int offset, int value) {
-		patch.sysex[offset] = (byte) ((value) & 0x0F);
-		patch.sysex[offset + 1] = (byte) ((value >> 4) & 0x0F);
-		patch.sysex[offset + 2] = (byte) ((value >> 8) & 0x0F);
-		patch.sysex[offset + 3] = (byte) ((value >> 12) & 0x0F);
+		patch.getSysex()[offset] = (byte) ((value) & 0x0F);
+		patch.getSysex()[offset + 1] = (byte) ((value >> 4) & 0x0F);
+		patch.getSysex()[offset + 2] = (byte) ((value >> 8) & 0x0F);
+		patch.getSysex()[offset + 3] = (byte) ((value >> 12) & 0x0F);
 	}
 
 	/**
@@ -97,8 +97,8 @@ class CZModel extends ParamModel {
 	 * @return word value, 0..64K
 	 */
 	public int getWordH(int offset) {
-		int w = patch.sysex[offset + 2] + (patch.sysex[offset + 3] << 4) + (patch.sysex[offset] << 8)
-				+ (patch.sysex[offset + 1] << 12);
+		int w = patch.getSysex()[offset + 2] + (patch.getSysex()[offset + 3] << 4) + (patch.getSysex()[offset] << 8)
+				+ (patch.getSysex()[offset + 1] << 12);
 		return w;
 	}
 
@@ -111,10 +111,10 @@ class CZModel extends ParamModel {
 	 *            0..64K
 	 */
 	public void setWordH(int offset, int value) {
-		patch.sysex[offset + 2] = (byte) ((value) & 0x0F);
-		patch.sysex[offset + 3] = (byte) ((value >> 4) & 0x0F);
-		patch.sysex[offset] = (byte) ((value >> 8) & 0x0F);
-		patch.sysex[offset + 1] = (byte) ((value >> 12) & 0x0F);
+		patch.getSysex()[offset + 2] = (byte) ((value) & 0x0F);
+		patch.getSysex()[offset + 3] = (byte) ((value >> 4) & 0x0F);
+		patch.getSysex()[offset] = (byte) ((value >> 8) & 0x0F);
+		patch.getSysex()[offset + 1] = (byte) ((value >> 12) & 0x0F);
 	}
 
 	/** Line select, octave */

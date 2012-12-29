@@ -72,11 +72,11 @@ public class RolandMT32TimbreTempDriver extends Driver {
 		int timbreAddr = patchNum * SSIZE; // Timbre offset is here same as size
 		int timAddrM = (timbreAddr / 0x80) & 0x7F;
 		int timAddrL = timbreAddr & 0x7F;
-		p.sysex[0] = (byte) 0xF0;
+		p.getSysex()[0] = (byte) 0xF0;
 
-		p.sysex[5] = (byte) 0x04; // point to Timbre Memory
-		p.sysex[6] = (byte) timAddrM;
-		p.sysex[7] = (byte) timAddrL;
+		p.getSysex()[5] = (byte) 0x04; // point to Timbre Memory
+		p.getSysex()[6] = (byte) timAddrM;
+		p.getSysex()[7] = (byte) timAddrL;
 		// calculateChecksum(p);
 
 		ErrorMsg.reportStatus("Store patchNum " + patchNum + " to timAddrM/L " + timAddrM + " / " + timAddrL);
@@ -102,10 +102,10 @@ public class RolandMT32TimbreTempDriver extends Driver {
 	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
 		int sum = 0;
 		for (int i = start; i <= end; i++) {
-			sum += p.sysex[i];
+			sum += p.getSysex()[i];
 		}
 		sum += 0xA5;
-		p.sysex[ofs] = (byte) (sum % 128);
+		p.getSysex()[ofs] = (byte) (sum % 128);
 	}
 
 	// not used

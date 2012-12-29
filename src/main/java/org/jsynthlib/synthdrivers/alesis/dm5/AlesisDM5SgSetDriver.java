@@ -118,7 +118,7 @@ public class AlesisDM5SgSetDriver extends Driver {
 	 * represented as binary 0010 0000 through 0011 0100 (32 plus patch number 0-20).
 	 */
 	protected void storePatch(Patch p, int bankNum, int patchNum) {
-		p.sysex[6] = (byte) (32 + patchNum);
+		p.getSysex()[6] = (byte) (32 + patchNum);
 		calculateChecksum(p);
 		sendPatchWorker(p);
 	}
@@ -144,7 +144,7 @@ public class AlesisDM5SgSetDriver extends Driver {
 	 * Overrides the Driver.sendPatch method to embed the program number in the patch, in this case the value is 1.
 	 */
 	protected void sendPatch(Patch p) {
-		p.sysex[6] = 1;
+		p.getSysex()[6] = 1;
 		calculateChecksum(p);
 		sendPatchWorker(p);
 	}
@@ -157,9 +157,9 @@ public class AlesisDM5SgSetDriver extends Driver {
 		int sum = 0;
 
 		for (int i = start; i <= end; i++) {
-			sum += patch.sysex[i];
+			sum += patch.getSysex()[i];
 		}
-		patch.sysex[offset] = (byte) (sum % 128);
+		patch.getSysex()[offset] = (byte) (sum % 128);
 	}
 
 	/**

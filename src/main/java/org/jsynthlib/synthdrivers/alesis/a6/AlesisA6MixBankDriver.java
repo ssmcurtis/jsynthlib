@@ -6,7 +6,7 @@ package org.jsynthlib.synthdrivers.alesis.a6;
 
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.patch.BankDriver;
 import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.SysexHandler;
@@ -51,14 +51,14 @@ public class AlesisA6MixBankDriver extends BankDriver {
 			return;
 		}
 
-		System.arraycopy(((Patch) p).sysex, 0, ((Patch) bank).sysex, patchNum * 1180, 1180);
-		((Patch) bank).sysex[patchNum * 1180 + 6] = 0; // user bank
-		((Patch) bank).sysex[patchNum * 1180 + 7] = (byte) patchNum; // set mix #
+		System.arraycopy(((Patch) p).getSysex(), 0, ((Patch) bank).getSysex(), patchNum * 1180, 1180);
+		((Patch) bank).getSysex()[patchNum * 1180 + 6] = 0; // user bank
+		((Patch) bank).getSysex()[patchNum * 1180 + 7] = (byte) patchNum; // set mix #
 	}
 
 	public Patch getPatch(Patch bank, int patchNum) {
 		byte sysex[] = new byte[1180];
-		System.arraycopy(((Patch) bank).sysex, patchNum * 1180, sysex, 0, 1180);
+		System.arraycopy(((Patch) bank).getSysex(), patchNum * 1180, sysex, 0, 1180);
 		return new Patch(sysex, getDevice());
 	}
 
@@ -67,7 +67,7 @@ public class AlesisA6MixBankDriver extends BankDriver {
 		try {
 			char c[] = new char[patchNameSize];
 			for (int i = 0; i < patchNameSize; i++)
-				c[i] = (char) (AlesisA6PgmSingleDriver.getA6PgmByte(Mix.sysex, i + patchNameStart));
+				c[i] = (char) (AlesisA6PgmSingleDriver.getA6PgmByte(Mix.getSysex(), i + patchNameStart));
 			return new String(c);
 		} catch (Exception ex) {
 			return "-";
@@ -80,7 +80,7 @@ public class AlesisA6MixBankDriver extends BankDriver {
 			name = name + "                ";
 		byte nameByte[] = name.getBytes();
 		for (int i = 0; i < patchNameSize; i++) {
-			AlesisA6PgmSingleDriver.setA6PgmByte(nameByte[i], Mix.sysex, i + patchNameStart);
+			AlesisA6PgmSingleDriver.setA6PgmByte(nameByte[i], Mix.getSysex(), i + patchNameStart);
 		}
 		putPatch(p, Mix, patchNum);
 	}
@@ -95,7 +95,7 @@ public class AlesisA6MixBankDriver extends BankDriver {
 		try {
 			PatchBayApplication.showWaitDialog();
 			for (int i = 0; i < 128; i++) {
-				System.arraycopy(p.sysex, i * 1180, tmp, 0, 1180);
+				System.arraycopy(p.getSysex(), i * 1180, tmp, 0, 1180);
 				tmp[6] = (byte) bankNum;
 				tmp[7] = (byte) i; // mix #
 				send(tmp);

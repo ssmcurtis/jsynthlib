@@ -60,7 +60,7 @@ public class RolandGP16BankDriver extends BankDriver {
 		int nameStart = getPatchStart(patchNum);
 		nameStart += 108; // offset of name in patch data
 		try {
-			StringBuffer s = new StringBuffer(new String(((Patch) p).sysex, nameStart, 16, "US-ASCII"));
+			StringBuffer s = new StringBuffer(new String(((Patch) p).getSysex(), nameStart, 16, "US-ASCII"));
 			return s.toString();
 		} catch (UnsupportedEncodingException ex) {
 			return "-";
@@ -78,7 +78,7 @@ public class RolandGP16BankDriver extends BankDriver {
 		try {
 			namebytes = name.getBytes("US-ASCII");
 			for (int i = 0; i < patchNameSize; i++)
-				((Patch) p).sysex[patchNameStart + i] = namebytes[i];
+				((Patch) p).getSysex()[patchNameStart + i] = namebytes[i];
 
 		} catch (UnsupportedEncodingException ex) {
 			return;
@@ -99,14 +99,14 @@ public class RolandGP16BankDriver extends BankDriver {
 			return;
 		}
 
-		System.arraycopy(((Patch) p).sysex, 0, ((Patch) bank).sysex, getPatchStart(patchNum), singleSize);
+		System.arraycopy(((Patch) p).getSysex(), 0, ((Patch) bank).getSysex(), getPatchStart(patchNum), singleSize);
 		calculateChecksum(bank);
 	}
 
 	/** Extract a given patch from a given bank. */
 	public Patch getPatch(Patch bank, int patchNum) {
 		byte[] sysex = new byte[singleSize];
-		System.arraycopy(((Patch) bank).sysex, getPatchStart(patchNum), sysex, 0, singleSize);
+		System.arraycopy(((Patch) bank).getSysex(), getPatchStart(patchNum), sysex, 0, singleSize);
 		try {
 			Patch p = new Patch(sysex, getDevice());
 			singleDriver.calcChecksum(p);
@@ -142,7 +142,7 @@ public class RolandGP16BankDriver extends BankDriver {
 		nVs[1] = new SysexHandler.NameValue("checksum", 0);
 		Patch p = new Patch(SYS_REQ.toByteArray(getChannel(), nVs));
 		calculateChecksum(p, 5, 10, 11); // the gp-16 requires correct checksum when requesting a patch
-		send(p.sysex);
+		send(p.getSysex());
 		try {
 			Thread.sleep(sleepTime);
 		} catch (Exception e) {
@@ -151,9 +151,9 @@ public class RolandGP16BankDriver extends BankDriver {
 
 	/** Worker for storePatch. */
 	public void storeSinglePatch(Patch p, int bankNum, int patchNum) {
-		((Patch) p).sysex[5] = (byte) 0x0B;
-		((Patch) p).sysex[6] = (byte) (bankNum * 8 + patchNum);
-		((Patch) p).sysex[7] = (byte) 0x00;
+		((Patch) p).getSysex()[5] = (byte) 0x0B;
+		((Patch) p).getSysex()[6] = (byte) (bankNum * 8 + patchNum);
+		((Patch) p).getSysex()[7] = (byte) 0x00;
 		sendPatchWorker(p);
 		try {
 			Thread.sleep(sleepTime);
@@ -168,7 +168,7 @@ public class RolandGP16BankDriver extends BankDriver {
 		RolandGP16SingleDriver patchCreator = new RolandGP16SingleDriver();
 		Patch blankPatch = patchCreator.createNewPatch();
 		for (int i = 0; i < NS; i++)
-			System.arraycopy(((Patch) blankPatch).sysex, 0, sysex, getPatchStart(i), singleSize);
+			System.arraycopy(((Patch) blankPatch).getSysex(), 0, sysex, getPatchStart(i), singleSize);
 		Patch p = new Patch(sysex, this);
 		calculateChecksum(p);
 		return p;

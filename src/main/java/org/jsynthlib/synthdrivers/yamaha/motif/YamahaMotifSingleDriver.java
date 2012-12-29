@@ -44,9 +44,9 @@ public abstract class YamahaMotifSingleDriver extends Driver {
 	public String getPatchName(Patch ip) {
 		int address = Byte.parseByte(parameter_base_address, 16);
 		address = (address << 16) | 0x007000;
-		int offset = YamahaMotifSysexUtility.findBaseAddressOffset(((Patch) ip).sysex, address);
+		int offset = YamahaMotifSysexUtility.findBaseAddressOffset(((Patch) ip).getSysex(), address);
 		try {
-			return new String(((Patch) ip).sysex, offset + YamahaMotifSysexUtility.DATA_OFFSET, 10, "US-ASCII");
+			return new String(((Patch) ip).getSysex(), offset + YamahaMotifSysexUtility.DATA_OFFSET, 10, "US-ASCII");
 		} catch (UnsupportedEncodingException e) {
 			return "-";
 		}
@@ -56,16 +56,16 @@ public abstract class YamahaMotifSingleDriver extends Driver {
 		byte[] namebytes;
 		int address = Byte.parseByte(parameter_base_address, 16);
 		address = (address << 16) | 0x007000;
-		int offset = YamahaMotifSysexUtility.findBaseAddressOffset(((Patch) p).sysex, address);
+		int offset = YamahaMotifSysexUtility.findBaseAddressOffset(((Patch) p).getSysex(), address);
 		try {
 			namebytes = name.getBytes("US-ASCII");
 			for (int i = 0; i < 10; i++) {
 				if (i >= namebytes.length)
-					((Patch) p).sysex[offset + i + YamahaMotifSysexUtility.DATA_OFFSET] = (byte) ' ';
+					((Patch) p).getSysex()[offset + i + YamahaMotifSysexUtility.DATA_OFFSET] = (byte) ' ';
 				else
-					((Patch) p).sysex[offset + i + YamahaMotifSysexUtility.DATA_OFFSET] = namebytes[i];
+					((Patch) p).getSysex()[offset + i + YamahaMotifSysexUtility.DATA_OFFSET] = namebytes[i];
 			}
-			YamahaMotifSysexUtility.checksum(((Patch) p).sysex, offset);
+			YamahaMotifSysexUtility.checksum(((Patch) p).getSysex(), offset);
 		} catch (UnsupportedEncodingException e) {
 			return;
 		}
@@ -83,25 +83,25 @@ public abstract class YamahaMotifSingleDriver extends Driver {
 	/** Does the actual work to send a patch to the synth */
 	protected void sendPatchWorker(Patch p, int patchnum) {
 		// Fix the header/footer
-		for (int offset = 0; offset <= p.sysex.length - YamahaMotifSysexUtility.SYSEX_OVERHEAD; offset += p.sysex.length
+		for (int offset = 0; offset <= p.getSysex().length - YamahaMotifSysexUtility.SYSEX_OVERHEAD; offset += p.getSysex().length
 				- YamahaMotifSysexUtility.SYSEX_OVERHEAD) {
-			p.sysex[offset + YamahaMotifSysexUtility.ADDRESS_OFFSET + 1] = (patchnum == -1) ? Byte.parseByte(
+			p.getSysex()[offset + YamahaMotifSysexUtility.ADDRESS_OFFSET + 1] = (patchnum == -1) ? Byte.parseByte(
 					edit_buffer_base_address, 16) : Byte.parseByte(base_address, 16);
 			// If sending to edit buffer (patchnum is -1) patch needs
 			// to be set to 0.
-			p.sysex[offset + YamahaMotifSysexUtility.ADDRESS_OFFSET + 2] = (byte) ((patchnum == -1) ? 0
+			p.getSysex()[offset + YamahaMotifSysexUtility.ADDRESS_OFFSET + 2] = (byte) ((patchnum == -1) ? 0
 					: (patchnum & 128));
-			YamahaMotifSysexUtility.checksum(p.sysex, offset);
+			YamahaMotifSysexUtility.checksum(p.getSysex(), offset);
 		}
 		// Send each message separately so it doesn't get screwed up by the
 		// midi wrapper.
-		YamahaMotifSysexUtility.splitAndSendBulk(p.sysex, this, getChannel() - 1);
+		YamahaMotifSysexUtility.splitAndSendBulk(p.getSysex(), this, getChannel() - 1);
 		// Put header back so that it will be recognized.
-		p.sysex[YamahaMotifSysexUtility.ADDRESS_OFFSET + 1] = Byte.parseByte(base_address, 16);
+		p.getSysex()[YamahaMotifSysexUtility.ADDRESS_OFFSET + 1] = Byte.parseByte(base_address, 16);
 	}
 
 	public void calculateChecksum(Patch p) {
-		YamahaMotifSysexUtility.checksum(((Patch) p).sysex);
+		YamahaMotifSysexUtility.checksum(((Patch) p).getSysex());
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {

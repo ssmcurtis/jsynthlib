@@ -3,11 +3,13 @@ package org.jsynthlib.tools;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.Window;
 import java.io.ByteArrayOutputStream;
 
 import javax.swing.JDialog;
 
-import org.jsynthlib.menu.PatchBayApplication;
+import org.jsynthlib.PatchBayApplication;
+import org.jsynthlib.example.style.FormatedString;
 import org.jsynthlib.menu.ui.JSLFrame;
 import org.jsynthlib.menu.ui.window.BankEditorFrame;
 import org.jsynthlib.menu.ui.window.LibraryFrame;
@@ -90,7 +92,7 @@ public class Utility extends Object {
 			int c = (d[offset + i] & 0xff);
 			if (c < 0x10)
 				buf.append("0");
-			buf.append(Integer.toHexString(c));
+			buf.append(Integer.toHexString(c).toUpperCase());
 			if (bytes > 0 && (i % bytes == bytes - 1 && i != len - 1))
 				buf.append("\n");
 			else if (i != len - 1 && wantspaces)
@@ -134,6 +136,7 @@ public class Utility extends Object {
 				}
 			}
 		}
+		
 		return (output);
 	}
 
@@ -197,6 +200,50 @@ public class Utility extends Object {
 		return (output);
 	}
 
+	// TODO ssmcurtis Format
+	public static FormatedString hexDumpFormated(byte[] d, int offset, int len, int bytesPerLine, boolean addresses, boolean characters) {
+		// Is offset beyond the end of array?
+		if (offset >= d.length) {
+			return new FormatedString();
+		}
+		// Is offset+len beyond the end of the array?
+		if (offset + len >= d.length || len < 0) {
+			len = d.length - offset; // Set len to get remaining bytes
+		}
+		// If bytes <=0, set it to len so that we get the remaining bytes on one
+		// line
+		if (bytesPerLine <= 0) {
+			bytesPerLine = len;
+		}
+
+		// How many digits to use for address?
+		int addresslen = 0;
+		// Keep adding 2 digits until we can repesent the highest number we need
+		if (addresses) {
+			int maxnumber = 1;
+			while (maxnumber < offset + len) {
+				addresslen += 2;
+				maxnumber *= 256;
+			}
+		}
+
+		FormatedString output = new FormatedString();
+		String outputString = "";
+		if (len <= bytesPerLine) {
+			outputString = hexDump(d, offset, len, bytesPerLine, addresslen, characters);
+		} else {
+			// The bytes won't fit. Split them up and call hexDump for each one
+			for (int i = 0; i < len; i += bytesPerLine) {
+				outputString = outputString + hexDump(d, offset + i, bytesPerLine, bytesPerLine, addresslen, characters) + "\n";
+			}
+		}
+		
+		output.setText(outputString);
+		
+		return (output);
+	}
+
+	
 	// ----- End Joe Emenaker
 
 	// ----- Start Hiroo Hayashi
@@ -243,13 +290,25 @@ public class Utility extends Object {
 
 		return (hexDump(d, offset, bytes - 4, 0) + ".." + hexDump(d, offset + len - 3, 3, 0));
 	}
-
+	
 	// ----- End Hiroo Hayashi
+
+	
+	public static byte[] convertStringToSyex(String texhex) {
+		// 
+	    int len = texhex.length();
+	    byte[] data = new byte[len / 2];
+	    for (int i = 0; i < len; i += 2) {
+	        data[i / 2] = (byte) ((Character.digit(texhex.charAt(i), 16) << 4)
+	                             + Character.digit(texhex.charAt(i+1), 16));
+	    }
+	    return data;		
+	}
 
 	/**
 	 * Place a JDialog window to the center of computer screen.
 	 */
-	public static void centerDialog(JDialog dialog) {
+	public static void centerDialog(Window dialog) {
 		Dimension screenSize = dialog.getToolkit().getScreenSize();
 		Dimension size = dialog.getSize();
 		screenSize.height = screenSize.height / 2;

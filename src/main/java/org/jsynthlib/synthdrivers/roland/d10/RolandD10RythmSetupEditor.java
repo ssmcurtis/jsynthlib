@@ -42,7 +42,7 @@ public class RolandD10RythmSetupEditor extends RolandD10EditorFrame {
 	public RolandD10RythmSetupEditor(Patch patch) {
 		super("Roland D-10 Rythm Setup Editor", patch);
 
-		EditSender.setDeviceId(patch.sysex[2]);
+		EditSender.setDeviceId(patch.getSysex()[2]);
 
 		JPanel panel = new JPanel(new GridBagLayout());
 

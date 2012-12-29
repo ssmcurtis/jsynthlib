@@ -41,7 +41,7 @@ public class NovationNova1SinglePerformanceDriver extends BankDriver {
 	public String getPatchName(Patch ip) {
 		// This method get the name of the performance
 		try {
-			StringBuffer s = new StringBuffer(new String(((Patch) ip).sysex, (296 * 8) + 8, 16, "US-ASCII"));
+			StringBuffer s = new StringBuffer(new String(((Patch) ip).getSysex(), (296 * 8) + 8, 16, "US-ASCII"));
 			return s.toString();
 		} catch (UnsupportedEncodingException ex) {
 			return "-";
@@ -52,7 +52,7 @@ public class NovationNova1SinglePerformanceDriver extends BankDriver {
 		// This method get the name of individual patch in the performance
 		int nameStart = getPatchStart(patchNum);
 		try {
-			StringBuffer s = new StringBuffer(new String(((Patch) p).sysex, nameStart, 16, "US-ASCII"));
+			StringBuffer s = new StringBuffer(new String(((Patch) p).getSysex(), nameStart, 16, "US-ASCII"));
 			return s.toString();
 		} catch (UnsupportedEncodingException ex) {
 			return "-";
@@ -70,7 +70,7 @@ public class NovationNova1SinglePerformanceDriver extends BankDriver {
 		try {
 			namebytes = name.getBytes("US-ASCII");
 			for (int i = 0; i < patchNameSize; i++)
-				((Patch) p).sysex[patchNameStart + i] = namebytes[i];
+				((Patch) p).getSysex()[patchNameStart + i] = namebytes[i];
 		} catch (UnsupportedEncodingException ex) {
 			return;
 		}
@@ -96,7 +96,7 @@ public class NovationNova1SinglePerformanceDriver extends BankDriver {
 			return;
 		}
 
-		System.arraycopy(((Patch) p).sysex, 9, ((Patch) bank).sysex, getPatchStart(patchNum), 296 - 9);
+		System.arraycopy(((Patch) p).getSysex(), 9, ((Patch) bank).getSysex(), getPatchStart(patchNum), 296 - 9);
 		calculateChecksum(bank);
 	}
 
@@ -118,7 +118,7 @@ public class NovationNova1SinglePerformanceDriver extends BankDriver {
 			sysex[7] = (byte) 0x00;
 			sysex[8] = (byte) 0x09;
 			sysex[295] = (byte) 0xF7;
-			System.arraycopy(((Patch) bank).sysex, getPatchStart(patchNum), sysex, 9, 296 - 9);
+			System.arraycopy(((Patch) bank).getSysex(), getPatchStart(patchNum), sysex, 9, 296 - 9);
 			Patch p = new Patch(sysex, getDevice());
 			p.calculateChecksum();
 			return p;
@@ -146,12 +146,12 @@ public class NovationNova1SinglePerformanceDriver extends BankDriver {
 		Patch p = new Patch(sysex, this);
 		for (int i = 0; i < 8; i++) {
 			sysexHeader[8] = (byte) i;
-			System.arraycopy(sysexHeader, 0, p.sysex, i * 296, 9);
-			System.arraycopy(NovationNova1InitPatch.initpatch, 9, p.sysex, (i * 296) + 9, 296 - 9);
+			System.arraycopy(sysexHeader, 0, p.getSysex(), i * 296, 9);
+			System.arraycopy(NovationNova1InitPatch.initpatch, 9, p.getSysex(), (i * 296) + 9, 296 - 9);
 		}
 		// now, create a new performance
 		// The default will be the same thing as "Multi Ch 1-6" Perf A126
-		System.arraycopy(NovationNova1InitPatch.initperf, 0, p.sysex, (8 * 296), 406);
+		System.arraycopy(NovationNova1InitPatch.initperf, 0, p.getSysex(), (8 * 296), 406);
 
 		// calculateChecksum(p);
 		return p;

@@ -131,7 +131,7 @@ public class NLPerfSingleDriver extends Driver {
 	// }
 
 	public String getPatchName(Patch ip) {
-		return "perf" + (((Patch) ip).sysex[PATCH_NUM_OFFSET] + 1);
+		return "perf" + (((Patch) ip).getSysex()[PATCH_NUM_OFFSET] + 1);
 	}
 
 	public void setPatchName(Patch p, String name) {
@@ -142,9 +142,9 @@ public class NLPerfSingleDriver extends Driver {
 	}
 
 	public void sendPatch(Patch p, int bankNum, int patchNum) {
-		Patch p2 = new Patch(p.sysex);
-		p2.sysex[BANK_NUM_OFFSET] = (byte) bankNum;
-		p2.sysex[PATCH_NUM_OFFSET] = (byte) patchNum;
+		Patch p2 = new Patch(p.getSysex());
+		p2.getSysex()[BANK_NUM_OFFSET] = (byte) bankNum;
+		p2.getSysex()[PATCH_NUM_OFFSET] = (byte) patchNum;
 		mySendPatch(p2);
 	}
 
@@ -156,7 +156,7 @@ public class NLPerfSingleDriver extends Driver {
 
 	protected void playPatch(Patch p) {
 		byte sysex[] = new byte[patchSize];
-		System.arraycopy(((Patch) p).sysex, 0, sysex, 0, patchSize);
+		System.arraycopy(((Patch) p).getSysex(), 0, sysex, 0, patchSize);
 		sysex[BANK_NUM_OFFSET] = 30; // edit buffer
 		sysex[PATCH_NUM_OFFSET] = 0;
 		Patch p2 = new Patch(sysex);
@@ -168,9 +168,9 @@ public class NLPerfSingleDriver extends Driver {
 	}
 
 	protected void mySendPatch(Patch p) {
-		p.sysex[deviceIDoffset] = (byte) (((NordLeadDevice) getDevice()).getGlobalChannel() - 1);
+		p.getSysex()[deviceIDoffset] = (byte) (((NordLeadDevice) getDevice()).getGlobalChannel() - 1);
 		try {
-			send(p.sysex);
+			send(p.getSysex());
 		} catch (Exception e) {
 			ErrorMsg.reportStatus(e);
 		}

@@ -100,7 +100,7 @@ public class YamahaFS1RFseqDriver extends Driver {
 		int oPitch[] = new int[oNbFrames];
 		for (int i = 0; i < oNbFrames; i++) {
 			int off = FSEQHEADER_SIZE + DATA_START + i * FRAME_SIZE;
-			oPitch[i] = (int) (p.sysex[off + 1] + (p.sysex[off] << 7));
+			oPitch[i] = (int) (p.getSysex()[off + 1] + (p.getSysex()[off] << 7));
 			// System.out.println("pitch "+i+" off "+off+" = "+oPitch[i]);
 		}
 		return oPitch;
@@ -121,7 +121,7 @@ public class YamahaFS1RFseqDriver extends Driver {
 		}
 		for (int i = 0; i < oNbFrames; i++) {
 			int off = FSEQHEADER_SIZE + DATA_START + i * FRAME_SIZE + offset + aOp;
-			oRet[i] = (int) (p.sysex[off + 8] + (p.sysex[off] << 7));
+			oRet[i] = (int) (p.getSysex()[off + 8] + (p.getSysex()[off] << 7));
 			// System.out.println("voiced freq "+i+" off "+off+" = "+oRet[i]);
 		}
 		return oRet;
@@ -136,7 +136,7 @@ public class YamahaFS1RFseqDriver extends Driver {
 		}
 		for (int i = 0; i < oNbFrames; i++) {
 			int off = FSEQHEADER_SIZE + DATA_START + i * FRAME_SIZE + offset + aOp;
-			oRet[i] = (int) (p.sysex[off]);
+			oRet[i] = (int) (p.getSysex()[off]);
 		}
 		return oRet;
 	}
@@ -185,11 +185,11 @@ public class YamahaFS1RFseqDriver extends Driver {
 		}
 
 		public void set(int i) {
-			patch.sysex[ofs] = (byte) (i & 127);
+			patch.getSysex()[ofs] = (byte) (i & 127);
 		}
 
 		public int get() {
-			return patch.sysex[ofs];
+			return patch.getSysex()[ofs];
 		}
 	}
 
@@ -199,12 +199,12 @@ public class YamahaFS1RFseqDriver extends Driver {
 		}
 
 		public void set(int i) {
-			patch.sysex[ofs] = (byte) ((i >> 7) & 127);
-			patch.sysex[ofs + 1] = (byte) (i & 127);
+			patch.getSysex()[ofs] = (byte) ((i >> 7) & 127);
+			patch.getSysex()[ofs + 1] = (byte) (i & 127);
 		}
 
 		public int get() {
-			int oVal = patch.sysex[ofs + 1] + (patch.sysex[ofs] << 7);
+			int oVal = patch.getSysex()[ofs + 1] + (patch.getSysex()[ofs] << 7);
 			return oVal;
 		}
 	}

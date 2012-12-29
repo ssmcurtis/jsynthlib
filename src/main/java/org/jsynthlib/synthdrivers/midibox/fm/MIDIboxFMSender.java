@@ -84,7 +84,7 @@ class MIDIboxFMSender extends SysexSender {
 		if (flag == -1) {
 			b[10] = (byte) value;
 		} else {
-			b[10] = (byte) (patch.sysex[10 + parameter] & (~bitmask));
+			b[10] = (byte) (patch.getSysex()[10 + parameter] & (~bitmask));
 
 			if (mapped_values.length > 0)
 				value = mapped_values[value];
