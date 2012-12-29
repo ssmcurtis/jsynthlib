@@ -37,8 +37,8 @@ import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.PATCH_WRITE_REQ
 import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.SIZE_HEADER_DT1;
 import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.SIZE_TRAILER;
 
-import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.Driver;
+import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.ui.JSLFrame;
 import org.jsynthlib.synthdrivers.roland.d10.message.D10DataSetMessage;
 import org.jsynthlib.synthdrivers.roland.d10.message.D10RequestMessage;

@@ -29,10 +29,10 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.jsynthlib._widgets.KnobLookupWidget;
-import org.jsynthlib._widgets.SysexWidget;
 import org.jsynthlib.menu.patch.IPatch;
 import org.jsynthlib.synthdrivers.yamaha.ub99.format.IFormat;
+import org.jsynthlib.widgets.KnobLookupWidget;
+import org.jsynthlib.widgets.SysexWidget;
 
 import com.dreamfabric.DKnob;
 

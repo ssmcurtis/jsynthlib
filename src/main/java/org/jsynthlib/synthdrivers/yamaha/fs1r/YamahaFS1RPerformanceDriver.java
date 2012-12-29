@@ -2,12 +2,12 @@ package org.jsynthlib.synthdrivers.yamaha.fs1r;
 
 import java.io.UnsupportedEncodingException;
 
-import org.jsynthlib._widgets.SysexSender;
-import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.Driver;
 import org.jsynthlib.menu.patch.ParamModel;
+import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.SysexHandler;
 import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.widgets.SysexSender;
 
 /**
  * Multi driver for FS1R. Multi are named Performance on FS1R.

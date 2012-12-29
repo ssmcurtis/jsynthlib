@@ -1,4 +1,23 @@
-package org.jsynthlib._widgets;
+/*
+ * This file is part of JSynthLib.
+ *
+ * JSynthLib is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation; either version 2 of the License,
+ * or (at your option) any later version.
+ *
+ * JSynthLib is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with JSynthLib; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+ * USA
+ */
+
+package org.jsynthlib.widgets;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -13,37 +32,20 @@ import javax.swing.event.ChangeListener;
 import org.jsynthlib.menu.patch.IPatch;
 
 /**
- * Horizontal scrollbar SysexWidget with value label field.
+ * Vertical scrollbar SysexWidget.
  * 
  * @version $Id$
  * @see ScrollBarWidget
  * @see VertScrollBarWidget
+ * @see ScrollBarLookupWidget
  */
-public class ScrollBarLookupWidget extends SysexWidget {
-	/**
-	 * Base value. This value is added to the actual value for display purposes.
-	 */
-	protected int base;
-	/** An array of label string for each value */
-	protected String[] options;
-	/** JTextField to display value. */
-	protected JTextField text;
-	/** JSlider widget */
-	protected JSlider slider;
-	/** width of label widget */
-	protected int labelWidth;
-
-	public ScrollBarLookupWidget(IPatch patch, IParameter param) {
+public class VertScrollBarLookupWidget extends ScrollBarLookupWidget {
+	public VertScrollBarLookupWidget(IPatch patch, IParameter param) {
 		super(patch, param);
-
-		options = param.getValues();
-		labelWidth = -1;
-		createWidgets();
-		layoutWidgets();
 	}
 
 	/**
-	 * Constructor for setting up the ScrollBarLookupWidget.
+	 * Constructor for setting up the VertScrollBarLookupWidget.
 	 * 
 	 * @param label
 	 *            Label for the Widget
@@ -62,14 +64,9 @@ public class ScrollBarLookupWidget extends SysexWidget {
 	 * @param options
 	 *            array of label string for each value.
 	 */
-	public ScrollBarLookupWidget(String label, IPatch patch, int min, int max, int labelWidth, IParamModel pmodel,
+	public VertScrollBarLookupWidget(String label, IPatch patch, int min, int max, int labelWidth, IParamModel pmodel,
 			ISender sender, String[] options) {
-		super(label, patch, min, max, pmodel, sender);
-		this.options = options;
-		this.labelWidth = labelWidth;
-
-		createWidgets();
-		layoutWidgets();
+		super(label, patch, min, max, labelWidth, pmodel, sender, options);
 	}
 
 	/**
@@ -91,13 +88,14 @@ public class ScrollBarLookupWidget extends SysexWidget {
 	 * @param options
 	 *            array of label strings for each value.
 	 */
-	public ScrollBarLookupWidget(String label, IPatch patch, int min, int max, IParamModel pmodel, ISender sender,
+	public VertScrollBarLookupWidget(String label, IPatch patch, int min, int max, IParamModel pmodel, ISender sender,
 			String[] options) {
 		this(label, patch, min, max, -1, pmodel, sender, options);
 	}
 
 	/**
-	 * Constructor for setting up the ScrollBarLookupWidget.<br>
+	 * Constructor for setting up the VertScrollBarLookupWidget.<br>
+	 * 
 	 * The width of the label will be determined by the label strings.<br>
 	 * The minimum value is set to 0 and the maximum value to the length of the options array.
 	 * 
@@ -112,13 +110,12 @@ public class ScrollBarLookupWidget extends SysexWidget {
 	 * @param options
 	 *            array of label strings for each value.
 	 */
-	public ScrollBarLookupWidget(String label, IPatch patch, IParamModel pmodel, ISender sender, String[] options) {
+	public VertScrollBarLookupWidget(String label, IPatch patch, IParamModel pmodel, ISender sender, String[] options) {
 		this(label, patch, 0, options.length, -1, pmodel, sender, options);
 	}
 
 	protected void createWidgets() {
-		slider = new JSlider(JSlider.HORIZONTAL, getValueMin(), getValueMax(), constrain(getValueMin(), getValue(),
-				getValueMax()));
+		slider = new JSlider(JSlider.VERTICAL, getValueMin(), getValueMax(), getValue());
 		slider.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				eventListener(e);
@@ -129,8 +126,7 @@ public class ScrollBarLookupWidget extends SysexWidget {
 				eventListener(e);
 			}
 		});
-
-		text = new JTextField(options[getValue() - super.getValueMin()], 4);
+		text = new JTextField(options[getValue()], 4);
 		text.setEditable(false);
 
 		if (labelWidth > 0) {
@@ -143,54 +139,14 @@ public class ScrollBarLookupWidget extends SysexWidget {
 		}
 	}
 
-	protected int constrain(int min, int val, int max) {
-		return val < min ? min : val > max ? max : val;
-	}
-
-	/** invoked when the slider is moved. */
-	protected void eventListener(ChangeEvent e) {
-		int v = slider.getValue();
-		text.setText(options[v - getValueMin()]);
-		sendSysex(v);
-	}
-
-	/** invoked when mouse wheel is moved. */
-	protected void eventListener(MouseWheelEvent e) {
-		JSlider t = (JSlider) e.getSource();
-		// ErrorMsg.reportStatus("wheel : " + e.getWheelRotation());
-		if (t.hasFocus()) // to make consistent with other operation.
-			t.setValue(t.getValue() - e.getWheelRotation());
-	}
-
-	/** Adds a <code>ChangeListener</code> to the slider. */
-	public void addEventListener(ChangeListener l) {
-		slider.addChangeListener(l);
-	}
-
 	protected void layoutWidgets() {
 		setLayout(new BorderLayout());
 
-		slider.setMinimumSize(new Dimension(75, 25));
-		slider.setMaximumSize(new Dimension(125, 25));
+		slider.setMinimumSize(new Dimension(25, 50));
+		slider.setMaximumSize(new Dimension(25, 100));
 
-		add(getJLabel(), BorderLayout.WEST);
+		add(getJLabel(), BorderLayout.NORTH);
 		add(slider, BorderLayout.CENTER);
-		add(text, BorderLayout.EAST);
-	}
-
-	public void setValue(int v) {
-		super.setValue(v);
-		slider.setValue(v);
-	}
-
-	public void setEnabled(boolean e) {
-		slider.setEnabled(e);
-	}
-
-	public void changeOptions(String[] o) {
-		if (o != options) {
-			options = o;
-			text.setText(options[getValue() - getValueMin()]);
-		}
+		add(text, BorderLayout.SOUTH);
 	}
 }

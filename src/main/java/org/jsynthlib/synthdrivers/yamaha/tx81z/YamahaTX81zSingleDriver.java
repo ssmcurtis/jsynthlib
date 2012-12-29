@@ -3,9 +3,8 @@
  */
 package org.jsynthlib.synthdrivers.yamaha.tx81z;
 
-import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.tools.ErrorMsg;
 
 public class YamahaTX81zSingleDriver extends Driver {

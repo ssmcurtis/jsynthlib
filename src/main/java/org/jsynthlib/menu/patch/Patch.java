@@ -5,7 +5,6 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.UUID;
@@ -20,7 +19,6 @@ import org.jsynthlib.menu.ui.PatchTransferHandler;
 import org.jsynthlib.model.ManufacturerLookup;
 import org.jsynthlib.tools.DriverUtil;
 import org.jsynthlib.tools.ErrorMsg;
-import org.jsynthlib.tools.HexDumpUtility;
 import org.jsynthlib.tools.Utility;
 import org.jsynthlib.tools.midi.MidiUtil;
 

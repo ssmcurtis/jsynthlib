@@ -7,8 +7,8 @@ package org.jsynthlib.synthdrivers.alesis.a6;
 import javax.swing.JOptionPane;
 
 import org.jsynthlib.PatchBayApplication;
-import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.Driver;
+import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.SysexHandler;
 import org.jsynthlib.tools.ErrorMsg;
 

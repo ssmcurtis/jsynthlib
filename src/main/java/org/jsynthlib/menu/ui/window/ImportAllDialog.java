@@ -6,32 +6,24 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Comparator;
 
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
 
-import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.action.Actions;
 import org.jsynthlib.menu.patch.Device;
 import org.jsynthlib.menu.patch.IPatch;
-import org.jsynthlib.menu.patch.PatchBank;
 import org.jsynthlib.menu.preferences.AppConfig;
 import org.jsynthlib.menu.ui.ColumnLayout;
 import org.jsynthlib.model.ImportFileType;
-import org.jsynthlib.tools.DriverUtil;
 import org.jsynthlib.tools.ErrorMsg;
 import org.jsynthlib.tools.Utility;
 

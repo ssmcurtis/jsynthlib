@@ -21,16 +21,16 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 import org.jsynthlib.PatchBayApplication;
-import org.jsynthlib._widgets.CheckBoxWidget;
-import org.jsynthlib._widgets.ComboBoxWidget;
-import org.jsynthlib._widgets.KnobWidget;
-import org.jsynthlib._widgets.PatchNameWidget;
-import org.jsynthlib._widgets.SpinnerWidget;
 import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.ui.JSLFrameEvent;
 import org.jsynthlib.menu.ui.JSLFrameListener;
 import org.jsynthlib.menu.ui.window.BankEditorFrame;
 import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.widgets.CheckBoxWidget;
+import org.jsynthlib.widgets.ComboBoxWidget;
+import org.jsynthlib.widgets.KnobWidget;
+import org.jsynthlib.widgets.PatchNameWidget;
+import org.jsynthlib.widgets.SpinnerWidget;
 
 /**
  * Editor for performance, ie group of 4 parts, each part holds a voice. Performance contains also effects, modulation

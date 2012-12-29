@@ -30,12 +30,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
-import org.jsynthlib._widgets.ComboBoxWidget;
-import org.jsynthlib._widgets.ScrollBarWidget;
-import org.jsynthlib._widgets.SysexSender;
-import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.ParamModel;
+import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.widgets.ComboBoxWidget;
+import org.jsynthlib.widgets.ScrollBarWidget;
+import org.jsynthlib.widgets.SysexSender;
 
 public class DX7FamilyAdditionalVoiceEditor extends PatchEditorFrame {
 	static final String[] OnOffName = new String[] { "Off", "On" };

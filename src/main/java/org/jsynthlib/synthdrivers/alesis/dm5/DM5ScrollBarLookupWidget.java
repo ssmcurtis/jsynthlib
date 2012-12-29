@@ -21,8 +21,8 @@
 
 package org.jsynthlib.synthdrivers.alesis.dm5;
 
-import org.jsynthlib._widgets.ScrollBarLookupWidget;
 import org.jsynthlib.menu.patch.IPatch;
+import org.jsynthlib.widgets.ScrollBarLookupWidget;
 
 /**
  * DM5ScrollBarLookupWidget. Adds functionality to the standard JSynthLib ScrollBarLookupWidget to allow dynamic

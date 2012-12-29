@@ -28,7 +28,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.jsynthlib._widgets.ComboBoxWidget;
+import org.jsynthlib.widgets.ComboBoxWidget;
 
 /**
  * Behringer VAmp2 Amp Select Model

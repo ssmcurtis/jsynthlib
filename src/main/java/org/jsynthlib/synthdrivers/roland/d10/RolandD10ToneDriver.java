@@ -33,8 +33,8 @@ import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.TONE_RECORD_SIZ
 import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.TONE_SIZE;
 import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.TONE_WRITE_REQUEST;
 
-import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.Driver;
+import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.ui.JSLFrame;
 import org.jsynthlib.synthdrivers.roland.d10.message.D10DataSetMessage;
 import org.jsynthlib.synthdrivers.roland.d10.message.D10RequestMessage;

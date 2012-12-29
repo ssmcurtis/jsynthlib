@@ -30,8 +30,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
 import javax.swing.filechooser.FileFilter;
 
 import org.jsynthlib.JSynthResource;
@@ -49,7 +47,6 @@ import org.jsynthlib.menu.ui.window.LibraryFrame;
 import org.jsynthlib.menu.ui.window.MenuFrame;
 import org.jsynthlib.menu.ui.window.MidiMonitorDialog;
 import org.jsynthlib.menu.ui.window.PatchEditorFrame;
-import org.jsynthlib.menu.ui.window.SceneFrame;
 import org.jsynthlib.menu.ui.window.SearchDialog;
 import org.jsynthlib.model.JSynthSequence;
 import org.jsynthlib.tools.ErrorMsg;
@@ -111,7 +108,7 @@ final public class Actions {
 			// | EN_DOCS
 			| EN_EDIT
 			// | EN_EXIT
-			| EN_EXPORT
+			 | EN_EXPORT
 			| EN_EXTRACT
 			| EN_GET
 			| EN_HOME_PAGE

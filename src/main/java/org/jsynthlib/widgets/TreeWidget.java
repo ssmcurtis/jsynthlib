@@ -19,7 +19,7 @@
  * USA
  */
 
-package org.jsynthlib._widgets;
+package org.jsynthlib.widgets;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;

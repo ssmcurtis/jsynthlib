@@ -20,8 +20,8 @@
  */
 package org.jsynthlib.synthdrivers.casio.cz1000;
 
-import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.ParamModel;
+import org.jsynthlib.menu.patch.Patch;
 
 /**
  * Unmangle CZ data. Nybbles in a byte are swapped, and bytes in a word are *sometimes* swapped, then each nybble is

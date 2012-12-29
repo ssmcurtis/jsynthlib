@@ -5,14 +5,10 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 
 import javax.swing.ButtonGroup;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -21,10 +17,7 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.jsynthlib.PatchBayApplication;
-import org.jsynthlib.menu.ui.window.CompatibleFileDialog;
 import org.jsynthlib.model.JSynthSequence;
-import org.jsynthlib.tools.midi.MidiUtil;
 
 /**
  * ConfigPanel for play note. Gives the user a way to change the note played... when the user changes something in a

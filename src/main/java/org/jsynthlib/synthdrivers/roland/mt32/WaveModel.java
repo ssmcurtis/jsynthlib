@@ -27,8 +27,8 @@
 
 package org.jsynthlib.synthdrivers.roland.mt32;
 
-import org.jsynthlib._widgets.SysexWidget;
 import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.widgets.SysexWidget;
 
 class WaveModel implements SysexWidget.IParamModel {
 	private Patch patch;

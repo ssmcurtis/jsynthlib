@@ -25,8 +25,8 @@
  */
 package org.jsynthlib.synthdrivers.roland.mt32;
 
-import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.Driver;
+import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.SysexHandler;
 import org.jsynthlib.menu.ui.JSLFrame;
 import org.jsynthlib.tools.ErrorMsg;

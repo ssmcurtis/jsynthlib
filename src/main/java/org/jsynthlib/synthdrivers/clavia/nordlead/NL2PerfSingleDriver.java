@@ -2,8 +2,8 @@
 // $Id$
 package org.jsynthlib.synthdrivers.clavia.nordlead;
 
-import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.Driver;
+import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.SysexHandler;
 import org.jsynthlib.tools.ErrorMsg;
 

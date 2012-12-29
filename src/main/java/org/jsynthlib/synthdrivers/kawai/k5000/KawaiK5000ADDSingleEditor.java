@@ -13,14 +13,14 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.jsynthlib._widgets.CheckBoxWidget;
-import org.jsynthlib._widgets.ComboBoxWidget;
-import org.jsynthlib._widgets.PatchNameWidget;
-import org.jsynthlib._widgets.ScrollBarWidget;
-import org.jsynthlib._widgets.SysexSender;
-import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.ParamModel;
+import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.widgets.CheckBoxWidget;
+import org.jsynthlib.widgets.ComboBoxWidget;
+import org.jsynthlib.widgets.PatchNameWidget;
+import org.jsynthlib.widgets.ScrollBarWidget;
+import org.jsynthlib.widgets.SysexSender;
 
 class KawaiK5000ADDSingleEditor extends PatchEditorFrame {
 	final String[] noteName = new String[] { "C#-2", "D-2", "D#-2", "E-2", "F-2", "F#-2", "G-2", "G#-2", "A-2", "A#-2",

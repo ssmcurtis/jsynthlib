@@ -27,8 +27,8 @@ import java.io.UnsupportedEncodingException;
 import javax.swing.JOptionPane;
 
 import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.IPatch;
+import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.SysexHandler;
 import org.jsynthlib.tools.DriverUtil;
 import org.jsynthlib.tools.ErrorMsg;

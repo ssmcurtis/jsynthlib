@@ -24,9 +24,9 @@ package org.jsynthlib.synthdrivers.alesis.dm5;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.ShortMessage;
 
-import org.jsynthlib._widgets.SysexWidget;
 import org.jsynthlib.menu.patch.IPatchDriver;
 import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.widgets.SysexWidget;
 
 /**
  * The NRPNSender class is used to send NRPNs to the DM5. The parameters handled by the NRPNSender are specifically

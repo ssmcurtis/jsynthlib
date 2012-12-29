@@ -21,8 +21,8 @@
 
 package org.jsynthlib.synthdrivers.yamaha.a01v;
 
-import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.Driver;
+import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.SysexHandler;
 
 public class Yamaha01vPrChangeTabDriver extends Driver {

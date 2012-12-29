@@ -65,7 +65,8 @@ public class PrefsDialog extends JDialog {
 		// addPanel(new FaderBoxConfigPanel(this));
 		addPanel(new SynthConfigPanel(this));
 		addPanel(new NoteChooserConfigPanel(this));
-		addPanel(new RepositoryConfigPanel(this));
+		// TODO ssymcurtis
+		//addPanel(new RepositoryConfigPanel(this));
 
 		init();
 	}

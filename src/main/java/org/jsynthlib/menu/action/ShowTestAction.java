@@ -1,26 +1,12 @@
 package org.jsynthlib.menu.action;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.io.Serializable;
 import java.util.Map;
 
 import javax.swing.AbstractAction;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
 
-import org.jsynthlib.Constants;
 import org.jsynthlib.example.midi.MidiWindow;
-import org.jsynthlib.example.style.TextComponentDemo;
-import org.jsynthlib.example.style.XMEditor;
-import org.jsynthlib.menu.preferences.DeviceDialog;
-import org.jsynthlib.menu.preferences.TestDialog;
-import org.jsynthlib.menu.ui.DeviceSelectionTree;
-import org.jsynthlib.tools.Utility;
 
 
 public class ShowTestAction extends AbstractAction {

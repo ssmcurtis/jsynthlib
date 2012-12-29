@@ -1,4 +1,4 @@
-package org.jsynthlib._widgets;
+package org.jsynthlib.widgets;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.SysexMessage;

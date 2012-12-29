@@ -32,11 +32,11 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import org.jsynthlib.PatchBayApplication;
-import org.jsynthlib._widgets.SpinnerWidget;
-import org.jsynthlib._widgets.SysexSender;
-import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.ParamModel;
+import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.widgets.SpinnerWidget;
+import org.jsynthlib.widgets.SysexSender;
 
 public class DX7FamilyMicroTuningEditor extends PatchEditorFrame {
 	static final String[] SemiToneName = new String[] { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };

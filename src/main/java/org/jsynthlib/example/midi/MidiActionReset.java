@@ -3,15 +3,10 @@ package org.jsynthlib.example.midi;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiDevice;
 import javax.sound.midi.MidiDevice.Info;
-import javax.sound.midi.MidiChannel;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Receiver;
 import javax.sound.midi.ShortMessage;
-import javax.sound.midi.Synthesizer;
-import javax.swing.JTextArea;
-
-import org.jsynthlib.menu.action.ExitAction;
 
 public class MidiActionReset implements Runnable, ThreadStop {
 

@@ -4,8 +4,8 @@
 
 package org.jsynthlib.menu.ui.window;
 
-import org.jsynthlib.menu.patch.IPatchDriver;
 import org.jsynthlib.menu.patch.IPatch;
+import org.jsynthlib.menu.patch.IPatchDriver;
 import org.jsynthlib.menu.patch.PatchSingle;
 
 /**

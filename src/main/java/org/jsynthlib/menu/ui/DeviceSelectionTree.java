@@ -21,6 +21,7 @@ import javax.swing.tree.TreePath;
 import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.model.DeviceDescriptor;
 
+@SuppressWarnings("serial")
 public class DeviceSelectionTree extends JTree {
 
 	// These are constants used for telling this class how to organize the tree

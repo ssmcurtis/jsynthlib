@@ -5,8 +5,8 @@ package org.jsynthlib.synthdrivers.novation.xiosynth;
 
 import java.io.UnsupportedEncodingException;
 
-import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.Driver;
+import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.ui.JSLFrame;
 
 public class NovationXioSynthSingleDriver extends Driver {

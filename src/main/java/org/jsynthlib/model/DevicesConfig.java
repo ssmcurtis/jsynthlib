@@ -31,7 +31,6 @@ import org.clapper.util.classutil.ClassFilter;
 import org.clapper.util.classutil.ClassFinder;
 import org.clapper.util.classutil.ClassInfo;
 import org.clapper.util.classutil.InterfaceOnlyClassFilter;
-import org.clapper.util.classutil.MethodInfo;
 import org.clapper.util.classutil.NotClassFilter;
 import org.clapper.util.classutil.SubclassClassFilter;
 import org.jsynthlib.Constants;
@@ -42,7 +41,7 @@ import org.jsynthlib.tools.ErrorMsg;
 
 public class DevicesConfig {
 	/* enable XML Device which are still under development. */
-	private static final boolean useXMLDevice = true;
+//	private static final boolean useXMLDevice = true;
 
 	/** Character used in the Preferences as file separator for xml files */
 	private static final char XML_FILE_SEPARATOR = ':';
@@ -57,9 +56,9 @@ public class DevicesConfig {
 	/** ArrayList of device names (long name). */
 	// private SortedSet deviceNames = new ArrayList();
 
-	private TreeSet descriptors = new TreeSet();
-	private TreeSet devicenameList = new TreeSet();
-	private TreeSet IDStringList = new TreeSet();
+	private TreeSet<DeviceDescriptor> descriptors = new TreeSet<DeviceDescriptor>();
+	private TreeSet<String> devicenameList = new TreeSet<String>();
+	private TreeSet<String> IDStringList = new TreeSet<String>();
 	private MapOfLists manufacturerList = new MapOfLists();
 	private MapOfLists typeList = new MapOfLists();
 
@@ -207,14 +206,14 @@ public class DevicesConfig {
 	 * 
 	 * @return A Collection of all DeviceDescriptors in the devicelist
 	 */
-	public Collection getDeviceDescriptors() {
+	public Collection<DeviceDescriptor> getDeviceDescriptors() {
 		return (descriptors);
 	}
 
 	/**
 	 * @return A Collection of all manufacturers in the devicelist as Strings
 	 */
-	Collection getManufacturers() {
+	Collection<String> getManufacturers() {
 		return (manufacturerList.keySet());
 	}
 

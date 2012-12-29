@@ -31,8 +31,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 
-import org.jsynthlib._widgets.SysexWidget;
 import org.jsynthlib.menu.patch.IPatch;
+import org.jsynthlib.widgets.SysexWidget;
 
 /**
  * * Special widget

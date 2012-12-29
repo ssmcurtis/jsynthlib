@@ -12,9 +12,6 @@
 package org.jsynthlib.menu.preferences;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -22,10 +19,10 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
+import org.jsynthlib.JSynthLib;
 import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.patch.Device;
 import org.jsynthlib.menu.patch.IPatchDriver;
-import org.jsynthlib.model.DevicesConfig;
 import org.jsynthlib.tools.ErrorMsg;
 import org.jsynthlib.tools.MacUtils;
 import org.jsynthlib.tools.midi.MidiUtil;
@@ -37,7 +34,7 @@ public class AppConfig {
 	private static ArrayList<Device> deviceList = new ArrayList<Device>();
 
 	private static Preferences prefs = Preferences.userNodeForPackage(Object.class);
-	private static Preferences prefsDev = prefs.node("devices");
+	private static Preferences prefsDev = prefs.node(JSynthLib.getStudio());
 
 	private static int defaultLookANdFeel = 1;
 

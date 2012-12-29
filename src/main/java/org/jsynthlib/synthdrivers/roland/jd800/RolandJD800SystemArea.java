@@ -21,8 +21,8 @@
 
 package org.jsynthlib.synthdrivers.roland.jd800;
 
-import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.Driver;
+import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.SysexHandler;
 
 /**

@@ -17,9 +17,7 @@ import javax.sound.midi.Sequence;
 import javax.sound.midi.SysexMessage;
 import javax.sound.midi.Track;
 
-import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.patch.IPatch;
-import org.jsynthlib.menu.patch.PatchBasket;
 
 /**
  * 

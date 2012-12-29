@@ -21,8 +21,8 @@
 
 package org.jsynthlib.synthdrivers.tcelectronic.gmajor;
 
-import org.jsynthlib._widgets.SysexSender;
 import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.widgets.SysexSender;
 
 class TCBitSender extends SysexSender {
 	int offs, delta;

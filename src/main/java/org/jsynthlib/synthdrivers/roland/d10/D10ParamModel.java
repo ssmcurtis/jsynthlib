@@ -20,8 +20,8 @@
  */
 package org.jsynthlib.synthdrivers.roland.d10;
 
-import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.ParamModel;
+import org.jsynthlib.menu.patch.Patch;
 
 /**
  * This class extends the ParamModel to relocate the offset specified into a the sysex message offset.

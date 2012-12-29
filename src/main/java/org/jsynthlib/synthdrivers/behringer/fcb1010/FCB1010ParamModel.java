@@ -21,8 +21,8 @@
 
 package org.jsynthlib.synthdrivers.behringer.fcb1010;
 
-import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.ParamModel;
+import org.jsynthlib.menu.patch.Patch;
 
 /**
  * FCB1010ParamModel. This model is used for all parameters of the FCB1010 and includes. masks to manipulate either the

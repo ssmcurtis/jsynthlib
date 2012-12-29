@@ -4,8 +4,8 @@
 
 package org.jsynthlib.menu.ui.window;
 
-import org.jsynthlib.menu.patch.IPatchDriver;
 import org.jsynthlib.menu.patch.IPatch;
+import org.jsynthlib.menu.patch.IPatchDriver;
 
 /**
  * If more than two devices are loaded which supports the given patch, show this Dialog to choose a new Device/Driver

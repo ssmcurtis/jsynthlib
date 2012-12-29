@@ -27,9 +27,8 @@
 
 package org.jsynthlib.synthdrivers.casio.cz1000;
 
-import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.tools.ErrorMsg;
 
 /**

@@ -38,13 +38,13 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.jsynthlib.PatchBayApplication;
-import org.jsynthlib._widgets.ComboBoxWidget;
-import org.jsynthlib._widgets.ScrollBarWidget;
-import org.jsynthlib._widgets.SpinnerWidget;
-import org.jsynthlib._widgets.SysexSender;
-import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.ParamModel;
+import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.widgets.ComboBoxWidget;
+import org.jsynthlib.widgets.ScrollBarWidget;
+import org.jsynthlib.widgets.SpinnerWidget;
+import org.jsynthlib.widgets.SysexSender;
 
 public class DX7FamilySystemSetupIIIEditor extends PatchEditorFrame {
 	static final String[] OnOffName = new String[] { "Off", "On" };

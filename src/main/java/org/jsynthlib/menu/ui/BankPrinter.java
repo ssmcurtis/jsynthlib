@@ -13,6 +13,7 @@ import javax.swing.JTable;
 
 // TODO: Unselect any cells in the table before printing... and then select them again afterward.
 
+
 /**
  * Created by IntelliJ IDEA. User: Joe Emenaker Date: Oct 22, 2005 Time: 7:30:33 PM
  */
@@ -99,7 +100,9 @@ public class BankPrinter implements Printable {
 		 */
 		g2.setTransform(unscaledTransform);
 		g2.scale(scale, scale);
-		AffineTransform scaledTransform = g2.getTransform();
+		
+		// AffineTransform scaledTransform = g2.getTransform();
+		
 		table.getTableHeader().paint(g2);// paint header at top
 		g2.translate(0, tableHeaderHeightOnPage / scale);
 		table.paint(g2);

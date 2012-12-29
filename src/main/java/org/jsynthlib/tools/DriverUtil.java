@@ -26,17 +26,15 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.jsynthlib.menu.patch.Device;
 import org.jsynthlib.menu.patch.Driver;
 import org.jsynthlib.menu.patch.IConverter;
 import org.jsynthlib.menu.patch.IDriver;
-import org.jsynthlib.menu.patch.IPatchDriver;
 import org.jsynthlib.menu.patch.IPatch;
+import org.jsynthlib.menu.patch.IPatchDriver;
 import org.jsynthlib.menu.preferences.AppConfig;
 
 /**

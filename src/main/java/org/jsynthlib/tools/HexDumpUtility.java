@@ -1,25 +1,14 @@
 package org.jsynthlib.tools;
 
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.Window;
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.JDialog;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 
-import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.example.style.FormatedString;
-import org.jsynthlib.menu.ui.JSLFrame;
-import org.jsynthlib.menu.ui.window.BankEditorFrame;
-import org.jsynthlib.menu.ui.window.LibraryFrame;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
 
 /**
  * hex utility functions.

@@ -6,12 +6,11 @@ package org.jsynthlib.synthdrivers.generic;
 
 import java.util.prefs.Preferences;
 
-import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.Device;
 import org.jsynthlib.menu.patch.Driver;
+import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.SysexHandler;
 import org.jsynthlib.menu.ui.JSLFrame;
-import org.jsynthlib.menu.ui.window.HexDumpEditorFrame;
 import org.jsynthlib.menu.ui.window.HexDumpEditorHighlighted;
 import org.jsynthlib.menu.ui.window.SingleTextAreaFrame;
 import org.jsynthlib.model.ManufacturerLookup;

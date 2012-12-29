@@ -9,7 +9,6 @@ import javax.sound.midi.SysexMessage;
 
 import org.jsynthlib.menu.preferences.AppConfig;
 import org.jsynthlib.tools.ErrorMsg;
-import org.jsynthlib.tools.midi.MidiUtil.TimeoutException;
 
 /**
  * @author Emenaker - 2003.03.20

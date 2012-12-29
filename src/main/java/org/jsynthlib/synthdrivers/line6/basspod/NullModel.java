@@ -21,7 +21,7 @@
 
 package org.jsynthlib.synthdrivers.line6.basspod;
 
-import org.jsynthlib._widgets.SysexWidget;
+import org.jsynthlib.widgets.SysexWidget;
 
 /**
  * Dummy do-nothing model. This model is used for the Global Wah on/off setting. Pod supports a CC number for Wah on off

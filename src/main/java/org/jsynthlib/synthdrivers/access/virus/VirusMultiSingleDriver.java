@@ -2,8 +2,8 @@
 
 package org.jsynthlib.synthdrivers.access.virus;
 
-import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.Driver;
+import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.SysexHandler;
 
 /**

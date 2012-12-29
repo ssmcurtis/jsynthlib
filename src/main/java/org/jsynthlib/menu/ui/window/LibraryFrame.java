@@ -9,7 +9,6 @@ import java.util.Iterator;
 
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
-import javax.swing.table.TableColumn;
 
 import org.jsynthlib.menu.action.Actions;
 import org.jsynthlib.menu.patch.IPatch;

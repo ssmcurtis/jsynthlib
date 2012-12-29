@@ -21,8 +21,8 @@
 package org.jsynthlib.synthdrivers.casio.cz1000;
 
 import org.jsynthlib.menu.patch.Converter;
-import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.IPatch;
+import org.jsynthlib.menu.patch.Patch;
 
 /**
  * Intercept the 263-byte messages sent by the synth, and convert them into standard 264-byte patches.

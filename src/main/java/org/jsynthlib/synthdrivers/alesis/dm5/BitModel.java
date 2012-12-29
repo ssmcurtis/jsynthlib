@@ -21,8 +21,8 @@
 
 package org.jsynthlib.synthdrivers.alesis.dm5;
 
-import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.ParamModel;
+import org.jsynthlib.menu.patch.Patch;
 
 /**
  * The BitModel class allows a control to set the individual bits in a byte of the patch.sysex record. This is used when

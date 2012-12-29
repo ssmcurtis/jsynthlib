@@ -4,16 +4,7 @@ package org.jsynthlib.menu.ui.window;
 // import java.awt.*;
 // import synthdrivers.AlesisSR16.DataModel;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-
 import javax.sound.midi.SysexMessage;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.InputMap;
-import javax.swing.JComponent;
-import javax.swing.JRootPane;
-import javax.swing.KeyStroke;
 
 import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.tools.Utility;

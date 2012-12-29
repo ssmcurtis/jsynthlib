@@ -21,8 +21,8 @@
 
 package org.jsynthlib.synthdrivers.behringer.vamp2;
 
-import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.ParamModel;
+import org.jsynthlib.menu.patch.Patch;
 
 /**
  * Scalable ParamModel--to allow different max values for CC and Sysex.

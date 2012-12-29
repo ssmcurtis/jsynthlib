@@ -9,7 +9,6 @@ import java.net.URL;
 import java.net.UnknownHostException;
 
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;

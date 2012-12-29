@@ -1,4 +1,4 @@
-package org.jsynthlib._widgets;
+package org.jsynthlib.widgets;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;

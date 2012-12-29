@@ -5,11 +5,11 @@ import java.awt.FlowLayout;
 import javax.swing.Box;
 import javax.swing.JPanel;
 
-import org.jsynthlib._widgets.CheckBoxWidget;
-import org.jsynthlib._widgets.ComboBoxWidget;
-import org.jsynthlib._widgets.KnobWidget;
-import org.jsynthlib._widgets.SpinnerWidget;
 import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.widgets.CheckBoxWidget;
+import org.jsynthlib.widgets.ComboBoxWidget;
+import org.jsynthlib.widgets.KnobWidget;
+import org.jsynthlib.widgets.SpinnerWidget;
 
 /**
  * Formant sequence parameters.

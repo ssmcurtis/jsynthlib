@@ -21,16 +21,16 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
-import org.jsynthlib._widgets.ComboBoxWidget;
-import org.jsynthlib._widgets.EnvelopeWidget;
-import org.jsynthlib._widgets.PatchNameWidget;
-import org.jsynthlib._widgets.ScrollBarWidget;
-import org.jsynthlib._widgets.SysexSender;
-import org.jsynthlib._widgets.SysexWidget;
-import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.ParamModel;
+import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.ui.window.PatchEditorFrame;
 import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.widgets.ComboBoxWidget;
+import org.jsynthlib.widgets.EnvelopeWidget;
+import org.jsynthlib.widgets.PatchNameWidget;
+import org.jsynthlib.widgets.ScrollBarWidget;
+import org.jsynthlib.widgets.SysexSender;
+import org.jsynthlib.widgets.SysexWidget;
 
 public class YamahaMotifNormalVoiceEditor extends PatchEditorFrame {
 	int slidercount = 0;

@@ -1,6 +1,6 @@
 package org.jsynthlib.synthdrivers.kawai.k4;
 
-import org.jsynthlib._widgets.SysexSender;
+import org.jsynthlib.widgets.SysexSender;
 
 class K4Sender extends SysexSender {
 	private int source;

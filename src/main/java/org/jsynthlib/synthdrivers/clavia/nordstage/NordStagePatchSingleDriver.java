@@ -1,7 +1,7 @@
 package org.jsynthlib.synthdrivers.clavia.nordstage;
 
-import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.Driver;
+import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.SysexHandler;
 
 /**

@@ -24,8 +24,8 @@
 
 package org.jsynthlib.synthdrivers.midibox.fm;
 
-import org.jsynthlib._widgets.SysexSender;
 import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.widgets.SysexSender;
 
 class MIDIboxFMSender extends SysexSender {
 	Patch patch;

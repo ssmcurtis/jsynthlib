@@ -9,18 +9,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -28,18 +22,12 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.ProgressMonitor;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
 
-import org.jsynthlib.PatchBayApplication;
+import org.jsynthlib.JSynthLib;
 import org.jsynthlib.example.midi.MidiActionPlayNote;
 import org.jsynthlib.menu.patch.Device;
-import org.jsynthlib.menu.ui.ExtensionFilter;
-import org.jsynthlib.menu.ui.window.AbstractLibraryFrame;
-import org.jsynthlib.menu.ui.window.CompatibleFileDialog;
-import org.jsynthlib.tools.ErrorMsg;
 import org.jsynthlib.tools.Utility;
 import org.jsynthlib.tools.midi.MidiUtil;
 
@@ -123,6 +111,9 @@ public class SynthConfigPanel extends ConfigPanel {
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
+		JLabel studioConfigTitle = new JLabel("Current studio setup: " + JSynthLib.getStudio());
+		buttonPanel.add(studioConfigTitle);
+
 		JButton add = new JButton("Add Device...");
 		add.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -148,6 +139,7 @@ public class SynthConfigPanel extends ConfigPanel {
 
 		++c.gridy;
 		p.add(buttonPanel, c);
+
 		add(p, BorderLayout.CENTER);
 
 		// popup menu

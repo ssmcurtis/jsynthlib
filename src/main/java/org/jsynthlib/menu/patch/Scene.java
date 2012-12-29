@@ -8,13 +8,6 @@
 
 package org.jsynthlib.menu.patch;
 
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.io.Serializable;
-
-import org.jsynthlib.menu.ui.PatchTransferHandler;
-import org.jsynthlib.tools.ErrorMsg;
 
 /**
  * A scene is a container for all patches and their explicite bank/patch locations at the synths for a concrete singular

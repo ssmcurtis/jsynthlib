@@ -23,8 +23,8 @@
 
 package org.jsynthlib.synthdrivers.roland.mks7;
 
-import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.Driver;
+import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.ui.JSLFrame;
 
 public class MKS7ToneSingleDriver extends Driver {

@@ -1,7 +1,6 @@
 package org.jsynthlib.menu.ui.window;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -18,14 +17,12 @@ import javax.sound.midi.Receiver;
 import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Transmitter;
 import javax.swing.JComponent;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.UIManager;
 
 import org.jsynthlib.Constants;
 import org.jsynthlib.PatchBayApplication;
-import org.jsynthlib._widgets.SysexWidget;
 import org.jsynthlib.menu.action.Actions;
 import org.jsynthlib.menu.patch.IPatch;
 import org.jsynthlib.menu.patch.PatchBasket;
@@ -39,6 +36,7 @@ import org.jsynthlib.model.ImportFileType;
 import org.jsynthlib.tools.ClipboardUtil;
 import org.jsynthlib.tools.ErrorMsg;
 import org.jsynthlib.tools.midi.MidiUtil;
+import org.jsynthlib.widgets.SysexWidget;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 

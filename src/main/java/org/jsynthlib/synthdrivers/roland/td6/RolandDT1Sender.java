@@ -28,10 +28,10 @@ import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.ShortMessage;
 import javax.sound.midi.SysexMessage;
 
-import org.jsynthlib._widgets.SysexWidget;
 import org.jsynthlib.menu.patch.IPatchDriver;
 import org.jsynthlib.tools.ErrorMsg;
 import org.jsynthlib.tools.Utility;
+import org.jsynthlib.widgets.SysexWidget;
 
 /**
  * RolandDT1Sender.java

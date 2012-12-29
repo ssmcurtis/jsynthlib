@@ -21,8 +21,8 @@
 
 package org.jsynthlib.synthdrivers.behringer.vamp2;
 
-import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.ParamModel;
+import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.tools.ErrorMsg;
 import org.jsynthlib.tools.Utility;
 

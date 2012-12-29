@@ -1,4 +1,4 @@
-package org.jsynthlib._widgets;
+package org.jsynthlib.widgets;
 
 /**
  * A Label widget.

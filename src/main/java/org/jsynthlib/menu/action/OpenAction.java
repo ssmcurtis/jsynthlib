@@ -14,7 +14,6 @@ import org.jsynthlib.menu.preferences.AppConfig;
 import org.jsynthlib.menu.ui.ExtensionFilter;
 import org.jsynthlib.menu.ui.window.CompatibleFileDialog;
 import org.jsynthlib.menu.ui.window.LibraryFrame;
-import org.jsynthlib.menu.ui.window.SceneFrame;
 
 public class OpenAction extends AbstractAction {
 	static final FileFilter filter;

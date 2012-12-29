@@ -15,8 +15,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
-import org.jsynthlib._widgets.SysexWidget;
 import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.widgets.SysexWidget;
 
 /**
  * Dialog to choose sources and destinations for operator paste.

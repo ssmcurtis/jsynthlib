@@ -5,11 +5,14 @@
  */
 package org.jsynthlib.menu.ui.window;
 
+import java.awt.AWTKeyStroke;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -21,8 +24,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import javax.swing.FocusManager;
 import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
@@ -30,14 +36,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.RowFilter;
+import javax.swing.KeyStroke;
 import javax.swing.TransferHandler;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.filechooser.FileFilter;
-import javax.swing.table.TableRowSorter;
 import javax.swing.text.MaskFormatter;
 
 import org.jsynthlib.PatchBayApplication;
@@ -57,8 +62,6 @@ import org.jsynthlib.tools.DriverUtil;
 import org.jsynthlib.tools.ErrorMsg;
 import org.jsynthlib.tools.ImportUtils;
 import org.jsynthlib.tools.Utility;
-
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Abstract class for unified handling of Library and Scene frames.
@@ -82,6 +85,7 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 
 	AbstractLibraryFrame(String title, String type, PatchTransferHandler pth) {
 		super(PatchBayApplication.getDesktop(), title);
+		
 		TYPE = type;
 		this.pth = pth;
 
@@ -94,6 +98,7 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 
 		// create Table
 		myModel = createTableModel();
+		
 		createTable();
 
 		// Create the scroll pane and add the table to it.
@@ -122,7 +127,6 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 		// ...Then set the window size or call pack...
 		setSize(800, 500);
 
-		table.setAutoCreateRowSorter(true);
 	}
 
 	abstract PatchTableModel createTableModel();
@@ -136,6 +140,7 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 
 	private void createTable() {
 		table = new JTable(myModel);
+		table.setAutoCreateRowSorter(true);
 
 		table.setPreferredScrollableViewportSize(new Dimension(500, 70));
 		table.addMouseListener(new MouseAdapter() {
@@ -212,6 +217,15 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				enableActions();
+			}
+		});
+
+		Set<AWTKeyStroke> newKeys = new HashSet<AWTKeyStroke>(table.getFocusTraversalKeys(FocusManager.FORWARD_TRAVERSAL_KEYS));
+		newKeys.remove(KeyStroke.getKeyStroke("ctrl TAB"));
+		table.setFocusTraversalKeys(FocusManager.FORWARD_TRAVERSAL_KEYS, newKeys);
+		table.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e) {
+				// nothing
 			}
 		});
 	}

@@ -6,8 +6,6 @@ import java.awt.Frame;
 import java.awt.Window;
 import java.io.ByteArrayOutputStream;
 
-import javax.swing.JDialog;
-
 import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.example.style.FormatedString;
 import org.jsynthlib.menu.ui.JSLFrame;

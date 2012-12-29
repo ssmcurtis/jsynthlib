@@ -1,7 +1,7 @@
 package org.jsynthlib.synthdrivers.alesis.qs;
 
-import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.Driver;
+import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.SysexHandler;
 import org.jsynthlib.synthdrivers.alesis.SysexRoutines;
 import org.jsynthlib.tools.ErrorMsg;

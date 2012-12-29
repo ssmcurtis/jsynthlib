@@ -24,8 +24,8 @@ package org.jsynthlib.synthdrivers.novation.sbs;
 //import core.JSLFrame;
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.Driver;
+import org.jsynthlib.menu.patch.Patch;
 
 public class NovationSBSProgramDriver extends Driver {
 

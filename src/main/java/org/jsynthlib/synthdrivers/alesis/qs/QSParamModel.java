@@ -1,8 +1,8 @@
 package org.jsynthlib.synthdrivers.alesis.qs;
 
-import org.jsynthlib._widgets.SysexWidget;
 import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.synthdrivers.alesis.SysexRoutines;
+import org.jsynthlib.widgets.SysexWidget;
 
 /**
  * Param model AlesisQS keyboards. Allows changing of specific ranges of bits in the patch, taking into account the

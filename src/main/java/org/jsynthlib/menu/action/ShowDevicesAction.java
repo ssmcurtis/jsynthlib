@@ -5,9 +5,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 import javax.swing.AbstractAction;
-import javax.swing.JOptionPane;
 
-import org.jsynthlib.Constants;
 import org.jsynthlib.menu.preferences.DeviceDialog;
 
 // //////////////////////////////////////////////////////////////////////

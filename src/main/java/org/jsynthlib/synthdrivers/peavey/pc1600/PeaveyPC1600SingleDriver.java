@@ -16,8 +16,8 @@
 
 package org.jsynthlib.synthdrivers.peavey.pc1600;
 
-import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.Driver;
+import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.SysexHandler;
 import org.jsynthlib.tools.NibbleSysex;
 

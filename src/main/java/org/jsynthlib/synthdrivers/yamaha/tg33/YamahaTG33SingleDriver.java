@@ -3,8 +3,8 @@
  */
 package org.jsynthlib.synthdrivers.yamaha.tg33;
 
-import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.Driver;
+import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.tools.ErrorMsg;
 
 public class YamahaTG33SingleDriver extends Driver {

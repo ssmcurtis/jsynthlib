@@ -17,7 +17,6 @@ import java.util.Properties;
 
 import org.jsynthlib.Constants;
 import org.jsynthlib.DeviceList;
-import org.jsynthlib.JSynthResource;
 import org.jsynthlib.menu.patch.Device;
 import org.jsynthlib.model.DevicesConfig;
 

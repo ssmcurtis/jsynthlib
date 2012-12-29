@@ -5,10 +5,8 @@ package org.jsynthlib.menu.ui.window;
 // import synthdrivers.AlesisSR16.DataModel;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.sound.midi.SysexMessage;
@@ -22,7 +20,6 @@ import javax.swing.text.StyleConstants;
 import org.jsynthlib.example.style.FormatedString;
 import org.jsynthlib.example.style.XMEditor;
 import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.synthdrivers.yamaha.ub99.format.ListFormat;
 import org.jsynthlib.tools.HexDumpUtility;
 
 /**

@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.Vector;
 
 import org.jsynthlib.menu.patch.IPatch;
-import org.jsynthlib.menu.patch.Scene;
 
 /**
  * The PatchesAndScenes class is merely a holder for multiple classes for drag-n-drop and cut-n-paste operations.
@@ -16,7 +15,7 @@ import org.jsynthlib.menu.patch.Scene;
 public class PatchesAndScenes implements Transferable {
 
 	DataFlavor[] flavors = new DataFlavor[] { PatchTransferHandler.PATCHES_FLAVOR };
-	Vector patches = new Vector();
+	Vector<IPatch> patches = new Vector<IPatch>();
 
 	public DataFlavor[] getTransferDataFlavors() {
 		return (flavors);
@@ -25,10 +24,6 @@ public class PatchesAndScenes implements Transferable {
 	public void add(IPatch patch) {
 		patches.add(patch);
 	}
-
-//	public void add(Scene scene) {
-//		patches.add(scene);
-//	}
 
 	public boolean isDataFlavorSupported(DataFlavor dataFlavor) {
 		for (int i = 0; i < flavors.length; i++) {

@@ -1,13 +1,13 @@
-package org.jsynthlib._widgets;
+package org.jsynthlib.widgets;
 
 import java.awt.Insets;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.jsynthlib.menu.patch.IPatch;
 import org.jsynthlib.menu.patch.IPatchDriver;
 import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.IPatch;
 import org.jsynthlib.menu.ui.window.PatchEditorFrame;
 
 /**

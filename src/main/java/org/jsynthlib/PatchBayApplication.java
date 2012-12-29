@@ -1,8 +1,6 @@
 package org.jsynthlib;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -14,20 +12,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import org.clapper.util.classutil.AbstractClassFilter;
-import org.clapper.util.classutil.AndClassFilter;
-import org.clapper.util.classutil.ClassFilter;
-import org.clapper.util.classutil.ClassFinder;
-import org.clapper.util.classutil.ClassInfo;
-import org.clapper.util.classutil.FieldInfo;
-import org.clapper.util.classutil.InterfaceOnlyClassFilter;
-import org.clapper.util.classutil.MethodInfo;
-import org.clapper.util.classutil.NotClassFilter;
-import org.clapper.util.classutil.SubclassClassFilter;
-import org.jsynthlib.DeviceList;
 import org.jsynthlib.menu.action.Actions;
 import org.jsynthlib.menu.action.MenuDesktop;
-import org.jsynthlib.menu.patch.Device;
 import org.jsynthlib.menu.preferences.AppConfig;
 import org.jsynthlib.menu.preferences.PrefsDialog;
 import org.jsynthlib.menu.ui.JSLDesktop;

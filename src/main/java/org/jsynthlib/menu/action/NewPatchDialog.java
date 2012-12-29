@@ -16,8 +16,8 @@ import javax.swing.JPanel;
 
 import org.jsynthlib.menu.patch.Device;
 import org.jsynthlib.menu.patch.IDriver;
-import org.jsynthlib.menu.patch.IPatchDriver;
 import org.jsynthlib.menu.patch.IPatch;
+import org.jsynthlib.menu.patch.IPatchDriver;
 import org.jsynthlib.menu.preferences.AppConfig;
 import org.jsynthlib.tools.ErrorMsg;
 import org.jsynthlib.tools.Utility;

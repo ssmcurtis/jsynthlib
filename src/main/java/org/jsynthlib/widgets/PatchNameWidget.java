@@ -1,4 +1,4 @@
-package org.jsynthlib._widgets;
+package org.jsynthlib.widgets;
 
 import java.awt.BorderLayout;
 import java.awt.event.FocusEvent;
@@ -6,8 +6,8 @@ import java.awt.event.FocusListener;
 
 import javax.swing.JTextField;
 
-import org.jsynthlib.menu.patch.IPatchDriver;
 import org.jsynthlib.menu.patch.IPatch;
+import org.jsynthlib.menu.patch.IPatchDriver;
 
 /**
  * SysexWidget for patch name.

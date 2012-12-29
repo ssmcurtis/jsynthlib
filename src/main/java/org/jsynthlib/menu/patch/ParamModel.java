@@ -1,6 +1,6 @@
 package org.jsynthlib.menu.patch;
 
-import org.jsynthlib._widgets.SysexWidget;
+import org.jsynthlib.widgets.SysexWidget;
 
 /**
  * An implementation of IParamModel for Patch class.

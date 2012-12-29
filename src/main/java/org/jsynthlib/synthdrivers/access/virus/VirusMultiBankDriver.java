@@ -2,7 +2,6 @@ package org.jsynthlib.synthdrivers.access.virus;
 
 import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.IPatch;
 import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.SysexHandler;
 import org.jsynthlib.tools.ErrorMsg;

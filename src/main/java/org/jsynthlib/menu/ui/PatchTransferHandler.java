@@ -17,7 +17,6 @@ import javax.swing.TransferHandler;
 
 import org.jsynthlib.menu.action.Actions;
 import org.jsynthlib.menu.patch.IPatch;
-import org.jsynthlib.menu.patch.Scene;
 import org.jsynthlib.menu.ui.window.PatchTableModel;
 import org.jsynthlib.tools.DriverUtil;
 import org.jsynthlib.tools.ErrorMsg;

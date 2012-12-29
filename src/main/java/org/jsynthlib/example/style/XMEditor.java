@@ -2,7 +2,6 @@ package org.jsynthlib.example.style;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Event;
 import java.awt.GridLayout;
 import java.awt.Insets;
@@ -58,9 +57,6 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
-
-import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
 
 public class XMEditor extends JTextPane {
 	protected AbstractDocument doc;

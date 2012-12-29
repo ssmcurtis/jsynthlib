@@ -21,8 +21,8 @@
 
 package org.jsynthlib.synthdrivers.alesis.dm5;
 
-import org.jsynthlib._widgets.ComboBoxWidget;
 import org.jsynthlib.menu.patch.IPatch;
+import org.jsynthlib.widgets.ComboBoxWidget;
 
 /**
  * DM5 ComboBoxWidget. Adds functionality to the standard JSynthLib ComboBoxWidget to allow dynamic updating of the

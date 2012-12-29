@@ -22,9 +22,9 @@ package org.jsynthlib.synthdrivers.roland.jv80;
 
 import java.util.Date;
 
-import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.Device;
 import org.jsynthlib.menu.patch.Driver;
+import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.patch.SysexHandler;
 import org.jsynthlib.menu.ui.JSLFrame;
 import org.jsynthlib.tools.DriverUtil;
