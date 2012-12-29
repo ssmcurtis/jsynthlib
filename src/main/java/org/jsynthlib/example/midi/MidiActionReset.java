@@ -11,8 +11,6 @@ import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Synthesizer;
 import javax.swing.JTextArea;
 
-import org.jfugue.DeviceThatWillReceiveMidi;
-import org.jfugue.JFugueException;
 import org.jsynthlib.menu.action.ExitAction;
 
 public class MidiActionReset implements Runnable, ThreadStop {
