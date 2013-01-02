@@ -8,7 +8,8 @@ public enum JSynthSequence {
 	S002("Sequence 2 (1/16)"),
 	S003("Sequence 3 (1/16)"),
 	S004("Sequence 4 (1/32)"),
-	S005("Pad 1");
+	S006("Sequence 6"),
+	S007("Pad 6");
 
 	private final String title;
 

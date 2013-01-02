@@ -10,7 +10,7 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.jsynthlib.menu.patch.IPatch;
+import org.jsynthlib.model.patch.Patch;
 
 /**
  * Horizontal scrollbar SysexWidget with value label field.
@@ -33,7 +33,7 @@ public class ScrollBarLookupWidget extends SysexWidget {
 	/** width of label widget */
 	protected int labelWidth;
 
-	public ScrollBarLookupWidget(IPatch patch, IParameter param) {
+	public ScrollBarLookupWidget(Patch patch, IParameter param) {
 		super(patch, param);
 
 		options = param.getValues();
@@ -62,7 +62,7 @@ public class ScrollBarLookupWidget extends SysexWidget {
 	 * @param options
 	 *            array of label string for each value.
 	 */
-	public ScrollBarLookupWidget(String label, IPatch patch, int min, int max, int labelWidth, IParamModel pmodel,
+	public ScrollBarLookupWidget(String label, Patch patch, int min, int max, int labelWidth, IParamModel pmodel,
 			ISender sender, String[] options) {
 		super(label, patch, min, max, pmodel, sender);
 		this.options = options;
@@ -91,7 +91,7 @@ public class ScrollBarLookupWidget extends SysexWidget {
 	 * @param options
 	 *            array of label strings for each value.
 	 */
-	public ScrollBarLookupWidget(String label, IPatch patch, int min, int max, IParamModel pmodel, ISender sender,
+	public ScrollBarLookupWidget(String label, Patch patch, int min, int max, IParamModel pmodel, ISender sender,
 			String[] options) {
 		this(label, patch, min, max, -1, pmodel, sender, options);
 	}
@@ -112,7 +112,7 @@ public class ScrollBarLookupWidget extends SysexWidget {
 	 * @param options
 	 *            array of label strings for each value.
 	 */
-	public ScrollBarLookupWidget(String label, IPatch patch, IParamModel pmodel, ISender sender, String[] options) {
+	public ScrollBarLookupWidget(String label, Patch patch, IParamModel pmodel, ISender sender, String[] options) {
 		this(label, patch, 0, options.length, -1, pmodel, sender, options);
 	}
 

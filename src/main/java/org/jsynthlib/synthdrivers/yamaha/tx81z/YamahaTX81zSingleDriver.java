@@ -3,11 +3,12 @@
  */
 package org.jsynthlib.synthdrivers.yamaha.tx81z;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
-public class YamahaTX81zSingleDriver extends Driver {
+public class YamahaTX81zSingleDriver extends SynthDriverPatchImpl {
 
 	public YamahaTX81zSingleDriver() {
 		super("Single", "Brian Klock");
@@ -16,40 +17,40 @@ public class YamahaTX81zSingleDriver extends Driver {
 		patchNameSize = 10;
 		deviceIDoffset = 2;
 		bankNumbers = new String[] { "0-Internal" };
-		patchNumbers = new String[] { "I01", "I02", "I03", "I04", "I05", "I06", "I07", "I08", "I09", "I10", "I11",
-				"I12", "I13", "I14", "I15", "I16", "I17", "I18", "I19", "I20", "I21", "I22", "I23", "I24", "I25",
-				"I26", "I27", "I28", "I29", "I30", "I31", "I32" };
+		patchNumbers = new String[] { "I01", "I02", "I03", "I04", "I05", "I06", "I07", "I08", "I09", "I10", "I11", "I12", "I13", "I14",
+				"I15", "I16", "I17", "I18", "I19", "I20", "I21", "I22", "I23", "I24", "I25", "I26", "I27", "I28", "I29", "I30", "I31",
+				"I32" };
 	}
 
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 		calculateChecksum(p, 6, 38, 39); // calculate ACED Checksum
 		calculateChecksum(p, 47, 139, 140); // calculate VCED Checksum
-		((Patch) p).getSysex()[43] = ((byte) (getChannel() - 1));
+		((PatchDataImpl) p).getSysex()[43] = ((byte) (getChannel() - 1));
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		setBankNum(bankNum);
 		setPatchNum(patchNum);
 		sendPatch(p);
 		try {
 			Thread.sleep(100);
-			send(new byte[] { (byte) 0xF0, (byte) 0x43, (byte) (0x10 + getChannel() - 1), (byte) 0x13, (byte) 0x41,
-					(byte) 0x7F, (byte) 0xF7 });
+			send(new byte[] { (byte) 0xF0, (byte) 0x43, (byte) (0x10 + getChannel() - 1), (byte) 0x13, (byte) 0x41, (byte) 0x7F,
+					(byte) 0xF7 });
 			Thread.sleep(100);
-			send(new byte[] { (byte) 0xF0, (byte) 0x43, (byte) (0x10 + getChannel() - 1), (byte) 0x13, (byte) 0x48,
-					(byte) 0x7F, (byte) 0xF7 });
+			send(new byte[] { (byte) 0xF0, (byte) 0x43, (byte) (0x10 + getChannel() - 1), (byte) 0x13, (byte) 0x48, (byte) 0x7F,
+					(byte) 0xF7 });
 			Thread.sleep(100);
-			send(new byte[] { (byte) 0xF0, (byte) 0x43, (byte) (0x10 + getChannel() - 1), (byte) 0x13, (byte) 0x41,
-					(byte) 0x00, (byte) 0xF7 });
+			send(new byte[] { (byte) 0xF0, (byte) 0x43, (byte) (0x10 + getChannel() - 1), (byte) 0x13, (byte) 0x41, (byte) 0x00,
+					(byte) 0xF7 });
 			Thread.sleep(100);
-			send(new byte[] { (byte) 0xF0, (byte) 0x43, (byte) (0x10 + getChannel() - 1), (byte) 0x13, (byte) 0x48,
-					(byte) 0x7F, (byte) 0xF7 });
+			send(new byte[] { (byte) 0xF0, (byte) 0x43, (byte) (0x10 + getChannel() - 1), (byte) 0x13, (byte) 0x48, (byte) 0x7F,
+					(byte) 0xF7 });
 		} catch (Exception e) {
-			ErrorMsg.reportError("Error", "Unable to Play Patch", e);
+			ErrorMsgUtil.reportError("Error", "Unable to Play Patch", e);
 		}
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[142];
 		sysex[00] = (byte) 0xF0;
 		sysex[01] = (byte) 0x43;
@@ -76,13 +77,13 @@ public class YamahaTX81zSingleDriver extends Driver {
 		sysex[46] = (byte) 0x5D;
 		sysex[141] = (byte) 0xF7;
 
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		setPatchName(p, "NewPatch");
 		calculateChecksum(p);
 		return p;
 	}
 
-//	public JSLFrame editPatch(Patch p) {
-//		return new YamahaTX81zSingleEditor((Patch) p);
-//	}
+	public JSLFrame editPatch(PatchDataImpl p) {
+		return new YamahaTX81zSingleEditor((PatchDataImpl) p);
+	}
 }

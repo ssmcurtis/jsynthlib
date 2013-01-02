@@ -34,9 +34,9 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.PatchSingle;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.model.patch.PatchSingle;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
 
@@ -156,7 +156,7 @@ public class FCB1010Editor extends PatchEditorFrame implements ActionListener {
 	 * Constructs a FCB1010Editor for the selected patch. Note that since the FCB1010 does not recognize any real-time
 	 * messages, all of the sysexWidgets in this editor have their ISender parameter set to null.
 	 */
-	FCB1010Editor(Patch patch) {
+	FCB1010Editor(PatchDataImpl patch) {
 		super("FCB1010 Patch Editor", patch);
 
 		SelectedPresetModel.init();
@@ -184,7 +184,7 @@ public class FCB1010Editor extends PatchEditorFrame implements ActionListener {
 	/**
 	 * Adds the preset select panel to the given panel for the given patch.
 	 */
-	private void addSelectPanel(Patch patch, JPanel panel) {
+	private void addSelectPanel(PatchDataImpl patch, JPanel panel) {
 		JPanel selectPanel = new JPanel();
 		// selectPanel.setLayout(new GridLayout(1, 7));
 		// selectPanel.setBorder(new TitledBorder(new
@@ -217,7 +217,7 @@ public class FCB1010Editor extends PatchEditorFrame implements ActionListener {
 	/**
 	 * Adds the copy/paste buttons to the given panel for the given patch.
 	 */
-	private void addCopyPastePanel(Patch patch, JPanel panel) {
+	private void addCopyPastePanel(PatchDataImpl patch, JPanel panel) {
 		JPanel copyPastePanel = new JPanel();
 		// selectPanel.setBorder(new TitledBorder(new
 		// EtchedBorder(EtchedBorder.RAISED),"Selected Preset",TitledBorder.CENTER,TitledBorder.CENTER));
@@ -266,7 +266,7 @@ public class FCB1010Editor extends PatchEditorFrame implements ActionListener {
 
 		int bank = bankSelect.getSelectedIndex();
 		int preset = presetSelect.getSelectedIndex();
-		Patch patch = (Patch) p;
+		PatchDataImpl patch = (PatchDataImpl) p;
 		byte[] deNibblizedSysex = FCB1010ParamModel.deNibblize(patch.getSysex(), Constants.HDR_SIZE);
 		int startPos = Constants.HDR_SIZE + (bank * BANK_LENGTH) + (preset * PRESET_LENGTH);
 		localScrap = new byte[PRESET_LENGTH];
@@ -282,7 +282,7 @@ public class FCB1010Editor extends PatchEditorFrame implements ActionListener {
 		pasteButton.setText("Paste Bank");
 
 		int bank = bankSelect.getSelectedIndex();
-		Patch patch = (Patch) p;
+		PatchDataImpl patch = (PatchDataImpl) p;
 		byte[] deNibblizedSysex = FCB1010ParamModel.deNibblize(patch.getSysex(), Constants.HDR_SIZE);
 		int startPos = Constants.HDR_SIZE + (bank * BANK_LENGTH);
 		localScrap = new byte[BANK_LENGTH];
@@ -307,7 +307,7 @@ public class FCB1010Editor extends PatchEditorFrame implements ActionListener {
 		}
 
 		if (startPos != 0) {
-			Patch patch = (Patch) p;
+			PatchDataImpl patch = (PatchDataImpl) p;
 			byte[] denibblizedArray = FCB1010ParamModel.deNibblize(patch.getSysex(), Constants.HDR_SIZE);
 
 			System.arraycopy(localScrap, 0, denibblizedArray, startPos, localScrap.length);
@@ -323,7 +323,7 @@ public class FCB1010Editor extends PatchEditorFrame implements ActionListener {
 	/**
 	 * Adds the parameters panel to the given panel for the given patch.
 	 */
-	private void addParmsPanel(Patch patch, JPanel panel) {
+	private void addParmsPanel(PatchDataImpl patch, JPanel panel) {
 		JPanel parmPanel = new JPanel();
 		parmPanel.setLayout(new BoxLayout(parmPanel, BoxLayout.X_AXIS));
 		// parmPanel.setBorder(new TitledBorder(new
@@ -338,7 +338,7 @@ public class FCB1010Editor extends PatchEditorFrame implements ActionListener {
 	/**
 	 * Adds the program change panel to the given panel for the given patch.
 	 */
-	private void addProgChgPanel(Patch patch, JPanel panel) {
+	private void addProgChgPanel(PatchDataImpl patch, JPanel panel) {
 		JPanel progChgPanel = new JPanel();
 		progChgPanel.setLayout(new BoxLayout(progChgPanel, BoxLayout.Y_AXIS));
 		progChgPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.RAISED), "Program Change",
@@ -353,7 +353,7 @@ public class FCB1010Editor extends PatchEditorFrame implements ActionListener {
 	/**
 	 * Adds a program change widget to the given panel for the given patch.
 	 */
-	private void addProgChgWidgets(Patch patch, JPanel panel, int pcGroupIx) {
+	private void addProgChgWidgets(PatchDataImpl patch, JPanel panel, int pcGroupIx) {
 		JPanel progChgPanel = new JPanel();
 		progChgPanel.setLayout(new BoxLayout(progChgPanel, BoxLayout.X_AXIS));
 		// progChgPanel.setBorder(new EtchedBorder(EtchedBorder.RAISED));
@@ -378,7 +378,7 @@ public class FCB1010Editor extends PatchEditorFrame implements ActionListener {
 	/**
 	 * Adds the control change panel to the given panel for the given patch.
 	 */
-	private void addCntlChgPanel(Patch patch, JPanel panel) {
+	private void addCntlChgPanel(PatchDataImpl patch, JPanel panel) {
 		JPanel midPanel = new JPanel();
 		midPanel.setLayout(new BoxLayout(midPanel, BoxLayout.Y_AXIS));
 		// midPanel.setBorder(new TitledBorder(new
@@ -403,7 +403,7 @@ public class FCB1010Editor extends PatchEditorFrame implements ActionListener {
 	/**
 	 * Adds CC and Value labels to the given panel for the given patch.
 	 */
-	private void addCntlChgLabels(Patch patch, JPanel panel) {
+	private void addCntlChgLabels(PatchDataImpl patch, JPanel panel) {
 		JPanel cntlChgPanel = new JPanel();
 		cntlChgPanel.setLayout(new BoxLayout(cntlChgPanel, BoxLayout.X_AXIS));
 		// cntlChgPanel.setBorder(new EtchedBorder(EtchedBorder.RAISED));
@@ -419,7 +419,7 @@ public class FCB1010Editor extends PatchEditorFrame implements ActionListener {
 	/**
 	 * Adds a control change widgets to the given panel for the given patch.
 	 */
-	private void addCntlChgWidgets(Patch patch, JPanel panel, int ccGroupIx) {
+	private void addCntlChgWidgets(PatchDataImpl patch, JPanel panel, int ccGroupIx) {
 		JPanel cntlChgPanel = new JPanel();
 		cntlChgPanel.setLayout(new BoxLayout(cntlChgPanel, BoxLayout.X_AXIS));
 		// cntlChgPanel.setBorder(new EtchedBorder(EtchedBorder.RAISED));
@@ -448,7 +448,7 @@ public class FCB1010Editor extends PatchEditorFrame implements ActionListener {
 	/**
 	 * Adds a switch widgets to the given panel for the given patch.
 	 */
-	private void addSwitchWidgets(Patch patch, JPanel panel) {
+	private void addSwitchWidgets(PatchDataImpl patch, JPanel panel) {
 		JPanel switchPanel = new JPanel();
 		switchPanel.setLayout(new BoxLayout(switchPanel, BoxLayout.X_AXIS));
 		switchPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.RAISED), "Relay Switch",
@@ -469,7 +469,7 @@ public class FCB1010Editor extends PatchEditorFrame implements ActionListener {
 	/**
 	 * Adds the expression pedals panel to the given panel for the given patch.
 	 */
-	private void addExpPdlPanel(Patch patch, JPanel panel) {
+	private void addExpPdlPanel(PatchDataImpl patch, JPanel panel) {
 		JPanel rtPanel = new JPanel();
 		rtPanel.setLayout(new BoxLayout(rtPanel, BoxLayout.Y_AXIS));
 		// rtPanel.setBorder(new TitledBorder(new
@@ -494,7 +494,7 @@ public class FCB1010Editor extends PatchEditorFrame implements ActionListener {
 	/**
 	 * Adds Controller, Minimum and Maximum labels to the given panel for the given patch.
 	 */
-	private void addExpPdlLabels(Patch patch, JPanel panel) {
+	private void addExpPdlLabels(PatchDataImpl patch, JPanel panel) {
 		JPanel expPdlPanel = new JPanel();
 		expPdlPanel.setLayout(new BoxLayout(expPdlPanel, BoxLayout.X_AXIS));
 		// expPdlPanel.setBorder(new EtchedBorder(EtchedBorder.RAISED));
@@ -513,7 +513,7 @@ public class FCB1010Editor extends PatchEditorFrame implements ActionListener {
 	/**
 	 * Adds a control change widgets to the given panel for the given patch.
 	 */
-	private void addExpPdlWidgets(Patch patch, JPanel panel, int expGroupIx) {
+	private void addExpPdlWidgets(PatchDataImpl patch, JPanel panel, int expGroupIx) {
 		JPanel expPdlPanel = new JPanel();
 		// expPdlPanel.setLayout(new BoxLayout(expPdlPanel, BoxLayout.X_AXIS));
 		// expPdlPanel.setBorder(new EtchedBorder(EtchedBorder.RAISED));
@@ -547,7 +547,7 @@ public class FCB1010Editor extends PatchEditorFrame implements ActionListener {
 	/**
 	 * Adds a noteCtrl widgets to the given panel for the given patch.
 	 */
-	private void addNoteCtrlWidgets(Patch patch, JPanel panel) {
+	private void addNoteCtrlWidgets(PatchDataImpl patch, JPanel panel) {
 		JPanel noteCtrlPanel = new JPanel();
 		// noteCtrlPanel.setLayout(new BoxLayout(noteCtrlPanel, BoxLayout.X_AXIS));
 		noteCtrlPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.RAISED), "Note Control",
@@ -572,7 +572,7 @@ public class FCB1010Editor extends PatchEditorFrame implements ActionListener {
 	/**
 	 * Adds the global panel to the given panel for the given patch.
 	 */
-	private JPanel addGlobalPanel(Patch patch, JPanel panel) {
+	private JPanel addGlobalPanel(PatchDataImpl patch, JPanel panel) {
 		final String[] ccString = new String[] { "Control Chg. 1", "Control Chg. 2", "    Exp. Pedal A",
 				"    Exp. Pedal B", "  Note Number" };
 

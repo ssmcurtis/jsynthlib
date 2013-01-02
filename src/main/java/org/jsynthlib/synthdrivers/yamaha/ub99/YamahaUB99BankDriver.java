@@ -23,12 +23,12 @@ package org.jsynthlib.synthdrivers.yamaha.ub99;
 
 import java.io.UnsupportedEncodingException;
 
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.DriverUtil;
 
-public class YamahaUB99BankDriver extends BankDriver {
+public class YamahaUB99BankDriver extends SynthDriverBank {
 
 	private static final SysexHandler BANKDUMP_REQ = new SysexHandler("F0 43 7D 50 55 42 30 01 ** F7");
 
@@ -50,16 +50,16 @@ public class YamahaUB99BankDriver extends BankDriver {
 		singleSize = YamahaUB99Const.SINGLE_SIZE;
 	}
 
-	public String getPatchName(Patch p, int patchNum) {
+	public String getPatchName(PatchDataImpl p, int patchNum) {
 		int nameOfst = YamahaUB99Const.NAME_SIZE * patchNum + YamahaUB99Const.BANK_NAME_OFFSET;
 		try {
-			return new String(((Patch) p).getSysex(), nameOfst, patchNameSize, "US-ASCII");
+			return new String(((PatchDataImpl) p).getSysex(), nameOfst, patchNameSize, "US-ASCII");
 		} catch (UnsupportedEncodingException e) {
 			return "---";
 		}
 	}
 
-	public void setPatchName(Patch p, int patchNum, String name) {
+	public void setPatchName(PatchDataImpl p, int patchNum, String name) {
 		int banknameOfst = YamahaUB99Const.NAME_SIZE * patchNum + YamahaUB99Const.BANK_NAME_OFFSET;
 		int nameOfst = YamahaUB99Const.BANK_PATCH_OFFSET + singleSize * patchNum + YamahaUB99Const.NAME_OFFSET;
 
@@ -74,29 +74,29 @@ public class YamahaUB99BankDriver extends BankDriver {
 		}
 	}
 
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 	}
 
-	protected boolean canHoldPatch(Patch p) {
+	public boolean canHoldPatch(PatchDataImpl p) {
 		if ((singleSize != p.getSysex().length) && (singleSize != 0))
 			return false;
 		return true;
 	}
 
-	public void putPatch(Patch bank, Patch p, int patchNum) {
-		System.arraycopy(((Patch) p).getSysex(), 0, ((Patch) bank).getSysex(), YamahaUB99Const.BANK_PATCH_OFFSET
+	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) {
+		System.arraycopy(((PatchDataImpl) p).getSysex(), 0, ((PatchDataImpl) bank).getSysex(), YamahaUB99Const.BANK_PATCH_OFFSET
 				+ singleSize * patchNum, singleSize);
 	}
 
-	public Patch getPatch(Patch bank, int patchNum) {
+	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
 		byte[] sysex = new byte[singleSize];
-		System.arraycopy(((Patch) bank).getSysex(), YamahaUB99Const.BANK_PATCH_OFFSET + singleSize * patchNum, sysex,
+		System.arraycopy(((PatchDataImpl) bank).getSysex(), YamahaUB99Const.BANK_PATCH_OFFSET + singleSize * patchNum, sysex,
 				0, singleSize);
 
-		return new Patch(sysex, singleDriver);
+		return new PatchDataImpl(sysex, singleDriver);
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] header = { 85, 66, 57, 57, 32, 86, 49, 46, 48, 48 };
 		byte[] sysex = new byte[YamahaUB99Const.BANK_SIZE];
 
@@ -111,7 +111,7 @@ public class YamahaUB99BankDriver extends BankDriver {
 					YamahaUB99Const.SINGLE_SIZE);
 		}
 
-		Patch bank = new Patch(sysex, this);
+		PatchDataImpl bank = new PatchDataImpl(sysex, this);
 		return bank;
 	}
 
@@ -125,8 +125,8 @@ public class YamahaUB99BankDriver extends BankDriver {
 		}
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
-		Patch single;
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
+		PatchDataImpl single;
 		byte[] buf = new byte[] { (byte) 0xF0, (byte) 0x43, (byte) (0x7D), (byte) 0x30, (byte) 0x55, (byte) 0x42,
 				(byte) 0x39, (byte) 0x39, (byte) 0x00, (byte) 0x00, (byte) 0x30, (byte) 0x00, (byte) 0x00, (byte) 0x00,
 				(byte) 0xF7 };

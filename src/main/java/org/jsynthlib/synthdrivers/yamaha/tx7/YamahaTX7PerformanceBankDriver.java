@@ -23,8 +23,8 @@
  */
 package org.jsynthlib.synthdrivers.yamaha.tx7;
 
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.synthdrivers.yamaha.dx7.common.DX7FamilyDevice;
 import org.jsynthlib.synthdrivers.yamaha.dx7.common.DX7FamilyPerformanceBankDriver;
 
@@ -35,11 +35,11 @@ public class YamahaTX7PerformanceBankDriver extends DX7FamilyPerformanceBankDriv
 				YamahaTX7PerformanceConstants.BANK_PERFORMANCE_BANK_NUMBERS);
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		return super.createNewPatch();
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		if ((((DX7FamilyDevice) (getDevice())).getSwOffMemProtFlag() & 0x01) == 1) {
 			// switch off memory protection
 			send(YamahaTX7SysexHelper.swOffMemProt.toSysexMessage(getChannel() + 0x10));
@@ -56,7 +56,7 @@ public class YamahaTX7PerformanceBankDriver extends DX7FamilyPerformanceBankDriv
 		send(sysexRequestDump.toSysexMessage(getChannel() + 0x20));
 	}
 
-	public JSLFrame editPatch(Patch p) {
+	public JSLFrame editPatch(PatchDataImpl p) {
 		if ((((DX7FamilyDevice) (getDevice())).getTipsMsgFlag() & 0x01) == 1) {
 			// show Information
 			YamahaTX7Strings.dxShowInformation(toString(), YamahaTX7Strings.EDIT_BANK_PERFORMANCE_STRING);

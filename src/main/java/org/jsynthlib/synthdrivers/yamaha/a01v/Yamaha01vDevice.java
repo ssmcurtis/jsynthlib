@@ -23,7 +23,7 @@ package org.jsynthlib.synthdrivers.yamaha.a01v;
 
 import java.util.prefs.Preferences;
 
-import org.jsynthlib.menu.patch.Device;
+import org.jsynthlib.model.device.Device;
 
 public class Yamaha01vDevice extends Device {
 	private static final String INFO_TEXT = "Yamaha 01v librarian.";

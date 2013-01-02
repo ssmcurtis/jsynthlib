@@ -23,8 +23,8 @@
  */
 package org.jsynthlib.synthdrivers.yamaha.dxii;
 
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.synthdrivers.yamaha.dx7.common.DX7FamilyAdditionalVoiceSingleDriver;
 import org.jsynthlib.synthdrivers.yamaha.dx7.common.DX7FamilyDevice;
 
@@ -35,15 +35,15 @@ public class YamahaDX7IIAdditionalVoiceSingleDriver extends DX7FamilyAdditionalV
 				YamahaDX7IIAdditionalVoiceConstants.SINGLE_ADDITIONAL_VOICE_BANK_NUMBERS);
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		return super.createNewPatch();
 	}
 
-	public JSLFrame editPatch(Patch p) {
+	public JSLFrame editPatch(PatchDataImpl p) {
 		return super.editPatch(p);
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		sendPatchWorker(p);
 
 		if ((((DX7FamilyDevice) (getDevice())).getTipsMsgFlag() & 0x01) == 1)

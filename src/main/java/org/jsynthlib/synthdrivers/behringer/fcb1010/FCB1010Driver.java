@@ -21,17 +21,17 @@
 
 package org.jsynthlib.synthdrivers.behringer.fcb1010;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 /**
  * Behringer FCB1010 Driver.
  * 
  * @author Jeff Weber
  */
-class FCB1010Driver extends Driver {
+class FCB1010Driver extends SynthDriverPatchImpl {
 
 	/**
 	 * FCB1010 Dump Request
@@ -68,13 +68,13 @@ class FCB1010Driver extends Driver {
 	/**
 	 * FCB1010Driver patch does not utilize checksum. Method overridded with null method.
 	 */
-	protected void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p)  {
 	}
 
 	/**
 	 * FCB1010Driver patch does not utilize checksum. Method overridded with null method.
 	 */
-	protected void calculateChecksum(Patch patch, int start, int end, int offset) {
+	protected void calculateChecksum(PatchDataImpl patch, int start, int end, int offset) {
 	}
 
 	/**
@@ -87,15 +87,15 @@ class FCB1010Driver extends Driver {
 	/**
 	 * Creates a new patch with default values.
 	 */
-	protected Patch createNewPatch() {
-		Patch p = new Patch(Constants.NEW_SYSEX, this);
+	protected PatchDataImpl createNewPatch() {
+		PatchDataImpl p = new PatchDataImpl(Constants.NEW_SYSEX, this);
 		return p;
 	}
 
 	/**
 	 * Opens an edit window on the specified patch.
 	 */
-	protected JSLFrame editPatch(Patch p) {
-		return new FCB1010Editor((Patch) p);
+	public JSLFrame editPatch(PatchDataImpl p) {
+		return new FCB1010Editor((PatchDataImpl) p);
 	}
 }

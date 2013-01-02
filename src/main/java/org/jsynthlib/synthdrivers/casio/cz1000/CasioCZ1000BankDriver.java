@@ -29,11 +29,11 @@ package org.jsynthlib.synthdrivers.casio.cz1000;
 
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
-public class CasioCZ1000BankDriver extends BankDriver {
+public class CasioCZ1000BankDriver extends SynthDriverBank {
 
 	public CasioCZ1000BankDriver() {
 		super("Bank", "Yves Lefebvre", 16, 4);
@@ -59,11 +59,11 @@ public class CasioCZ1000BankDriver extends BankDriver {
 	//
 	// }
 
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 
 	}
 
-	public void putPatch(Patch bank, Patch p, int patchNum) {
+	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) {
 		// This method is called when doing a paste (from another bank or a single)
 		// the patch received will be a single dump (meant for the edit buffer)
 		// we need to extract the actual patch info and paste it in the bank itself
@@ -73,11 +73,11 @@ public class CasioCZ1000BankDriver extends BankDriver {
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-		System.arraycopy(((Patch) p).getSysex(), 7, ((Patch) bank).getSysex(), getPatchStart(patchNum), 264 - 7);
+		System.arraycopy(((PatchDataImpl) p).getSysex(), 7, ((PatchDataImpl) bank).getSysex(), getPatchStart(patchNum), 264 - 7);
 		calculateChecksum(bank);
 	}
 
-	public Patch getPatch(Patch bank, int patchNum) {
+	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
 		// this method is call when you have a bank opened and want to send or play individual patches
 		// OR when you do a Cut/Copy
 		// The method is call to retreive a single patch to send using the default sendPatch()
@@ -93,17 +93,17 @@ public class CasioCZ1000BankDriver extends BankDriver {
 			sysex[5] = (byte) 0x20;
 			sysex[6] = (byte) (0x60); // to send to edit buffer
 			sysex[263] = (byte) 0xF7;
-			System.arraycopy(((Patch) bank).getSysex(), getPatchStart(patchNum), sysex, 7, 264 - 7);
-			Patch p = new Patch(sysex, getDevice());
+			System.arraycopy(((PatchDataImpl) bank).getSysex(), getPatchStart(patchNum), sysex, 7, 264 - 7);
+			PatchDataImpl p = new PatchDataImpl(sysex, getDevice());
 			p.calculateChecksum();
 			return p;
 		} catch (Exception e) {
-			ErrorMsg.reportError("Error", "Error in Nova1 Bank Driver", e);
+			ErrorMsgUtil.reportError("Error", "Error in Nova1 Bank Driver", e);
 			return null;
 		}
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		// There is no additionnal header on the Bank dump itself.
 
 		byte[] sysex = new byte[(264 * 16)];
@@ -117,7 +117,7 @@ public class CasioCZ1000BankDriver extends BankDriver {
 		sysexHeader[5] = (byte) 0x20; // store command
 		sysexHeader[6] = (byte) 0x20; // patch number (internal start at 0x20)
 
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		for (int i = 0; i < 16; i++) {
 			sysexHeader[6] = (byte) (0x20 + i); // patch nunmber
 			System.arraycopy(sysexHeader, 0, p.getSysex(), i * 264, 7);
@@ -128,29 +128,29 @@ public class CasioCZ1000BankDriver extends BankDriver {
 		return p;
 	}
 
-	public void storePatch(Patch bank, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl bank, int bankNum, int patchNum) {
 		// This is called when the user want to Store a bank.
 		byte[] newsysex = new byte[264];
-		Patch p = new Patch(newsysex, getDevice());
+		PatchDataImpl p = new PatchDataImpl(newsysex, getDevice());
 		try {
 			for (int i = 0; i < 16; i++) {
-				System.arraycopy(((Patch) bank).getSysex(), 264 * i, p.getSysex(), 0, 264);
+				System.arraycopy(((PatchDataImpl) bank).getSysex(), 264 * i, p.getSysex(), 0, 264);
 				sendPatchWorker(p);
 				Thread.sleep(100); // a small delay to play safe
 			}
 		} catch (Exception e) {
-			ErrorMsg.reportError("Error", "Unable to send Patch", e);
+			ErrorMsgUtil.reportError("Error", "Unable to send Patch", e);
 		}
 	}
 
 	public void setBankNum(int bankNum) {
 	}
 
-	protected String getPatchName(Patch bank, int patchNum) {
+	public String getPatchName(PatchDataImpl bank, int patchNum) {
 		return "-";
 	}
 
-	protected void setPatchName(Patch bank, int patchNum, String name) {
+	public void setPatchName(PatchDataImpl bank, int patchNum, String name) {
 		// do nothing
 	}
 }

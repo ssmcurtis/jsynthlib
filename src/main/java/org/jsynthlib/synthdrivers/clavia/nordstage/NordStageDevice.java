@@ -2,7 +2,7 @@ package org.jsynthlib.synthdrivers.clavia.nordstage;
 
 import java.util.prefs.Preferences;
 
-import org.jsynthlib.menu.patch.Device;
+import org.jsynthlib.model.device.Device;
 
 /**
  * This is a beta driver for the Nord Stage Rev. B. It has been tested on OS 2.16.

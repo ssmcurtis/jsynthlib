@@ -26,7 +26,7 @@ package org.jsynthlib.synthdrivers.midibox.fm;
 
 import java.util.prefs.Preferences;
 
-import org.jsynthlib.menu.patch.Device;
+import org.jsynthlib.model.device.Device;
 
 public class MIDIboxFMDevice extends Device {
 	private static final String infoText = "This driver has been created for MIDIbox FM, a non-commercial DIY "

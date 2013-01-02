@@ -6,8 +6,9 @@ import java.util.Map;
 
 import javax.swing.AbstractAction;
 
-import org.jsynthlib.menu.ui.window.BankEditorFrame;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.Actions;
+import org.jsynthlib.menu.window.BankEditorFrame;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 // Added by Joe Emenaker - 2005-10-24
 public class PrintAction extends AbstractAction {
@@ -22,10 +23,10 @@ public class PrintAction extends AbstractAction {
 			if (Actions.getSelectedFrame() instanceof BankEditorFrame) {
 				((BankEditorFrame) Actions.getSelectedFrame()).printPatch();
 			} else {
-				ErrorMsg.reportError("Error", "You can only print a Bank window.");
+				ErrorMsgUtil.reportError("Error", "You can only print a Bank window.");
 			}
 		} catch (Exception ex) {
-			ErrorMsg.reportError("Error", "Patch to Play must be highlighted in the focused Window.", ex);
+			ErrorMsgUtil.reportError("Error", "Patch to Play must be highlighted in the focused Window."+ getClass().getSimpleName(), ex);
 		}
 	}
 }

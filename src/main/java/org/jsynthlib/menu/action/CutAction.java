@@ -6,7 +6,8 @@ import java.util.Map;
 
 import javax.swing.AbstractAction;
 
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.Actions;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 public class CutAction extends AbstractAction {
 	public CutAction(Map<Serializable, Integer> mnemonics) {
@@ -20,7 +21,7 @@ public class CutAction extends AbstractAction {
 			Actions.getSelectedFrame().copySelectedPatch();
 			Actions.getSelectedFrame().deleteSelectedPatches();
 		} catch (Exception ex) {
-			ErrorMsg.reportError("Error", "Patch to cut must be hilighted\nin the focused Window.", ex);
+			ErrorMsgUtil.reportError("Error", "Patch to cut must be hilighted\nin the focused Window."+ getClass().getSimpleName(), ex);
 		}
 	}
 }

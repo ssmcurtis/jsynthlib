@@ -14,12 +14,12 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.EnvelopeWidget;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.PatchNameWidget;
 import org.jsynthlib.widgets.ScrollBarLookupWidget;
 import org.jsynthlib.widgets.ScrollBarWidget;
@@ -134,7 +134,7 @@ class EmuProteusMPSSingleEditor extends PatchEditorFrame {
 			{ { 0, 127 }, { 1, 127 }, { -18, 18 }, { 0, 127 }, { 1, 127 }, { -18, 18 } }, // eq
 			{ { 0, 255 }, { 0, 255 } } }; // fuzzlite
 
-	public EmuProteusMPSSingleEditor(Patch patch) {
+	public EmuProteusMPSSingleEditor(PatchDataImpl patch) {
 		super("Emu ProteusMPS Single Editor", patch);
 		JTabbedPane tabPane = new JTabbedPane();
 		JPanel wavePane = new JPanel();
@@ -725,7 +725,7 @@ class InstSender extends SysexSender {
 }
 
 class MPSModel extends ParamModel {
-	public MPSModel(Patch p, int o) {
+	public MPSModel(PatchDataImpl p, int o) {
 		super(p, o * 2 + 7);
 	}
 
@@ -754,7 +754,7 @@ class MPSModel extends ParamModel {
 }
 
 class InstModel extends ParamModel {
-	public InstModel(Patch p, int o) {
+	public InstModel(PatchDataImpl p, int o) {
 		super(p, o * 2 + 7);
 	}
 

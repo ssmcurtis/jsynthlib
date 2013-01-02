@@ -21,7 +21,7 @@
 
 package org.jsynthlib.synthdrivers.alesis.dm5;
 
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 /**
  * The PacketModel derives from the BitModel class and allows for editing of the individual note "packets" within a
@@ -40,7 +40,7 @@ class PacketModel extends BitModel {
 	 * Constructs a PacketModel given the patch, the offset into the sysex record, the mask representing the parameter,
 	 * and the packetIndex.
 	 */
-	PacketModel(Patch p, int offset, byte mask, int packetIndex) {
+	PacketModel(PatchDataImpl p, int offset, byte mask, int packetIndex) {
 		super(p, offset, mask);
 		this.packetIndex = packetIndex;
 	}
@@ -49,7 +49,7 @@ class PacketModel extends BitModel {
 	 * Constructs a PacketModel given the patch, the offset into the sysex record, and the mask representing the
 	 * parameter. The packetIndex is defaulted to zero.
 	 */
-	PacketModel(Patch p, int offset, byte mask) {
+	PacketModel(PatchDataImpl p, int offset, byte mask) {
 		super(p, offset, mask);
 		this.packetIndex = 0;
 	}

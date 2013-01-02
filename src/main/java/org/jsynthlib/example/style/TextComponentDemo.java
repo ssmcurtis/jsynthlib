@@ -75,7 +75,7 @@ import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 
-import org.jsynthlib.tools.Utility;
+import org.jsynthlib.tools.UiUtil;
 
 public class TextComponentDemo extends JFrame {
     JTextPane textPane;
@@ -93,7 +93,7 @@ public class TextComponentDemo extends JFrame {
     public TextComponentDemo() {
         super("TextComponentDemo");
         setSize(600, 500);
-		Utility.centerDialog(this);
+		UiUtil.centerDialog(this);
         
 		//Create the text pane and configure it.
         textPane = new JTextPane();

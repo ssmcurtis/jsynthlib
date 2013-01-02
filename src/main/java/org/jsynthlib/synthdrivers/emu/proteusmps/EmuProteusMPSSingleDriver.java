@@ -7,13 +7,13 @@ import java.io.UnsupportedEncodingException;
 
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.DriverUtil;
 
-public class EmuProteusMPSSingleDriver extends Driver {
+public class EmuProteusMPSSingleDriver extends SynthDriverPatchImpl {
 	final static SysexHandler SysexRequestDump = new SysexHandler("F0 18 08 00 00 *bankNum* *patchNum* F7");
 
 	public EmuProteusMPSSingleDriver() {
@@ -32,11 +32,11 @@ public class EmuProteusMPSSingleDriver extends Driver {
 
 	}
 
-	public String getPatchName(Patch ip) {
+	public String getPatchName(PatchDataImpl ip) {
 		if (patchNameSize == 0)
 			return ("-");
 		try {
-			StringBuffer s = new StringBuffer(new String(((Patch) ip).getSysex(), patchNameStart,
+			StringBuffer s = new StringBuffer(new String(((PatchDataImpl) ip).getSysex(), patchNameStart,
 					patchNameSize * 2 - 1, "US-ASCII"));
 			for (int i = 1; i < s.length(); i++)
 				s.deleteCharAt(i);
@@ -46,7 +46,7 @@ public class EmuProteusMPSSingleDriver extends Driver {
 		}
 	}
 
-	public void setPatchName(Patch p, String name) {
+	public void setPatchName(PatchDataImpl p, String name) {
 		if (patchNameSize == 0) {
 			JOptionPane.showMessageDialog(null, "The Driver for this patch does not support Patch Name Editing.",
 					"Error", JOptionPane.ERROR_MESSAGE);
@@ -58,7 +58,7 @@ public class EmuProteusMPSSingleDriver extends Driver {
 		try {
 			namebytes = name.getBytes("US-ASCII");
 			for (int i = 0; i < patchNameSize; i++)
-				((Patch) p).getSysex()[patchNameStart + (i * 2)] = namebytes[i];
+				((PatchDataImpl) p).getSysex()[patchNameStart + (i * 2)] = namebytes[i];
 
 		} catch (UnsupportedEncodingException ex) {
 			return;
@@ -66,9 +66,9 @@ public class EmuProteusMPSSingleDriver extends Driver {
 		calculateChecksum(p);
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
-		((Patch) p).getSysex()[5] = (byte) ((bankNum * 100 + patchNum) % 128);
-		((Patch) p).getSysex()[6] = (byte) ((bankNum * 100 + patchNum) / 128);
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
+		((PatchDataImpl) p).getSysex()[5] = (byte) ((bankNum * 100 + patchNum) % 128);
+		((PatchDataImpl) p).getSysex()[6] = (byte) ((bankNum * 100 + patchNum) / 128);
 		setBankNum(bankNum);
 		setPatchNum(patchNum);
 		sendPatchWorker(p);
@@ -84,18 +84,18 @@ public class EmuProteusMPSSingleDriver extends Driver {
 	 * storePatch(p,patchNum.intValue()/100,patchNum.intValue()%100); }catch (Exception e)
 	 * {JOptionPane.showMessageDialog(null, "Invalid Patch Number Entered!","Error", JOptionPane.ERROR_MESSAGE);} }
 	 */
-	public void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 
 		Integer patchNum = new Integer(100);
-		((Patch) p).getSysex()[5] = (byte) (patchNum.intValue() % 128);
-		((Patch) p).getSysex()[6] = (byte) (patchNum.intValue() / 128);
+		((PatchDataImpl) p).getSysex()[5] = (byte) (patchNum.intValue() % 128);
+		((PatchDataImpl) p).getSysex()[6] = (byte) (patchNum.intValue() / 128);
 		setBankNum(patchNum.intValue() / 100);
 		setPatchNum(patchNum.intValue() % 100);
 		sendPatchWorker(p);
 	}
 
-	public void calculateChecksum(Patch ip) {
-		Patch p = (Patch) ip;
+	public void calculateChecksum(PatchDataImpl ip) {
+		PatchDataImpl p = (PatchDataImpl) ip;
 		int i;
 		int sum = 0;
 
@@ -105,7 +105,7 @@ public class EmuProteusMPSSingleDriver extends Driver {
 
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[319];
 		sysex[0] = (byte) 0xF0;
 		sysex[1] = (byte) 0x18;
@@ -113,14 +113,14 @@ public class EmuProteusMPSSingleDriver extends Driver {
 		sysex[3] = (byte) 0x00;
 		sysex[4] = (byte) 0x01;
 		sysex[318] = (byte) 0xF7;
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		setPatchName(p, "New Patch");
 		calculateChecksum(p);
 		return p;
 	}
 
-	public JSLFrame editPatch(Patch p) {
-		return new EmuProteusMPSSingleEditor((Patch) p);
+	public JSLFrame editPatch(PatchDataImpl p) {
+		return new EmuProteusMPSSingleEditor((PatchDataImpl) p);
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {

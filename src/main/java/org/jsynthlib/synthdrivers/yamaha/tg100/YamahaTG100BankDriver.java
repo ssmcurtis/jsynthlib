@@ -25,10 +25,10 @@ import java.io.UnsupportedEncodingException;
 
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.DriverUtil;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 /**
  * Driver for Yamaha TG100 Bank's
@@ -36,7 +36,7 @@ import org.jsynthlib.tools.ErrorMsg;
  * @author Joachim Backhaus
  * @version $Id$
  */
-public class YamahaTG100BankDriver extends BankDriver {
+public class YamahaTG100BankDriver extends SynthDriverBank {
 
 	/*
 	 * Sends only "all" dumps of size 8266 in Bytes
@@ -68,7 +68,7 @@ public class YamahaTG100BankDriver extends BankDriver {
 		this.patchSize = this.singleSize * patchNumbers.length; // Should be 6720 Bytes
 	}
 
-	public void calculateChecksum(Patch p, int patchNum) {
+	public void calculateChecksum(PatchDataImpl p, int patchNum) {
 		calculateChecksum(p, getPatchStart(patchNum) + this.checksumStart, getPatchStart(patchNum) + this.checksumEnd,
 				getPatchStart(patchNum) + this.checksumOffset);
 	}
@@ -76,7 +76,7 @@ public class YamahaTG100BankDriver extends BankDriver {
 	/**
 	 * Replacement for sendPatchWorker which doesn't work here as each sysex sub part has to be send separately
 	 */
-	private final void doSendPatch(Patch p) {
+	private final void doSendPatch(PatchDataImpl p) {
 		byte[] tempSysex = new byte[this.singleSize];
 
 		for (int patchNum = 0; patchNum < patchNumbers.length; patchNum++) {
@@ -91,7 +91,7 @@ public class YamahaTG100BankDriver extends BankDriver {
 			// Wait a little bit else the TG-100 can't handle the SysEx
 			Thread.sleep(30);
 		} catch (Exception ex) {
-			ErrorMsg.reportError("Error", "Error requesting the internal bank.", ex);
+			ErrorMsgUtil.reportError("Error", "Error requesting the internal bank.", ex);
 		}
 	}
 
@@ -105,7 +105,7 @@ public class YamahaTG100BankDriver extends BankDriver {
 	 * @param patchNum
 	 *            Ignored
 	 */
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		doSendPatch(p);
 	}
 
@@ -121,7 +121,7 @@ public class YamahaTG100BankDriver extends BankDriver {
 	/**
 	 * Puts a patch into the bank, converting it as needed
 	 */
-	public void putPatch(Patch bank, Patch p, int patchNum) {
+	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) {
 		if (!canHoldPatch(p)) {
 			{
 				JOptionPane.showMessageDialog(null, "This type of patch does not fit in to this type of bank.",
@@ -139,17 +139,17 @@ public class YamahaTG100BankDriver extends BankDriver {
 	/**
 	 * Gets a patch from the bank, converting it as needed
 	 */
-	public Patch getPatch(Patch bank, int patchNum) {
+	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
 		try {
 			byte[] sysex = new byte[this.singleSize];
 
 			System.arraycopy(bank.getSysex(), getPatchStart(patchNum), sysex, 0, this.singleSize);
-			Patch p = new Patch(sysex);
+			PatchDataImpl p = new PatchDataImpl(sysex);
 			calculateChecksum(p);
 
 			return p;
 		} catch (Exception e) {
-			ErrorMsg.reportError("Error", "Error in Yamaha TG-100 Bank Driver", e);
+			ErrorMsgUtil.reportError("Error", "Error in Yamaha TG-100 Bank Driver", e);
 			return null;
 		}
 	}
@@ -157,7 +157,7 @@ public class YamahaTG100BankDriver extends BankDriver {
 	/**
 	 * Get the name of the patch at the given number
 	 */
-	public String getPatchName(Patch p, int patchNum) {
+	public String getPatchName(PatchDataImpl p, int patchNum) {
 		int nameStart = getPatchStart(patchNum);
 		nameStart += TG100Constants.PATCH_NAME_START; // offset of name in patch data
 		try {
@@ -170,7 +170,7 @@ public class YamahaTG100BankDriver extends BankDriver {
 	}
 
 	/** Set the name of the patch at the given number <code>patchNum</code>. */
-	public void setPatchName(Patch p, int patchNum, String name) {
+	public void setPatchName(PatchDataImpl p, int patchNum, String name) {
 		int tempPatchNameStart = this.patchNameStart + this.getPatchStart(patchNum);
 
 		while (name.length() < patchNameSize)
@@ -188,11 +188,11 @@ public class YamahaTG100BankDriver extends BankDriver {
 		this.calculateChecksum(p, patchNum);
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[this.patchSize];
 
-		Patch p;
-		Patch tempPatch;
+		PatchDataImpl p;
+		PatchDataImpl tempPatch;
 
 		for (int patchNum = 0; patchNum < patchNumbers.length; patchNum++) {
 			tempPatch = YamahaTG100SingleDriver.createNewPatch(patchNum);
@@ -202,7 +202,7 @@ public class YamahaTG100BankDriver extends BankDriver {
 			System.arraycopy(tempPatch.getSysex(), 0, sysex, getPatchStart(patchNum), this.singleSize);
 		}
 
-		p = new Patch(sysex);
+		p = new PatchDataImpl(sysex);
 
 		return p;
 	}

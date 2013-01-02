@@ -7,13 +7,13 @@ import java.io.UnsupportedEncodingException;
 
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
-public class NovationXioSynthBankDriver extends BankDriver {
+public class NovationXioSynthBankDriver extends SynthDriverBank {
 	private final NovationXioSynthSingleDriver singleDriver;
-	Patch bank = null;
+	PatchDataImpl bank = null;
 
 	/* I use this global to be able to delete in deletePatch... */
 	/* Ugly hack.. */
@@ -69,12 +69,12 @@ public class NovationXioSynthBankDriver extends BankDriver {
 	public void copySelectedPatch() {
 	}
 
-	public String getPatchName(Patch p, int patchNum) {
+	public String getPatchName(PatchDataImpl p, int patchNum) {
 		int nameStart = getPatchStart(patchNum);
 		nameStart += 164; // offset of name in patch data
 		String retname = new String();
 		try {
-			StringBuffer s = new StringBuffer(new String(((Patch) p).getSysex(), nameStart, 16, "US-ASCII"));
+			StringBuffer s = new StringBuffer(new String(((PatchDataImpl) p).getSysex(), nameStart, 16, "US-ASCII"));
 			retname = s.toString();
 			while (retname.length() < 16)
 				retname += " ";
@@ -87,14 +87,14 @@ public class NovationXioSynthBankDriver extends BankDriver {
 	protected void setPatchNum(int patchNum) {
 	}
 
-	public void setPatchName(Patch p, int patchNum, String name) {
+	public void setPatchName(PatchDataImpl p, int patchNum, String name) {
 		/* do nothing here, names can just be changed in single editor */
 	}
 
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 	}
 
-	public void putPatch(Patch bank, Patch p, int patchNum) {
+	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) {
 		if (!canHoldPatch(p)) {
 			JOptionPane.showMessageDialog(null, "This type of patch does not fit in to this type of bank.", "Error",
 					JOptionPane.ERROR_MESSAGE);
@@ -104,38 +104,38 @@ public class NovationXioSynthBankDriver extends BankDriver {
 		p.getSysex()[7] = (byte) 0x01;
 		p.getSysex()[12] = (byte) patchNum;
 
-		System.arraycopy(((Patch) p).getSysex(), 0, ((Patch) bank).getSysex(), getPatchStart(patchNum), 270);
+		System.arraycopy(((PatchDataImpl) p).getSysex(), 0, ((PatchDataImpl) bank).getSysex(), getPatchStart(patchNum), 270);
 	}
 
-	public Patch getPatch(Patch bank, int patchNum) {
+	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
 		this.bank = bank;
 
 		try {
 			byte[] sysex = new byte[270];
 
-			System.arraycopy(((Patch) bank).getSysex(), getPatchStart(patchNum), sysex, 0, 270);
+			System.arraycopy(((PatchDataImpl) bank).getSysex(), getPatchStart(patchNum), sysex, 0, 270);
 			sysex[269] = (byte) 0xF7;
 			sysex[7] = (byte) 0X00;
 			sysex[12] = (byte) patchNum;
 
-			Patch p = new Patch(sysex, singleDriver);
+			PatchDataImpl p = new PatchDataImpl(sysex, singleDriver);
 
 			return p;
 		} catch (Exception e) {
-			ErrorMsg.reportError("Error", "Error in Novation XioSynth Bank Driver", e);
+			ErrorMsgUtil.reportError("Error", "Error in Novation XioSynth Bank Driver", e);
 			return null;
 		}
 	}
 
-	protected void deletePatch(Patch single, int patchNum) {
-		Patch p = singleDriver.createNewPatch();
+	public void deletePatch(PatchDataImpl single, int patchNum) {
+		PatchDataImpl p = singleDriver.createNewPatch();
 
 		if (bank != null) {
 			putPatch(bank, p, patchNum);
 		}
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[270 * 100];
 
 		byte[] b = new byte[] { (byte) 0xF0, (byte) 0x00, (byte) 0x20, (byte) 0x29, (byte) 0x01, (byte) 0x42,
@@ -173,7 +173,7 @@ public class NovationXioSynthBankDriver extends BankDriver {
 				(byte) 0x07, (byte) 0x07, (byte) 0x00, (byte) 0x3F, (byte) 0x07, (byte) 0x3F, (byte) 0x00, (byte) 0x3F,
 				(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0xF7 };
 
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		/* todo : replace this by an arraycopy */
 		for (int i = 0; i < 100; i++) {
 			for (int j = 0; j < 270; j++) {

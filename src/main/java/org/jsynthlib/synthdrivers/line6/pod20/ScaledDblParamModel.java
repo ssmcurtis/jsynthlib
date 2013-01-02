@@ -21,8 +21,8 @@
 
 package org.jsynthlib.synthdrivers.line6.pod20;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.widgets.ParamModel;
 
 /**
  * Scalable Double (two-byte) ParamModel--Used for two-byte sysex parameters. Also allows different max values for CC
@@ -65,7 +65,7 @@ class ScaledDblParamModel extends ParamModel {
 	 * Constructs a ScaledDblParamModel. Patch p is the reference to the patch containing the sysex record. int o is the
 	 * offset into the sysex record in non-nibblized bytes, not including the header bytes.
 	 */
-	ScaledDblParamModel(Patch p, int o) {
+	ScaledDblParamModel(PatchDataImpl p, int o) {
 		this(p, o, 0, 1, 0, 1, false);
 	}
 
@@ -75,7 +75,7 @@ class ScaledDblParamModel extends ParamModel {
 	 * record in non-nibblized bytes, not including the header bytes. int maxCC is the maximum CC value. int maxSysex is
 	 * the max sysex value
 	 */
-	ScaledDblParamModel(Patch p, int o, int maxCC, int maxSysex) {
+	ScaledDblParamModel(PatchDataImpl p, int o, int maxCC, int maxSysex) {
 		this(p, o, 0, maxCC, 0, maxSysex, false);
 	}
 
@@ -87,7 +87,7 @@ class ScaledDblParamModel extends ParamModel {
 	 * are the minimum and maximum sysex values, respectively. boolean reverse reverses the range to min to max when set
 	 * to true.
 	 */
-	ScaledDblParamModel(Patch p, int o, int minCC, int maxCC, int minSysex, int maxSysex, boolean reverse) {
+	ScaledDblParamModel(PatchDataImpl p, int o, int minCC, int maxCC, int minSysex, int maxSysex, boolean reverse) {
 		super(p, o);
 		this.reverse = reverse;
 		this.minCC = minCC;

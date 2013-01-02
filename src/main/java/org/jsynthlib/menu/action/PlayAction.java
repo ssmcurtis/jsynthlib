@@ -6,7 +6,8 @@ import java.util.Map;
 
 import javax.swing.AbstractAction;
 
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.Actions;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 public class PlayAction extends AbstractAction {
 	public PlayAction(Map<Serializable, Integer> mnemonics) {
@@ -20,7 +21,7 @@ public class PlayAction extends AbstractAction {
 			
 			Actions.getSelectedFrame().playSelectedPatch();
 		} catch (Exception ex) {
-			ErrorMsg.reportError("Error", "Patch to Play must be highlighted in the focused Window.", ex);
+			ErrorMsgUtil.reportError("Error", "Patch to Play must be highlighted in the focused Window."+ getClass().getSimpleName(), ex);
 		}
 	}
 }

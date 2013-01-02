@@ -7,7 +7,7 @@ package org.jsynthlib.synthdrivers.roland.gp16;
 
 import java.util.prefs.Preferences;
 
-import org.jsynthlib.menu.patch.Device;
+import org.jsynthlib.model.device.Device;
 
 /**
  * Device class for ROLAND GP16.

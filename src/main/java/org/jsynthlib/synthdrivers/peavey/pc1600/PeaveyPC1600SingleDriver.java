@@ -16,16 +16,16 @@
 
 package org.jsynthlib.synthdrivers.peavey.pc1600;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.tools.NibbleSysex;
+import org.jsynthlib.menu.helper.NibbleSysex;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 //======================================================================================================================
 // Class: PeaveyPC1600SingleDriver
 //======================================================================================================================
 
-public class PeaveyPC1600SingleDriver extends Driver {
+public class PeaveyPC1600SingleDriver extends SynthDriverPatchImpl {
 	final static int NIBBLE_MULTIPLIER = 16;
 
 	final static int PATCH_SIZE_START = 39; // (F0 00 00 1B 0B ch 04).size + <name>.size = 7 + 32 = 39;
@@ -77,8 +77,8 @@ public class PeaveyPC1600SingleDriver extends Driver {
 	// PeaveyPC1600SingleDriver->getPatchName
 	// ----------------------------------------------------------------------------------------------------------------------
 
-	public String getPatchName(Patch ip) {
-		NibbleSysex nibbleSysex = new NibbleSysex(((Patch) ip).getSysex(), PATCH_NAME_START);
+	public String getPatchName(PatchDataImpl ip) {
+		NibbleSysex nibbleSysex = new NibbleSysex(((PatchDataImpl) ip).getSysex(), PATCH_NAME_START);
 		return nibbleSysex.getNibbleStr(PATCH_NAME_SIZE, PATCH_NAME_CHAR_BYTES, NIBBLE_MULTIPLIER);
 	}
 
@@ -86,8 +86,8 @@ public class PeaveyPC1600SingleDriver extends Driver {
 	// PeaveyPC1600SingleDriver->setPatchName
 	// ----------------------------------------------------------------------------------------------------------------------
 
-	public void setPatchName(Patch p, String name) {
-		NibbleSysex nibbleSysex = new NibbleSysex(((Patch) p).getSysex(), PATCH_NAME_START);
+	public void setPatchName(PatchDataImpl p, String name) {
+		NibbleSysex nibbleSysex = new NibbleSysex(((PatchDataImpl) p).getSysex(), PATCH_NAME_START);
 		nibbleSysex.putNibbleStr(name, PATCH_NAME_SIZE, PATCH_NAME_CHAR_BYTES, NIBBLE_MULTIPLIER);
 	}
 
@@ -95,7 +95,7 @@ public class PeaveyPC1600SingleDriver extends Driver {
 	// PeaveyPC1600SingleDriver->sendPatch
 	// ----------------------------------------------------------------------------------------------------------------------
 
-	public void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		storePatch(p, 0, 0);
 	}
 
@@ -103,7 +103,7 @@ public class PeaveyPC1600SingleDriver extends Driver {
 	// PeaveyPC1600SingleDriver->storePatch
 	// ----------------------------------------------------------------------------------------------------------------------
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		sendPatchWorker(p);
 
 		// Request PC1600 stores edit buffer with this patchNum

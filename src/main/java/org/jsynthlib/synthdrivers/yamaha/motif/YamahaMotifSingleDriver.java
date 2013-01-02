@@ -3,13 +3,13 @@ package org.jsynthlib.synthdrivers.yamaha.motif;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 /** Base driver for Yamaha Motif voices */
-public abstract class YamahaMotifSingleDriver extends Driver {
+public abstract class YamahaMotifSingleDriver extends SynthDriverPatchImpl {
 
 	String base_address;
 	String edit_buffer_base_address;
@@ -41,47 +41,47 @@ public abstract class YamahaMotifSingleDriver extends Driver {
 		}
 	}
 
-	public String getPatchName(Patch ip) {
+	public String getPatchName(PatchDataImpl ip) {
 		int address = Byte.parseByte(parameter_base_address, 16);
 		address = (address << 16) | 0x007000;
-		int offset = YamahaMotifSysexUtility.findBaseAddressOffset(((Patch) ip).getSysex(), address);
+		int offset = YamahaMotifSysexUtility.findBaseAddressOffset(((PatchDataImpl) ip).getSysex(), address);
 		try {
-			return new String(((Patch) ip).getSysex(), offset + YamahaMotifSysexUtility.DATA_OFFSET, 10, "US-ASCII");
+			return new String(((PatchDataImpl) ip).getSysex(), offset + YamahaMotifSysexUtility.DATA_OFFSET, 10, "US-ASCII");
 		} catch (UnsupportedEncodingException e) {
 			return "-";
 		}
 	}
 
-	public void setPatchName(Patch p, String name) {
+	public void setPatchName(PatchDataImpl p, String name) {
 		byte[] namebytes;
 		int address = Byte.parseByte(parameter_base_address, 16);
 		address = (address << 16) | 0x007000;
-		int offset = YamahaMotifSysexUtility.findBaseAddressOffset(((Patch) p).getSysex(), address);
+		int offset = YamahaMotifSysexUtility.findBaseAddressOffset(((PatchDataImpl) p).getSysex(), address);
 		try {
 			namebytes = name.getBytes("US-ASCII");
 			for (int i = 0; i < 10; i++) {
 				if (i >= namebytes.length)
-					((Patch) p).getSysex()[offset + i + YamahaMotifSysexUtility.DATA_OFFSET] = (byte) ' ';
+					((PatchDataImpl) p).getSysex()[offset + i + YamahaMotifSysexUtility.DATA_OFFSET] = (byte) ' ';
 				else
-					((Patch) p).getSysex()[offset + i + YamahaMotifSysexUtility.DATA_OFFSET] = namebytes[i];
+					((PatchDataImpl) p).getSysex()[offset + i + YamahaMotifSysexUtility.DATA_OFFSET] = namebytes[i];
 			}
-			YamahaMotifSysexUtility.checksum(((Patch) p).getSysex(), offset);
+			YamahaMotifSysexUtility.checksum(((PatchDataImpl) p).getSysex(), offset);
 		} catch (UnsupportedEncodingException e) {
 			return;
 		}
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
-		sendPatchWorker((Patch) p, patchNum);
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
+		sendPatchWorker((PatchDataImpl) p, patchNum);
 	}
 
 	/** Send to edit buffer */
-	protected void sendPatch(Patch p) {
-		sendPatchWorker((Patch) p, -1);
+	public void sendPatch(PatchDataImpl p) {
+		sendPatchWorker((PatchDataImpl) p, -1);
 	}
 
 	/** Does the actual work to send a patch to the synth */
-	protected void sendPatchWorker(Patch p, int patchnum) {
+	protected void sendPatchWorker(PatchDataImpl p, int patchnum) {
 		// Fix the header/footer
 		for (int offset = 0; offset <= p.getSysex().length - YamahaMotifSysexUtility.SYSEX_OVERHEAD; offset += p.getSysex().length
 				- YamahaMotifSysexUtility.SYSEX_OVERHEAD) {
@@ -100,8 +100,8 @@ public abstract class YamahaMotifSingleDriver extends Driver {
 		p.getSysex()[YamahaMotifSysexUtility.ADDRESS_OFFSET + 1] = Byte.parseByte(base_address, 16);
 	}
 
-	public void calculateChecksum(Patch p) {
-		YamahaMotifSysexUtility.checksum(((Patch) p).getSysex());
+	public void calculateChecksum(PatchDataImpl p) {
+		YamahaMotifSysexUtility.checksum(((PatchDataImpl) p).getSysex());
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {
@@ -110,15 +110,15 @@ public abstract class YamahaMotifSingleDriver extends Driver {
 
 	// Stolen from the YamahaFS1RVoiceEditor
 	// I probably should use some other method to do this, but I'm lazy.
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		try {
 			InputStream fileIn = getClass().getResourceAsStream(defaults_filename);
 			byte[] buffer = new byte[patchSize];
 			fileIn.read(buffer);
 			fileIn.close();
-			return new Patch(buffer, this);
+			return new PatchDataImpl(buffer, this);
 		} catch (Exception e) {
-			ErrorMsg.reportError("Error", "Unable to find " + defaults_filename, e);
+			ErrorMsgUtil.reportError("Error", "Unable to find " + defaults_filename, e);
 			return null;
 		}
 	}

@@ -39,8 +39,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.KnobWidget;
 import org.jsynthlib.widgets.PatchNameWidget;
@@ -58,10 +58,10 @@ public class YamahaTG100SingleEditor extends PatchEditorFrame {
 	private static JTabbedPane oTabs;
 	private static JPanel element2Panel;
 
-	public YamahaTG100SingleEditor(Patch iPatch) {
+	public YamahaTG100SingleEditor(PatchDataImpl iPatch) {
 		super("Yamaha TG100 Single Editor", iPatch);
 
-		Patch patch = (Patch) iPatch;
+		PatchDataImpl patch = (PatchDataImpl) iPatch;
 
 		oTabs = new JTabbedPane();
 		scrollPane.add(oTabs);
@@ -82,7 +82,7 @@ public class YamahaTG100SingleEditor extends PatchEditorFrame {
 	/**
 	 * Common parameter tab
 	 */
-	private Container buildCommonWindow(Patch patch) {
+	private Container buildCommonWindow(PatchDataImpl patch) {
 		Box verticalBox = Box.createVerticalBox();
 		GridBagLayout gridbag = new GridBagLayout();
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -191,7 +191,7 @@ public class YamahaTG100SingleEditor extends PatchEditorFrame {
 	/**
 	 * Common element tab
 	 */
-	private Container buildElementWindow(final int element, Patch patch) {
+	private Container buildElementWindow(final int element, PatchDataImpl patch) {
 		int offset = TG100Constants.ELEMENT_SIZE * (element - 1);
 
 		Box verticalBox = Box.createVerticalBox();

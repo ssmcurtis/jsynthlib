@@ -23,7 +23,7 @@ package org.jsynthlib.synthdrivers.alesis.dm5;
 
 import java.util.prefs.Preferences;
 
-import org.jsynthlib.menu.patch.Device;
+import org.jsynthlib.model.device.Device;
 
 /**
  * Device file for Alesis DM5

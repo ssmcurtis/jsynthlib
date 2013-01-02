@@ -30,7 +30,7 @@ import java.awt.GridBagLayout;
 
 import javax.swing.JPanel;
 
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.ScrollBarWidget;
 
@@ -39,7 +39,7 @@ public class RolandD10RythmSetupEditor extends RolandD10EditorFrame {
 	/**
 	 * @param patch
 	 */
-	public RolandD10RythmSetupEditor(Patch patch) {
+	public RolandD10RythmSetupEditor(PatchDataImpl patch) {
 		super("Roland D-10 Rythm Setup Editor", patch);
 
 		EditSender.setDeviceId(patch.getSysex()[2]);

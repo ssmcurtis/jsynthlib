@@ -12,9 +12,9 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.ScrollBarWidget;
 
 class RolandGP16SingleEditor extends PatchEditorFrame {
@@ -48,7 +48,7 @@ class RolandGP16SingleEditor extends PatchEditorFrame {
 	private ExpLevScrollBarWidget expLevMinWidget;
 
 	/** The constructor sets up everything. */
-	public RolandGP16SingleEditor(Patch patch) {
+	public RolandGP16SingleEditor(PatchDataImpl patch) {
 		super("Roland GP16 Single Editor", patch);
 
 		int faderVal = 1;
@@ -587,7 +587,7 @@ class RolandGP16SingleEditor extends PatchEditorFrame {
 	}
 
 	/** Helper function for initialising the expression min/max levels. See ExpLevScrollBar for comments. */
-	private ExpLevScrollBarWidget createExpLevScrollBarWidget(String l, Patch p, int adress) {
+	private ExpLevScrollBarWidget createExpLevScrollBarWidget(String l, PatchDataImpl p, int adress) {
 		int chosen = (expAssWidget.cb).getSelectedIndex() - 1;
 
 		switch (chosen) {

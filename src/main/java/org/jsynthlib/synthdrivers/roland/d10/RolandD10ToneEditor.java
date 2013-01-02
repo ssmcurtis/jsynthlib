@@ -27,7 +27,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.EnvelopeWidget;
@@ -41,7 +41,7 @@ import org.jsynthlib.widgets.ScrollBarWidget;
 public class RolandD10ToneEditor extends RolandD10EditorFrame {
 
 	/** Creates a new instance of RolandD10ToneEditor */
-	public RolandD10ToneEditor(Patch patch) {
+	public RolandD10ToneEditor(PatchDataImpl patch) {
 		super("Roland D-10 Tone Editor", patch);
 
 		EditSender.setDeviceId(patch.getSysex()[2]);
@@ -66,7 +66,7 @@ public class RolandD10ToneEditor extends RolandD10EditorFrame {
 		scrollPane.add(partTabsPanel, gbc);
 	}
 
-	private JPanel createCommonPanel(Patch patch) {
+	private JPanel createCommonPanel(PatchDataImpl patch) {
 
 		JPanel commonPanel = new JPanel(new GridBagLayout());
 		setNamedBorder(commonPanel, "Common parameters");
@@ -104,7 +104,7 @@ public class RolandD10ToneEditor extends RolandD10EditorFrame {
 		return commonPanel;
 	}
 
-	private JPanel createPartPanel(Patch patch, int part) {
+	private JPanel createPartPanel(PatchDataImpl patch, int part) {
 		JPanel panel = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.BOTH;
@@ -139,7 +139,7 @@ public class RolandD10ToneEditor extends RolandD10EditorFrame {
 		gbc.gridheight = height;
 	}
 
-	private JComponent createWGPanel(Patch patch, int part) {
+	private JComponent createWGPanel(PatchDataImpl patch, int part) {
 		JPanel panel = new JPanel(new GridBagLayout());
 		setNamedBorder(panel, "Wave Generator (WG)");
 
@@ -188,7 +188,7 @@ public class RolandD10ToneEditor extends RolandD10EditorFrame {
 		return panel;
 	}
 
-	private JPanel createPENVPanel(Patch patch, int part) {
+	private JPanel createPENVPanel(PatchDataImpl patch, int part) {
 		JPanel panel = new JPanel(new GridBagLayout());
 		setNamedBorder(panel, "Pitch Envelope");
 		int base = getPartBaseOffset(part);
@@ -236,7 +236,7 @@ public class RolandD10ToneEditor extends RolandD10EditorFrame {
 		return panel;
 	}
 
-	private JPanel createPLFOPanel(Patch patch, int part) {
+	private JPanel createPLFOPanel(PatchDataImpl patch, int part) {
 		JPanel panel = new JPanel(new GridBagLayout());
 		setNamedBorder(panel, "Pitch LFO");
 		int base = getPartBaseOffset(part);
@@ -255,7 +255,7 @@ public class RolandD10ToneEditor extends RolandD10EditorFrame {
 		return panel;
 	}
 
-	private JPanel createTVFPanel(Patch patch, int part) {
+	private JPanel createTVFPanel(PatchDataImpl patch, int part) {
 		JPanel panel = new JPanel(new GridBagLayout());
 		setNamedBorder(panel, "Time Variant Filter (TVF)");
 		int base = getPartBaseOffset(part);
@@ -286,7 +286,7 @@ public class RolandD10ToneEditor extends RolandD10EditorFrame {
 		return panel;
 	}
 
-	private JPanel createTVFENVPanel(Patch patch, int part) {
+	private JPanel createTVFENVPanel(PatchDataImpl patch, int part) {
 		JPanel panel = new JPanel(new GridBagLayout());
 		setNamedBorder(panel, "Time Variant Filter Envelope (TVF ENV)");
 		int base = getPartBaseOffset(part);
@@ -337,7 +337,7 @@ public class RolandD10ToneEditor extends RolandD10EditorFrame {
 		return panel;
 	}
 
-	private JPanel createTVAPanel(Patch patch, int part) {
+	private JPanel createTVAPanel(PatchDataImpl patch, int part) {
 		JPanel panel = new JPanel(new GridBagLayout());
 		setNamedBorder(panel, "Time Variant Amplifier (TVA)");
 		int base = getPartBaseOffset(part);

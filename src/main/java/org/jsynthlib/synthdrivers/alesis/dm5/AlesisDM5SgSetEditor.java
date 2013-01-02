@@ -39,12 +39,12 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.IPatch;
-import org.jsynthlib.menu.patch.Patch;
 import org.jsynthlib.menu.preferences.AppConfig;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.PatchNameWidget;
 import org.jsynthlib.widgets.ScrollBarLookupWidget;
@@ -78,7 +78,7 @@ public class AlesisDM5SgSetEditor extends PatchEditorFrame {
 	private int ctrlBase = 1;
 	private int widgetCount = 1;
 
-	private Patch patch;
+	private PatchDataImpl patch;
 
 	private PacketModel[] notePacketModel = new PacketModel[8];
 	private SysexWidget[] sysexWidget = new SysexWidget[8];
@@ -93,7 +93,7 @@ public class AlesisDM5SgSetEditor extends PatchEditorFrame {
 	/**
 	 * Constructs a AlesisDM5SgSetEditor given the patch.
 	 */
-	AlesisDM5SgSetEditor(Patch patch) {
+	AlesisDM5SgSetEditor(PatchDataImpl patch) {
 		super("Alesis DM5 Single Drumset Editor", patch);
 		scrollPane.setLayout(new GridLayout(0, 1));
 		addMainPanel(patch);
@@ -104,7 +104,7 @@ public class AlesisDM5SgSetEditor extends PatchEditorFrame {
 	/**
 	 * Adds the main panel to the editor. The main panel contains all the other panels of the editor.
 	 */
-	private void addMainPanel(Patch patch) {
+	private void addMainPanel(PatchDataImpl patch) {
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 		// mainPanel.setBorder(new TitledBorder(new
@@ -125,7 +125,7 @@ public class AlesisDM5SgSetEditor extends PatchEditorFrame {
 	 * Adds the noteSelect panel, Trigger Note Assignments panel, the selected note widget, and the Selected Note
 	 * Parameters panel to the main panel
 	 */
-	private void addSubPanels(Patch patch, JPanel panel) {
+	private void addSubPanels(PatchDataImpl patch, JPanel panel) {
 		JPanel noteSelectPanel = new JPanel();
 		noteSelectPanel.setLayout(new BoxLayout(noteSelectPanel, BoxLayout.Y_AXIS));
 		// noteSelectPanel.setBorder(new TitledBorder(new
@@ -156,7 +156,7 @@ public class AlesisDM5SgSetEditor extends PatchEditorFrame {
 	/**
 	 * Adds the voice panel, parm widgets, and output panel to the Selected Note Parameters panel.
 	 */
-	private void addParmsSubPanels(Patch patch, JPanel panel) {
+	private void addParmsSubPanels(PatchDataImpl patch, JPanel panel) {
 		JPanel voicePanel = new JPanel();
 		// voicePanel.setLayout(new BoxLayout(voicePanel, BoxLayout.X_AXIS));
 		voicePanel.setLayout(new GridLayout(0, 2));
@@ -178,7 +178,7 @@ public class AlesisDM5SgSetEditor extends PatchEditorFrame {
 	/**
 	 * Adds the selected note widget.
 	 */
-	private void addSelectedNoteWidget(Patch patch, JPanel panel) {
+	private void addSelectedNoteWidget(PatchDataImpl patch, JPanel panel) {
 		selectedNoteSender = new NRPNSender(NRPNSender.PREVIEW_NOTE, 60);
 		selectedNoteWidget = new DM5ScrollBarLookupWidget("Selected Note", patch, 0, 60, -1, null,
 		// selectedNoteSender,
@@ -248,7 +248,7 @@ public class AlesisDM5SgSetEditor extends PatchEditorFrame {
 	/**
 	 * Adds the Family and Drum Sound combo boxes.
 	 */
-	private void addVoiceWidgets(Patch patch, JPanel panel) {
+	private void addVoiceWidgets(PatchDataImpl patch, JPanel panel) {
 		notePacketModel[0] = new PacketModel(patch, 36 + 1, BitModel.BANK_MASK);
 		sysexWidget[0] = new ComboBoxWidget("Family", patch, notePacketModel[0],
 				new NRPNSender(NRPNSender.NOTE_BANK, 7), new String[] { "0--Kick      ", "1--Snare     ",
@@ -282,7 +282,7 @@ public class AlesisDM5SgSetEditor extends PatchEditorFrame {
 	/**
 	 * Adds controls for the coarse tune, fine tune, volume, and pan.
 	 */
-	private void addParmWidgets(Patch patch, JPanel panel) {
+	private void addParmWidgets(PatchDataImpl patch, JPanel panel) {
 		notePacketModel[2] = new PacketModel(patch, 36 + 4, BitModel.CRSE_TUNE_MASK);
 		sysexWidget[2] = new CoarseTuneScrollBarLookupWidget("Coarse Tune", patch, 0, 7, -1, notePacketModel[2],
 				new NRPNSender(NRPNSender.NOTE_COARSE_TUNE, new int[] { 28, 42, 56, 71, 85, 99, 113, 127 }));
@@ -338,7 +338,7 @@ public class AlesisDM5SgSetEditor extends PatchEditorFrame {
 	/**
 	 * Adds the Output and Group comboboxes and the Play Note button.
 	 */
-	private void addOutputWidgets(Patch patch, JPanel panel) {
+	private void addOutputWidgets(PatchDataImpl patch, JPanel panel) {
 		notePacketModel[6] = new PacketModel(patch, 36 + 1, BitModel.OUTP_MASK);
 		sysexWidget[6] = new ComboBoxWidget("Output", patch, notePacketModel[6], new NRPNSender(NRPNSender.NOTE_OUTPUT,
 				1), new String[] { "Main", "Aux" });
@@ -363,7 +363,7 @@ public class AlesisDM5SgSetEditor extends PatchEditorFrame {
 	 */
 	private void playPreviewNote() {
 		int selNoteVal = selectedNoteWidget.getValue();
-		Driver driver = (Driver) patch.getDriver();
+		SynthDriverPatchImpl driver = (SynthDriverPatchImpl) patch.getDriver();
 		int noteVal = rootNoteWidget.getValue() + selNoteVal;
 		try {
 			Thread.sleep(10);
@@ -376,14 +376,14 @@ public class AlesisDM5SgSetEditor extends PatchEditorFrame {
 			msg.setMessage(ShortMessage.NOTE_ON, driver.getChannel() - 1, noteVal, 0); // expecting running status
 			driver.send(msg);
 		} catch (Exception e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 	}
 
 	/**
 	 * Adds the Root Note, Closing Note, and Held Note sliders and the twelve Trigger Note sliders.
 	 */
-	private void addTriggerWidgets(Patch patch, JPanel panel) {
+	private void addTriggerWidgets(PatchDataImpl patch, JPanel panel) {
 		rootNoteWidget = new DM5ScrollBarLookupWidget("Root Note", patch, 0, 67, -1, new BitModel(patch, 21,
 				BitModel.ROOT_NOTE_MASK), new NRPNSender(NRPNSender.SET_ROOT_NOTE, 67), 0, 68);
 		addWidget(panel, rootNoteWidget, ctrlBase++, 0, 1, 1, widgetCount++);
@@ -448,7 +448,7 @@ class CoarseTuneScrollBarLookupWidget extends ScrollBarLookupWidget {
 	 * Constructs a CoarseTuneScrollBarLookupWidget given the label, patch, min and max values, labelWidth, model, and
 	 * sender.
 	 */
-	CoarseTuneScrollBarLookupWidget(String label, IPatch patch, int min, int max, int labelWidth, IParamModel pmodel,
+	CoarseTuneScrollBarLookupWidget(String label, Patch patch, int min, int max, int labelWidth, IParamModel pmodel,
 			ISender sender) {
 		super(label, patch, min, max, labelWidth, pmodel, sender, posOptions);
 	}
@@ -503,7 +503,7 @@ class FineTuneScrollBarLookupWidget extends ScrollBarLookupWidget {
 	 * Constructs a FineTuneScrollBarLookupWidget given the label, patch, min and max values, labelWidth, model, and
 	 * sender.
 	 */
-	FineTuneScrollBarLookupWidget(String label, IPatch patch, int min, int max, int labelWidth, IParamModel pmodel,
+	FineTuneScrollBarLookupWidget(String label, Patch patch, int min, int max, int labelWidth, IParamModel pmodel,
 			ISender sender) {
 		super(label, patch, min, max, labelWidth, pmodel, sender, posOptions);
 	}

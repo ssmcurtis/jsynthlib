@@ -13,8 +13,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.EnvelopeWidget;
@@ -84,7 +84,7 @@ class KawaiK4SingleEditor extends PatchEditorFrame {
 	/** For Alignment, a size to scrollbar labels */
 	// private int labelWidth;
 
-	public KawaiK4SingleEditor(Patch patch) {
+	public KawaiK4SingleEditor(PatchDataImpl patch) {
 		super("Kawai K4 Single Editor", patch);
 		int lw; // label width
 		// Common Pane

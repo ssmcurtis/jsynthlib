@@ -2,10 +2,10 @@ package org.jsynthlib.synthdrivers.yamaha.fs1r;
 
 import java.io.UnsupportedEncodingException;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 /**
  * Single driver for Yamaha FS1R voices.
@@ -13,7 +13,7 @@ import org.jsynthlib.menu.ui.JSLFrame;
  * @author Denis Queffeulou mailto:dqueffeulou@free.fr
  * @version $Id$
  */
-public class YamahaFS1RVoiceDriver extends Driver {
+public class YamahaFS1RVoiceDriver extends SynthDriverPatchImpl {
 	/** size of patch without header */
 	static final int PATCH_SIZE = 608;
 
@@ -142,7 +142,7 @@ public class YamahaFS1RVoiceDriver extends Driver {
 	 * @param aPart
 	 *            1..4
 	 */
-	public void sendPatch(Patch p, int aPart) {
+	public void sendPatch(PatchDataImpl p, int aPart) {
 		p.getSysex()[6] = (byte) (0x40 + aPart - 1);
 		p.getSysex()[7] = (byte) 0;
 		p.getSysex()[8] = (byte) 0;
@@ -151,11 +151,11 @@ public class YamahaFS1RVoiceDriver extends Driver {
 	}
 
 	/** Sends a patch to a set location on a synth. */
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		// change the address to internal voice
-		((Patch) p).getSysex()[6] = (byte) 0x51;
-		((Patch) p).getSysex()[7] = (byte) 0;
-		((Patch) p).getSysex()[8] = (byte) patchNum;
+		((PatchDataImpl) p).getSysex()[6] = (byte) 0x51;
+		((PatchDataImpl) p).getSysex()[7] = (byte) 0;
+		((PatchDataImpl) p).getSysex()[8] = (byte) patchNum;
 		calculateChecksum(p);
 		sendPatch(p);
 	}
@@ -177,7 +177,7 @@ public class YamahaFS1RVoiceDriver extends Driver {
 	 * @param aPatchOffset
 	 *            offset of voice in patch sysex
 	 */
-	String getPatchName(Patch p, int aPatchOffset) {
+	String getPatchName(PatchDataImpl p, int aPatchOffset) {
 		if (patchNameSize == 0)
 			return ("-");
 		try {
@@ -194,7 +194,7 @@ public class YamahaFS1RVoiceDriver extends Driver {
 	 * @param aPatchOffset
 	 *            offset of voice in patch sysex
 	 */
-	public void setPatchName(Patch p, String name, int aPatchOffset) {
+	public void setPatchName(PatchDataImpl p, String name, int aPatchOffset) {
 		if (name.length() < patchNameSize)
 			name = name + "            ";
 		byte[] namebytes = new byte[64];
@@ -213,10 +213,10 @@ public class YamahaFS1RVoiceDriver extends Driver {
 	 * 
 	 * @return an Init Voice copy
 	 */
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[PATCH_AND_HEADER_SIZE];
 		initPatch(sysex, 0);
-		return new Patch(sysex, this);
+		return new PatchDataImpl(sysex, this);
 	}
 
 	static void initPatch(byte[] sysex, int aOffset) {
@@ -232,15 +232,15 @@ public class YamahaFS1RVoiceDriver extends Driver {
 	 *            Description of the Parameter
 	 * @return Description of the Return Value
 	 */
-	public JSLFrame editPatch(Patch p) {
-		return new YamahaFS1RVoiceEditor((Patch) p);
+	public JSLFrame editPatch(PatchDataImpl p) {
+		return new YamahaFS1RVoiceEditor((PatchDataImpl) p);
 	}
 
 	/**
 	 * @param aPart
 	 *            part number in performance
 	 */
-	public JSLFrame editPatch(Patch p, int aPart, int aBankNumber) {
+	public JSLFrame editPatch(PatchDataImpl p, int aPart, int aBankNumber) {
 		return new YamahaFS1RVoiceEditor(p, aPart, aBankNumber);
 	}
 }

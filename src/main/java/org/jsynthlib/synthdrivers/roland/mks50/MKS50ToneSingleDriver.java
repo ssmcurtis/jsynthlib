@@ -3,12 +3,12 @@
 
 package org.jsynthlib.synthdrivers.roland.mks50;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
-public class MKS50ToneSingleDriver extends Driver {
+public class MKS50ToneSingleDriver extends SynthDriverPatchImpl {
 	static final char nameChars[] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
 			'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
 			'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5',
@@ -30,7 +30,7 @@ public class MKS50ToneSingleDriver extends Driver {
 				"76-", "77-", "78-", "81-", "82-", "83-", "84-", "85-", "86-", "87-", "88-" };
 	}
 
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 		// MKS-50 doesn't use checksum
 	}
 
@@ -43,18 +43,18 @@ public class MKS50ToneSingleDriver extends Driver {
 		// MKS-50 doesn't have banks: pgm# 0-63 is group A, 64-127 is group B
 	}
 
-	public String getPatchName(Patch ip) {
+	public String getPatchName(PatchDataImpl ip) {
 		try {
 			char c[] = new char[patchNameSize];
 			for (int i = 0; i < patchNameSize; i++)
-				c[i] = nameChars[((Patch) ip).getSysex()[i + patchNameStart]];
+				c[i] = nameChars[((PatchDataImpl) ip).getSysex()[i + patchNameStart]];
 			return new String(c);
 		} catch (Exception ex) {
 			return "-";
 		}
 	}
 
-	public void setPatchName(Patch p, String name) {
+	public void setPatchName(PatchDataImpl p, String name) {
 		String s = new String(nameChars);
 		for (int i = 0; i < patchNameSize; i++) {
 			int j;
@@ -64,11 +64,11 @@ public class MKS50ToneSingleDriver extends Driver {
 					j = 62; // convert invalid character to space
 			} else
 				j = 62; // pad with spaces
-			((Patch) p).getSysex()[i + patchNameStart] = (byte) j;
+			((PatchDataImpl) p).getSysex()[i + patchNameStart] = (byte) j;
 		}
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte sysex[] = { (byte) 0xF0, (byte) 0x41, (byte) 0x35, (byte) 0x00, (byte) 0x23, (byte) 0x20, (byte) 0x01,
 				(byte) 0x00, (byte) 0x00, (byte) 0x01, (byte) 0x00, (byte) 0x01, (byte) 0x00, (byte) 0x02, (byte) 0x00,
 				(byte) 0x00, (byte) 0x01, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x40, (byte) 0x00,
@@ -76,12 +76,12 @@ public class MKS50ToneSingleDriver extends Driver {
 				(byte) 0x57, (byte) 0x00, (byte) 0x00, (byte) 0x7F, (byte) 0x00, (byte) 0x7A, (byte) 0x30, (byte) 0x34,
 				(byte) 0x28, (byte) 0x08, (byte) 0x50, (byte) 0x02, (byte) 0x0D, (byte) 0x1E, (byte) 0x30, (byte) 0x0F,
 				(byte) 0x1A, (byte) 0x2D, (byte) 0x1C, (byte) 0x21, (byte) 0x3E, (byte) 0x3E, (byte) 0xF7 };
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		setPatchName(p, "NewPatch");
 		return p;
 	}
 
-	public JSLFrame editPatch(Patch p) {
-		return new MKS50ToneSingleEditor((Patch) p);
+	public JSLFrame editPatch(PatchDataImpl p) {
+		return new MKS50ToneSingleEditor((PatchDataImpl) p);
 	}
 }

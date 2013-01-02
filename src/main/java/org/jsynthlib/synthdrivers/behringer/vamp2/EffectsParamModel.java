@@ -21,10 +21,10 @@
 
 package org.jsynthlib.synthdrivers.behringer.vamp2;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.tools.ErrorMsg;
-import org.jsynthlib.tools.Utility;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
+import org.jsynthlib.tools.HexaUtil;
+import org.jsynthlib.widgets.ParamModel;
 
 /**
  * The EffectsParamModel class allows a control to set the individual bits in a byte of the patch.sysex record. This is
@@ -101,7 +101,7 @@ class EffectsParamModel extends ParamModel {
 	 *            The offset into the patch (including the size of the sysex header) representing the value to be
 	 *            edited.
 	 */
-	EffectsParamModel(Patch p, int offset) {
+	EffectsParamModel(PatchDataImpl p, int offset) {
 		super(p, offset);
 	}
 
@@ -117,7 +117,7 @@ class EffectsParamModel extends ParamModel {
 		System.arraycopy(EFFECT_DEFAULT[value], 0, patch.getSysex(), Constants.HDR_SIZE + 16, 16);
 
 //		ErrorMsg.reportStatus(">>>>>>> Patch After Edit <<<<<<<<<");
-		ErrorMsg.reportStatus("  " + Utility.hexDump(patch.getSysex(), 0, -1, 16));
+		ErrorMsgUtil.reportStatus("  " + HexaUtil.hexDump(patch.getSysex(), 0, -1, 16));
 	}
 
 	/**

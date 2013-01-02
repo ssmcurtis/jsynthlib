@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.swing.AbstractAction;
 
+import org.jsynthlib.menu.Actions;
+
 
 public class SaveAction extends AbstractAction {
 	public SaveAction(Map<Serializable, Integer> mnemonics) {

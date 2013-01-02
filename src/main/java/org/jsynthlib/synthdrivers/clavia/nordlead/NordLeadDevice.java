@@ -11,7 +11,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.jsynthlib.menu.patch.Device;
+import org.jsynthlib.model.device.Device;
 
 public class NordLeadDevice extends Device implements ItemListener {
 	static final String DRIVER_INFO = "Slot one's edit buffer will be used to send and play patches.\n"

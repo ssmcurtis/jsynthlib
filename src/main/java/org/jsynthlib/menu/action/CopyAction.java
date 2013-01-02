@@ -6,7 +6,8 @@ import java.util.Map;
 
 import javax.swing.AbstractAction;
 
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.Actions;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 public class CopyAction extends AbstractAction {
 	public CopyAction(Map<Serializable, Integer> mnemonics) {
@@ -19,7 +20,7 @@ public class CopyAction extends AbstractAction {
 		try {
 			Actions.getSelectedFrame().copySelectedPatch();
 		} catch (Exception ex) {
-			ErrorMsg.reportError("Error", "Patch to copy must be highlighted\nin the focused Window.", ex);
+			ErrorMsgUtil.reportError("Error", "Patch to copy must be highlighted\nin the focused Window." + getClass().getSimpleName(), ex);
 		}
 	}
 }

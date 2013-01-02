@@ -36,8 +36,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.ScrollBarLookupWidget;
 import org.jsynthlib.widgets.ScrollBarWidget;
@@ -54,7 +54,7 @@ class RolandMT32SystemEditor extends PatchEditorFrame {
 	/** For Alignment, a size to scrollbar labels */
 	// private int labelWidth;
 
-	public RolandMT32SystemEditor(Patch patch) {
+	public RolandMT32SystemEditor(PatchDataImpl patch) {
 		super("Roland MT-32 System Editor", patch);
 		// Common Pane
 		gbc.weightx = 5;

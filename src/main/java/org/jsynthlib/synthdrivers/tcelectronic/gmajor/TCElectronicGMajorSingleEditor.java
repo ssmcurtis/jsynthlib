@@ -39,9 +39,9 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
 import org.jsynthlib.PatchBayApplication;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.PatchNameWidget;
@@ -122,12 +122,12 @@ class TCElectronicGMajorSingleEditor extends PatchEditorFrame {
 	private final String[] delayReleaseString = new String[] { "20", "30", "50", "70", "100", "140", "200", "300",
 			"500", "700", "1.0s" };
 
-	private Patch patch;
+	private PatchDataImpl patch;
 
-	public TCElectronicGMajorSingleEditor(Patch iPatch) {
+	public TCElectronicGMajorSingleEditor(PatchDataImpl iPatch) {
 		super("TC Electronic G-Major Single Editor", iPatch);
 
-		patch = (Patch) iPatch;
+		patch = (PatchDataImpl) iPatch;
 
 		Box box = Box.createVerticalBox();
 		box.add(buildTopPanel());
@@ -172,7 +172,7 @@ class TCElectronicGMajorSingleEditor extends PatchEditorFrame {
 			parent.add(widget, gbc);
 
 		} catch (Exception e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 	}
 
@@ -475,7 +475,7 @@ class TCElectronicGMajorSingleEditor extends PatchEditorFrame {
 			addWidget(pnl, cmbTempo, 0, 2, 1, 1, gbc.anchor, gbc.fill, 0);
 			break;
 		default:
-			ErrorMsg.reportStatus("Switch value " + i + " not handled! ");
+			ErrorMsgUtil.reportStatus("Switch value " + i + " not handled! ");
 		}
 		pnl.setVisible(true);
 
@@ -605,7 +605,7 @@ class TCElectronicGMajorSingleEditor extends PatchEditorFrame {
 			addWidget(pnl, cmbLvl2, 2, 1, 1, 1, gbc.anchor, gbc.fill, 0);
 			break;
 		default:
-			ErrorMsg.reportStatus("Switch value " + i + " not handled! ");
+			ErrorMsgUtil.reportStatus("Switch value " + i + " not handled! ");
 		}
 		pnl.setVisible(true);
 
@@ -748,7 +748,7 @@ class TCElectronicGMajorSingleEditor extends PatchEditorFrame {
 			addWidget(pnl, chkPhaRev, 1, 3, 1, 1, gbc.anchor, gbc.fill, 0);
 			break;
 		default:
-			ErrorMsg.reportStatus("Switch value " + i + " not handled! ");
+			ErrorMsgUtil.reportStatus("Switch value " + i + " not handled! ");
 		}
 		pnl.setVisible(true);
 
@@ -895,7 +895,7 @@ class TCElectronicGMajorSingleEditor extends PatchEditorFrame {
 			addWidget(pnl, cmbPan2, 1, 4, 1, 1, gbc.anchor, gbc.fill, 0);
 			break;
 		default:
-			ErrorMsg.reportStatus("Switch value " + i + " not handled! ");
+			ErrorMsgUtil.reportStatus("Switch value " + i + " not handled! ");
 		}
 
 		pnl.setVisible(true);
@@ -996,7 +996,7 @@ class TCElectronicGMajorSingleEditor extends PatchEditorFrame {
 			addWidget(pnl, cmbDiff, 2, 2, 1, 1, gbc.anchor, gbc.fill, 0);
 			break;
 		default:
-			ErrorMsg.reportStatus("Switch value " + i + " not handled! ");
+			ErrorMsgUtil.reportStatus("Switch value " + i + " not handled! ");
 		}
 		pnl.setVisible(true);
 

@@ -6,7 +6,7 @@ package org.jsynthlib.synthdrivers.sci.prophet600;
 
 import java.util.prefs.Preferences;
 
-import org.jsynthlib.menu.patch.Device;
+import org.jsynthlib.model.device.Device;
 
 public class SCIProphet600Device extends Device {
 	static final String DRIVER_INFO = "The Prophet-600 lacks a MIDI addressable patch buffer. Therefore, when "

@@ -33,9 +33,9 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.PatchSingle;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.model.patch.PatchSingle;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.ScrollBarWidget;
 
@@ -68,7 +68,7 @@ public class RolandD10EditorFrame extends PatchEditorFrame {
 		return iconList.toArray();
 	}
 
-	protected JPanel createTimbrePanel(Patch patch, String name, int[] offsets, EditSender[] editSenders) {
+	protected JPanel createTimbrePanel(PatchDataImpl patch, String name, int[] offsets, EditSender[] editSenders) {
 		JPanel panel = new JPanel(new GridBagLayout());
 
 		setNamedBorder(panel, name);

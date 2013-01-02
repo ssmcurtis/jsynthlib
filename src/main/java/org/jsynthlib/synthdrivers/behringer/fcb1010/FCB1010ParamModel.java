@@ -21,8 +21,8 @@
 
 package org.jsynthlib.synthdrivers.behringer.fcb1010;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.widgets.ParamModel;
 
 /**
  * FCB1010ParamModel. This model is used for all parameters of the FCB1010 and includes. masks to manipulate either the
@@ -78,7 +78,7 @@ class FCB1010ParamModel extends ParamModel {
 	 * parameter, and a boolean (reverse, used only with the MSB mask). Normally, the MSB values are reversed (0 for 1
 	 * and 1 for 0). To prevent this from happening a value of false can be set for the reverse parameter.
 	 */
-	FCB1010ParamModel(Patch p, int offset, byte mask, boolean reverse) {
+	FCB1010ParamModel(PatchDataImpl p, int offset, byte mask, boolean reverse) {
 		super(p, offset);
 		this.mask = mask;
 		this.reverse = reverse;
@@ -98,7 +98,7 @@ class FCB1010ParamModel extends ParamModel {
 	 * Constructs a FCB1010ParamModel given the patch, the offset into the first preset, and the mask representing the
 	 * parameter.
 	 */
-	FCB1010ParamModel(Patch p, int offset, byte mask) {
+	FCB1010ParamModel(PatchDataImpl p, int offset, byte mask) {
 		this(p, offset, mask, true);
 	}
 

@@ -26,12 +26,12 @@ package org.jsynthlib.synthdrivers.yamaha.dx7.common;
 
 import java.io.UnsupportedEncodingException;
 
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
-public class DX7FamilyPerformanceIIBankDriver extends BankDriver {
+public class DX7FamilyPerformanceIIBankDriver extends SynthDriverBank {
 	byte[] initSysex;
 	String[] dxPatchNumbers;
 	String[] dxBankNumbers;
@@ -74,11 +74,11 @@ public class DX7FamilyPerformanceIIBankDriver extends BankDriver {
 		return getPatchStart(patchNum) + dxPatchNameOffset;
 	}
 
-	public String getPatchName(Patch p, int patchNum) {
+	public String getPatchName(PatchDataImpl p, int patchNum) {
 		int nameStart = getPatchNameStart(patchNum);
 
 		try {
-			StringBuffer s = new StringBuffer(new String(((Patch) p).getSysex(), nameStart, dxPatchNameSize,
+			StringBuffer s = new StringBuffer(new String(((PatchDataImpl) p).getSysex(), nameStart, dxPatchNameSize,
 					"US-ASCII"));
 			return s.toString();
 		} catch (UnsupportedEncodingException ex) {
@@ -86,7 +86,7 @@ public class DX7FamilyPerformanceIIBankDriver extends BankDriver {
 		}
 	}
 
-	public void setPatchName(Patch p, int patchNum, String name) {
+	public void setPatchName(PatchDataImpl p, int patchNum, String name) {
 		int nameStart = getPatchNameStart(patchNum);
 
 		while (name.length() < dxPatchNameSize)
@@ -97,14 +97,14 @@ public class DX7FamilyPerformanceIIBankDriver extends BankDriver {
 		try {
 			namebytes = name.getBytes("US-ASCII");
 			for (int i = 0; i < dxPatchNameSize; i++)
-				((Patch) p).getSysex()[nameStart + i] = namebytes[i];
+				((PatchDataImpl) p).getSysex()[nameStart + i] = namebytes[i];
 
 		} catch (UnsupportedEncodingException ex) {
 			return;
 		}
 	}
 
-	public void putPatch(Patch bank, Patch p, int patchNum) // puts a patch into the bank, converting it
+	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) // puts a patch into the bank, converting it
 																			// as needed
 	{
 		if (!canHoldPatch(p)) {
@@ -113,13 +113,13 @@ public class DX7FamilyPerformanceIIBankDriver extends BankDriver {
 		}
 
 		for (int i = 0; i < 51; i++) {
-			((Patch) bank).getSysex()[getPatchStart(patchNum) + i] = (byte) (((Patch) p).getSysex()[16 + i]);
+			((PatchDataImpl) bank).getSysex()[getPatchStart(patchNum) + i] = (byte) (((PatchDataImpl) p).getSysex()[16 + i]);
 		}
 
 		calculateChecksum(bank);
 	}
 
-	public Patch getPatch(Patch bank, int patchNum) // Gets a patch from the bank, converting it as needed
+	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) // Gets a patch from the bank, converting it as needed
 	{
 		try {
 			byte[] sysex = new byte[singleSize];
@@ -144,20 +144,20 @@ public class DX7FamilyPerformanceIIBankDriver extends BankDriver {
 			sysex[singleSize - 1] = (byte) 0xf7;
 
 			for (int i = 0; i < 51; i++) {
-				sysex[16 + i] = (byte) (((Patch) bank).getSysex()[getPatchStart(patchNum) + i]);
+				sysex[16 + i] = (byte) (((PatchDataImpl) bank).getSysex()[getPatchStart(patchNum) + i]);
 			}
 
-			Patch p = new Patch(sysex, getDevice()); // single sysex
+			PatchDataImpl p = new PatchDataImpl(sysex, getDevice()); // single sysex
 			p.calculateChecksum();
 
 			return p;
 		} catch (Exception e) {
-			ErrorMsg.reportError(getManufacturerName() + " " + getModelName(), "Error in " + toString(), e);
+			ErrorMsgUtil.reportError(getManufacturerName() + " " + getModelName(), "Error in " + toString(), e);
 			return null;
 		}
 	}
 
-	public Patch createNewPatch() // create a bank with 32 performance patches
+	public PatchDataImpl createNewPatch() // create a bank with 32 performance patches
 	{
 		byte[] sysex = new byte[trimSize];
 
@@ -180,8 +180,8 @@ public class DX7FamilyPerformanceIIBankDriver extends BankDriver {
 
 		sysex[trimSize - 1] = (byte) 0xf7;
 
-		Patch v = new Patch(initSysex, getDevice()); // single sysex
-		Patch p = new Patch(sysex, this); // bank sysex
+		PatchDataImpl v = new PatchDataImpl(initSysex, getDevice()); // single sysex
+		PatchDataImpl p = new PatchDataImpl(sysex, this); // bank sysex
 
 		for (int i = 0; i < getNumPatches(); i++)
 			putPatch(p, v, i);

@@ -31,11 +31,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.jsynthlib.PatchBayApplication;
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.EnvelopeWidget;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.PatchNameWidget;
 import org.jsynthlib.widgets.SysexSender;
 
@@ -154,13 +154,13 @@ public class DX7FamilyPerformanceIIEditor extends PatchEditorFrame {
 			"AMP MOD Sens - OP 5", "AMP MOD Sens - OP 6", "Total Level - OP 1", "Total Level - OP 2",
 			"Total Level - OP 3", "Total Level - OP 4", "Total Level - OP 5", "Total Level - OP 6" };
 
-	public DX7FamilyPerformanceIIEditor(String name, Patch patch) {
+	public DX7FamilyPerformanceIIEditor(String name, PatchDataImpl patch) {
 		super(name, patch);
 
 		buildEditor(patch);
 	}
 
-	protected void buildEditor(Patch patch) {
+	protected void buildEditor(PatchDataImpl patch) {
 		PatchBayApplication.showWaitDialog(); // Because it needs some time to build up the editor frame
 
 		JPanel cmnPane = new JPanel();

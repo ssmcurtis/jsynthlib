@@ -42,13 +42,13 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.EnvelopeWidget;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.PatchNameWidget;
 import org.jsynthlib.widgets.ScrollBarLookupWidget;
 import org.jsynthlib.widgets.ScrollBarWidget;
@@ -118,13 +118,13 @@ public class DX7FamilyVoiceEditor extends PatchEditorFrame implements ItemListen
 
 	private static ImageIcon algoIcon[] = new ImageIcon[32];
 
-	public DX7FamilyVoiceEditor(String name, Patch patch) {
+	public DX7FamilyVoiceEditor(String name, PatchDataImpl patch) {
 		super(name, patch);
 
 		buildEditor(patch);
 	}
 
-	protected void buildEditor(Patch patch) {
+	protected void buildEditor(PatchDataImpl patch) {
 		algoIcon[0] = new ImageIcon(getClass().getResource("../images/algo01.gif"));
 		algoIcon[1] = new ImageIcon(getClass().getResource("../images/algo02.gif"));
 		algoIcon[2] = new ImageIcon(getClass().getResource("../images/algo03.gif"));
@@ -597,7 +597,7 @@ public class DX7FamilyVoiceEditor extends PatchEditorFrame implements ItemListen
 
 	// transmit OperatorState to Synth
 	private void SendOpState() {
-		xmitVoiceOperatorState((Driver) p.getDriver(), OperatorState & 0x3f);
+		xmitVoiceOperatorState((SynthDriverPatchImpl) p.getDriver(), OperatorState & 0x3f);
 	}
 
 	// It's not good idea to override PatchPasket method.
@@ -617,7 +617,7 @@ public class DX7FamilyVoiceEditor extends PatchEditorFrame implements ItemListen
 	private final static SysexHandler VoiceOPstate = new SysexHandler("f0 43 @@ 01 1b *value* f7");
 
 	// send voice operator state
-	private static void xmitVoiceOperatorState(Driver drv, int st) // channel, OperatorState
+	private static void xmitVoiceOperatorState(SynthDriverPatchImpl drv, int st) // channel, OperatorState
 	{
 		drv.send(VoiceOPstate.toSysexMessage(0x10 + drv.getChannel(), new SysexHandler.NameValue("value", st)));
 	}

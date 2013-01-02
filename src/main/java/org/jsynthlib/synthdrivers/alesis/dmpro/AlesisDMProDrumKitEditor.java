@@ -30,8 +30,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.PatchNameWidget;
@@ -45,7 +45,7 @@ import org.jsynthlib.widgets.SysexWidget;
  */
 class AlesisDMProDrumKitEditor extends PatchEditorFrame {
 
-	public AlesisDMProDrumKitEditor(Patch patch) {
+	public AlesisDMProDrumKitEditor(PatchDataImpl patch) {
 		super("Alesis DM Pro Drumkit Editor", patch);
 
 		// All widgets need a ref to parser, it handles access to patchsysex
@@ -157,7 +157,7 @@ class AlesisDMProDrumKitEditor extends PatchEditorFrame {
 
 		JComboBox m_cboOther = null;
 
-		public BuddyCombo(String l, Patch p, SysexWidget.IParamModel ofs, SysexSender s, String[] o,
+		public BuddyCombo(String l, PatchDataImpl p, SysexWidget.IParamModel ofs, SysexSender s, String[] o,
 				JComboBox cboOther) {
 			super(l, p, ofs, s, o);
 			m_cboOther = cboOther;

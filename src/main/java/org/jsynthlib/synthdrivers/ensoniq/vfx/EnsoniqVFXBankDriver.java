@@ -2,10 +2,10 @@ package org.jsynthlib.synthdrivers.ensoniq.vfx;
 
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 /**
  * Bank driver for Ensoniq VFX
@@ -13,7 +13,7 @@ import org.jsynthlib.tools.ErrorMsg;
  * @author <a href="mailto:dqueffeulou@free.fr">Denis Queffeulou</a> (created 17 Sep 2002)
  * @version $Id$
  */
-public class EnsoniqVFXBankDriver extends BankDriver {
+public class EnsoniqVFXBankDriver extends SynthDriverBank {
 	static final int BANK_NB_PATCHES = 60;
 	static final int BANK_SIZE = EnsoniqVFXSingleDriver.PATCH_SIZE * BANK_NB_PATCHES;
 	static final int BANK_AND_HEADER_SIZE = BANK_SIZE + 7;
@@ -63,9 +63,9 @@ public class EnsoniqVFXBankDriver extends BankDriver {
 	 *            number of the patch in the bank
 	 * @return The patchName
 	 */
-	public String getPatchName(Patch p, int patchNum) {
+	public String getPatchName(PatchDataImpl p, int patchNum) {
 		int oPatchStart = getPatchStart(patchNum);
-		return EnsoniqVFXSingleDriver.getPatchName(((Patch) p).getSysex(), oPatchStart);
+		return EnsoniqVFXSingleDriver.getPatchName(((PatchDataImpl) p).getSysex(), oPatchStart);
 	}
 
 	/**
@@ -78,16 +78,16 @@ public class EnsoniqVFXBankDriver extends BankDriver {
 	 * @param name
 	 *            The new patchName value
 	 */
-	public void setPatchName(Patch p, int patchNum, String name) {
+	public void setPatchName(PatchDataImpl p, int patchNum, String name) {
 		int oPatchStart = getPatchStart(patchNum);
-		EnsoniqVFXSingleDriver.setPatchName(((Patch) p).getSysex(), name, oPatchStart);
+		EnsoniqVFXSingleDriver.setPatchName(((PatchDataImpl) p).getSysex(), name, oPatchStart);
 	}
 
 	// protected static void calculateChecksum(Patch p, int start, int end, int ofs)
 	// {
 	// }
 
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 	}
 
 	/**
@@ -100,14 +100,14 @@ public class EnsoniqVFXBankDriver extends BankDriver {
 	 * @param patchNum
 	 *            Description of the Parameter
 	 */
-	public void putPatch(Patch bank, Patch p, int patchNum) {
+	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) {
 		if (!canHoldPatch(p)) {
 			JOptionPane.showMessageDialog(null, "This type of patch does not fit in to this type of bank.", "Error",
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
-		System.arraycopy(((Patch) p).getSysex(), 6, ((Patch) bank).getSysex(), getPatchStart(patchNum),
+		System.arraycopy(((PatchDataImpl) p).getSysex(), 6, ((PatchDataImpl) bank).getSysex(), getPatchStart(patchNum),
 				EnsoniqVFXSingleDriver.PATCH_SIZE);
 	}
 
@@ -120,11 +120,11 @@ public class EnsoniqVFXBankDriver extends BankDriver {
 	 *            number of patch in the bank
 	 * @return The patch
 	 */
-	public Patch getPatch(Patch bank, int patchNum) {
+	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
 		try {
-			return EnsoniqVFXSingleDriver.newPatch(((Patch) bank).getSysex(), getPatchStart(patchNum));
+			return EnsoniqVFXSingleDriver.newPatch(((PatchDataImpl) bank).getSysex(), getPatchStart(patchNum));
 		} catch (Exception e) {
-			ErrorMsg.reportError("Error", "Error in VFX Bank Driver", e);
+			ErrorMsgUtil.reportError("Error", "Error in VFX Bank Driver", e);
 			return null;
 		}
 	}
@@ -134,7 +134,7 @@ public class EnsoniqVFXBankDriver extends BankDriver {
 	 * 
 	 * @return the new "empty" bank
 	 */
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[BANK_AND_HEADER_SIZE];
 		sysex[0] = (byte) 0xF0;
 		sysex[1] = (byte) 0x0F;
@@ -143,7 +143,7 @@ public class EnsoniqVFXBankDriver extends BankDriver {
 		sysex[4] = (byte) 0x00;
 		sysex[5] = (byte) 0x03;
 		sysex[BANK_AND_HEADER_SIZE - 1] = (byte) 0xF7;
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		for (int i = 0; i < BANK_NB_PATCHES; i++) {
 			setPatchName(p, i, "NEWSND");
 		}

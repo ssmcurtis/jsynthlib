@@ -5,12 +5,12 @@ package org.jsynthlib.synthdrivers.clavia.nordlead;
 import javax.swing.JOptionPane;
 
 import org.jsynthlib.PatchBayApplication;
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
-public class NLDrumBankDriver extends BankDriver {
+public class NLDrumBankDriver extends SynthDriverBank {
 	static final int BANK_NUM_OFFSET = 4;
 	static final int PATCH_NUM_OFFSET = 5;
 	static final int NUM_IN_BANK = 10;
@@ -29,7 +29,7 @@ public class NLDrumBankDriver extends BankDriver {
 		patchNumbers = NLDrumSingleDriver.PATCH_LIST;
 	}
 
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 		// doesn't use checksum
 	}
 
@@ -37,45 +37,45 @@ public class NLDrumBankDriver extends BankDriver {
 	// // doesn't use checksum
 	// }
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		if (bankNum == 0) {
 			JOptionPane.showMessageDialog(PatchBayApplication.getInstance(), "Cannot send to ROM bank", "Store Patch",
 					JOptionPane.WARNING_MESSAGE);
 		} else {
 			setBankNum(bankNum); // must set bank - sysex patch dump always stored in current bank
 			setPatchNum(patchNum); // must send program change to make bank change take effect
-			sendPatchWorker((Patch) p, bankNum);
+			sendPatchWorker((PatchDataImpl) p, bankNum);
 		}
 	}
 
-	public void putPatch(Patch bank, Patch p, int patchNum) {
+	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) {
 		if (!canHoldPatch(p)) {
-			ErrorMsg.reportError("Error", "This type of patch does not fit in to this type of bank.");
+			ErrorMsgUtil.reportError("Error", "This type of patch does not fit in to this type of bank.");
 			return;
 		}
 
-		System.arraycopy(((Patch) p).getSysex(), 0, ((Patch) bank).getSysex(), patchNum * singleSize, singleSize);
-		((Patch) bank).getSysex()[patchNum * singleSize + PATCH_NUM_OFFSET] = (byte) (patchNum + 99); // set program #
+		System.arraycopy(((PatchDataImpl) p).getSysex(), 0, ((PatchDataImpl) bank).getSysex(), patchNum * singleSize, singleSize);
+		((PatchDataImpl) bank).getSysex()[patchNum * singleSize + PATCH_NUM_OFFSET] = (byte) (patchNum + 99); // set program #
 	}
 
-	public Patch getPatch(Patch bank, int patchNum) {
+	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
 		byte sysex[] = new byte[singleSize];
-		System.arraycopy(((Patch) bank).getSysex(), patchNum * singleSize, sysex, 0, singleSize);
-		return new Patch(sysex);
+		System.arraycopy(((PatchDataImpl) bank).getSysex(), patchNum * singleSize, sysex, 0, singleSize);
+		return new PatchDataImpl(sysex);
 	}
 
-	public String getPatchName(Patch p, int patchNum) {
+	public String getPatchName(PatchDataImpl p, int patchNum) {
 		return "-";
 	}
 
-	public void setPatchName(Patch p, int patchNum, String name) {
+	public void setPatchName(PatchDataImpl p, int patchNum, String name) {
 	}
 
 	// protected void sendPatch (Patch p) {
 	// sendPatchWorker((Patch)p, 0);
 	// }
 
-	protected void sendPatchWorker(Patch p, int bankNum) {
+	protected void sendPatchWorker(PatchDataImpl p, int bankNum) {
 		byte tmp[] = new byte[singleSize]; // send in 10 single-program messages
 		try {
 			PatchBayApplication.showWaitDialog();
@@ -89,12 +89,12 @@ public class NLDrumBankDriver extends BankDriver {
 			}
 			PatchBayApplication.hideWaitDialog();
 		} catch (Exception e) {
-			ErrorMsg.reportStatus(e);
-			ErrorMsg.reportError("Error", "Unable to send Patch");
+			ErrorMsgUtil.reportStatus(e);
+			ErrorMsgUtil.reportError("Error", "Unable to send Patch");
 		}
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte tmp[] = new byte[singleSize];
 		byte sysex[] = new byte[patchSize];
 		System.arraycopy(NLDrumSingleDriver.NEW_PATCH, 0, tmp, 0, singleSize);
@@ -102,7 +102,7 @@ public class NLDrumBankDriver extends BankDriver {
 			tmp[PATCH_NUM_OFFSET] = (byte) i; // program #
 			System.arraycopy(tmp, 0, sysex, i * singleSize, singleSize);
 		}
-		return new Patch(sysex, this);
+		return new PatchDataImpl(sysex, this);
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {
@@ -115,8 +115,8 @@ public class NLDrumBankDriver extends BankDriver {
 			try {
 				Thread.sleep(400); // it takes some time for each drum patch to be sent
 			} catch (Exception e) {
-				ErrorMsg.reportStatus(e);
-				ErrorMsg.reportError("Error", "Unable to request Patch " + i);
+				ErrorMsgUtil.reportStatus(e);
+				ErrorMsgUtil.reportError("Error", "Unable to request Patch " + i);
 			}
 		}
 	}

@@ -3,12 +3,12 @@
  */
 package org.jsynthlib.synthdrivers.ensoniq.esq1;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.JSLFrame;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
-public class EnsoniqESQ1SingleDriver extends Driver {
+public class EnsoniqESQ1SingleDriver extends SynthDriverPatchImpl {
 
 	public EnsoniqESQ1SingleDriver() {
 		super("Single", "Brian Klock");
@@ -27,8 +27,8 @@ public class EnsoniqESQ1SingleDriver extends Driver {
 
 	}
 
-	public String getPatchName(Patch ip) {
-		Patch p = (Patch) ip;
+	public String getPatchName(PatchDataImpl ip) {
+		PatchDataImpl p = (PatchDataImpl) ip;
 		try {
 			byte[] b = new byte[8];
 			b[0] = ((byte) (p.getSysex()[5] + p.getSysex()[6] * 16));
@@ -44,24 +44,24 @@ public class EnsoniqESQ1SingleDriver extends Driver {
 		}
 	}
 
-	public void setPatchName(Patch p, String name) {
+	public void setPatchName(PatchDataImpl p, String name) {
 		byte[] namebytes = new byte[32];
 		try {
 			if (name.length() < 6)
 				name = name + "        ";
 			namebytes = name.getBytes("US-ASCII");
-			((Patch) p).getSysex()[5] = ((byte) (namebytes[0] % 16));
-			((Patch) p).getSysex()[6] = ((byte) (namebytes[0] / 16));
-			((Patch) p).getSysex()[7] = ((byte) (namebytes[1] % 16));
-			((Patch) p).getSysex()[8] = ((byte) (namebytes[1] / 16));
-			((Patch) p).getSysex()[9] = ((byte) (namebytes[2] % 16));
-			((Patch) p).getSysex()[10] = ((byte) (namebytes[2] / 16));
-			((Patch) p).getSysex()[11] = ((byte) (namebytes[3] % 16));
-			((Patch) p).getSysex()[12] = ((byte) (namebytes[3] / 16));
-			((Patch) p).getSysex()[13] = ((byte) (namebytes[4] % 16));
-			((Patch) p).getSysex()[14] = ((byte) (namebytes[4] / 16));
-			((Patch) p).getSysex()[15] = ((byte) (namebytes[5] % 16));
-			((Patch) p).getSysex()[16] = ((byte) (namebytes[5] / 16));
+			((PatchDataImpl) p).getSysex()[5] = ((byte) (namebytes[0] % 16));
+			((PatchDataImpl) p).getSysex()[6] = ((byte) (namebytes[0] / 16));
+			((PatchDataImpl) p).getSysex()[7] = ((byte) (namebytes[1] % 16));
+			((PatchDataImpl) p).getSysex()[8] = ((byte) (namebytes[1] / 16));
+			((PatchDataImpl) p).getSysex()[9] = ((byte) (namebytes[2] % 16));
+			((PatchDataImpl) p).getSysex()[10] = ((byte) (namebytes[2] / 16));
+			((PatchDataImpl) p).getSysex()[11] = ((byte) (namebytes[3] % 16));
+			((PatchDataImpl) p).getSysex()[12] = ((byte) (namebytes[3] / 16));
+			((PatchDataImpl) p).getSysex()[13] = ((byte) (namebytes[4] % 16));
+			((PatchDataImpl) p).getSysex()[14] = ((byte) (namebytes[4] / 16));
+			((PatchDataImpl) p).getSysex()[15] = ((byte) (namebytes[5] % 16));
+			((PatchDataImpl) p).getSysex()[16] = ((byte) (namebytes[5] / 16));
 		} catch (Exception e) {
 		}
 	}
@@ -70,24 +70,24 @@ public class EnsoniqESQ1SingleDriver extends Driver {
 	 * public void choosePatch (Patch p) {storePatch(p,0,0);}
 	 */
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		sendPatchWorker(p);
-		ErrorMsg.reportWarning(
+		ErrorMsgUtil.reportWarning(
 				"Ensoniq ESQ!",
 				"The patch has been placed in the edit buffer\nYou must now hold the 'write' button 'exit' on the ESQ1's\nand choose a location to store the patch.");
 	}
 
-	public void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		sendPatchWorker(p);
-		ErrorMsg.reportWarning("Ensoniq ESQ!",
+		ErrorMsgUtil.reportWarning("Ensoniq ESQ!",
 				"You must now hit 'exit' on the ESQ1's\nfront panel before you can\nsend another patch.");
 	}
 
-	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
+	protected void calculateChecksum(PatchDataImpl p, int start, int end, int ofs) {
 		// This synth does not use a checksum
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[210];
 		sysex[0] = (byte) 0xF0;
 		sysex[1] = (byte) 0x0F;
@@ -95,13 +95,13 @@ public class EnsoniqESQ1SingleDriver extends Driver {
 		sysex[3] = (byte) 0x00;
 		sysex[4] = (byte) 0x01;
 		sysex[209] = (byte) 0xF7;
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		setPatchName(p, "NEWSND");
 		calculateChecksum(p);
 		return p;
 	}
 
-	public JSLFrame editPatch(Patch p) {
+	public JSLFrame editPatch(PatchDataImpl p) {
 		return null;// return new KawaiK4SingleEditor((Patch)p);
 	}
 }

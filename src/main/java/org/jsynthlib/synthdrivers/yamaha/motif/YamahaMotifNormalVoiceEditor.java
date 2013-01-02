@@ -21,12 +21,12 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.EnvelopeWidget;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.PatchNameWidget;
 import org.jsynthlib.widgets.ScrollBarWidget;
 import org.jsynthlib.widgets.SysexSender;
@@ -36,7 +36,7 @@ public class YamahaMotifNormalVoiceEditor extends PatchEditorFrame {
 	int slidercount = 0;
 	private Container panel;
 
-	public YamahaMotifNormalVoiceEditor(Patch p) {
+	public YamahaMotifNormalVoiceEditor(PatchDataImpl p) {
 		super("Yamaha Motif Normal Voice Editor", p);
 		JTabbedPane tabs = new JTabbedPane();
 		tabs.addTab("General", new GeneralPanel());
@@ -65,7 +65,7 @@ public class YamahaMotifNormalVoiceEditor extends PatchEditorFrame {
 		int sendaddress = address;
 		if ((byte) (address >> 8) == (byte) -1)
 			sendaddress = (address & 0x7f007f) | (mid << 8);
-		ComboBoxWidget combo = new ComboBoxWidget(name, p, new MotifParamModel((Patch) p, address, mid, _short),
+		ComboBoxWidget combo = new ComboBoxWidget(name, p, new MotifParamModel((PatchDataImpl) p, address, mid, _short),
 				new ParamSender(sendaddress, _short), options);
 		addWidget(panel, combo, slidercount++);
 		return combo;
@@ -91,7 +91,7 @@ public class YamahaMotifNormalVoiceEditor extends PatchEditorFrame {
 		int sendaddress = address;
 		if ((byte) (address >> 8) == (byte) -1)
 			sendaddress = (address & 0x7f007f) | (mid << 8);
-		ScrollBarWidget bar = new ScrollBarWidget(name, p, min, max, offset, new MotifParamModel((Patch) p,
+		ScrollBarWidget bar = new ScrollBarWidget(name, p, min, max, offset, new MotifParamModel((PatchDataImpl) p,
 				address, mid, _short), new ParamSender(sendaddress, _short));
 		addWidget(panel, bar, slidercount++);
 		return bar;
@@ -106,7 +106,7 @@ public class YamahaMotifNormalVoiceEditor extends PatchEditorFrame {
 	 * = label; box.add(bar); addWidget(null, bar, slidercount++, false); return bar; }
 	 */
 	class MyScrollBarWidget extends ScrollBarWidget {
-		MyScrollBarWidget(String l, Patch p, int min, int max, int b, ParamModel ofs, SysexSender s) {
+		MyScrollBarWidget(String l, PatchDataImpl p, int min, int max, int b, ParamModel ofs, SysexSender s) {
 			super(l, p, min, max, b, ofs, s);
 		}
 
@@ -128,8 +128,8 @@ public class YamahaMotifNormalVoiceEditor extends PatchEditorFrame {
 		int sendaddress = address;
 		if ((byte) (address >> 8) == (byte) -1)
 			sendaddress = (address & 0x7f007f) | (mid << 8);
-		MyScrollBarWidget bar = new MyScrollBarWidget(name, (Patch) p, min, max, offset, new MotifParamModel(
-				(Patch) p, address, mid, _short), new ParamSender(sendaddress, _short));
+		MyScrollBarWidget bar = new MyScrollBarWidget(name, (PatchDataImpl) p, min, max, offset, new MotifParamModel(
+				(PatchDataImpl) p, address, mid, _short), new ParamSender(sendaddress, _short));
 		addWidget(panel, bar, slidercount++, false);
 		return bar;
 	}
@@ -193,7 +193,7 @@ public class YamahaMotifNormalVoiceEditor extends PatchEditorFrame {
 			 */
 			widgetList.add(widget);
 		} catch (Exception e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 
 	}
@@ -462,13 +462,13 @@ public class YamahaMotifNormalVoiceEditor extends PatchEditorFrame {
 			arp.setAlignmentX(Component.LEFT_ALIGNMENT);
 			add(arp);
 			EnvelopeWidget w = new EnvelopeWidget("Envelope", p, new EnvelopeWidget.Node[] {
-					new EnvelopeWidget.Node(0, 127, new MotifParamModel((Patch) p, 0x400605), 5, 5, null, 0,
+					new EnvelopeWidget.Node(0, 127, new MotifParamModel((PatchDataImpl) p, 0x400605), 5, 5, null, 0,
 							false, new ParamSender(0x400605), null, "Delay", null),
-					new EnvelopeWidget.Node(0, 127, new MotifParamModel((Patch) p, 0x400606), 30, 30, null, 0,
+					new EnvelopeWidget.Node(0, 127, new MotifParamModel((PatchDataImpl) p, 0x400606), 30, 30, null, 0,
 							false, new ParamSender(0x400606), null, "Fade In", null),
-					new EnvelopeWidget.Node(0, 127, new MotifParamModel((Patch) p, 0x400607), 30, 30, null, 0,
+					new EnvelopeWidget.Node(0, 127, new MotifParamModel((PatchDataImpl) p, 0x400607), 30, 30, null, 0,
 							false, new ParamSender(0x400607), null, "Hold", null),
-					new EnvelopeWidget.Node(0, 127, new MotifParamModel((Patch) p, 0x400608), 5, 5, null, 0,
+					new EnvelopeWidget.Node(0, 127, new MotifParamModel((PatchDataImpl) p, 0x400608), 5, 5, null, 0,
 							false, new ParamSender(0x400608), null, "Fade Out", null), });
 			addWidget(arp, w, 500);
 		}
@@ -525,22 +525,22 @@ public class YamahaMotifNormalVoiceEditor extends PatchEditorFrame {
 			panel = Box.createHorizontalBox();
 			c.add(panel);
 			addWidget(panel, new EnvelopeWidget("Amp Envelope", p, new EnvelopeWidget.Node[] {
-					new EnvelopeWidget.Node(0, 127, new MotifParamModel((Patch) p, 0x41ff11, element), 0, 0,
+					new EnvelopeWidget.Node(0, 127, new MotifParamModel((PatchDataImpl) p, 0x41ff11, element), 0, 0,
 							null, 0, false, new ParamSender(0x41ff11, element), null, "Delay", null),
-					new EnvelopeWidget.Node(10, 10, null, 0, 127, new MotifParamModel((Patch) p, 0x41ff28,
+					new EnvelopeWidget.Node(10, 10, null, 0, 127, new MotifParamModel((PatchDataImpl) p, 0x41ff28,
 							element), 0, false, null, new ParamSender(0x41ff28, element), null, "Init"),
-					new EnvelopeWidget.Node(0, 127, new MotifParamModel((Patch) p, 0x41ff24, element), 127, 127,
+					new EnvelopeWidget.Node(0, 127, new MotifParamModel((PatchDataImpl) p, 0x41ff24, element), 127, 127,
 							null, 0, false, new ParamSender(0x41ff24, element), null, "Attack", null),
-					new EnvelopeWidget.Node(0, 127, new MotifParamModel((Patch) p, 0x41ff25, element), 0, 127,
-							new MotifParamModel((Patch) p, 0x41ff2a, element), 0, false, new ParamSender(
+					new EnvelopeWidget.Node(0, 127, new MotifParamModel((PatchDataImpl) p, 0x41ff25, element), 0, 127,
+							new MotifParamModel((PatchDataImpl) p, 0x41ff2a, element), 0, false, new ParamSender(
 									0x41ff25, element), new ParamSender(0x41ff25, element), "Decay 1 Time",
 							"Decay 1 Level"),
-					new EnvelopeWidget.Node(0, 127, new MotifParamModel((Patch) p, 0x41ff26, element), 0, 127,
-							new MotifParamModel((Patch) p, 0x41ff2b, element), 0, false, new ParamSender(
+					new EnvelopeWidget.Node(0, 127, new MotifParamModel((PatchDataImpl) p, 0x41ff26, element), 0, 127,
+							new MotifParamModel((PatchDataImpl) p, 0x41ff2b, element), 0, false, new ParamSender(
 									0x410025, element), new ParamSender(0x41ff25, element), "Decay 2", "Sustain"),
 					new EnvelopeWidget.Node(100, 100, null, EnvelopeWidget.Node.SAME, EnvelopeWidget.Node.SAME, null,
 							0, false, null, null, null, null),
-					new EnvelopeWidget.Node(0, 127, new MotifParamModel((Patch) p, 0x41ff27, element), 0, 0,
+					new EnvelopeWidget.Node(0, 127, new MotifParamModel((PatchDataImpl) p, 0x41ff27, element), 0, 0,
 							null, 0, false, new ParamSender(0x41ff27, element), null, "Release", null)
 
 			}), 600 + 10 * element);
@@ -630,25 +630,25 @@ public class YamahaMotifNormalVoiceEditor extends PatchEditorFrame {
 	class MotifParamModel extends ParamModel {
 		boolean twobytes;
 
-		public MotifParamModel(Patch p, int address) {
+		public MotifParamModel(PatchDataImpl p, int address) {
 			super(p, address);
 			setAddress(0);
 			twobytes = false;
 		}
 
-		public MotifParamModel(Patch p, int address, boolean _short) {
+		public MotifParamModel(PatchDataImpl p, int address, boolean _short) {
 			super(p, address);
 			setAddress(0);
 			twobytes = _short;
 		}
 
-		public MotifParamModel(Patch p, int address, int _mid) {
+		public MotifParamModel(PatchDataImpl p, int address, int _mid) {
 			super(p, address);
 			setAddress(_mid & 127);
 			twobytes = false;
 		}
 
-		public MotifParamModel(Patch p, int address, int _mid, boolean _short) {
+		public MotifParamModel(PatchDataImpl p, int address, int _mid, boolean _short) {
 			super(p, address);
 			setAddress(_mid & 127);
 			twobytes = _short;

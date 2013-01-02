@@ -21,8 +21,8 @@
 
 package org.jsynthlib.synthdrivers.alesis.dm5;
 
-import org.jsynthlib.menu.patch.Converter;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.driver.ConverterImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 /**
  * Removes "Garbage Data" from Alesis response to dump request and extracts desired patch.
@@ -35,7 +35,7 @@ import org.jsynthlib.menu.patch.Patch;
  * 
  * @author Jeff Weber
  */
-public class AlesisDM5Converter extends Converter {
+public class AlesisDM5Converter extends ConverterImpl {
 
 	/** Constructor for AlesisDM5Converter */
 	AlesisDM5Converter() {
@@ -99,20 +99,20 @@ public class AlesisDM5Converter extends Converter {
 	/**
 	 * Extracts a Alesis patch from a Alesis patch dump response (block of data). Calls parseSysex to do the extraction.
 	 */
-	public Patch[] extractPatch(Patch p) {
+	public PatchDataImpl[] extractPatch(PatchDataImpl p) {
 		byte[] sysex = parseSysex(p.getByteArray());
 
-		Patch[] newPatchArray = new Patch[1];
+		PatchDataImpl[] newPatchArray = new PatchDataImpl[1];
 		if (sysex[6] == (byte) 0x00) { // Is this a system info patch?
-			newPatchArray[0] = new Patch(sysex, new AlesisDM5SysInfoDriver());
+			newPatchArray[0] = new PatchDataImpl(sysex, new AlesisDM5SysInfoDriver());
 		} else if (sysex[6] == (byte) 0x01) { // Is this an edit buffer patch?
-			newPatchArray[0] = new Patch(sysex, new AlesisDM5EdBufDriver()); // Convert to a AlesisDM5SgSetDriver
+			newPatchArray[0] = new PatchDataImpl(sysex, new AlesisDM5EdBufDriver()); // Convert to a AlesisDM5SgSetDriver
 		} else if (sysex[6] == (byte) 0x03) { // Is this a program change table patch?
-			newPatchArray[0] = new Patch(sysex, new AlesisDM5PrChgDriver());
+			newPatchArray[0] = new PatchDataImpl(sysex, new AlesisDM5PrChgDriver());
 		} else if (sysex[6] == (byte) 0x05) { // Is this a trigger setup patch?
-			newPatchArray[0] = new Patch(sysex, new AlesisDM5TrSetDriver());
+			newPatchArray[0] = new PatchDataImpl(sysex, new AlesisDM5TrSetDriver());
 		} else if ((sysex[6] >= (byte) 0x20) && (sysex[6] <= (byte) 0x34)) { // Is this a single drumset patch?
-			newPatchArray[0] = new Patch(sysex, new AlesisDM5SgSetDriver());
+			newPatchArray[0] = new PatchDataImpl(sysex, new AlesisDM5SgSetDriver());
 		}
 		return newPatchArray;
 	}

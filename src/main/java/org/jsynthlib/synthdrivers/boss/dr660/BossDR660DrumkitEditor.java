@@ -12,11 +12,11 @@ import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.PatchNameWidget;
 import org.jsynthlib.widgets.ScrollBarLookupWidget;
 import org.jsynthlib.widgets.ScrollBarWidget;
@@ -90,7 +90,7 @@ class BossDR660DrumkitEditor extends PatchEditorFrame {
 
 	int drum = 0;
 
-	public BossDR660DrumkitEditor(Patch patch) {
+	public BossDR660DrumkitEditor(PatchDataImpl patch) {
 		super("Boss DR660 Drumkit Editor", patch);
 		JPanel kitPane = new JPanel();
 		kitPane.setLayout(new GridBagLayout());
@@ -395,7 +395,7 @@ class BossDR660DrumkitEditor extends PatchEditorFrame {
 
 	class DrumModel extends ParamModel {
 		// int ofs;
-		public DrumModel(Patch p, int o) {
+		public DrumModel(PatchDataImpl p, int o) {
 			super(p, o);
 		}
 
@@ -411,7 +411,7 @@ class BossDR660DrumkitEditor extends PatchEditorFrame {
 
 	class NoteModel extends ParamModel {
 		// int ofs;
-		public NoteModel(Patch p, int o) {
+		public NoteModel(PatchDataImpl p, int o) {
 			super(p, o);
 		}
 
@@ -427,7 +427,7 @@ class BossDR660DrumkitEditor extends PatchEditorFrame {
 
 	class PitchModel extends ParamModel {
 		// int ofs;
-		public PitchModel(Patch p, int o) {
+		public PitchModel(PatchDataImpl p, int o) {
 			super(p, o);
 		}
 
@@ -444,7 +444,7 @@ class BossDR660DrumkitEditor extends PatchEditorFrame {
 
 	class WaveModel extends ParamModel {
 		// int ofs;
-		public WaveModel(Patch p, int o) {
+		public WaveModel(PatchDataImpl p, int o) {
 			super(p, o);
 		}
 

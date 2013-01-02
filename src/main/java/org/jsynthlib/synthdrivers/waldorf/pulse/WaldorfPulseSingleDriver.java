@@ -24,12 +24,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.text.NumberFormat;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
-public class WaldorfPulseSingleDriver extends Driver {
+public class WaldorfPulseSingleDriver extends SynthDriverPatchImpl {
 	private String userPatchNumbers[];
 
 	public WaldorfPulseSingleDriver() {
@@ -64,7 +64,7 @@ public class WaldorfPulseSingleDriver extends Driver {
 		super.setPatchNum(patchNum);
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[77];
 		try {
 			FileInputStream f = new FileInputStream(new File("synthdrivers/WaldorfPulse/pulse_default.syx"));
@@ -75,28 +75,28 @@ public class WaldorfPulseSingleDriver extends Driver {
 			System.arraycopy(WaldorfPulseInitPatch.initPatch, 0, sysex, 0, 77);
 		}
 		sysex[3] = 0; // Device ID
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		calculateChecksum(p);
 		return p;
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		setPatchNum(patchNum);
-		((Patch) p).getSysex()[4] = (byte) 1;
-		((Patch) p).getSysex()[5] = (byte) patchNum;
+		((PatchDataImpl) p).getSysex()[4] = (byte) 1;
+		((PatchDataImpl) p).getSysex()[5] = (byte) patchNum;
 		super.sendPatch(p);
 	}
 
-	public void sendPatch(Patch p) {
-		((Patch) p).getSysex()[4] = (byte) 0;
+	public void sendPatch(PatchDataImpl p) {
+		((PatchDataImpl) p).getSysex()[4] = (byte) 0;
 		super.sendPatch(p);
 	}
 
-	public JSLFrame editPatch(Patch p) {
-		return new WaldorfPulseSingleEditor((Patch) p);
+	public JSLFrame editPatch(PatchDataImpl p) {
+		return new WaldorfPulseSingleEditor((PatchDataImpl) p);
 	}
 
-	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
+	protected void calculateChecksum(PatchDataImpl p, int start, int end, int ofs) {
 		int sum = 0;
 		for (int i = start; i <= end; i++)
 			sum += p.getSysex()[i];

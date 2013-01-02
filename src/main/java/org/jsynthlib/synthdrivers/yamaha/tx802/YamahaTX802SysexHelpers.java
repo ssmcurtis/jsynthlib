@@ -23,8 +23,8 @@
  */
 package org.jsynthlib.synthdrivers.yamaha.tx802;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.SysexHandler;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 
 public class YamahaTX802SysexHelpers {
 	// ############################################### TX802 ############################################
@@ -43,7 +43,7 @@ public class YamahaTX802SysexHelpers {
 																										// about "OnOff"
 
 	// switch off internal/cartridge memory protection
-	protected static void swOffMemProt(Driver d, byte ch) // port, channel
+	protected static void swOffMemProt(SynthDriverPatchImpl d, byte ch) // port, channel
 	{
 		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("switch", SYSTEM_SETUP),
 				new SysexHandler.NameValue("OnOff", DEPRESS)));
@@ -53,7 +53,7 @@ public class YamahaTX802SysexHelpers {
 				DEPRESS)));
 	}
 
-	protected static void swOnMemProt(Driver d, byte ch) // port, channel
+	protected static void swOnMemProt(SynthDriverPatchImpl d, byte ch) // port, channel
 	{
 		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("switch", SYSTEM_SETUP),
 				new SysexHandler.NameValue("OnOff", DEPRESS)));
@@ -64,14 +64,14 @@ public class YamahaTX802SysexHelpers {
 	}
 
 	// choose the desired MIDI receive/transmit block
-	protected static void chBlock(Driver d, byte ch, byte bn) // port, channel,
+	protected static void chBlock(SynthDriverPatchImpl d, byte ch, byte bn) // port, channel,
 	{
 		d.send(System.toSysexMessage(ch, new SysexHandler.NameValue("param", 0x4d), new SysexHandler.NameValue(
 				"action", bn)));
 	} // bn: 0 = 1-32, 1 = 33-64
 
 	// choose voice mode
-	protected static void chVoiceMode(Driver d, byte ch) // port, channel
+	protected static void chVoiceMode(SynthDriverPatchImpl d, byte ch) // port, channel
 	{
 		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("switch", 0x52), new SysexHandler.NameValue(
 				"OnOff", 0x00)));

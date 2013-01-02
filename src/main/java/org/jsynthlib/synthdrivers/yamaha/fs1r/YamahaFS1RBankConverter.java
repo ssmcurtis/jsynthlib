@@ -1,7 +1,7 @@
 package org.jsynthlib.synthdrivers.yamaha.fs1r;
 
-import org.jsynthlib.menu.patch.Converter;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.driver.ConverterImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.DriverUtil;
 
 /**
@@ -10,7 +10,7 @@ import org.jsynthlib.tools.DriverUtil;
  * @author Denis Queffeulou mailto:dqueffeulou@free.fr
  * @version $Id$
  */
-public class YamahaFS1RBankConverter extends Converter {
+public class YamahaFS1RBankConverter extends ConverterImpl {
 	public YamahaFS1RBankConverter() {
 		super("Bank Dump Converter", "Denis Queffeulou");
 		// en fait ce n'est pas un sysex donc je met le debut du fichier
@@ -20,14 +20,14 @@ public class YamahaFS1RBankConverter extends Converter {
 		patchSize = 129340;
 	}
 
-	public Patch[] extractPatch(Patch p) {
-		Patch oBank[] = new Patch[1];
+	public PatchDataImpl[] extractPatch(PatchDataImpl p) {
+		PatchDataImpl oBank[] = new PatchDataImpl[1];
 		oBank[0] = importFSEditor(p.getByteArray());
 		return oBank;
 	}
 
-	Patch importFSEditor(byte[] aBuffer) {
-		Patch oBank = (Patch) YamahaFS1RBankDriver.getInstance().createNewPatch();
+	PatchDataImpl importFSEditor(byte[] aBuffer) {
+		PatchDataImpl oBank = (PatchDataImpl) YamahaFS1RBankDriver.getInstance().createNewPatch();
 		int oIndex = 26;
 		int oIDest = YamahaFS1RBankDriver.DATA_START;
 		for (int p = 0; p < 128; p++) {

@@ -1,19 +1,19 @@
 package org.jsynthlib.synthdrivers.kawai.k4;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.widgets.ParamModel;
 
 class K4Model extends ParamModel {
 	private int bitmask;
 	private int mult;
 
-	public K4Model(Patch p, int offset) {
+	public K4Model(PatchDataImpl p, int offset) {
 		super(p, offset + 8);
 		bitmask = 255;
 		mult = 1;
 	}
 
-	public K4Model(Patch p, int offset, int bitmask) {
+	public K4Model(PatchDataImpl p, int offset, int bitmask) {
 		super(p, offset + 8);
 		this.bitmask = bitmask;
 		if ((bitmask & 1) == 1)

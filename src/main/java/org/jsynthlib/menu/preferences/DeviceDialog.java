@@ -20,10 +20,10 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
 import org.jsynthlib.PatchBayApplication;
-import org.jsynthlib.menu.patch.Device;
-import org.jsynthlib.menu.ui.DeviceSelectionTree;
-import org.jsynthlib.menu.ui.JSLDialog;
-import org.jsynthlib.tools.Utility;
+import org.jsynthlib.menu.DeviceSelectionTree;
+import org.jsynthlib.menu.JSLDialog;
+import org.jsynthlib.model.device.Device;
+import org.jsynthlib.tools.UiUtil;
 
 public class DeviceDialog extends JSLDialog {
 
@@ -90,7 +90,7 @@ public class DeviceDialog extends JSLDialog {
 		getContentPane().add(container);
 		setSize(400, 600);
 
-		Utility.centerDialog(this);
+		UiUtil.centerDialog(this);
 	}
 
 	void okPressed() {

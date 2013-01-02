@@ -28,13 +28,13 @@ import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.SIZE_TRAILER;
 import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.TIMBRE_COUNT;
 import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.TIMBRE_SIZE;
 
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.synthdrivers.roland.d10.message.D10DataSetMessage;
 import org.jsynthlib.synthdrivers.roland.d10.message.D10RequestMessage;
 import org.jsynthlib.synthdrivers.roland.d10.message.D10TransferMessage;
 
-public class RolandD10TimbreBankDriver extends BankDriver {
+public class RolandD10TimbreBankDriver extends SynthDriverBank {
 
 	private RolandD10TimbreDriver timbreDriver;
 
@@ -59,10 +59,10 @@ public class RolandD10TimbreBankDriver extends BankDriver {
 		patchNumbers = RolandD10Support.createPatchNumbers();
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		D10TransferMessage message = new D10DataSetMessage(patchSize - (SIZE_HEADER_DT1 + SIZE_TRAILER),
 				BASE_TIMBRE_MEMORY.getDataValue());
-		Patch bank = new Patch(message.getBytes(), this);
+		PatchDataImpl bank = new PatchDataImpl(message.getBytes(), this);
 		for (int patchNumber = 0; patchNumber < TIMBRE_COUNT; patchNumber++) {
 			putPatch(bank, timbreDriver.createNewPatch(), patchNumber);
 		}
@@ -75,21 +75,21 @@ public class RolandD10TimbreBankDriver extends BankDriver {
 		send(requestMessage.getBytes());
 	}
 
-	protected Patch getPatch(Patch bank, int patchNum) {
-		Patch patch = timbreDriver.createNewPatch();
+	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+		PatchDataImpl patch = timbreDriver.createNewPatch();
 		RolandD10Support.copyPatchFromBank(patchNum, bank.getSysex(), patch.getSysex());
 		return patch;
 	}
 
-	protected String getPatchName(Patch bank, int patchNum) {
+	public String getPatchName(PatchDataImpl bank, int patchNum) {
 		return timbreDriver.getPatchName(getPatch(bank, patchNum));
 	}
 
-	protected void setPatchName(Patch bank, int patchNum, String name) {
+	public void setPatchName(PatchDataImpl bank, int patchNum, String name) {
 		// Patch has no name in data.
 	}
 
-	protected void putPatch(Patch bank, Patch patch, int patchNum) {
+	public void putPatch(PatchDataImpl bank, PatchDataImpl patch, int patchNum) {
 		RolandD10Support.copyPatchFromBank(patchNum, bank.getSysex(), patch.getSysex());
 	}
 

@@ -14,13 +14,13 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.jsynthlib.menu.patch.Device;
-import org.jsynthlib.menu.patch.IDriver;
-import org.jsynthlib.menu.patch.IPatch;
-import org.jsynthlib.menu.patch.IPatchDriver;
 import org.jsynthlib.menu.preferences.AppConfig;
-import org.jsynthlib.tools.ErrorMsg;
-import org.jsynthlib.tools.Utility;
+import org.jsynthlib.model.device.Device;
+import org.jsynthlib.model.driver.SynthDriver;
+import org.jsynthlib.model.driver.SynthDriverPatch;
+import org.jsynthlib.model.patch.Patch;
+import org.jsynthlib.tools.ErrorMsgUtil;
+import org.jsynthlib.tools.UiUtil;
 
 /**
  * Dialog to create a new Patch of the loaded Devices respective Drivers. Any 'Generic' device and 'Converter' driver
@@ -33,7 +33,7 @@ import org.jsynthlib.tools.Utility;
 public class NewPatchDialog extends JDialog {
 	private JComboBox deviceComboBox;
 	private JComboBox driverComboBox;
-	private IPatch p;
+	private Patch p;
 
 	public NewPatchDialog(JFrame parent) {
 		super(parent, "Create New Patch", true);
@@ -53,9 +53,9 @@ public class NewPatchDialog extends JDialog {
 		for (int i = 1; i < AppConfig.deviceCount(); i++) {
 			Device device = AppConfig.getDevice(i);
 			for (int j = 0; j < device.driverCount(); j++) {
-				IDriver driver = device.getDriver(j);
+				SynthDriver driver = device.getDriver(j);
 				if ((driver.isSingleDriver() || driver.isBankDriver()) // Skipping a converter
-						&& ((IPatchDriver) driver).canCreatePatch()) {
+						&& ((SynthDriverPatch) driver).canCreatePatch()) {
 					deviceComboBox.addItem(device);
 					break;
 				}
@@ -85,16 +85,16 @@ public class NewPatchDialog extends JDialog {
 		JButton create = new JButton(" Create ");
 		create.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				IPatchDriver driver = (IPatchDriver) driverComboBox.getSelectedItem();
+				SynthDriverPatch driver = (SynthDriverPatch) driverComboBox.getSelectedItem();
 
 				p = driver.createPatch();
 				if (p != null) {
-					ErrorMsg.reportStatus("Bingo " + driver.toString());
+					ErrorMsgUtil.reportStatus("Bingo " + driver.toString());
 				} else {
 					// If a driver does not override
 					// createNewPatch method unnecessary, this
 					// error never occurs.
-					ErrorMsg.reportError("New Patch Error", "The driver does not support `New Patch' function.");
+					ErrorMsgUtil.reportError("New Patch Error", "The driver does not support `New Patch' function.");
 				}
 				setVisible(false);
 				dispose();
@@ -117,13 +117,13 @@ public class NewPatchDialog extends JDialog {
 		container.add(buttonPanel, BorderLayout.SOUTH);
 		getContentPane().add(container);
 		pack();
-		Utility.centerDialog(this);
+		UiUtil.centerDialog(this);
 		// } catch(Exception e) {
 		// ErrorMsg.reportStatus(e);
 		// }
 	}
 
-	public IPatch getNewPatch() {
+	public Patch getNewPatch() {
 		return p;
 	}
 
@@ -136,8 +136,8 @@ public class NewPatchDialog extends JDialog {
 
 			Device device = (Device) deviceComboBox.getSelectedItem();
 			for (int i = 0; i < device.driverCount(); i++) {
-				IDriver driver = device.getDriver(i);
-				if ((driver.isSingleDriver() || driver.isBankDriver()) && ((IPatchDriver) driver).canCreatePatch()) {
+				SynthDriver driver = device.getDriver(i);
+				if ((driver.isSingleDriver() || driver.isBankDriver()) && ((SynthDriverPatch) driver).canCreatePatch()) {
 					driverComboBox.addItem(driver);
 				}
 			}

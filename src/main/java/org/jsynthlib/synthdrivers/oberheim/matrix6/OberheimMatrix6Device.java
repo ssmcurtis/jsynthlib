@@ -8,7 +8,7 @@ package org.jsynthlib.synthdrivers.oberheim.matrix6;
 
 import java.util.prefs.Preferences;
 
-import org.jsynthlib.menu.patch.Device;
+import org.jsynthlib.model.device.Device;
 import org.jsynthlib.synthdrivers.oberheim.matrix1000.OberheimMatrixSingleDriver;
 
 /**

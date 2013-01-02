@@ -16,9 +16,9 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
 import org.jsynthlib.example.midi.MidiActionPlayNote;
-import org.jsynthlib.tools.ErrorMsg;
-import org.jsynthlib.tools.midi.MidiTest;
-import org.jsynthlib.tools.midi.MidiUtil;
+import org.jsynthlib.tools.ErrorMsgUtil;
+import org.jsynthlib.tools.MidiTestUtil;
+import org.jsynthlib.tools.MidiUtil;
 
 /**
  * The panel that configures the MIDI layer. Taken out of PrefsDialog.
@@ -181,7 +181,7 @@ public class MidiConfigPanel extends ConfigPanel {
 
 		testButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				MidiTest.runLoopbackTest(cbIn.getSelectedIndex(), cbOut.getSelectedIndex());
+				MidiTestUtil.runLoopbackTest(cbIn.getSelectedIndex(), cbOut.getSelectedIndex());
 			}
 		});
 
@@ -201,7 +201,7 @@ public class MidiConfigPanel extends ConfigPanel {
 			cbIn.setSelectedIndex(AppConfig.getInitPortIn());
 			cbMC.setSelectedIndex(AppConfig.getMasterController());
 		} catch (IllegalArgumentException e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 
 		spBufSize.setValue(new Integer(AppConfig.getMidiOutBufSize()));

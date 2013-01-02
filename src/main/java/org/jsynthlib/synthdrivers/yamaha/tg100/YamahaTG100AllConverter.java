@@ -21,8 +21,8 @@
 
 package org.jsynthlib.synthdrivers.yamaha.tg100;
 
-import org.jsynthlib.menu.patch.Converter;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.driver.ConverterImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 /**
  * Converts temporary parameter SysEx data (644 Bytes) to a "Single Performance" (223 Bytes)
@@ -30,7 +30,7 @@ import org.jsynthlib.menu.patch.Patch;
  * @author Joachim Backhaus
  * @version $Id$
  */
-public class YamahaTG100AllConverter extends Converter {
+public class YamahaTG100AllConverter extends ConverterImpl {
 
 	public YamahaTG100AllConverter() {
 		super("All Dump Converter", "Joachim Backhaus");
@@ -44,15 +44,15 @@ public class YamahaTG100AllConverter extends Converter {
 	/**
 	 * Converts 8266 Byte sysex files to the 6720 Bytes of a Voice Bank
 	 */
-	public Patch[] extractPatch(Patch p) {
+	public PatchDataImpl[] extractPatch(PatchDataImpl p) {
 		byte[] sysex = p.getByteArray();
-		Patch[] newPatchArray = new Patch[1];
+		PatchDataImpl[] newPatchArray = new PatchDataImpl[1];
 		byte[] temporarySysex = new byte[TG100Constants.PATCH_SIZE * TG100Constants.PATCH_NUMBER_LENGTH];
 
 		System.arraycopy(sysex, TG100Constants.ALL_DUMP_OFFSET, temporarySysex, 0, TG100Constants.PATCH_SIZE
 				* TG100Constants.PATCH_NUMBER_LENGTH);
 
-		newPatchArray[0] = new Patch(temporarySysex, getDevice());
+		newPatchArray[0] = new PatchDataImpl(temporarySysex, getDevice());
 
 		return newPatchArray;
 	}

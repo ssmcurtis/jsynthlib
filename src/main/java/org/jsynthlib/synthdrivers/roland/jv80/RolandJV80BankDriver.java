@@ -23,15 +23,15 @@ package org.jsynthlib.synthdrivers.roland.jv80;
 
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.DriverUtil;
 
 /**
  * @author Sander Brandenburg
  * @version $Id$
  */
-public class RolandJV80BankDriver extends BankDriver {
+public class RolandJV80BankDriver extends SynthDriverBank {
 
 	final RolandJV80PatchDriver patchDriver;
 
@@ -60,35 +60,35 @@ public class RolandJV80BankDriver extends BankDriver {
 		return patchDriver;
 	}
 
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 		for (int i = 0; i < PATCHES_PER_BANK; i++) {
 			patchDriver.calculateChecksum(p, getStartOffset(i));
 		}
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] bankSysex = new byte[patchSize];
 
 		// get a single patch
-		Patch patch = patchDriver.createNewPatch();
+		PatchDataImpl patch = patchDriver.createNewPatch();
 
 		for (int i = 0; i < PATCHES_PER_BANK; i++) {
 			patchDriver.setPatchNum(patch.getSysex(), 0, i);
 			System.arraycopy(patch.getSysex(), 0, bankSysex, i * singleSize, patch.getSysex().length);
 		}
 
-		Patch bankPatch = new Patch(bankSysex, this);
+		PatchDataImpl bankPatch = new PatchDataImpl(bankSysex, this);
 		calculateChecksum(bankPatch);
 		return bankPatch;
 	}
 
-	public Patch getPatch(Patch bank, int patchNum) {
+	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
 		byte[] sysex = new byte[singleSize];
 		System.arraycopy(bank.getSysex(), getStartOffset(patchNum), sysex, 0, sysex.length);
-		return new Patch(sysex, patchDriver);
+		return new PatchDataImpl(sysex, patchDriver);
 	}
 
-	public String getPatchName(Patch p, int patchNum) {
+	public String getPatchName(PatchDataImpl p, int patchNum) {
 		int offset = getStartOffset(patchNum);
 		return new String(p.getSysex(), offset + patchNameStart, patchNameSize);
 	}
@@ -97,7 +97,7 @@ public class RolandJV80BankDriver extends BankDriver {
 		return patchnr * singleSize;
 	}
 
-	public void putPatch(Patch bank, Patch p, int patchNum) {
+	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) {
 		if (!canHoldPatch(p)) {
 			JOptionPane.showMessageDialog(null, "This type of patch does not fit in to this type of bank.", "Error",
 					JOptionPane.ERROR_MESSAGE);
@@ -131,7 +131,7 @@ public class RolandJV80BankDriver extends BankDriver {
 		}
 	}
 
-	public void setPatchName(Patch p, int patchNum, String name) {
+	public void setPatchName(PatchDataImpl p, int patchNum, String name) {
 		int offset = getStartOffset(patchNum);
 		byte data[] = name.getBytes();
 		if (data.length > patchNameSize)
@@ -141,14 +141,14 @@ public class RolandJV80BankDriver extends BankDriver {
 	}
 
 	// stores entire bank
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		setPatchNum(p.getSysex(), bankNum);
 		calculateChecksum(p);
 		sendPatchWorker(p);
 	}
 
-	public void deletePatch(Patch bank, int patchNum) {
-		Patch patch = patchDriver.createNewPatch();
+	public void deletePatch(PatchDataImpl bank, int patchNum) {
+		PatchDataImpl patch = patchDriver.createNewPatch();
 		int offset = getStartOffset(patchNum);
 		System.arraycopy(patch.getSysex(), 0, bank.getSysex(), offset, patch.getSysex().length);
 	}

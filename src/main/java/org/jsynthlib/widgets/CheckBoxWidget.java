@@ -6,7 +6,7 @@ import java.awt.event.ItemListener;
 
 import javax.swing.JCheckBox;
 
-import org.jsynthlib.menu.patch.IPatch;
+import org.jsynthlib.model.patch.Patch;
 
 /**
  * A SysexWidget class features JCheckBox widget.
@@ -17,7 +17,7 @@ public class CheckBoxWidget extends SysexWidget {
 	/** JCheckBox object. */
 	protected JCheckBox cb;
 
-	public CheckBoxWidget(IPatch patch, IParameter param) {
+	public CheckBoxWidget(Patch patch, IParameter param) {
 		super(patch, param);
 		createWidgets();
 		layoutWidgets();
@@ -36,7 +36,7 @@ public class CheckBoxWidget extends SysexWidget {
 	 *            a <code>SysexSender</code> instance.
 	 * @see SysexWidget
 	 */
-	public CheckBoxWidget(String label, IPatch patch, IParamModel pmodel, ISender sender) {
+	public CheckBoxWidget(String label, Patch patch, IParamModel pmodel, ISender sender) {
 		super(label, patch, 0, 1, pmodel, sender);
 
 		createWidgets();

@@ -1,13 +1,13 @@
 package org.jsynthlib.synthdrivers.clavia.nordstage;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 /**
  * Single Voice Patch Driver for Clavia Nord Stage.
  */
-public class NordStagePatchSingleDriver extends Driver {
+public class NordStagePatchSingleDriver extends SynthDriverPatchImpl {
 
 	private static final int HEADER_SIZE = 8;
 	private static final int SINGLE_PATCH_SIZE = 471;
@@ -33,7 +33,7 @@ public class NordStagePatchSingleDriver extends Driver {
 		this.patchNumbers = new String[] { "1", "2", "3", "4", "5", "6" };
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		setBankNum(bankNum);
 		setPatchNum(patchNum);
 		try {
@@ -55,13 +55,13 @@ public class NordStagePatchSingleDriver extends Driver {
 		setPatchNum(patchNum);
 	}
 
-	public void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		p.getSysex()[3] = (byte) 0x23;
 		p.getSysex()[7] = (byte) 0x00;
 		sendPatchWorker(p);
 	}
 
-	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
+	protected void calculateChecksum(PatchDataImpl p, int start, int end, int ofs) {
 		int sum = 0;
 		// Nord Stage checksum is defined in the documentation as being a sum of
 		// all bytes
@@ -76,7 +76,7 @@ public class NordStagePatchSingleDriver extends Driver {
 		// p.sysex[ofs]=(byte)(p.sysex[ofs]+1);
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[HEADER_SIZE + SINGLE_PATCH_SIZE + 1];
 		sysex[0] = (byte) 0xF0;
 		sysex[1] = (byte) 0x40;
@@ -86,7 +86,7 @@ public class NordStagePatchSingleDriver extends Driver {
 		sysex[5] = (byte) 0x04;
 		sysex[6] = (byte) 0x0;
 		sysex[HEADER_SIZE + SINGLE_PATCH_SIZE] = (byte) 0xF7;
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		setPatchName(p, "New Patch");
 		calculateChecksum(p);
 		return p;
@@ -94,12 +94,12 @@ public class NordStagePatchSingleDriver extends Driver {
 	}
 
 	@Override
-	public String getPatchName(Patch p) {
+	public String getPatchName(PatchDataImpl p) {
 		return "";
 	}
 
 	@Override
-	public void setPatchName(Patch p, String s) {
+	public void setPatchName(PatchDataImpl p, String s) {
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {

@@ -3,8 +3,8 @@ package org.jsynthlib.widgets;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.SysexMessage;
 
-import org.jsynthlib.menu.patch.IPatchDriver;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.model.driver.SynthDriverPatch;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 /**
  * An implementation of SysexWidget.ISender.
@@ -73,7 +73,7 @@ public class SysexSender implements SysexWidget.ISender {
 	}
 
 	// SysexWidget.ISender method
-	public void send(IPatchDriver driver, int value) {
+	public void send(SynthDriverPatch driver, int value) {
 		channel = (byte) driver.getDevice().getDeviceID();
 		byte[] sysex = generate(value);
 		SysexMessage m = new SysexMessage();
@@ -81,7 +81,7 @@ public class SysexSender implements SysexWidget.ISender {
 			m.setMessage(sysex, sysex.length);
 			driver.send(m);
 		} catch (InvalidMidiDataException e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 	}
 }

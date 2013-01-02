@@ -10,8 +10,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.LabelWidget;
 import org.jsynthlib.widgets.ScrollBarWidget;
@@ -39,7 +39,7 @@ class KawaiK4EffectEditor extends PatchEditorFrame {
 	private final String[] effectParam3 = new String[] { "Tone", "Tone", "Tone", "Tone", "Tone", "Tone", "Delay",
 			"Delay", "Rate", "1->2 Bal.", "1->2 Bal.", "1->2 Bal.", "1->2 Bal.", "1->2 Bal.", "1->2 Bal.", "1->2 Bal." };
 
-	public KawaiK4EffectEditor(Patch patch) {
+	public KawaiK4EffectEditor(PatchDataImpl patch) {
 		super("Kawai K4 Effect Editor", patch);
 		/*
 		 * final Image algoPic1=Toolkit.getDefaultToolkit ().getImage ("synthdrivers/KawaiK4/effect1.gif"); final Image

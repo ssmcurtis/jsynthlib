@@ -3,12 +3,12 @@
  */
 package org.jsynthlib.synthdrivers.oberheim.matrix1000;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
-public class OberheimMatrixSingleDriver extends Driver {
+public class OberheimMatrixSingleDriver extends SynthDriverPatchImpl {
 
 	public OberheimMatrixSingleDriver() {
 		super("Single", "Brian Klock");
@@ -32,12 +32,12 @@ public class OberheimMatrixSingleDriver extends Driver {
 				"95-", "96-", "97-", "98-", "99-" };
 	}
 
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 		calculateChecksum(p, 5, 272, 273);
 
 	}
 
-	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
+	protected void calculateChecksum(PatchDataImpl p, int start, int end, int ofs) {
 		int sum = 0;
 		for (int i = start; i <= end; i++)
 			if (i % 2 != 0)
@@ -55,23 +55,23 @@ public class OberheimMatrixSingleDriver extends Driver {
 		}
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		setBankNum(bankNum);
 		setPatchNum(patchNum);
-		((Patch) p).getSysex()[3] = 1;
-		((Patch) p).getSysex()[4] = (byte) patchNum;
+		((PatchDataImpl) p).getSysex()[3] = 1;
+		((PatchDataImpl) p).getSysex()[4] = (byte) patchNum;
 		sendPatchWorker(p);
 
 	}
 
-	public void sendPatch(Patch p) {
-		((Patch) p).getSysex()[3] = 0x0D;
-		((Patch) p).getSysex()[4] = 0;
+	public void sendPatch(PatchDataImpl p) {
+		((PatchDataImpl) p).getSysex()[3] = 0x0D;
+		((PatchDataImpl) p).getSysex()[4] = 0;
 		sendPatchWorker(p);
 	}
 
-	public String getPatchName(Patch p) {
-		Patch ip = (Patch) p;
+	public String getPatchName(PatchDataImpl p) {
+		PatchDataImpl ip = (PatchDataImpl) p;
 		try {
 			byte[] b = new byte[8];
 			b[0] = ((byte) (ip.getSysex()[5] + ip.getSysex()[6] * 16));
@@ -89,33 +89,33 @@ public class OberheimMatrixSingleDriver extends Driver {
 		}
 	}
 
-	public void setPatchName(Patch p, String name) {
+	public void setPatchName(PatchDataImpl p, String name) {
 		byte[] namebytes = new byte[32];
 		try {
 			if (name.length() < 8)
 				name = name + "        ";
 			namebytes = name.getBytes("US-ASCII");
-			((Patch) p).getSysex()[5] = ((byte) (namebytes[0] % 16));
-			((Patch) p).getSysex()[6] = ((byte) (namebytes[0] / 16));
-			((Patch) p).getSysex()[7] = ((byte) (namebytes[1] % 16));
-			((Patch) p).getSysex()[8] = ((byte) (namebytes[1] / 16));
-			((Patch) p).getSysex()[9] = ((byte) (namebytes[2] % 16));
-			((Patch) p).getSysex()[10] = ((byte) (namebytes[2] / 16));
-			((Patch) p).getSysex()[11] = ((byte) (namebytes[3] % 16));
-			((Patch) p).getSysex()[12] = ((byte) (namebytes[3] / 16));
-			((Patch) p).getSysex()[13] = ((byte) (namebytes[4] % 16));
-			((Patch) p).getSysex()[14] = ((byte) (namebytes[4] / 16));
-			((Patch) p).getSysex()[15] = ((byte) (namebytes[5] % 16));
-			((Patch) p).getSysex()[16] = ((byte) (namebytes[5] / 16));
-			((Patch) p).getSysex()[17] = ((byte) (namebytes[6] % 16));
-			((Patch) p).getSysex()[18] = ((byte) (namebytes[6] / 16));
-			((Patch) p).getSysex()[19] = ((byte) (namebytes[7] % 16));
-			((Patch) p).getSysex()[20] = ((byte) (namebytes[7] / 16));
+			((PatchDataImpl) p).getSysex()[5] = ((byte) (namebytes[0] % 16));
+			((PatchDataImpl) p).getSysex()[6] = ((byte) (namebytes[0] / 16));
+			((PatchDataImpl) p).getSysex()[7] = ((byte) (namebytes[1] % 16));
+			((PatchDataImpl) p).getSysex()[8] = ((byte) (namebytes[1] / 16));
+			((PatchDataImpl) p).getSysex()[9] = ((byte) (namebytes[2] % 16));
+			((PatchDataImpl) p).getSysex()[10] = ((byte) (namebytes[2] / 16));
+			((PatchDataImpl) p).getSysex()[11] = ((byte) (namebytes[3] % 16));
+			((PatchDataImpl) p).getSysex()[12] = ((byte) (namebytes[3] / 16));
+			((PatchDataImpl) p).getSysex()[13] = ((byte) (namebytes[4] % 16));
+			((PatchDataImpl) p).getSysex()[14] = ((byte) (namebytes[4] / 16));
+			((PatchDataImpl) p).getSysex()[15] = ((byte) (namebytes[5] % 16));
+			((PatchDataImpl) p).getSysex()[16] = ((byte) (namebytes[5] / 16));
+			((PatchDataImpl) p).getSysex()[17] = ((byte) (namebytes[6] % 16));
+			((PatchDataImpl) p).getSysex()[18] = ((byte) (namebytes[6] / 16));
+			((PatchDataImpl) p).getSysex()[19] = ((byte) (namebytes[7] % 16));
+			((PatchDataImpl) p).getSysex()[20] = ((byte) (namebytes[7] / 16));
 		} catch (Exception e) {
 		}
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[275];
 		sysex[0] = (byte) 0xF0;
 		sysex[1] = (byte) 0x10;
@@ -123,13 +123,13 @@ public class OberheimMatrixSingleDriver extends Driver {
 		sysex[3] = (byte) 0x0D;
 		sysex[4] = (byte) 0x00;
 		sysex[274] = (byte) 0xF7;
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		setPatchName(p, "NewPatch");
 		calculateChecksum(p);
 		return p;
 	}
 
-	public JSLFrame editPatch(Patch p) {
-		return new OberheimMatrixSingleEditor((Patch) p);
+	public JSLFrame editPatch(PatchDataImpl p) {
+		return new OberheimMatrixSingleEditor((PatchDataImpl) p);
 	}
 }

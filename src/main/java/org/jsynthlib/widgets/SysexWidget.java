@@ -5,10 +5,9 @@ import java.awt.Insets;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.jsynthlib.menu.patch.IPatch;
-import org.jsynthlib.menu.patch.IPatchDriver;
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.driver.SynthDriverPatch;
+import org.jsynthlib.model.patch.Patch;
 
 /**
  * Base class of SysexWidgets. There are many kinds of extended class.
@@ -55,7 +54,7 @@ public abstract class SysexWidget extends JPanel {
 	private JLabel jlabel;
 
 	/** <code>Patch</code> associated with the widget. */
-	private IPatch patch;
+	private Patch patch;
 
 	/** MIDI message sender. */
 	private ISender sender;
@@ -87,9 +86,9 @@ public abstract class SysexWidget extends JPanel {
 	/** <code>Device</code> associated with the <code>patch</code>. */
 	// private Device device;
 	/** <code>Driver</code> associated with the <code>patch</code>. */
-	private IPatchDriver driver;
+	private SynthDriverPatch driver;
 
-	protected SysexWidget(IPatch patch, IParameter param) {
+	protected SysexWidget(Patch patch, IParameter param) {
 		this(param.getName(), patch, param.getMin(), param.getMax(), null, null);
 		parameter = param;
 	}
@@ -110,7 +109,7 @@ public abstract class SysexWidget extends JPanel {
 	 * @param sender
 	 *            ISender for transmitting the value at editing the parameter.
 	 */
-	protected SysexWidget(String label, IPatch patch, int min, int max, IParamModel pmodel, ISender sender) {
+	protected SysexWidget(String label, Patch patch, int min, int max, IParamModel pmodel, ISender sender) {
 		super();
 		this.label = label;
 		this.patch = patch;
@@ -135,7 +134,7 @@ public abstract class SysexWidget extends JPanel {
 	 * <code>min</code> is set to <code>Integer.MIN_VALUE</code> and <code>max</code> is set to
 	 * <code>Integer.MAX_VALUE</code>.
 	 */
-	protected SysexWidget(String label, IPatch patch, IParamModel pmodel, ISender sender) {
+	protected SysexWidget(String label, Patch patch, IParamModel pmodel, ISender sender) {
 		this(label, patch, Integer.MIN_VALUE, Integer.MAX_VALUE, pmodel, sender);
 	}
 
@@ -247,12 +246,12 @@ public abstract class SysexWidget extends JPanel {
 	}
 
 	/** Return <code>Patch</code> value. */
-	protected IPatch getPatch() {
+	protected Patch getPatch() {
 		return patch;
 	}
 
 	/** Return <code>driver</code> value. */
-	protected IPatchDriver getDriver() {
+	protected SynthDriverPatch getDriver() {
 		return driver;
 	}
 
@@ -395,7 +394,7 @@ public abstract class SysexWidget extends JPanel {
 		 * @param value
 		 *            an <code>int</code> value
 		 */
-		void send(IPatchDriver driver, int value);
+		void send(SynthDriverPatch driver, int value);
 	}
 
 	public interface IParameter {
@@ -406,21 +405,21 @@ public abstract class SysexWidget extends JPanel {
 
 		public int getMax();
 
-		public int get(IPatch p);
+		public int get(Patch p);
 
-		public void set(IPatch p, int val);
+		public void set(Patch p, int val);
 
 		/* For list parameters */
 		public String[] getValues();
 
 		/* For String parameters */
-		public String getString(IPatch p);
+		public String getString(Patch p);
 
 		public int getLength();
 
-		public void set(IPatch p, String stringval);
+		public void set(Patch p, String stringval);
 
-		public void send(IPatch p);
+		public void send(Patch p);
 	}
 
 	public IParameter getParameter() {

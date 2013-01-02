@@ -47,14 +47,14 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.EnvelopeWidget;
 import org.jsynthlib.widgets.KnobWidget;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.PatchNameWidget;
 import org.jsynthlib.widgets.ScrollBarWidget;
 import org.jsynthlib.widgets.SysexSender;
@@ -116,7 +116,7 @@ class MIDIboxSIDSingleEditor extends PatchEditorFrame {
 	JButton switchViewButton = new JButton(dataModel.getHexView() ? "Switch to Dec" : "Switch to Hex");
 	JButton updateWavetableButton = new JButton("Update Wavetable");
 
-	public MIDIboxSIDSingleEditor(Patch patch) {
+	public MIDIboxSIDSingleEditor(PatchDataImpl patch) {
 		super("MIDIbox SID Patch Editor", patch);
 		gbc.weightx = 0;
 		gbc.weighty = 0;
@@ -362,31 +362,31 @@ class MIDIboxSIDSingleEditor extends PatchEditorFrame {
 
 		ComboBoxWidget WT1CCBox = new ComboBoxWidget("Parameter #1", patch, new SIDModel(patch, 0x5a), new SIDSender(
 				patch, 0x5a), ccName);
-		dataModel.setColumnCC(0, (byte) ((Patch) p).getSysex()[8 + 0x5a]);
+		dataModel.setColumnCC(0, (byte) ((PatchDataImpl) p).getSysex()[8 + 0x5a]);
 		ComboBoxWidget WT2CCBox = new ComboBoxWidget("Parameter #2", patch, new SIDModel(patch, 0x5b), new SIDSender(
 				patch, 0x5b), ccName);
-		dataModel.setColumnCC(1, (byte) ((Patch) p).getSysex()[8 + 0x5b]);
+		dataModel.setColumnCC(1, (byte) ((PatchDataImpl) p).getSysex()[8 + 0x5b]);
 		ComboBoxWidget WT3CCBox = new ComboBoxWidget("Parameter #3", patch, new SIDModel(patch, 0x5c), new SIDSender(
 				patch, 0x5c), ccName);
-		dataModel.setColumnCC(2, (byte) ((Patch) p).getSysex()[8 + 0x5c]);
+		dataModel.setColumnCC(2, (byte) ((PatchDataImpl) p).getSysex()[8 + 0x5c]);
 
 		table.repaint();
 
 		WT1CCBox.addEventListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dataModel.setColumnCC(0, (byte) ((Patch) p).getSysex()[8 + 0x5a]);
+				dataModel.setColumnCC(0, (byte) ((PatchDataImpl) p).getSysex()[8 + 0x5a]);
 				table.repaint();
 			}
 		});
 		WT2CCBox.addEventListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dataModel.setColumnCC(1, (byte) ((Patch) p).getSysex()[8 + 0x5b]);
+				dataModel.setColumnCC(1, (byte) ((PatchDataImpl) p).getSysex()[8 + 0x5b]);
 				table.repaint();
 			}
 		});
 		WT3CCBox.addEventListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dataModel.setColumnCC(2, (byte) ((Patch) p).getSysex()[8 + 0x5c]);
+				dataModel.setColumnCC(2, (byte) ((PatchDataImpl) p).getSysex()[8 + 0x5c]);
 				table.repaint();
 			}
 		});
@@ -422,7 +422,7 @@ class MIDIboxSIDSingleEditor extends PatchEditorFrame {
 
 		byte[] cooked_dump = dataModel.getCookedDump();
 		for (int i = 0; i < cooked_dump.length; ++i)
-			cooked_dump[i] = ((Patch) p).getSysex()[8 + 0x80 + i];
+			cooked_dump[i] = ((PatchDataImpl) p).getSysex()[8 + 0x80 + i];
 		dataModel.setCookedDump(cooked_dump);
 
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -694,11 +694,11 @@ class MIDIboxSIDSingleEditor extends PatchEditorFrame {
 		byte[] cooked_dump = dataModel.getCookedDump();
 
 		for (int i = 0; i < 4 * 32; ++i) {
-			byte stored_value = ((Patch) p).getSysex()[8 + 0x80 + i];
+			byte stored_value = ((PatchDataImpl) p).getSysex()[8 + 0x80 + i];
 			if (stored_value != cooked_dump[i]) {
 				System.out.println("Wavetable Field changed: " + i);
-				((Patch) p).getSysex()[8 + 0x80 + i] = cooked_dump[i];
-				SlowSender.sendParameter((Driver) ((Patch) p).getDriver(), 0x80 + i, cooked_dump[i], 10);
+				((PatchDataImpl) p).getSysex()[8 + 0x80 + i] = cooked_dump[i];
+				SlowSender.sendParameter((SynthDriverPatchImpl) ((PatchDataImpl) p).getDriver(), 0x80 + i, cooked_dump[i], 10);
 			}
 		}
 	}
@@ -717,14 +717,14 @@ class MIDIboxSIDSingleEditor extends PatchEditorFrame {
 }
 
 class SIDSender extends SysexSender {
-	Patch patch;
+	PatchDataImpl patch;
 	int parameter;
 	int flag;
 	int bitmask;
 	int[] mapped_values;
 	byte[] b = new byte[11];
 
-	private void SIDSender_Hlp(Patch _patch, int _parameter) {
+	private void SIDSender_Hlp(PatchDataImpl _patch, int _parameter) {
 		patch = _patch;
 		parameter = _parameter;
 		b[0] = (byte) 0xf0;
@@ -740,26 +740,26 @@ class SIDSender extends SysexSender {
 		b[10] = (byte) 0xf7;
 	}
 
-	public SIDSender(Patch _patch, int parameter) {
+	public SIDSender(PatchDataImpl _patch, int parameter) {
 		flag = -1;
 		SIDSender_Hlp(_patch, parameter);
 	}
 
-	public SIDSender(Patch _patch, int parameter, int _flag) {
+	public SIDSender(PatchDataImpl _patch, int parameter, int _flag) {
 		flag = _flag;
 		bitmask = (1 << _flag);
 		mapped_values = new int[] {}; // (empty)
 		SIDSender_Hlp(_patch, parameter);
 	}
 
-	public SIDSender(Patch _patch, int parameter, int _flag, int _bitmask) {
+	public SIDSender(PatchDataImpl _patch, int parameter, int _flag, int _bitmask) {
 		flag = _flag;
 		bitmask = _bitmask << flag;
 		mapped_values = new int[] {}; // (empty)
 		SIDSender_Hlp(_patch, parameter);
 	}
 
-	public SIDSender(Patch _patch, int parameter, int _flag, int _bitmask, int[] _mapped_values) {
+	public SIDSender(PatchDataImpl _patch, int parameter, int _flag, int _bitmask, int[] _mapped_values) {
 		flag = _flag;
 		bitmask = _bitmask << flag;
 		mapped_values = _mapped_values;
@@ -789,26 +789,26 @@ class SIDModel extends ParamModel {
 	int bitmask;
 	int[] mapped_values;
 
-	public SIDModel(Patch _patch, int _offset) {
+	public SIDModel(PatchDataImpl _patch, int _offset) {
 		super(_patch, _offset + 8);
 		flag = -1;
 	}
 
-	public SIDModel(Patch _patch, int _offset, int _flag) {
+	public SIDModel(PatchDataImpl _patch, int _offset, int _flag) {
 		super(_patch, _offset + 8);
 		flag = _flag;
 		bitmask = (1 << flag);
 		mapped_values = new int[] {}; // (empty)
 	}
 
-	public SIDModel(Patch _patch, int _offset, int _flag, int _bitmask) {
+	public SIDModel(PatchDataImpl _patch, int _offset, int _flag, int _bitmask) {
 		super(_patch, _offset + 8);
 		flag = _flag;
 		bitmask = _bitmask << flag;
 		mapped_values = new int[] {}; // (empty)
 	}
 
-	public SIDModel(Patch _patch, int _offset, int _flag, int _bitmask, int[] _mapped_values) {
+	public SIDModel(PatchDataImpl _patch, int _offset, int _flag, int _bitmask, int[] _mapped_values) {
 		super(_patch, _offset + 8);
 		flag = _flag;
 		bitmask = _bitmask << flag;

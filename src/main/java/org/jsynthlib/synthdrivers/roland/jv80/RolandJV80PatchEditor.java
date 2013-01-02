@@ -39,13 +39,13 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.DriverUtil;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.EnvelopeWidget;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.PatchNameWidget;
 import org.jsynthlib.widgets.ScrollBarLookupWidget;
 import org.jsynthlib.widgets.ScrollBarWidget;
@@ -57,7 +57,7 @@ import org.jsynthlib.widgets.SysexSender;
  */
 public class RolandJV80PatchEditor extends PatchEditorFrame {
 	class JV2Model extends JVModel {
-		JV2Model(Patch p, int tone, int msg_offset) {
+		JV2Model(PatchDataImpl p, int tone, int msg_offset) {
 			super(p, tone, msg_offset);
 		}
 
@@ -99,7 +99,7 @@ public class RolandJV80PatchEditor extends PatchEditorFrame {
 		final static int DATA_OFFSET = 9;
 
 		// tone == -1 -> common
-		JVModel(Patch p, int tone, int msg_offset) {
+		JVModel(PatchDataImpl p, int tone, int msg_offset) {
 			super(p, DATA_OFFSET + msg_offset);
 			if (tone >= 0)
 				ofs += ((RolandJV80PatchDriver) p.getDriver()).patchToneOffsets[tone];
@@ -136,7 +136,7 @@ public class RolandJV80PatchEditor extends PatchEditorFrame {
 
 	final boolean isJV80;
 
-	public RolandJV80PatchEditor(final Patch patch) {
+	public RolandJV80PatchEditor(final PatchDataImpl patch) {
 		super("Roland JV80 Patch Editor", patch);
 
 		((RolandJV80Device) patch.getDevice()).getPatchDriver().setPatchNum(patch.getSysex(), -1, -1);
@@ -150,7 +150,7 @@ public class RolandJV80PatchEditor extends PatchEditorFrame {
 		buildEditor(patch);
 	}
 
-	JPanel buildChorus(Patch patch) {
+	JPanel buildChorus(PatchDataImpl patch) {
 		GridBagConstraints gbc = new GridBagConstraints();
 		JPanel panel = new JPanel(new GridBagLayout());
 		panel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.RAISED), "Chorus", TitledBorder.CENTER,
@@ -199,7 +199,7 @@ public class RolandJV80PatchEditor extends PatchEditorFrame {
 		return panel;
 	}
 
-	JPanel buildCommon(Patch patch) {
+	JPanel buildCommon(PatchDataImpl patch) {
 		GridBagConstraints gbc = new GridBagConstraints();
 
 		JPanel panel = new JPanel(new GridBagLayout());
@@ -261,7 +261,7 @@ public class RolandJV80PatchEditor extends PatchEditorFrame {
 		return panel;
 	}
 
-	JPanel buildHeader(Patch patch) {
+	JPanel buildHeader(PatchDataImpl patch) {
 		GridBagConstraints gbc = new GridBagConstraints();
 
 		JPanel panel = new JPanel(new GridBagLayout());
@@ -299,7 +299,7 @@ public class RolandJV80PatchEditor extends PatchEditorFrame {
 		return panel;
 	}
 
-	void buildEditor(Patch patch) {
+	void buildEditor(PatchDataImpl patch) {
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.anchor = GridBagConstraints.CENTER;
 		gbc.fill = GridBagConstraints.BOTH;
@@ -369,7 +369,7 @@ public class RolandJV80PatchEditor extends PatchEditorFrame {
 		pack();
 	}
 
-	JPanel buildPortamento(Patch patch) {
+	JPanel buildPortamento(PatchDataImpl patch) {
 		GridBagConstraints gbc = new GridBagConstraints();
 
 		JPanel panel = new JPanel(new GridBagLayout());
@@ -407,7 +407,7 @@ public class RolandJV80PatchEditor extends PatchEditorFrame {
 		return panel;
 	}
 
-	JPanel buildReverb(Patch patch) {
+	JPanel buildReverb(PatchDataImpl patch) {
 		GridBagConstraints gbc = new GridBagConstraints();
 
 		JPanel panel = new JPanel(new GridBagLayout());
@@ -448,7 +448,7 @@ public class RolandJV80PatchEditor extends PatchEditorFrame {
 		return panel;
 	}
 
-	JPanel buildToneWaveGroup(final Patch patch, final int tone) {
+	JPanel buildToneWaveGroup(final PatchDataImpl patch, final int tone) {
 		GridBagConstraints gbc = new GridBagConstraints();
 		JPanel panel = new JPanel(new GridBagLayout());
 
@@ -516,7 +516,7 @@ public class RolandJV80PatchEditor extends PatchEditorFrame {
 		return panel;
 	}
 
-	JPanel buildTVA(final Patch patch, final int tone) {
+	JPanel buildTVA(final PatchDataImpl patch, final int tone) {
 		GridBagConstraints gbc = new GridBagConstraints();
 		JPanel panel = new JPanel(new GridBagLayout());
 
@@ -616,7 +616,7 @@ public class RolandJV80PatchEditor extends PatchEditorFrame {
 		return panel;
 	}
 
-	JPanel buildVelocity(Patch patch, int tone) {
+	JPanel buildVelocity(PatchDataImpl patch, int tone) {
 		GridBagConstraints gbc = new GridBagConstraints();
 		JPanel panel = new JPanel(new GridBagLayout());
 
@@ -649,7 +649,7 @@ public class RolandJV80PatchEditor extends PatchEditorFrame {
 		return panel;
 	}
 
-	JPanel buildOutput(Patch patch, int tone) {
+	JPanel buildOutput(PatchDataImpl patch, int tone) {
 		GridBagConstraints gbc = new GridBagConstraints();
 		JPanel panel = new JPanel(new GridBagLayout());
 
@@ -696,7 +696,7 @@ public class RolandJV80PatchEditor extends PatchEditorFrame {
 		return panel;
 	}
 
-	JPanel buildTVF(Patch patch, int tone) {
+	JPanel buildTVF(PatchDataImpl patch, int tone) {
 		GridBagConstraints gbc = new GridBagConstraints();
 		JPanel panel = new JPanel(new GridBagLayout());
 
@@ -791,7 +791,7 @@ public class RolandJV80PatchEditor extends PatchEditorFrame {
 		return panel;
 	}
 
-	JPanel buildPitch(Patch patch, int tone) {
+	JPanel buildPitch(PatchDataImpl patch, int tone) {
 		GridBagConstraints gbc = new GridBagConstraints();
 		JPanel panel = new JPanel(new GridBagLayout());
 
@@ -872,7 +872,7 @@ public class RolandJV80PatchEditor extends PatchEditorFrame {
 		return panel;
 	}
 
-	JPanel buildLFOs(Patch patch, int tone) {
+	JPanel buildLFOs(PatchDataImpl patch, int tone) {
 		GridBagConstraints gbc = new GridBagConstraints();
 		JPanel panel = new JPanel(new GridBagLayout());
 
@@ -968,7 +968,7 @@ public class RolandJV80PatchEditor extends PatchEditorFrame {
 		return panel;
 	}
 
-	JPanel buildControlChange(Patch patch, int tone) {
+	JPanel buildControlChange(PatchDataImpl patch, int tone) {
 		GridBagConstraints gbc = new GridBagConstraints();
 		JPanel panel = new JPanel(new GridBagLayout());
 

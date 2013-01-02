@@ -7,7 +7,7 @@ import java.util.Map;
 import javax.swing.AbstractAction;
 
 import org.jsynthlib.PatchBayApplication;
-import org.jsynthlib.menu.ui.window.SysexGetDialog;
+import org.jsynthlib.menu.window.SysexGetDialog;
 
 public class GetAction extends AbstractAction {
 	

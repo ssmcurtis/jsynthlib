@@ -21,8 +21,8 @@
 
 package org.jsynthlib.synthdrivers.quasimidi.quasar;
 
-import org.jsynthlib.menu.patch.Converter;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.driver.ConverterImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 /**
  * Converts temporary parameter SysEx data (644 Bytes) to a "Single Performance" (223 Bytes)
@@ -30,7 +30,7 @@ import org.jsynthlib.menu.patch.Patch;
  * @author Joachim Backhaus
  * @version $Id$
  */
-public class QuasimidiQuasarTemporaryConverter extends Converter {
+public class QuasimidiQuasarTemporaryConverter extends ConverterImpl {
 
 	public QuasimidiQuasarTemporaryConverter() {
 		super("Temporary Converter", "Joachim Backhaus");
@@ -44,9 +44,9 @@ public class QuasimidiQuasarTemporaryConverter extends Converter {
 	/**
 	 * Converts 644 Byte sysex files to the 223 Bytes the "Single Performance" driver uses
 	 */
-	public Patch[] extractPatch(Patch p) {
+	public PatchDataImpl[] extractPatch(PatchDataImpl p) {
 		byte[] sysex = p.getByteArray();
-		Patch[] newPatchArray = new Patch[1];
+		PatchDataImpl[] newPatchArray = new PatchDataImpl[1];
 		byte[] temporarySysex = new byte[QuasarConstants.PATCH_SIZE];
 
 		// starting at 19h (=25): Temporary name: 17 Bytes
@@ -62,7 +62,7 @@ public class QuasimidiQuasarTemporaryConverter extends Converter {
 		// starting at 263h (=611): Part 16: 33 Bytes
 		System.arraycopy(sysex, 611, temporarySysex, QuasarConstants.ARRAY_PART_4_OFFSET, 33);
 
-		newPatchArray[0] = new Patch(temporarySysex, getDevice());
+		newPatchArray[0] = new PatchDataImpl(temporarySysex, getDevice());
 
 		return newPatchArray;
 	}

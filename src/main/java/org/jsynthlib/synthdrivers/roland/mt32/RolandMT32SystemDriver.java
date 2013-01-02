@@ -27,13 +27,13 @@
 
 package org.jsynthlib.synthdrivers.roland.mt32;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
-public class RolandMT32SystemDriver extends Driver {
+public class RolandMT32SystemDriver extends SynthDriverPatchImpl {
 	/** Header Size of the Data set DT1 message. */
 	// F0 41 10 16 12 10 00 00 .. .. .. *chkSum* F7
 	// | | Addr | Msg |
@@ -61,13 +61,13 @@ public class RolandMT32SystemDriver extends Driver {
 	 * Send a patch (bulk dump system exclusive message) to MIDI device. Target should be Timbre Memory 1 - 64. TTA will
 	 * do for now. The message format here is Data set DT1
 	 */
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		// setBankNum(bankNum); // Control change
 		// setPatchNum(patchNum); // Program change
 		try {
 			Thread.sleep(100);
 		} catch (Exception e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 
 		p.getSysex()[0] = (byte) 0xF0;
@@ -84,7 +84,7 @@ public class RolandMT32SystemDriver extends Driver {
 			sendPatchWorker(p);
 			Thread.sleep(100);
 		} catch (Exception e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 		// setPatchNum(patchNum); // Program change
 	}
@@ -93,17 +93,17 @@ public class RolandMT32SystemDriver extends Driver {
 	 * Send a Patch (bulk dump system exclusive message) to an edit buffer of MIDI device. Target should be Timbre Temp
 	 * Area 1 - 8. The message format here is Data set DT1
 	 */
-	public void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		try {
 			sendPatchWorker(p);
 			Thread.sleep(100);
 		} catch (Exception e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 	}
 
 	// not used
-	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
+	protected void calculateChecksum(PatchDataImpl p, int start, int end, int ofs) {
 		int sum = 0;
 		for (int i = start; i <= end; i++) {
 			sum += p.getSysex()[i];
@@ -113,7 +113,7 @@ public class RolandMT32SystemDriver extends Driver {
 	}
 
 	// not used
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		// The message format here is DT1 Data Set
 		byte[] sysex = new byte[HSIZE + SSIZE + 1];
 		sysex[0] = (byte) 0xF0;
@@ -151,7 +151,7 @@ public class RolandMT32SystemDriver extends Driver {
 		sysex[HSIZE + 20] = (byte) 0x08; // Midi Channel 9
 		sysex[HSIZE + 21] = (byte) 0x09; // Midi Channel 10
 		sysex[HSIZE + SSIZE] = (byte) 0xF7;
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		// setPatchName(p, "System");
 		// calculateChecksum(p);
 		calculateChecksum(p, 5, HSIZE + SSIZE - 2, HSIZE + SSIZE - 1);
@@ -159,7 +159,7 @@ public class RolandMT32SystemDriver extends Driver {
 		return p;
 	}
 
-	public JSLFrame editPatch(Patch p) {
+	public JSLFrame editPatch(PatchDataImpl p) {
 		return new RolandMT32SystemEditor(p);
 	}
 

@@ -7,7 +7,7 @@ import java.util.Map;
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.Constants;
+import org.jsynthlib.JSynthConstants;
 
 // //////////////////////////////////////////////////////////////////////
 /*
@@ -21,8 +21,8 @@ public class AboutAction extends AbstractAction {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		JOptionPane.showMessageDialog(null, "JSynthLib2 Version " + Constants.VERSION + "." + Constants.VERSION_2
-				+ "\nCopyright (C) 2012-13 ssmcurtis" + "\n\nJSynthLib Version " + Constants.VERSION
+		JOptionPane.showMessageDialog(null, "JSynthLib2 Version " + JSynthConstants.VERSION + "." + JSynthConstants.VERSION_2
+				+ "\nCopyright (C) 2012-13 ssmCurtis" + "\n\nJSynthLib Version " + JSynthConstants.VERSION
 				+ "\nCopyright (C) 2000-04 Brian Klock et al." + "\n\nSee Help->License for more information.",
 				"About JSynthLib2", JOptionPane.INFORMATION_MESSAGE);
 		return;

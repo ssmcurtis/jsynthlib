@@ -15,7 +15,7 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.SpinnerWidget;
@@ -26,13 +26,13 @@ import org.jsynthlib.widgets.SpinnerWidget;
  * @author denis queffeulou mailto:dqueffeulou@free.fr
  */
 class MatrixWindow extends JPanel {
-	private Patch p;
+	private PatchDataImpl p;
 
-	public Patch getPatch() {
+	public PatchDataImpl getPatch() {
 		return p;
 	}
 
-	MatrixWindow(Patch aPatch) {
+	MatrixWindow(PatchDataImpl aPatch) {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		p = aPatch;
 
@@ -133,10 +133,10 @@ class MatrixWindow extends JPanel {
 	}
 
 	static class MatrixCellRenderer implements TableCellRenderer {
-		Patch patch;
+		PatchDataImpl patch;
 		private Component[][] mTable;
 
-		MatrixCellRenderer(Patch p, Component[][] aTable) {
+		MatrixCellRenderer(PatchDataImpl p, Component[][] aTable) {
 			patch = p;
 			mTable = aTable;
 		}

@@ -14,12 +14,12 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.EnvelopeWidget;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.PatchNameWidget;
 import org.jsynthlib.widgets.ScrollBarLookupWidget;
 import org.jsynthlib.widgets.ScrollBarWidget;
@@ -28,7 +28,7 @@ import org.jsynthlib.widgets.SysexSender;
 class YamahaTX81zSingleEditor extends PatchEditorFrame {
 	ImageIcon algoIcon[] = new ImageIcon[8];
 
-	public YamahaTX81zSingleEditor(Patch patch) {
+	public YamahaTX81zSingleEditor(PatchDataImpl patch) {
 		super("Yamaha TX81z Single Editor", patch);
 		algoIcon[0] = new ImageIcon(getClass().getResource("1.gif"));
 		algoIcon[1] = new ImageIcon(getClass().getResource("2.gif"));

@@ -25,17 +25,17 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.DriverUtil;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 /**
  * Single patch driver for Yamaha UB99
  * 
  */
-public class YamahaUB99Driver extends Driver {
+public class YamahaUB99Driver extends SynthDriverPatchImpl {
 
 	public YamahaUB99Driver() {
 		super("Single", "Ton Holsink <a.j.m.holsink@chello.nl>");
@@ -51,7 +51,7 @@ public class YamahaUB99Driver extends Driver {
 				YamahaUB99Const.NUM_PATCH);
 	}
 
-	public void sendThisPatch(Patch p, int nr, int typ) {
+	public void sendThisPatch(PatchDataImpl p, int nr, int typ) {
 		try {
 			// SEND PATCH sysEx command
 			byte[] buf = new byte[] { (byte) 0xF0, (byte) 0x43, (byte) (0x7D), (byte) 0x30, (byte) 0x55, (byte) 0x42,
@@ -127,19 +127,19 @@ public class YamahaUB99Driver extends Driver {
 			send(buf);
 
 		} catch (Exception e) {
-			ErrorMsg.reportError("Error", "Unable to Send Patch", e);
+			ErrorMsgUtil.reportError("Error", "Unable to Send Patch", e);
 		}
 
 	}
 
-	public void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		sendThisPatch(p, 0x00, 0x03);
 	}
 
-	protected void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p)  {
 	}
 
-	protected void calculateChecksum(Patch patch, int start, int end, int offset) {
+	protected void calculateChecksum(PatchDataImpl patch, int start, int end, int offset) {
 	}
 
 	public byte[] createNewPatchArray() {
@@ -149,15 +149,15 @@ public class YamahaUB99Driver extends Driver {
 		return b;
 	}
 
-	public Patch createNewPatch() {
-		return new Patch(createNewPatchArray(), this);
+	public PatchDataImpl createNewPatch() {
+		return new PatchDataImpl(createNewPatchArray(), this);
 	}
 
-	public JSLFrame editPatch(Patch p) {
-		return new YamahaUB99Editor((Patch) p);
+	public JSLFrame editPatch(PatchDataImpl p) {
+		return new YamahaUB99Editor((PatchDataImpl) p);
 	}
 
-	public Patch getDefaultValues(Patch p, int patchno) {
+	public PatchDataImpl getDefaultValues(PatchDataImpl p, int patchno) {
 		int size = YamahaUB99Const.SINGLE_SIZE;
 		String fileName = YamahaUB99Const.DEFAULT_FILENAME;
 		byte[] buffer = new byte[YamahaUB99Const.DEFAULT_SIZE];
@@ -177,7 +177,7 @@ public class YamahaUB99Driver extends Driver {
 				throw new FileNotFoundException("File: " + fileName + " does not exist!");
 			}
 		} catch (IOException e) {
-			ErrorMsg.reportError("Error", "Unable to open " + fileName, e);
+			ErrorMsgUtil.reportError("Error", "Unable to open " + fileName, e);
 			return null;
 		}
 	}

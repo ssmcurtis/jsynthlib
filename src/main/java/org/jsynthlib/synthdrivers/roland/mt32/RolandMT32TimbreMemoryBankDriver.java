@@ -29,13 +29,13 @@ import java.io.UnsupportedEncodingException;
 
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.DriverUtil;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
-public class RolandMT32TimbreMemoryBankDriver extends BankDriver {
+public class RolandMT32TimbreMemoryBankDriver extends SynthDriverBank {
 	/** Header Size */
 	private static final int HSIZE = 8;
 	/** Single Patch size */
@@ -68,7 +68,7 @@ public class RolandMT32TimbreMemoryBankDriver extends BankDriver {
 		return ((HSIZE + SSIZE) * patchNum);
 	}
 
-	public String getPatchName(Patch p, int patchNum) {
+	public String getPatchName(PatchDataImpl p, int patchNum) {
 		int nameStart = getPatchStart(patchNum);
 		nameStart += 0; // offset of name in patch data
 		try {
@@ -79,7 +79,7 @@ public class RolandMT32TimbreMemoryBankDriver extends BankDriver {
 		}
 	}
 
-	public void setPatchName(Patch p, int patchNum, String name) {
+	public void setPatchName(PatchDataImpl p, int patchNum, String name) {
 		patchNameSize = 10;
 		patchNameStart = getPatchStart(patchNum);
 
@@ -96,7 +96,7 @@ public class RolandMT32TimbreMemoryBankDriver extends BankDriver {
 		}
 	}
 
-	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
+	protected void calculateChecksum(PatchDataImpl p, int start, int end, int ofs) {
 		int i;
 		int sum = 0;
 
@@ -106,12 +106,12 @@ public class RolandMT32TimbreMemoryBankDriver extends BankDriver {
 		p.getSysex()[ofs] = (byte) (sum % 128);
 	}
 
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 		for (int i = 0; i < NS; i++)
 			calculateChecksum(p, HSIZE + (i * SSIZE), HSIZE + (i * SSIZE) + SSIZE - 2, HSIZE + (i * SSIZE) + SSIZE - 1);
 	}
 
-	public void putPatch(Patch bank, Patch p, int patchNum) {
+	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) {
 		if (!canHoldPatch(p)) {
 			JOptionPane.showMessageDialog(null, "This type of patch does not fit in to this type of bank.", "Error",
 					JOptionPane.ERROR_MESSAGE);
@@ -121,7 +121,7 @@ public class RolandMT32TimbreMemoryBankDriver extends BankDriver {
 		calculateChecksum(bank);
 	}
 
-	public Patch getPatch(Patch bank, int patchNum) {
+	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
 		int addressMSB = 0x08;
 		int addressISB = 0x00;
 		int addressLSB = 0x00;
@@ -143,16 +143,16 @@ public class RolandMT32TimbreMemoryBankDriver extends BankDriver {
 		System.arraycopy(bank.getSysex(), getPatchStart(patchNum), sysex, HSIZE, SSIZE);
 		try {
 			// pass Single Driver !!!FIXIT!!!
-			Patch p = new Patch(sysex, getDevice());
+			PatchDataImpl p = new PatchDataImpl(sysex, getDevice());
 			p.calculateChecksum();
 			return p;
 		} catch (Exception e) {
-			ErrorMsg.reportError("Error", "Error in MT32 Bank Driver", e);
+			ErrorMsgUtil.reportError("Error", "Error in MT32 Bank Driver", e);
 			return null;
 		}
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[(HSIZE + SSIZE) * NS + 1];
 		sysex[0] = (byte) 0xF0;
 		sysex[1] = (byte) 0x41;
@@ -167,7 +167,7 @@ public class RolandMT32TimbreMemoryBankDriver extends BankDriver {
 		sysex[10] = (byte) 0x76; // size LSB
 		sysex[11] = (byte) 0x00; // checksum
 		sysex[(HSIZE + SSIZE) * NS] = (byte) 0xF7;
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		for (int i = 0; i < NS; i++)
 			setPatchName(p, i, "New TM Patch");
 		calculateChecksum(p);
@@ -201,7 +201,7 @@ public class RolandMT32TimbreMemoryBankDriver extends BankDriver {
 		}
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		try {
 			Thread.sleep(100);
 		} catch (Exception e) {

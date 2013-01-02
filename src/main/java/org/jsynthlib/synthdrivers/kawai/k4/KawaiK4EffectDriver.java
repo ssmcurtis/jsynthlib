@@ -1,9 +1,9 @@
 package org.jsynthlib.synthdrivers.kawai.k4;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.DriverUtil;
 
 /**
@@ -13,7 +13,7 @@ import org.jsynthlib.tools.DriverUtil;
  * @version $Id$
  */
 
-public class KawaiK4EffectDriver extends Driver {
+public class KawaiK4EffectDriver extends SynthDriverPatchImpl {
 	/** Header Size */
 	private static final int HSIZE = 8;
 	/** Single Patch size */
@@ -40,7 +40,7 @@ public class KawaiK4EffectDriver extends Driver {
 		patchNumbers = DriverUtil.generateNumbers(1, 31, "00");
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		setBankNum(bankNum);
 		setPatchNum(patchNum);
 		try {
@@ -58,13 +58,13 @@ public class KawaiK4EffectDriver extends Driver {
 		setPatchNum(patchNum);
 	}
 
-	public void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		p.getSysex()[3] = (byte) 0x23;
 		p.getSysex()[7] = (byte) 0x00;
 		sendPatchWorker(p);
 	}
 
-	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
+	protected void calculateChecksum(PatchDataImpl p, int start, int end, int ofs) {
 		int sum = 0;
 		for (int i = start; i <= end; i++) {
 			sum += p.getSysex()[i];
@@ -73,7 +73,7 @@ public class KawaiK4EffectDriver extends Driver {
 		p.getSysex()[ofs] = (byte) (sum % 128);
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[HSIZE + SSIZE + 1];
 		sysex[0] = (byte) 0xF0;
 		sysex[1] = (byte) 0x40;
@@ -93,17 +93,17 @@ public class KawaiK4EffectDriver extends Driver {
 		sysex[39] = 0x07;
 
 		sysex[HSIZE + SSIZE] = (byte) 0xF7;
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		// setPatchName(p,"New Effect");
 		calculateChecksum(p);
 		return p;
 	}
 
-	public JSLFrame editPatch(Patch p) {
+	public JSLFrame editPatch(PatchDataImpl p) {
 		return new KawaiK4EffectEditor(p);
 	}
 
-	public String getPatchName(Patch p) {
+	public String getPatchName(PatchDataImpl p) {
 		String s = "Effect Type " + (p.getSysex()[HSIZE] + 1);
 		return s;
 	}

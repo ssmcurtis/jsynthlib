@@ -33,6 +33,7 @@ public class GeneralConfigPanel extends ConfigPanel {
 	private JComboBox cbLF;
 	private JComboBox cbGS;
 	private JCheckBox cbxTB;
+	private JCheckBox makeTableSortable;
 
 	private static UIManager.LookAndFeelInfo[] installedLF;
 	static {
@@ -70,7 +71,7 @@ public class GeneralConfigPanel extends ConfigPanel {
 		c.insets = new Insets(10, 0, 0, 0);
 		p.add(new JLabel("GUI Style:"), c);
 		cbGS = new JComboBox(new String[] { "MDI (multiple document interface)", "SDI (single document interface)", });
-		// TODO ssmcurtis - re-enable ? 
+		// TODO ssmCurtis - re-enable ? 
 		cbGS.setEnabled(false);
 		
 		cbGS.addActionListener(new ActionListener() {
@@ -88,6 +89,14 @@ public class GeneralConfigPanel extends ConfigPanel {
 		c.gridwidth = 2;
 		p.add(cbxTB, c);
 
+		// Tool Bar check box
+		makeTableSortable= new JCheckBox("Make table sortable");
+		c.gridx = 0;
+		c.gridy++;
+		c.gridwidth = 2;
+		p.add(makeTableSortable, c);
+
+		
 		add(p, BorderLayout.CENTER);
 	}
 
@@ -95,6 +104,7 @@ public class GeneralConfigPanel extends ConfigPanel {
 		cbLF.setSelectedIndex(AppConfig.getLookAndFeel());
 		cbGS.setSelectedIndex(AppConfig.getGuiStyle());
 		cbxTB.setSelected(AppConfig.getToolBar());
+		makeTableSortable.setSelected(AppConfig.getMakeTableSortable());
 	}
 
 	public void commitSettings() {
@@ -110,7 +120,9 @@ public class GeneralConfigPanel extends ConfigPanel {
 					JOptionPane.INFORMATION_MESSAGE);
 			AppConfig.setGuiStyle(cbGS.getSelectedIndex());
 		}
-		if (AppConfig.getToolBar() != cbxTB.isSelected())
+		if (AppConfig.getToolBar() != cbxTB.isSelected()) {
 			AppConfig.setToolBar(cbxTB.isSelected());
+		}
+		AppConfig.setMakeTableSortable(makeTableSortable.isSelected());
 	}
 }

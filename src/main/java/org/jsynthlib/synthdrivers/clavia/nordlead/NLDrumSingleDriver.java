@@ -2,12 +2,12 @@
 // $Id$
 package org.jsynthlib.synthdrivers.clavia.nordlead;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
-public class NLDrumSingleDriver extends Driver {
+public class NLDrumSingleDriver extends SynthDriverPatchImpl {
 	static final String BANK_LIST[] = new String[] { "ROM", "PCMCIA 1", "PCMCIA 2", "PCMCIA 3" };
 	static final String PATCH_LIST[] = new String[] { "P0", "P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9" };
 	static final int BANK_NUM_OFFSET = 4;
@@ -160,7 +160,7 @@ public class NLDrumSingleDriver extends Driver {
 		patchNumbers = PATCH_LIST;
 	}
 
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 		// doesn't use checksum
 	}
 
@@ -168,8 +168,8 @@ public class NLDrumSingleDriver extends Driver {
 	// // doesn't use checksum
 	// }
 
-	public String getPatchName(Patch p) {
-		Patch ip = (Patch) p;
+	public String getPatchName(PatchDataImpl p) {
+		PatchDataImpl ip = (PatchDataImpl) p;
 		if (ip.getSysex()[PATCH_NUM_OFFSET] < 99) {
 			return "drum Edit" + (ip.getSysex()[PATCH_NUM_OFFSET] - 16);
 		} else {
@@ -177,47 +177,47 @@ public class NLDrumSingleDriver extends Driver {
 		}
 	}
 
-	public void setPatchName(Patch p, String name) {
+	public void setPatchName(PatchDataImpl p, String name) {
 	}
 
-	public void sendPatch(Patch p) {
-		sendPatch((Patch) p, 0, 16); // using edit buffer for slot A
+	public void sendPatch(PatchDataImpl p) {
+		sendPatch((PatchDataImpl) p, 0, 16); // using edit buffer for slot A
 	}
 
-	public void sendPatch(Patch p, int bankNum, int patchNum) {
-		Patch p2 = new Patch(p.getSysex());
+	public void sendPatch(PatchDataImpl p, int bankNum, int patchNum) {
+		PatchDataImpl p2 = new PatchDataImpl(p.getSysex());
 		p2.getSysex()[BANK_NUM_OFFSET] = (byte) bankNum;
 		p2.getSysex()[PATCH_NUM_OFFSET] = (byte) patchNum;
 		mySendPatch(p2);
 	}
 
 	// Sends a patch to a set location in the user bank
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		setBankNum(bankNum); // must set bank - sysex patch dump always stored in current bank
 		setPatchNum(patchNum); // must send program change to make bank change take effect
-		sendPatch((Patch) p, bankNum + 1, patchNum + 99);
+		sendPatch((PatchDataImpl) p, bankNum + 1, patchNum + 99);
 		setPatchNum(patchNum); // send another program change to get new sound in edit buffer
 	}
 
-	protected void playPatch(Patch p) {
+	public void playPatch(PatchDataImpl p) {
 		byte sysex[] = new byte[patchSize];
-		System.arraycopy(((Patch) p).getSysex(), 0, sysex, 0, patchSize);
+		System.arraycopy(((PatchDataImpl) p).getSysex(), 0, sysex, 0, patchSize);
 		sysex[BANK_NUM_OFFSET] = 0; // edit buffer
 		sysex[PATCH_NUM_OFFSET] = 16; // slot A
-		Patch p2 = new Patch(sysex);
+		PatchDataImpl p2 = new PatchDataImpl(sysex);
 		super.playPatch(p2);
 	}
 
-	public Patch createNewPatch() {
-		return new Patch(NEW_PATCH, this);
+	public PatchDataImpl createNewPatch() {
+		return new PatchDataImpl(NEW_PATCH, this);
 	}
 
-	protected void mySendPatch(Patch p) {
+	protected void mySendPatch(PatchDataImpl p) {
 		p.getSysex()[deviceIDoffset] = (byte) (((NordLeadDevice) getDevice()).getGlobalChannel() - 1);
 		try {
 			send(p.getSysex());
 		} catch (Exception e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 	}
 

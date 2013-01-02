@@ -20,9 +20,9 @@
  */
 package org.jsynthlib.synthdrivers.casio.cz1000;
 
-import org.jsynthlib.menu.patch.Converter;
-import org.jsynthlib.menu.patch.IPatch;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.driver.ConverterImpl;
+import org.jsynthlib.model.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 /**
  * Intercept the 263-byte messages sent by the synth, and convert them into standard 264-byte patches.
@@ -30,14 +30,14 @@ import org.jsynthlib.menu.patch.Patch;
  * @author Bill Zwicky
  * @version $Id$
  */
-public class CasioCZ1000RcvConverter extends Converter {
+public class CasioCZ1000RcvConverter extends ConverterImpl {
 	public CasioCZ1000RcvConverter() {
 		super("Converter", "Bill Zwicky");
 		sysexID = "F04400007*";
 		patchSize = 263;
 	}
 
-	public IPatch createPatch(byte[] sysex) {
+	public Patch createPatch(byte[] sysex) {
 		// Casio returns a 263 byte patch, but everyone expects 264,
 		// because the sysex sent to the Casio contains the bank number,
 		// while the sysex sent back does not.
@@ -45,10 +45,10 @@ public class CasioCZ1000RcvConverter extends Converter {
 		System.arraycopy(sysex, 0, sysex2, 0, 6);
 		sysex2[6] = 0x60; // default to edit buffer
 		System.arraycopy(sysex, 6, sysex2, 7, sysex.length - 6);
-		return new Patch(sysex2, this);
+		return new PatchDataImpl(sysex2, this);
 	}
 
-	public Patch[] extractPatch(Patch p) {
-		return new Patch[] { (Patch) createPatch(p.getSysex()) };
+	public PatchDataImpl[] extractPatch(PatchDataImpl p) {
+		return new PatchDataImpl[] { (PatchDataImpl) createPatch(p.getSysex()) };
 	}
 }

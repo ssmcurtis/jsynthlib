@@ -33,14 +33,14 @@ import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.TONE_RECORD_SIZ
 import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.TONE_SIZE;
 import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.TONE_WRITE_REQUEST;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.synthdrivers.roland.d10.message.D10DataSetMessage;
 import org.jsynthlib.synthdrivers.roland.d10.message.D10RequestMessage;
 import org.jsynthlib.synthdrivers.roland.d10.message.D10TransferMessage;
 
-public class RolandD10ToneDriver extends Driver {
+public class RolandD10ToneDriver extends SynthDriverPatchImpl {
 
 	public RolandD10ToneDriver() {
 		super("Tone", "Roger Westerlund");
@@ -63,7 +63,7 @@ public class RolandD10ToneDriver extends Driver {
 		send(message.getBytes());
 	}
 
-	public void storePatch(Patch patch, int bankNumber, int patchNumber) {
+	public void storePatch(PatchDataImpl patch, int bankNumber, int patchNumber) {
 
 		// First we send the patch, then we press the write switch.
 		sendPatch(patch);
@@ -74,7 +74,7 @@ public class RolandD10ToneDriver extends Driver {
 		send(message.getBytes());
 	}
 
-	public void sendPatch(Patch patch) {
+	public void sendPatch(PatchDataImpl patch) {
 		// The tone temp area has a record size that is the same as the data
 		// size so we can not send the whole patch.
 		D10DataSetMessage message = new D10DataSetMessage(TONE_SIZE, BASE_TONE_TEMP_AREA);
@@ -82,19 +82,19 @@ public class RolandD10ToneDriver extends Driver {
 		send(message.getBytes());
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		D10TransferMessage message = new D10DataSetMessage(TONE_RECORD_SIZE, BASE_TONE_MEMORY);
-		Patch patch = new Patch(message.getBytes(), this);
+		PatchDataImpl patch = new PatchDataImpl(message.getBytes(), this);
 		setPatchName(patch, "New Tone");
 		calculateChecksum(patch);
 		return patch;
 	}
 
-	public JSLFrame editPatch(Patch patch) {
+	public JSLFrame editPatch(PatchDataImpl patch) {
 		return new RolandD10ToneEditor(patch);
 	}
 
-	protected String getPatchName(Patch patch) {
+	public String getPatchName(PatchDataImpl patch) {
 		return RolandD10Support.trimName(super.getPatchName(patch));
 	}
 

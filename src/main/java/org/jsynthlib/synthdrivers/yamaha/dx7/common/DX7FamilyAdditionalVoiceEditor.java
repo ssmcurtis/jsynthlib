@@ -30,10 +30,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.ComboBoxWidget;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.ScrollBarWidget;
 import org.jsynthlib.widgets.SysexSender;
 
@@ -89,13 +89,13 @@ public class DX7FamilyAdditionalVoiceEditor extends PatchEditorFrame {
 			"Octave" // Oktave
 	};
 
-	public DX7FamilyAdditionalVoiceEditor(String name, Patch patch) {
+	public DX7FamilyAdditionalVoiceEditor(String name, PatchDataImpl patch) {
 		super(name, patch);
 
 		buildEditor(patch);
 	}
 
-	protected void buildEditor(Patch patch) {
+	protected void buildEditor(PatchDataImpl patch) {
 
 		// voiceTabPane - Additional Voice settings
 		JTabbedPane voiceTabPane = new JTabbedPane();

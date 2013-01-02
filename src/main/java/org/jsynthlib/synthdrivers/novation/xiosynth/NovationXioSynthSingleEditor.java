@@ -14,11 +14,11 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.EnvelopeWidget;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.PatchNameWidget;
 import org.jsynthlib.widgets.ScrollBarWidget;
 import org.jsynthlib.widgets.SysexSender;
@@ -31,7 +31,7 @@ class NXSParamModel extends ParamModel {
 	 * use bitmasks since some bytes in the sysex are shared among different parameters
 	 */
 
-	public NXSParamModel(Patch p, int offset, int bitMask) {
+	public NXSParamModel(PatchDataImpl p, int offset, int bitMask) {
 		super(p, offset);
 
 		this.bitmask = bitMask;
@@ -137,14 +137,14 @@ class NXSSender extends SysexSender {
 class NovationXioSynthSingleEditor extends PatchEditorFrame {
 	ImageIcon algoIcon[] = new ImageIcon[8];
 
-	public NovationXioSynthSingleEditor(Patch patch) {
+	public NovationXioSynthSingleEditor(PatchDataImpl patch) {
 		super("Novation XioSynth Single Editor" + " - " + patch.getName(), patch);
 
 		int i = 0;
 		int j = 32;
 
 		JPanel tmpPane;
-		final Patch p = patch;
+		final PatchDataImpl p = patch;
 
 		String[] oscShapeStrings = new String[] { "SINUS", "TRI", "SAW", "SQU",
 

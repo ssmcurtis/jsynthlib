@@ -24,7 +24,7 @@
 
 package org.jsynthlib.synthdrivers.midibox.fm;
 
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 public class MIDIboxFMEnsBankDriver extends MIDIboxFMBankDriver {
 
@@ -32,7 +32,7 @@ public class MIDIboxFMEnsBankDriver extends MIDIboxFMBankDriver {
 		super("EnsBank", 32, (byte) 0x70);
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[32 * 256 + 11];
 		sysex[0] = (byte) 0xF0;
 		sysex[1] = (byte) 0x00;
@@ -45,9 +45,9 @@ public class MIDIboxFMEnsBankDriver extends MIDIboxFMBankDriver {
 		sysex[8] = (byte) 0x00;
 		sysex[32 * 256 + 10] = (byte) 0xF7;
 
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		MIDIboxFMEnsDriver EnsDriver = new MIDIboxFMEnsDriver();
-		Patch ps = EnsDriver.createNewPatch();
+		PatchDataImpl ps = EnsDriver.createNewPatch();
 
 		for (int i = 0; i < 32; i++)
 			putPatch(p, ps, i);

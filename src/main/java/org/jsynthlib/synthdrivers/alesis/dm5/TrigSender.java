@@ -23,8 +23,8 @@ package org.jsynthlib.synthdrivers.alesis.dm5;
 
 import javax.sound.midi.InvalidMidiDataException;
 
-import org.jsynthlib.menu.patch.IPatchDriver;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.model.driver.SynthDriverPatch;
+import org.jsynthlib.tools.ErrorMsgUtil;
 import org.jsynthlib.widgets.SysexWidget;
 
 /**
@@ -67,7 +67,7 @@ class TrigSender extends NRPNSender implements SysexWidget.ISender {
 	 * number. The second group sets the value for the active trigger and consts of the LSB to select the parameter,
 	 * followed by the Data Entry value for that parameter.
 	 */
-	public void send(IPatchDriver driver, int value) {
+	public void send(SynthDriverPatch driver, int value) {
 		if (trigNum != LAST_TRIG_NUM) {
 			try {
 				driver.send(newControlChange(driver, NRPN_MSB, 0)); // Send NRPN MSB
@@ -75,7 +75,7 @@ class TrigSender extends NRPNSender implements SysexWidget.ISender {
 																					// number (NRPN LSB)
 				driver.send(newControlChange(driver, 6, trigNum * 127 / MAX_TRIG_NUM)); // Set the Trigger Number
 			} catch (InvalidMidiDataException e) {
-				ErrorMsg.reportStatus(e);
+				ErrorMsgUtil.reportStatus(e);
 			}
 			LAST_TRIG_NUM = trigNum;
 
@@ -89,7 +89,7 @@ class TrigSender extends NRPNSender implements SysexWidget.ISender {
 			driver.send(newControlChange(driver, NRPN_LSB, param)); // Command to select the parameter
 			driver.send(newControlChange(driver, DATA_ENTRY_MSB, ccMap[value])); // Set the NRPN value using the table
 		} catch (InvalidMidiDataException e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 	}
 }

@@ -29,7 +29,7 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.jsynthlib.menu.patch.IPatch;
+import org.jsynthlib.model.patch.Patch;
 import org.jsynthlib.synthdrivers.yamaha.ub99.format.IFormat;
 import org.jsynthlib.widgets.KnobLookupWidget;
 import org.jsynthlib.widgets.SysexWidget;
@@ -56,7 +56,7 @@ public class Knob extends SysexWidget {
 	protected ClickLabel mLabel = new ClickLabel();
 	private IFormat mFormat;
 
-	public Knob(IPatch patch, IParameter param) {
+	public Knob(Patch patch, IParameter param) {
 		super(patch, param);
 
 		mBase = 0;
@@ -82,7 +82,7 @@ public class Knob extends SysexWidget {
 	 * @param sender
 	 *            a <code>ISender</code> object.
 	 */
-	public Knob(String label, IPatch patch, int min, int max, int base, IParamModel pmodel, ISender sender) {
+	public Knob(String label, Patch patch, int min, int max, int base, IParamModel pmodel, ISender sender) {
 		super(label, patch, min, max, pmodel, sender);
 		mBase = base;
 
@@ -90,7 +90,7 @@ public class Knob extends SysexWidget {
 		layoutWidgets();
 	}
 
-	public Knob(String label, IPatch patch, int min, int max, IFormat format, IParamModel pmodel, ISender sender) {
+	public Knob(String label, Patch patch, int min, int max, IFormat format, IParamModel pmodel, ISender sender) {
 		super(label, patch, min, max, pmodel, sender);
 		mFormat = format;
 

@@ -10,7 +10,7 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.jsynthlib.menu.patch.IPatch;
+import org.jsynthlib.model.patch.Patch;
 
 /**
  * Vertical scrollbar SysexWidget.
@@ -20,7 +20,7 @@ import org.jsynthlib.menu.patch.IPatch;
  * @see ScrollBarLookupWidget
  */
 public class VertScrollBarWidget extends ScrollBarWidget {
-	public VertScrollBarWidget(IPatch patch, IParameter param) {
+	public VertScrollBarWidget(Patch patch, IParameter param) {
 		super(patch, param);
 	}
 
@@ -42,7 +42,7 @@ public class VertScrollBarWidget extends ScrollBarWidget {
 	 * @param sender
 	 *            sysexSender for transmitting the value at editing the parameter
 	 */
-	public VertScrollBarWidget(String label, IPatch patch, int min, int max, int base, IParamModel pmodel, ISender sender) {
+	public VertScrollBarWidget(String label, Patch patch, int min, int max, int base, IParamModel pmodel, ISender sender) {
 		super(label, patch, min, max, base, pmodel, sender);
 	}
 

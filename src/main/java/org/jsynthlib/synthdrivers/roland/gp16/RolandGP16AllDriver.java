@@ -4,17 +4,17 @@ import java.io.UnsupportedEncodingException;
 
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 /**
  * All-memory driver for ROLAND GP16.
  * 
  * @version $Id$
  */
-public class RolandGP16AllDriver extends BankDriver {
+public class RolandGP16AllDriver extends SynthDriverBank {
 	/** Header Size */
 	private static final int HSIZE = 5;
 	/** Single Patch size */
@@ -53,49 +53,49 @@ public class RolandGP16AllDriver extends BankDriver {
 	}
 
 	/** Get group names in the memory patch for memory edit view. */
-	public String getPatchName(Patch p, int patchNum) {
+	public String getPatchName(PatchDataImpl p, int patchNum) {
 		int nameStart = getPatchStart(patchNum);
 		nameStart += 108; // offset of name in patch data
 		try {
-			StringBuffer s = new StringBuffer(new String(((Patch) p).getSysex(), nameStart, 16, "US-ASCII"));
+			StringBuffer s = new StringBuffer(new String(((PatchDataImpl) p).getSysex(), nameStart, 16, "US-ASCII"));
 			return s.toString();
 		} catch (UnsupportedEncodingException ex) {
 			return "-";
 		}
 	}
 
-	protected void setPatchName(Patch bank, int patchNum, String name) {
+	public void setPatchName(PatchDataImpl bank, int patchNum, String name) {
 		// do nothing
 	}
 
 	/** Calculate the checksum for all patches in the memory. */
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 		for (int i = 0; i < 64 * NS; i++)
 			calculateChecksum(p, i * 127 + 5, i * 127 + 124, i * 127 + 125);
 	}
 
 	/** Insert a given group into a given position of a given memory patch. */
-	public void putPatch(Patch bank, Patch p, int patchNum) {
+	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) {
 		if (!canHoldPatch(p)) {
 			JOptionPane.showMessageDialog(null, "This type of patch does not fit in to this type of bank.", "Error",
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
-		System.arraycopy(((Patch) p).getSysex(), 0, ((Patch) bank).getSysex(), getPatchStart(patchNum), singleSize);
+		System.arraycopy(((PatchDataImpl) p).getSysex(), 0, ((PatchDataImpl) bank).getSysex(), getPatchStart(patchNum), singleSize);
 		calculateChecksum(bank);
 	}
 
 	/** Extract a given group from a given memory patch. */
-	public Patch getPatch(Patch bank, int patchNum) {
+	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
 		byte[] sysex = new byte[singleSize];
-		System.arraycopy(((Patch) bank).getSysex(), getPatchStart(patchNum), sysex, 0, singleSize);
+		System.arraycopy(((PatchDataImpl) bank).getSysex(), getPatchStart(patchNum), sysex, 0, singleSize);
 		try {
-			Patch p = new Patch(sysex, getDevice());
+			PatchDataImpl p = new PatchDataImpl(sysex, getDevice());
 			singleDriver.calcChecksum(p);
 			return p;
 		} catch (Exception e) {
-			ErrorMsg.reportError("Error", "Error in GP16 Bank Driver", e);
+			ErrorMsgUtil.reportError("Error", "Error in GP16 Bank Driver", e);
 			return null;
 		}
 	}
@@ -107,9 +107,9 @@ public class RolandGP16AllDriver extends BankDriver {
 	}
 
 	/** Send the memory patch back as it was received. */
-	public void storePatch(Patch group, int groupNum, int bankNum) {
+	public void storePatch(PatchDataImpl group, int groupNum, int bankNum) {
 		for (int i = 0; i < NS; i++) {
-			Patch p = getPatch(group, i);
+			PatchDataImpl p = getPatch(group, i);
 			storeSingleGroup(p, i, 0);
 		}
 	}
@@ -124,7 +124,7 @@ public class RolandGP16AllDriver extends BankDriver {
 			SysexHandler.NameValue nVs[] = new SysexHandler.NameValue[2];
 			nVs[0] = new SysexHandler.NameValue("patchnumber", groupNum * 128 + bankNum * 64 + i);
 			nVs[1] = new SysexHandler.NameValue("checksum", 0);
-			Patch p = new Patch(SYS_REQ.toByteArray(getChannel(), nVs));
+			PatchDataImpl p = new PatchDataImpl(SYS_REQ.toByteArray(getChannel(), nVs));
 			calculateChecksum(p, 5, 10, 11); // the gp-16 requires correct checksum when requesting a patch
 			send(p.getSysex());
 			try {
@@ -135,15 +135,15 @@ public class RolandGP16AllDriver extends BankDriver {
 	}
 
 	/** Worker for storePatch. */
-	public void storeSingleGroup(Patch p, int groupNum, int bankNum) {
-		byte[] gsysex = ((Patch) p).getSysex();
+	public void storeSingleGroup(PatchDataImpl p, int groupNum, int bankNum) {
+		byte[] gsysex = ((PatchDataImpl) p).getSysex();
 		byte[] ggsysex = new byte[127];
 		for (int i = 0; i < 64; i++) {
 			gsysex[127 * i + 5] = (byte) 0x0F;
 			gsysex[127 * i + 6] = (byte) (groupNum * 64 + bankNum * 8 + i);
 			gsysex[127 * i + 7] = (byte) 0x00;
 			System.arraycopy(gsysex, 127 * i, ggsysex, 0, 127);
-			sendPatchWorker(new Patch(ggsysex, this));
+			sendPatchWorker(new PatchDataImpl(ggsysex, this));
 			try {
 				Thread.sleep(sleepTime);
 			} catch (Exception e) {
@@ -152,25 +152,25 @@ public class RolandGP16AllDriver extends BankDriver {
 	}
 
 	/** Create a new all memory patch, that conforms to the format of the GP-16. */
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[NS * singleSize];
 
 		RolandGP16SingleDriver patchCreator = new RolandGP16SingleDriver();
-		Patch blankPatch = patchCreator.createNewPatch();
+		PatchDataImpl blankPatch = patchCreator.createNewPatch();
 		for (int i = 0; i < NS * 64; i++)
-			System.arraycopy(((Patch) blankPatch).getSysex(), 0, sysex, getPatchStart(i) / 64, singleSize / 64);
-		Patch p = new Patch(sysex, this);
+			System.arraycopy(((PatchDataImpl) blankPatch).getSysex(), 0, sysex, getPatchStart(i) / 64, singleSize / 64);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		calculateChecksum(p);
 		return p;
 	}
 
 	/** The name string of the GP-16 is 16 characters long. */
-	public void deletePatch(Patch p, int patchNum) {
+	public void deletePatch(PatchDataImpl p, int patchNum) {
 		setPatchName(p, patchNum, "                ");
 	}
 
 	/** Smarter all memory naming, name the group after the first patch in it. */
-	public String getPatchName(Patch p) {
+	public String getPatchName(PatchDataImpl p) {
 		return getPatchName(p, 0);
 	}
 

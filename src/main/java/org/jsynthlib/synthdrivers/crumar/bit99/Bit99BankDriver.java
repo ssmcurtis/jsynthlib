@@ -3,17 +3,18 @@ package org.jsynthlib.synthdrivers.crumar.bit99;
 import javax.sound.midi.MidiMessage;
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.patch.SysexHandler.NameValue;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.menu.helper.SysexHandler.NameValue;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.synthdrivers.korg.microkorg.MicroKorg;
 
 /**
  * Bank driver for KAWAI K4/K4r voice patch.
  * 
  * @version $Id$
  */
-public class Bit99BankDriver extends BankDriver {
+public class Bit99BankDriver extends SynthDriverBank {
 	/** Header Size */
 	private static final int HSIZE = 8;
 	/** Single Patch size */
@@ -24,12 +25,12 @@ public class Bit99BankDriver extends BankDriver {
 	private static final SysexHandler SYS_REQ = new SysexHandler("F0 01 20 01 05 *bankNum* *patchNum* F7");
 
 	public Bit99BankDriver() {
-		super("Bank", "ssmcurtis", NS, 4);
-		sysexID = Bit99.DEVICE_SYSEX_ID;
+		super("Bank", "ssmCurtis", NS, 4);
+		sysexID = MicroKorg.DEVICE_SYSEX_ID;
 
 		deviceIDoffset = 2;
-		bankNumbers = Bit99.BANK_NAMES;
-		patchNumbers = Bit99Device.createPatchNumbers();
+		bankNumbers = MicroKorg.BANK_NAMES;
+		patchNumbers = MicroKorg.createPatchNumbers();
 
 		singleSysexID = sysexID;
 		singleSize = 0;// HSIZE + SSIZE + 1;
@@ -42,7 +43,7 @@ public class Bit99BankDriver extends BankDriver {
 		return HSIZE + (SSIZE * patchNum);
 	}
 
-	public String getPatchName(Patch p, int patchNum) {
+	public String getPatchName(PatchDataImpl p, int patchNum) {
 		System.out.println(">>>> Get patch name");
 
 		// int nameStart = getPatchStart(patchNum);
@@ -57,7 +58,7 @@ public class Bit99BankDriver extends BankDriver {
 		return "NO NAME";
 	}
 
-	public void setPatchName(Patch p, int patchNum, String name) {
+	public void setPatchName(PatchDataImpl p, int patchNum, String name) {
 		System.out.println(">>>> Set name");
 		// patchNameSize = 10;
 		// patchNameStart = getPatchStart(patchNum);
@@ -75,7 +76,7 @@ public class Bit99BankDriver extends BankDriver {
 		// }
 	}
 
-	public void putPatch(Patch bank, Patch p, int patchNum) {
+	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) {
 		System.out.println(">>>> put patch");
 		if (!canHoldPatch(p)) {
 			JOptionPane.showMessageDialog(null, "This type of patch does not fit in to this type of bank.", "Error",
@@ -87,7 +88,7 @@ public class Bit99BankDriver extends BankDriver {
 		calculateChecksum(bank);
 	}
 
-	public Patch getPatch(Patch bank, int patchNum) {
+	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
 		System.out.println(">>>> Get patch");
 		// byte[] sysex = new byte[HSIZE + SSIZE + 1];
 		// sysex[0] = (byte) 0xF0;
@@ -121,7 +122,7 @@ public class Bit99BankDriver extends BankDriver {
 		send(msg);
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		System.out.println(">>>> store patch");
 
 		try {

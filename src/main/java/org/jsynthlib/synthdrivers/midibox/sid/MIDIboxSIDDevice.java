@@ -28,7 +28,7 @@ package org.jsynthlib.synthdrivers.midibox.sid;
 
 import java.util.prefs.Preferences;
 
-import org.jsynthlib.menu.patch.Device;
+import org.jsynthlib.model.device.Device;
 
 public class MIDIboxSIDDevice extends Device {
 	private static final String infoText = "This driver has been created for MIDIbox SID, a non-commercial DIY "

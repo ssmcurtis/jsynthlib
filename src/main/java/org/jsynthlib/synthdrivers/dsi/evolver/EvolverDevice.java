@@ -2,8 +2,7 @@ package org.jsynthlib.synthdrivers.dsi.evolver;
 
 import java.util.prefs.Preferences;
 
-import org.jsynthlib.menu.patch.Device;
-import org.jsynthlib.tools.DriverUtil;
+import org.jsynthlib.model.device.Device;
 
 public class EvolverDevice extends Device {
 
@@ -17,14 +16,6 @@ public class EvolverDevice extends Device {
 		this.prefs = prefs;
 
 		addDriver(new EvolverSingleDriver());
-		// addDriver(new EvolverBankDriver());
-	}
-
-	public static String[] createPatchNumbers() {
-		String[] retarr = new String[Evolver.PATCH_COUNT_IN_BANK.number()];
-		String[] names = DriverUtil.generateNumbers(1, Evolver.PATCH_COUNT_IN_BANK.number(), "Patch ##");
-		System.arraycopy(names, 0, retarr, 0, Evolver.PATCH_COUNT_IN_BANK.number());
-
-		return retarr;
+		addDriver(new EvolverBankDriver());
 	}
 }

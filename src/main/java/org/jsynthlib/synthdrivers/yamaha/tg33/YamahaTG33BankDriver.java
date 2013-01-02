@@ -7,11 +7,11 @@ import java.io.UnsupportedEncodingException;
 
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
-public class YamahaTG33BankDriver extends BankDriver {
+public class YamahaTG33BankDriver extends SynthDriverBank {
 
 	public YamahaTG33BankDriver() {
 		super("Bank", "Brian Klock", 64, 4);
@@ -35,11 +35,11 @@ public class YamahaTG33BankDriver extends BankDriver {
 		return start;
 	}
 
-	public String getPatchName(Patch p, int patchNum) {
+	public String getPatchName(PatchDataImpl p, int patchNum) {
 		int nameStart = getPatchStart(patchNum);
 		nameStart += 12; // offset of name in patch data
 		try {
-			StringBuffer s = new StringBuffer(new String(((Patch) p).getSysex(), nameStart, 8, "US-ASCII"));
+			StringBuffer s = new StringBuffer(new String(((PatchDataImpl) p).getSysex(), nameStart, 8, "US-ASCII"));
 			return s.toString();
 		} catch (UnsupportedEncodingException ex) {
 			return "-";
@@ -47,7 +47,7 @@ public class YamahaTG33BankDriver extends BankDriver {
 
 	}
 
-	public void setPatchName(Patch p, int patchNum, String name) {
+	public void setPatchName(PatchDataImpl p, int patchNum, String name) {
 		patchNameSize = 8;
 		patchNameStart = getPatchStart(patchNum) + 12;
 
@@ -57,14 +57,14 @@ public class YamahaTG33BankDriver extends BankDriver {
 		try {
 			namebytes = name.getBytes("US-ASCII");
 			for (int i = 0; i < patchNameSize; i++)
-				((Patch) p).getSysex()[patchNameStart + i] = namebytes[i];
+				((PatchDataImpl) p).getSysex()[patchNameStart + i] = namebytes[i];
 
 		} catch (UnsupportedEncodingException ex) {
 			return;
 		}
 	}
 
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 		calculateChecksum(p, 6, 2363, 2364);
 		calculateChecksum(p, 2367, 4714, 4715);
 		calculateChecksum(p, 2367 + 2351, 4714 + 2351, 4715 + 2351);
@@ -83,18 +83,18 @@ public class YamahaTG33BankDriver extends BankDriver {
 		calculateChecksum(p, 2367 + 2351 * 14, 4714 + 2351 * 14, 4715 + 2351 * 14);
 	}
 
-	public void putPatch(Patch bank, Patch p, int patchNum) {
+	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) {
 		if (!canHoldPatch(p)) {
 			JOptionPane.showMessageDialog(null, "This type of patch does not fit in to this type of bank.", "Error",
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
-		System.arraycopy(((Patch) p).getSysex(), 16, ((Patch) bank).getSysex(), getPatchStart(patchNum), 587);
+		System.arraycopy(((PatchDataImpl) p).getSysex(), 16, ((PatchDataImpl) bank).getSysex(), getPatchStart(patchNum), 587);
 		calculateChecksum(bank);
 	}
 
-	public Patch getPatch(Patch bank, int patchNum) {
+	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
 		try {
 			byte[] sysex = new byte[605];
 			sysex[00] = (byte) 0xF0;
@@ -114,17 +114,17 @@ public class YamahaTG33BankDriver extends BankDriver {
 			sysex[14] = (byte) 0x56;
 			sysex[15] = (byte) 0x45;
 			sysex[604] = (byte) 0xF7;
-			System.arraycopy(((Patch) bank).getSysex(), getPatchStart(patchNum), sysex, 16, 587);
-			Patch p = new Patch(sysex, getDevice());
+			System.arraycopy(((PatchDataImpl) bank).getSysex(), getPatchStart(patchNum), sysex, 16, 587);
+			PatchDataImpl p = new PatchDataImpl(sysex, getDevice());
 			p.calculateChecksum();
 			return p;
 		} catch (Exception e) {
-			ErrorMsg.reportError("Error", "Error in TG33 Bank Driver", e);
+			ErrorMsgUtil.reportError("Error", "Error in TG33 Bank Driver", e);
 			return null;
 		}
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[37631];
 		sysex[00] = (byte) 0xF0;
 		sysex[01] = (byte) 0x43;
@@ -143,7 +143,7 @@ public class YamahaTG33BankDriver extends BankDriver {
 		sysex[14] = (byte) 0x56;
 		sysex[15] = (byte) 0x43;
 		sysex[37630] = (byte) 0xF7;
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		for (int i = 4; i < 64; i += 4) {
 			sysex[getPatchStart(i) - 2] = 0x12;
 			sysex[getPatchStart(i) - 1] = 0x2C;

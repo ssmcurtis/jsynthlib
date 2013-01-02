@@ -26,7 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.jsynthlib.menu.patch.Device;
+import org.jsynthlib.model.device.Device;
 import org.jsynthlib.tools.DriverUtil;
 
 /**

@@ -29,10 +29,10 @@ import java.awt.GridBagLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.ComboBoxWidget;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.PatchNameWidget;
 import org.jsynthlib.widgets.SysexSender;
 
@@ -128,13 +128,13 @@ public class DX7FamilyPerformanceIIIEditor extends PatchEditorFrame {
 			"Cartridge C53", "Cartridge C54", "Cartridge C55", "Cartridge C56", "Cartridge C57", "Cartridge C58",
 			"Cartridge C59", "Cartridge C60", "Cartridge C61", "Cartridge C62", "Cartridge C63" };
 
-	public DX7FamilyPerformanceIIIEditor(String name, Patch patch) {
+	public DX7FamilyPerformanceIIIEditor(String name, PatchDataImpl patch) {
 		super(name, patch);
 
 		buildEditor(patch);
 	}
 
-	protected void buildEditor(Patch patch) {
+	protected void buildEditor(PatchDataImpl patch) {
 
 		JPanel perfPane = new JPanel();
 		perfPane.setLayout(new GridBagLayout());
@@ -496,7 +496,7 @@ public class DX7FamilyPerformanceIIIEditor extends PatchEditorFrame {
 	class PerformanceModel extends ParamModel {
 		int upper_nibble, lower_nibble;
 
-		public PerformanceModel(Patch p, int o) {
+		public PerformanceModel(PatchDataImpl p, int o) {
 			super(p, 16 + 2 * o);
 		}
 

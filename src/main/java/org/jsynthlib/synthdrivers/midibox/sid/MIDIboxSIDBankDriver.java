@@ -30,12 +30,12 @@ import java.io.UnsupportedEncodingException;
 
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
-public class MIDIboxSIDBankDriver extends BankDriver {
+public class MIDIboxSIDBankDriver extends SynthDriverBank {
 
 	public MIDIboxSIDBankDriver() {
 		super("Bank", "Thorsten Klose", 128, 4);
@@ -65,11 +65,11 @@ public class MIDIboxSIDBankDriver extends BankDriver {
 		checksumOffset = 128 * 256 + 8;
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		// MIDIboxSIDSlowSender SlowSender = new MIDIboxSIDSlowSender();
 
 		for (int i = 0; i < 128; ++i) {
-			Patch ps = getPatch(p, i);
+			PatchDataImpl ps = getPatch(p, i);
 			System.out.println("Sending Patch #" + i);
 			// SlowSender.sendSysEx(p.getDriver().getPort(), ps.sysex, 500);
 			send(ps.getSysex());
@@ -91,18 +91,18 @@ public class MIDIboxSIDBankDriver extends BankDriver {
 		return start;
 	}
 
-	public String getPatchName(Patch p, int patchNum) {
+	public String getPatchName(PatchDataImpl p, int patchNum) {
 		int nameStart = getPatchStart(patchNum);
 		nameStart += 0; // offset of name in patch data
 		try {
-			StringBuffer s = new StringBuffer(new String(((Patch) p).getSysex(), nameStart, 16, "US-ASCII"));
+			StringBuffer s = new StringBuffer(new String(((PatchDataImpl) p).getSysex(), nameStart, 16, "US-ASCII"));
 			return s.toString();
 		} catch (UnsupportedEncodingException ex) {
 			return "-";
 		}
 	}
 
-	public void setPatchName(Patch p, int patchNum, String name) {
+	public void setPatchName(PatchDataImpl p, int patchNum, String name) {
 		patchNameSize = 16;
 		patchNameStart = getPatchStart(patchNum);
 
@@ -112,24 +112,24 @@ public class MIDIboxSIDBankDriver extends BankDriver {
 		try {
 			namebytes = name.getBytes("US-ASCII");
 			for (int i = 0; i < patchNameSize; i++)
-				((Patch) p).getSysex()[patchNameStart + i] = namebytes[i];
+				((PatchDataImpl) p).getSysex()[patchNameStart + i] = namebytes[i];
 		} catch (UnsupportedEncodingException ex) {
 			return;
 		}
 	}
 
-	public void putPatch(Patch bank, Patch p, int patchNum) {
+	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) {
 		if (!canHoldPatch(p)) {
 			JOptionPane.showMessageDialog(null, "This type of patch does not fit in to this type of bank.", "Error",
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
-		System.arraycopy(((Patch) p).getSysex(), 8, ((Patch) bank).getSysex(), getPatchStart(patchNum), 256);
+		System.arraycopy(((PatchDataImpl) p).getSysex(), 8, ((PatchDataImpl) bank).getSysex(), getPatchStart(patchNum), 256);
 		calculateChecksum(bank);
 	}
 
-	public Patch getPatch(Patch bank, int patchNum) {
+	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
 		try {
 			byte[] sysex = new byte[266];
 			sysex[0] = (byte) 0xF0;
@@ -142,17 +142,17 @@ public class MIDIboxSIDBankDriver extends BankDriver {
 			sysex[7] = (byte) (patchNum);
 			sysex[265] = (byte) 0xF7;
 
-			System.arraycopy(((Patch) bank).getSysex(), getPatchStart(patchNum), sysex, 8, 256);
-			Patch p = new Patch(sysex, getDevice());
+			System.arraycopy(((PatchDataImpl) bank).getSysex(), getPatchStart(patchNum), sysex, 8, 256);
+			PatchDataImpl p = new PatchDataImpl(sysex, getDevice());
 			p.calculateChecksum();
 			return p;
 		} catch (Exception e) {
-			ErrorMsg.reportError("Error", "Error in MIDIboxSID Bank Driver", e);
+			ErrorMsgUtil.reportError("Error", "Error in MIDIboxSID Bank Driver", e);
 			return null;
 		}
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[128 * 256 + 9];
 		sysex[0] = (byte) 0xF0;
 		sysex[1] = (byte) 0x00;
@@ -163,9 +163,9 @@ public class MIDIboxSIDBankDriver extends BankDriver {
 		sysex[6] = (byte) 0x04;
 		sysex[128 * 256 + 8] = (byte) 0xF7;
 
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		MIDIboxSIDSingleDriver SingleDriver = new MIDIboxSIDSingleDriver();
-		Patch ps = SingleDriver.createNewPatch();
+		PatchDataImpl ps = SingleDriver.createNewPatch();
 
 		for (int i = 0; i < 128; i++)
 			putPatch(p, ps, i);

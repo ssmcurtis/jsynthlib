@@ -24,17 +24,17 @@ package org.jsynthlib.synthdrivers.behringer.vamp2;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 /**
  * Behringer VAmp2 Single Driver.
  * 
  * @author Jeff Weber
  */
-public class VAmp2SingleDriver extends Driver {
+public class VAmp2SingleDriver extends SynthDriverPatchImpl {
 	/**
 	 * VAmp2 Dump Request
 	 */
@@ -83,7 +83,7 @@ public class VAmp2SingleDriver extends Driver {
 	 * 
 	 * @see core.Driver#calculateChecksum(core.Patch)
 	 */
-	protected void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p)  {
 	}
 
 	/*
@@ -91,7 +91,7 @@ public class VAmp2SingleDriver extends Driver {
 	 * 
 	 * @see core.Driver#calculateChecksum(core.Patch, int, int, int)
 	 */
-	protected void calculateChecksum(Patch patch, int start, int end, int offset) {
+	protected void calculateChecksum(PatchDataImpl patch, int start, int end, int offset) {
 	}
 
 	/**
@@ -100,11 +100,11 @@ public class VAmp2SingleDriver extends Driver {
 	 * @param p
 	 *            The patch to be sent.
 	 */
-	protected void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		byte newSysex[] = new byte[p.getSysex().length];
 		System.arraycopy(p.getSysex(), 0, newSysex, 0, p.getSysex().length);
 		newSysex[7] = (byte) 0x7f; // Set the patch location to 127 (edit buffer)
-		sendPatchWorker(new Patch(newSysex, this));
+		sendPatchWorker(new PatchDataImpl(newSysex, this));
 	}
 
 	/**
@@ -117,7 +117,7 @@ public class VAmp2SingleDriver extends Driver {
 	 * @param patchNum
 	 *            The patch number within the bank, in the range 0 to 4.
 	 */
-	protected void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		int progNum = bankNum * 5 + patchNum;
 		p.getSysex()[7] = (byte) progNum;
 		sendPatchWorker(p);
@@ -135,7 +135,7 @@ public class VAmp2SingleDriver extends Driver {
 	 * @param p
 	 *            The patch to be "played".
 	 */
-	protected void playPatch(Patch p) {
+	public void playPatch(PatchDataImpl p) {
 		JFrame frame = new JFrame();
 		JOptionPane.showMessageDialog(frame, Constants.PLAY_CMD_MSG);
 	}
@@ -164,8 +164,8 @@ public class VAmp2SingleDriver extends Driver {
 	 * 
 	 * @return A reference to a new patch containing default values
 	 */
-	protected Patch createNewPatch() {
-		Patch p = new Patch(Constants.NEW_SINGLE_SYSEX, this);
+	protected PatchDataImpl createNewPatch() {
+		PatchDataImpl p = new PatchDataImpl(Constants.NEW_SINGLE_SYSEX, this);
 		p.getSysex()[4] = (byte) getChannel();
 		return p;
 	}
@@ -176,7 +176,7 @@ public class VAmp2SingleDriver extends Driver {
 	 * @param p
 	 *            The patch to be edited.
 	 */
-	protected JSLFrame editPatch(Patch p) {
-		return new VAmp2Editor((Patch) p);
+	public JSLFrame editPatch(PatchDataImpl p) {
+		return new VAmp2Editor((PatchDataImpl) p);
 	}
 }

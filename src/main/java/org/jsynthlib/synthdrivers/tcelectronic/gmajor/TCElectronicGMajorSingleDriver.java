@@ -24,17 +24,17 @@ package org.jsynthlib.synthdrivers.tcelectronic.gmajor;
 import javax.swing.JOptionPane;
 
 import org.jsynthlib.PatchBayApplication;
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.DriverUtil;
 
 /**
  * Single patch driver for TC Electronic G-Major
  * 
  */
-public class TCElectronicGMajorSingleDriver extends Driver {
+public class TCElectronicGMajorSingleDriver extends SynthDriverPatchImpl {
 
 	private static final SysexHandler SYS_REQ = new SysexHandler("F0 00 20 1F 00 48 45 *bankNum* *patchNum* F7");
 
@@ -55,7 +55,7 @@ public class TCElectronicGMajorSingleDriver extends Driver {
 				TCElectronicGMajorConst.NUM_PATCH);
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		if (bankNum == 0) {
 			JOptionPane.showMessageDialog(PatchBayApplication.getInstance(),
 					"You cannot store a patch in the factory bank.\n\nPlease try the user bank...", "Store Patch",
@@ -68,8 +68,8 @@ public class TCElectronicGMajorSingleDriver extends Driver {
 			Thread.sleep(100);
 		} catch (Exception e) {
 		}
-		((Patch) p).getSysex()[7] = (byte) TCElectronicGMajorUtil.calcBankNum(bankNum, patchNum);
-		((Patch) p).getSysex()[8] = (byte) TCElectronicGMajorUtil.calcPatchNum(bankNum, patchNum);
+		((PatchDataImpl) p).getSysex()[7] = (byte) TCElectronicGMajorUtil.calcBankNum(bankNum, patchNum);
+		((PatchDataImpl) p).getSysex()[8] = (byte) TCElectronicGMajorUtil.calcPatchNum(bankNum, patchNum);
 		sendPatchWorker(p);
 		try {
 			Thread.sleep(100);
@@ -78,27 +78,27 @@ public class TCElectronicGMajorSingleDriver extends Driver {
 		setPatchNum(patchNum);
 	}
 
-	public void sendPatch(Patch p) {
-		((Patch) p).getSysex()[7] = (byte) 0x00;
-		((Patch) p).getSysex()[8] = (byte) 0x00;
+	public void sendPatch(PatchDataImpl p) {
+		((PatchDataImpl) p).getSysex()[7] = (byte) 0x00;
+		((PatchDataImpl) p).getSysex()[8] = (byte) 0x00;
 		sendPatchWorker(p);
 	}
 
-	protected void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p)  {
 		calculateChecksum(p, checksumStart, checksumEnd, checksumOffset);
 	}
 
-	protected void calculateChecksum(Patch patch, int start, int end, int offset) {
+	protected void calculateChecksum(PatchDataImpl patch, int start, int end, int offset) {
 		patch.getSysex()[offset] = TCElectronicGMajorUtil.calcChecksum(patch.getSysex(), start, end);
 	}
 
-	public Patch createNewPatch() {
-		return (Patch) DriverUtil.createNewPatch(this, TCElectronicGMajorConst.PATCHFILENAME,
+	public PatchDataImpl createNewPatch() {
+		return (PatchDataImpl) DriverUtil.createNewPatch(this, TCElectronicGMajorConst.PATCHFILENAME,
 				TCElectronicGMajorConst.SINGLE_SIZE);
 	}
 
-	public JSLFrame editPatch(Patch p) {
-		return new TCElectronicGMajorSingleEditor((Patch) p);
+	public JSLFrame editPatch(PatchDataImpl p) {
+		return new TCElectronicGMajorSingleEditor((PatchDataImpl) p);
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {

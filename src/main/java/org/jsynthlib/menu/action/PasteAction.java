@@ -7,8 +7,9 @@ import java.util.Map;
 import javax.swing.AbstractAction;
 
 import org.jsynthlib.PatchBayApplication;
-import org.jsynthlib.menu.ui.JSLFrame;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.Actions;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 public class PasteAction extends AbstractAction {
 	public PasteAction(Map<Serializable, Integer> mnemonics) {
@@ -21,7 +22,7 @@ public class PasteAction extends AbstractAction {
 		try {
 			Actions.getSelectedFrame().pastePatch();
 		} catch (Exception ex) {
-			ErrorMsg.reportError("Error", "Library to Paste into must be the focused Window.", ex);
+			ErrorMsgUtil.reportError("Error", "Library to Paste into must be the focused Window." + getClass().getSimpleName(), ex);
 		}
 	}
 

@@ -1,5 +1,7 @@
 package org.jsynthlib.synthdrivers.crumar.bit99;
 
+import org.jsynthlib.tools.DriverUtil;
+
 public enum Bit99 {
 	PATCH_COUNT_IN_BANK(75),
 	PATCH_SIZE(80),
@@ -8,7 +10,7 @@ public enum Bit99 {
 	PATCH_NAME_END_AT(0),
 	CHECKSUM_START_AT(0),
 	CHECKSUM_END_AT(0),
-	CHECKSUM_OFFSET(0),
+	CHECKSUM_OFFSET(-1),
 	HEADER_SIZE(0),
 	BANK_AT(0),
 	PATCH_AT(4);
@@ -27,6 +29,14 @@ public enum Bit99 {
 
 	public int number() {
 		return position;
+	}
+
+	public static String[] createPatchNumbers() {
+		String[] retarr = new String[PATCH_COUNT_IN_BANK.number()];
+		String[] names = DriverUtil.generateNumbers(1, PATCH_COUNT_IN_BANK.number(), "Patch ##");
+		System.arraycopy(names, 0, retarr, 0, PATCH_COUNT_IN_BANK.number());
+	
+		return retarr;
 	}
 
 }

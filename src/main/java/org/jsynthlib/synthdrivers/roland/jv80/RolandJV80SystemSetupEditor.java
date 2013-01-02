@@ -30,12 +30,12 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.DriverUtil;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.ScrollBarWidget;
 import org.jsynthlib.widgets.SysexSender;
 
@@ -47,7 +47,7 @@ public class RolandJV80SystemSetupEditor extends PatchEditorFrame {
 
 	private final boolean isJV80;
 
-	RolandJV80SystemSetupEditor(Patch p) {
+	RolandJV80SystemSetupEditor(PatchDataImpl p) {
 		super("Roland JV80 System editor", p);
 
 		isJV80 = ((RolandJV80SystemSetupDriver) p.getDriver()).isJV80;
@@ -55,7 +55,7 @@ public class RolandJV80SystemSetupEditor extends PatchEditorFrame {
 		buildEditor(p);
 	}
 
-	void buildEditor(Patch patch) {
+	void buildEditor(PatchDataImpl patch) {
 		JTabbedPane systemPane = new JTabbedPane();
 
 		systemPane.addTab("System Setup", buildSystemSetup(patch));
@@ -68,7 +68,7 @@ public class RolandJV80SystemSetupEditor extends PatchEditorFrame {
 		pack();
 	}
 
-	JPanel buildReceiveSwitches(Patch patch) {
+	JPanel buildReceiveSwitches(PatchDataImpl patch) {
 		GridBagConstraints gbc = new GridBagConstraints();
 		JPanel panel = new JPanel(new GridBagLayout());
 
@@ -110,7 +110,7 @@ public class RolandJV80SystemSetupEditor extends PatchEditorFrame {
 		return panel;
 	}
 
-	JPanel buildTransmitSwitches(Patch patch) {
+	JPanel buildTransmitSwitches(PatchDataImpl patch) {
 		GridBagConstraints gbc = new GridBagConstraints();
 		JPanel panel = new JPanel(new GridBagLayout());
 
@@ -152,7 +152,7 @@ public class RolandJV80SystemSetupEditor extends PatchEditorFrame {
 		return panel;
 	}
 
-	JPanel buildSystemSetup(Patch patch) {
+	JPanel buildSystemSetup(PatchDataImpl patch) {
 		GridBagConstraints gbc = new GridBagConstraints();
 		JPanel panel = new JPanel(new GridBagLayout());
 
@@ -326,7 +326,7 @@ public class RolandJV80SystemSetupEditor extends PatchEditorFrame {
 	class JVModel extends ParamModel {
 		final static int DATA_OFFSET = 9;
 
-		JVModel(Patch p, int offset) {
+		JVModel(PatchDataImpl p, int offset) {
 			super(p, DATA_OFFSET + offset);
 		}
 	}

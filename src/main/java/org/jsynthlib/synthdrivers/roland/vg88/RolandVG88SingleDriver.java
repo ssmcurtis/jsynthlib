@@ -21,17 +21,17 @@
 
 package org.jsynthlib.synthdrivers.roland.vg88;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.DriverUtil;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 /**
  * Single Driver for Roland VG88
  */
 
-public final class RolandVG88SingleDriver extends Driver {
+public final class RolandVG88SingleDriver extends SynthDriverPatchImpl {
 
 	/** Size of a single patch */
 	static final int SINGLE_SIZE = 140 * 5 + 76;
@@ -89,14 +89,14 @@ public final class RolandVG88SingleDriver extends Driver {
 	/**
 	 * Store a patch
 	 */
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		storePatchVG88(p, patchNum);
 	}
 
 	/**
 	 * Send a patch in multiple sysex
 	 */
-	void storePatchVG88(Patch p, int patchNum) {
+	void storePatchVG88(PatchDataImpl p, int patchNum) {
 		arrangePatchVG88(p, patchNum);
 		int size;
 		int offset = 0;
@@ -108,12 +108,12 @@ public final class RolandVG88SingleDriver extends Driver {
 			try {
 				send(tmpSysex);
 			} catch (Exception e) {
-				ErrorMsg.reportStatus(e);
+				ErrorMsgUtil.reportStatus(e);
 			}
 			try {
 				Thread.sleep(50); // wait at least 50 milliseconds.
 			} catch (Exception e) {
-				ErrorMsg.reportStatus(e);
+				ErrorMsgUtil.reportStatus(e);
 			}
 		}
 	}
@@ -121,7 +121,7 @@ public final class RolandVG88SingleDriver extends Driver {
 	/**
 	 * Update data and checksums for each pack in a Patch
 	 */
-	public void arrangePatchVG88(Patch p, int patchNum) {
+	public void arrangePatchVG88(PatchDataImpl p, int patchNum) {
 		int size;
 		int offset = 0;
 		for (int i = 0; i < NUM_PKT; i++, offset += size) {
@@ -138,14 +138,14 @@ public final class RolandVG88SingleDriver extends Driver {
 	/**
 	 * Send a Patch to an edit buffer of MIDI device. Use last user-patch 25-4 (100) as an edit buffer.
 	 */
-	public void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		storePatch(p, 0, NUM_PATCH - 1);
 	}
 
 	/**
 	 * Calculate and update checksum of a Patch.
 	 */
-	void calculateChecksum(Patch p, int offset) {
+	void calculateChecksum(PatchDataImpl p, int offset) {
 		int size;
 		for (int i = 0; i < NUM_PKT; i++, offset += size) {
 			size = PKT_SIZE[i];
@@ -157,15 +157,15 @@ public final class RolandVG88SingleDriver extends Driver {
 	/**
 	 * Calculate and update checksum of a Patch.
 	 */
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 		calculateChecksum(p, 0);
 	}
 
 	/**
 	 * Create new patch using a patch file
 	 */
-	public Patch createNewPatch() {
-		return (Patch) DriverUtil.createNewPatch(this, patchDefFileName, SINGLE_SIZE);
+	public PatchDataImpl createNewPatch() {
+		return (PatchDataImpl) DriverUtil.createNewPatch(this, patchDefFileName, SINGLE_SIZE);
 	}
 
 	/**
@@ -180,7 +180,7 @@ public final class RolandVG88SingleDriver extends Driver {
 	/**
 	 * Get the patch name.
 	 */
-	public String getPatchName(Patch p) {
+	public String getPatchName(PatchDataImpl p) {
 		try {
 			int k = 0;
 			char c[] = new char[patchNameSize];
@@ -198,7 +198,7 @@ public final class RolandVG88SingleDriver extends Driver {
 	/**
 	 * set the patch name.
 	 */
-	public void setPatchName(Patch p, String name) {
+	public void setPatchName(PatchDataImpl p, String name) {
 		byte[] namebytes = name.getBytes();
 		byte c;
 		int k = 0;
@@ -215,9 +215,9 @@ public final class RolandVG88SingleDriver extends Driver {
 		}
 	}
 
-	protected void playPatch(Patch p) {
-		ErrorMsg warning = new ErrorMsg();
-		ErrorMsg.reportWarning("Advice: ",
+	public void playPatch(PatchDataImpl p) {
+		ErrorMsgUtil warning = new ErrorMsgUtil();
+		ErrorMsgUtil.reportWarning("Advice: ",
 				"VG88 can't play anything by itself. You can test the sound with your guitar.");
 	}
 

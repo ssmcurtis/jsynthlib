@@ -3,11 +3,11 @@
 
 package org.jsynthlib.synthdrivers.roland.mks50;
 
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
-public class MKS50PatchBankDriver extends BankDriver {
+public class MKS50PatchBankDriver extends SynthDriverBank {
 
 	public MKS50PatchBankDriver() {
 		super("Patch Bank", "Kenneth L. Martinez", 64, 4);
@@ -26,7 +26,7 @@ public class MKS50PatchBankDriver extends BankDriver {
 		singleSysexID = "F041350*233001";
 	}
 
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 		// MKS-50 doesn't use checksum
 	}
 
@@ -35,7 +35,7 @@ public class MKS50PatchBankDriver extends BankDriver {
 	// // MKS-50 doesn't use checksum
 	// }
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		sendPatchWorker(p);
 	}
 
@@ -46,44 +46,44 @@ public class MKS50PatchBankDriver extends BankDriver {
 	 * +"3. press Data Transfer, select Bulk*Load and the bank (P-A or P-B)\n" +"4. press Write\n"
 	 * +"5. now click OK to send the bank", "Store Patch Bank", JOptionPane.PLAIN_MESSAGE ); storePatch(p, 0, 0); }
 	 */
-	public void putPatch(Patch bank, Patch p, int patchNum) {
+	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) {
 		if (!canHoldPatch(p)) {
-			ErrorMsg.reportError("Error", "This type of patch does not fit in to this type of bank.");
+			ErrorMsgUtil.reportError("Error", "This type of patch does not fit in to this type of bank.");
 			return;
 		}
 
 		byte bankSysex[] = new byte[32];
 		// TONE NUMBER
-		bankSysex[0] |= ((Patch) p).getSysex()[7];
+		bankSysex[0] |= ((PatchDataImpl) p).getSysex()[7];
 		// KEY RANGE LOW
-		bankSysex[1] |= (byte) (((Patch) p).getSysex()[8] + 4); // sysex docs didn't show, but needed to get correct
+		bankSysex[1] |= (byte) (((PatchDataImpl) p).getSysex()[8] + 4); // sysex docs didn't show, but needed to get correct
 																	// value
 		// KEY RANGE HIGH
-		bankSysex[2] |= (byte) (((Patch) p).getSysex()[9] + 4); // sysex docs didn't show, but needed to get correct
+		bankSysex[2] |= (byte) (((PatchDataImpl) p).getSysex()[9] + 4); // sysex docs didn't show, but needed to get correct
 																	// value
 		// PORTAMENTO TIME
-		bankSysex[3] |= ((Patch) p).getSysex()[10];
+		bankSysex[3] |= ((PatchDataImpl) p).getSysex()[10];
 		// PORTAMENTO
-		bankSysex[10] |= (byte) (((Patch) p).getSysex()[11] << 4);
+		bankSysex[10] |= (byte) (((PatchDataImpl) p).getSysex()[11] << 4);
 		// MOD SENS
-		bankSysex[4] |= ((Patch) p).getSysex()[12];
+		bankSysex[4] |= ((PatchDataImpl) p).getSysex()[12];
 		// KEY SHIFT
-		bankSysex[5] |= ((Patch) p).getSysex()[13];
+		bankSysex[5] |= ((PatchDataImpl) p).getSysex()[13];
 		// VOLUME
-		bankSysex[6] |= ((Patch) p).getSysex()[14];
+		bankSysex[6] |= ((PatchDataImpl) p).getSysex()[14];
 		// DETUNE
-		bankSysex[7] |= ((Patch) p).getSysex()[15];
+		bankSysex[7] |= ((PatchDataImpl) p).getSysex()[15];
 		// MIDI FUNCTION
-		bankSysex[9] |= ((Patch) p).getSysex()[16];
+		bankSysex[9] |= ((PatchDataImpl) p).getSysex()[16];
 		// MONO BENDER RANGE
-		bankSysex[8] |= (byte) (((Patch) p).getSysex()[17] << 4);
+		bankSysex[8] |= (byte) (((PatchDataImpl) p).getSysex()[17] << 4);
 		// CHORD MEMORY
-		bankSysex[8] |= ((Patch) p).getSysex()[18];
+		bankSysex[8] |= ((PatchDataImpl) p).getSysex()[18];
 		// KEY ASSIGN MODE
-		bankSysex[10] |= (byte) (((Patch) p).getSysex()[19] & 0x60);
+		bankSysex[10] |= (byte) (((PatchDataImpl) p).getSysex()[19] & 0x60);
 		// PATCH NAME (10 bytes)
 		for (int i = 0; i < 10; i++) {
-			bankSysex[i + 11] = ((Patch) p).getSysex()[20 + i];
+			bankSysex[i + 11] = ((PatchDataImpl) p).getSysex()[20 + i];
 		}
 		byte bankSysexNibbles[] = new byte[64];
 		for (int i = 0; i < 32; i++) {
@@ -91,10 +91,10 @@ public class MKS50PatchBankDriver extends BankDriver {
 			bankSysexNibbles[i * 2 + 1] = (byte) ((bankSysex[i] & 0xF0) >> 4);
 		}
 		int patchOffset = getPatchStart(patchNum);
-		System.arraycopy(bankSysexNibbles, 0, ((Patch) bank).getSysex(), patchOffset, 64);
+		System.arraycopy(bankSysexNibbles, 0, ((PatchDataImpl) bank).getSysex(), patchOffset, 64);
 	}
 
-	public Patch getPatch(Patch bank, int patchNum) {
+	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
 		byte bankSysexNibbles[] = new byte[64];
 		byte bankSysex[] = new byte[32];
 		byte sysex[] = new byte[31];
@@ -107,7 +107,7 @@ public class MKS50PatchBankDriver extends BankDriver {
 		sysex[6] = (byte) 0x01;
 		sysex[30] = (byte) 0xF7;
 		int patchOffset = getPatchStart(patchNum);
-		System.arraycopy(((Patch) bank).getSysex(), patchOffset, bankSysexNibbles, 0, 64);
+		System.arraycopy(((PatchDataImpl) bank).getSysex(), patchOffset, bankSysexNibbles, 0, 64);
 
 		// convert bank patch (31 bytes, lo/hi nibble) to single patch (46 bytes)
 		for (int i = 0; i < 32; i++) {
@@ -144,15 +144,15 @@ public class MKS50PatchBankDriver extends BankDriver {
 			sysex[20 + i] = (byte) (bankSysex[i + 11] & 0x3F);
 		}
 
-		return new Patch(sysex);
+		return new PatchDataImpl(sysex);
 	}
 
-	public String getPatchName(Patch p, int patchNum) {
+	public String getPatchName(PatchDataImpl p, int patchNum) {
 		byte bankSysexNibbles[] = new byte[64];
 		byte bankSysex[] = new byte[32];
 		char patchName[] = new char[10];
 		int patchOffset = getPatchStart(patchNum);
-		System.arraycopy(((Patch) p).getSysex(), patchOffset, bankSysexNibbles, 0, 64);
+		System.arraycopy(((PatchDataImpl) p).getSysex(), patchOffset, bankSysexNibbles, 0, 64);
 		for (int i = 0; i < 32; i++) {
 			bankSysex[i] = (byte) (bankSysexNibbles[i * 2] | bankSysexNibbles[i * 2 + 1] << 4);
 		}
@@ -163,7 +163,7 @@ public class MKS50PatchBankDriver extends BankDriver {
 		return new String(patchName);
 	}
 
-	protected void setPatchName(Patch bank, int patchNum, String name) {
+	public void setPatchName(PatchDataImpl bank, int patchNum, String name) {
 		// do nothing
 	}
 

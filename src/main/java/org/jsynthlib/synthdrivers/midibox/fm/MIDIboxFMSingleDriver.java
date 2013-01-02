@@ -27,12 +27,12 @@ package org.jsynthlib.synthdrivers.midibox.fm;
 import javax.swing.JOptionPane;
 
 import org.jsynthlib.PatchBayApplication;
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.DriverUtil;
 
-public class MIDIboxFMSingleDriver extends Driver {
+public class MIDIboxFMSingleDriver extends SynthDriverPatchImpl {
 	private byte sysex_type;
 	private int num_patches;
 
@@ -78,12 +78,12 @@ public class MIDIboxFMSingleDriver extends Driver {
 					new SysexHandler.NameValue("patchNum", patchNum)));
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
-		((Patch) p).getSysex()[5] = (byte) ((getDeviceID() - 1) & 0x7f);
-		((Patch) p).getSysex()[6] = (byte) 0x02;
-		((Patch) p).getSysex()[7] = (byte) sysex_type;
-		((Patch) p).getSysex()[8] = (byte) (bankNum);
-		((Patch) p).getSysex()[9] = (byte) (patchNum);
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
+		((PatchDataImpl) p).getSysex()[5] = (byte) ((getDeviceID() - 1) & 0x7f);
+		((PatchDataImpl) p).getSysex()[6] = (byte) 0x02;
+		((PatchDataImpl) p).getSysex()[7] = (byte) sysex_type;
+		((PatchDataImpl) p).getSysex()[8] = (byte) (bankNum);
+		((PatchDataImpl) p).getSysex()[9] = (byte) (patchNum);
 		sendPatchWorker(p);
 		try {
 			Thread.sleep(100);
@@ -91,10 +91,10 @@ public class MIDIboxFMSingleDriver extends Driver {
 		}
 	}
 
-	public void sendPatch(Patch p) {
-		((Patch) p).getSysex()[5] = (byte) ((getDeviceID() - 1) & 0x7f);
-		((Patch) p).getSysex()[6] = (byte) 0x02;
-		((Patch) p).getSysex()[7] = (byte) sysex_type;
+	public void sendPatch(PatchDataImpl p) {
+		((PatchDataImpl) p).getSysex()[5] = (byte) ((getDeviceID() - 1) & 0x7f);
+		((PatchDataImpl) p).getSysex()[6] = (byte) 0x02;
+		((PatchDataImpl) p).getSysex()[7] = (byte) sysex_type;
 
 		sendPatchWorker(p);
 	}

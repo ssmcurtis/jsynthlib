@@ -9,7 +9,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.jsynthlib.menu.patch.IPatch;
+import org.jsynthlib.model.patch.Patch;
 
 /**
  * Spinner SysexWidget.
@@ -21,7 +21,7 @@ public class SpinnerWidget extends SysexWidget {
 	protected JTextField text;
 	protected JSpinner spinner;
 
-	public SpinnerWidget(IPatch patch, IParameter param) {
+	public SpinnerWidget(Patch patch, IParameter param) {
 		super(patch, param);
 
 		base = 0;
@@ -47,7 +47,7 @@ public class SpinnerWidget extends SysexWidget {
 	 * @param sender
 	 *            sysexSender for transmitting the value at editing the parameter
 	 */
-	public SpinnerWidget(String label, IPatch patch, int min, int max, int base, IParamModel pmodel, ISender sender) {
+	public SpinnerWidget(String label, Patch patch, int min, int max, int base, IParamModel pmodel, ISender sender) {
 		super(label, patch, min, max, pmodel, sender);
 		this.base = base;
 

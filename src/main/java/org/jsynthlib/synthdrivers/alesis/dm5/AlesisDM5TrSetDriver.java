@@ -21,17 +21,17 @@
 
 package org.jsynthlib.synthdrivers.alesis.dm5;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 /**
  * Alesis DM5 Trigger Setup Driver.
  * 
  * @author Jeff Weber
  */
-public class AlesisDM5TrSetDriver extends Driver {
+public class AlesisDM5TrSetDriver extends SynthDriverPatchImpl {
 
 	/**
 	 * Alesis DM5 Trigger Setup Driver.
@@ -91,7 +91,7 @@ public class AlesisDM5TrSetDriver extends Driver {
 	 * Calculates the checksum for the DM5. Equal to the mod 128 of the sum of all the bytes from offset header+1 to
 	 * offset total patchlength-3.
 	 */
-	protected void calculateChecksum(Patch patch, int start, int end, int offset) {
+	protected void calculateChecksum(PatchDataImpl patch, int start, int end, int offset) {
 		int sum = 0;
 
 		for (int i = start; i <= end; i++) {
@@ -110,8 +110,8 @@ public class AlesisDM5TrSetDriver extends Driver {
 	/**
 	 * Creates a new trigger setup patch with default values.
 	 */
-	protected Patch createNewPatch() {
-		Patch p = new Patch(NEW_SYSEX, this);
+	protected PatchDataImpl createNewPatch() {
+		PatchDataImpl p = new PatchDataImpl(NEW_SYSEX, this);
 		calculateChecksum(p);
 		return p;
 	}
@@ -119,7 +119,7 @@ public class AlesisDM5TrSetDriver extends Driver {
 	/**
 	 * Opens an edit window on the specified patch.
 	 */
-	protected JSLFrame editPatch(Patch p) {
-		return new AlesisDM5TrSetEditor((Patch) p);
+	public JSLFrame editPatch(PatchDataImpl p) {
+		return new AlesisDM5TrSetEditor((PatchDataImpl) p);
 	}
 }

@@ -23,10 +23,10 @@ package org.jsynthlib.synthdrivers.yamaha.ub99;
 
 import javax.sound.midi.SysexMessage;
 
-import org.jsynthlib.menu.patch.Converter;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.driver.ConverterImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
-public class YamahaUB99BankDumpConverter extends Converter {
+public class YamahaUB99BankDumpConverter extends ConverterImpl {
 
 	private final YamahaUB99Driver singleDriver;
 
@@ -49,7 +49,7 @@ public class YamahaUB99BankDumpConverter extends Converter {
 		return ok;
 	}
 
-	public Patch[] extractPatch(Patch p) {
+	public PatchDataImpl[] extractPatch(PatchDataImpl p) {
 		byte[] header = { 85, 66, 57, 57, 32, 86, 49, 46, 48, 48 };
 		byte[] sysex = new byte[YamahaUB99Const.BANK_SIZE];
 		System.arraycopy(header, 0, sysex, 0, header.length);
@@ -87,8 +87,8 @@ public class YamahaUB99BankDumpConverter extends Converter {
 
 		}
 
-		Patch[] newPatchArray = new Patch[1];
-		newPatchArray[0] = new Patch(sysex, new YamahaUB99BankDriver(singleDriver));
+		PatchDataImpl[] newPatchArray = new PatchDataImpl[1];
+		newPatchArray[0] = new PatchDataImpl(sysex, new YamahaUB99BankDriver(singleDriver));
 		return newPatchArray;
 	}
 

@@ -11,17 +11,17 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.KnobLookupWidget;
 import org.jsynthlib.widgets.KnobWidget;
+import org.jsynthlib.widgets.ParamModel;
 
 /**
  * Effects panel contains Reverberation, Variation and Insertion.
  */
 class EffectsWindow {
-	protected Patch p;
+	protected PatchDataImpl p;
 
 	static final String[] mReverbs = { "No effect", "Hall 1", "Hall 2", "Room 1", "Room 2", "Room 3", "Stage 1",
 			"Stage 2", "Plate", "White room", "Tunnel", "Basement", "Canyon", "Delay LCR", "Delay L,R", "Echo",
@@ -575,7 +575,7 @@ class EffectsWindow {
 	private KnobWidget mVariationWidgets[] = new KnobWidget[16];
 	private KnobWidget mInsertionWidgets[] = new KnobWidget[16];
 
-	EffectsWindow(Patch aPatch) {
+	EffectsWindow(PatchDataImpl aPatch) {
 		p = aPatch;
 	}
 

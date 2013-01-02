@@ -27,20 +27,20 @@
 
 package org.jsynthlib.synthdrivers.roland.mt32;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.widgets.ParamModel;
 
 class MT32Model extends ParamModel {
 	private int bitmask;
 	private int mult;
 
-	public MT32Model(Patch p, int offset) {
+	public MT32Model(PatchDataImpl p, int offset) {
 		super(p, offset + 8);
 		bitmask = 255;
 		mult = 1;
 	}
 
-	public MT32Model(Patch p, int offset, int b) {
+	public MT32Model(PatchDataImpl p, int offset, int b) {
 		super(p, offset + 8);
 		ofs = offset + 8;
 		patch = p;

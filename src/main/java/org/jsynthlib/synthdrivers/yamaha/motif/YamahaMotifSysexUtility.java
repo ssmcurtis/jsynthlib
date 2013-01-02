@@ -1,7 +1,7 @@
 package org.jsynthlib.synthdrivers.yamaha.motif;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 public abstract class YamahaMotifSysexUtility {
 
@@ -97,7 +97,7 @@ public abstract class YamahaMotifSysexUtility {
 				&& setParameter(sysex, address + 1, value & 127, offset);
 	}
 
-	public static void splitAndSendBulk(byte[] sysex, Driver driver, int deviceid) {
+	public static void splitAndSendBulk(byte[] sysex, SynthDriverPatchImpl driver, int deviceid) {
 		byte[] msg;
 		for (int size = 0, offset = 0; offset <= sysex.length - SYSEX_OVERHEAD; offset += size + SYSEX_OVERHEAD) {
 			size = getSize(sysex, offset);
@@ -107,7 +107,7 @@ public abstract class YamahaMotifSysexUtility {
 			try {
 				driver.send(msg);
 			} catch (Exception e) {
-				ErrorMsg.reportStatus(e);
+				ErrorMsgUtil.reportStatus(e);
 			}
 		}
 	}

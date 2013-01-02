@@ -31,7 +31,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 
-import org.jsynthlib.menu.patch.IPatch;
+import org.jsynthlib.model.patch.Patch;
 import org.jsynthlib.widgets.SysexWidget;
 
 /**
@@ -58,7 +58,7 @@ public class MultiWidget extends SysexWidget {
 	 * @param sender
 	 *            Sender
 	 */
-	public MultiWidget(MultiWidgetParams[] params, IPatch patch, IParamModel pmodel, ISender sender) {
+	public MultiWidget(MultiWidgetParams[] params, Patch patch, IParamModel pmodel, ISender sender) {
 		super("", patch, pmodel, sender);
 
 		int numberOfCheckBoxes = 0;

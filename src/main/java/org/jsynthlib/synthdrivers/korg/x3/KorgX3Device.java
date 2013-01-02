@@ -2,7 +2,7 @@ package org.jsynthlib.synthdrivers.korg.x3;
 
 import java.util.prefs.Preferences;
 
-import org.jsynthlib.menu.patch.Device;
+import org.jsynthlib.model.device.Device;
 
 /**
  * This class is a device driver for Korg X3 -synthesizer to be used in JSynthLib-program. Might work directly with Korg

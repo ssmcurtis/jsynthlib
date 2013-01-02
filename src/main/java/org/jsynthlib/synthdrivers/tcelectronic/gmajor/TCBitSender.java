@@ -21,16 +21,16 @@
 
 package org.jsynthlib.synthdrivers.tcelectronic.gmajor;
 
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.SysexSender;
 
 class TCBitSender extends SysexSender {
 	int offs, delta;
 	int mask;
 	int shift;
-	Patch patch;
+	PatchDataImpl patch;
 
-	public TCBitSender(Patch iPatch, int iParam, int iMask) {
+	public TCBitSender(PatchDataImpl iPatch, int iParam, int iMask) {
 		patch = iPatch;
 		offs = iParam;
 
@@ -46,7 +46,7 @@ class TCBitSender extends SysexSender {
 		}
 	}
 
-	public TCBitSender(Patch iPatch, int iParam, int iMask, int idelta) {
+	public TCBitSender(PatchDataImpl iPatch, int iParam, int iMask, int idelta) {
 		this(iPatch, iParam, iMask);
 		delta = idelta;
 	}

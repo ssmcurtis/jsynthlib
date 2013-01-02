@@ -21,7 +21,7 @@
 
 package org.jsynthlib.synthdrivers.alesis.dm5;
 
-import org.jsynthlib.menu.patch.IPatch;
+import org.jsynthlib.model.patch.Patch;
 import org.jsynthlib.widgets.ComboBoxWidget;
 
 /**
@@ -37,7 +37,7 @@ class DM5ComboBoxWidget extends ComboBoxWidget {
 	/**
 	 * Constructs a new DM5ComboBoxWidget given the standard parameters for a JSynthLib ComboBoxWidget.
 	 */
-	DM5ComboBoxWidget(String label, IPatch patch, IParamModel pmodel, ISender sender, Object[] options) {
+	DM5ComboBoxWidget(String label, Patch patch, IParamModel pmodel, ISender sender, Object[] options) {
 		super(label, patch, 0, pmodel, sender, options);
 		cb.setPrototypeDisplayValue("MMMMMMMMMMMMMM");
 		cb.setMaximumRowCount(30);

@@ -29,13 +29,13 @@ import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-import org.jsynthlib.menu.patch.IPatchDriver;
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.driver.SynthDriverPatch;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.KnobWidget;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.PatchNameWidget;
 import org.jsynthlib.widgets.SysexSender;
 
@@ -147,7 +147,7 @@ public class Line6Pod20SingleEditor extends PatchEditorFrame {
 	private CheckBoxWidget brightSwitch;
 
 	/** Constructs a Line6Pod20SingleEditor for the selected patch. */
-	Line6Pod20SingleEditor(Patch patch) {
+	Line6Pod20SingleEditor(PatchDataImpl patch) {
 		super("Line 6 POD 2.0 Single Editor", patch);
 		line6EditPanel = new JPanel();
 		line6EditPanel.setLayout(new BoxLayout(line6EditPanel, BoxLayout.X_AXIS));
@@ -173,14 +173,14 @@ public class Line6Pod20SingleEditor extends PatchEditorFrame {
 	/**
 	 * Adds the patch name panel to the left edit panel.
 	 */
-	private void addPatchNamePanel(JPanel parentPanel, Patch patch) {
+	private void addPatchNamePanel(JPanel parentPanel, PatchDataImpl patch) {
 		JPanel patchNamePanel = new JPanel();
 		parentPanel.add(patchNamePanel);
 		addWidget(patchNamePanel, new PatchNameWidget("Program Name ", patch), 0, 0, 1, 1, 1);
 	}
 
 	/** Adds the amp select panel. */
-	private void addAmpPane(JPanel parentPanel, Patch patch) {
+	private void addAmpPane(JPanel parentPanel, PatchDataImpl patch) {
 		JPanel modelPane = new JPanel();
 		modelPane.setLayout(new BoxLayout(modelPane, BoxLayout.Y_AXIS));
 		parentPanel.add(modelPane);
@@ -252,7 +252,7 @@ public class Line6Pod20SingleEditor extends PatchEditorFrame {
 	}
 
 	/** Adds the stompbox panel. */
-	private void addStompBoxPane(JPanel parentPanel, Patch patch) {
+	private void addStompBoxPane(JPanel parentPanel, PatchDataImpl patch) {
 		JPanel stompBoxPane = new JPanel();
 		stompBoxPane.setLayout(new BoxLayout(stompBoxPane, BoxLayout.X_AXIS));
 		parentPanel.add(stompBoxPane, gbc);
@@ -303,7 +303,7 @@ public class Line6Pod20SingleEditor extends PatchEditorFrame {
 	}
 
 	/** Adds the effects panel. */
-	private void addEffectsPanel(JPanel parentPanel, Patch patch) {
+	private void addEffectsPanel(JPanel parentPanel, PatchDataImpl patch) {
 		JPanel effectsPanel = new JPanel();
 		effectsPanel.setLayout(new BoxLayout(effectsPanel, BoxLayout.Y_AXIS));
 		effParmsPanel = new JPanel(new CardLayout());
@@ -317,7 +317,7 @@ public class Line6Pod20SingleEditor extends PatchEditorFrame {
 	}
 
 	/** Creates the different panels for each of the effects configurations. */
-	private void createCards(JPanel parentPanel, Patch patch) {
+	private void createCards(JPanel parentPanel, PatchDataImpl patch) {
 		// Panel 1--Compressor
 		JPanel panel1 = new JPanel();
 		setupCompressorPanel(panel1, patch);
@@ -357,7 +357,7 @@ public class Line6Pod20SingleEditor extends PatchEditorFrame {
 	}
 
 	/** Sets up the compressor panel. */
-	private void setupCompressorPanel(JPanel parentPanel, Patch patch) {
+	private void setupCompressorPanel(JPanel parentPanel, PatchDataImpl patch) {
 		parentPanel.setLayout(new BoxLayout(parentPanel, BoxLayout.Y_AXIS));
 		JPanel btnPanel = new JPanel();
 		parentPanel.add(btnPanel);
@@ -367,7 +367,7 @@ public class Line6Pod20SingleEditor extends PatchEditorFrame {
 	}
 
 	/** Sets up the tremelo panel. */
-	private void setupTremeloPanel(JPanel parentPanel, Patch patch) {
+	private void setupTremeloPanel(JPanel parentPanel, PatchDataImpl patch) {
 		parentPanel.setLayout(new BoxLayout(parentPanel, BoxLayout.Y_AXIS));
 		JPanel btnPanel = new JPanel();
 		parentPanel.add(btnPanel);
@@ -382,7 +382,7 @@ public class Line6Pod20SingleEditor extends PatchEditorFrame {
 	}
 
 	/** Sets up the chorus panel. */
-	private void setupChorusPanel(JPanel parentPanel, Patch patch) {
+	private void setupChorusPanel(JPanel parentPanel, PatchDataImpl patch) {
 		parentPanel.setLayout(new BoxLayout(parentPanel, BoxLayout.Y_AXIS));
 		JPanel btnPanel = new JPanel();
 		parentPanel.add(btnPanel);
@@ -401,7 +401,7 @@ public class Line6Pod20SingleEditor extends PatchEditorFrame {
 	}
 
 	/** Sets up the flanger panel. */
-	private void setupFlangerPanel(JPanel parentPanel, Patch patch) {
+	private void setupFlangerPanel(JPanel parentPanel, PatchDataImpl patch) {
 		parentPanel.setLayout(new BoxLayout(parentPanel, BoxLayout.Y_AXIS));
 		JPanel btnPanel = new JPanel();
 		parentPanel.add(btnPanel);
@@ -419,7 +419,7 @@ public class Line6Pod20SingleEditor extends PatchEditorFrame {
 				52 + pgmDumpheaderSize), new CCSender(53)), 6, 0, 1, 1, 33);
 	}
 
-	private void setupRotaryPanel(JPanel parentPanel, Patch patch) {
+	private void setupRotaryPanel(JPanel parentPanel, PatchDataImpl patch) {
 		parentPanel.setLayout(new BoxLayout(parentPanel, BoxLayout.Y_AXIS));
 		JPanel btnPanel = new JPanel();
 		parentPanel.add(btnPanel);
@@ -442,13 +442,13 @@ public class Line6Pod20SingleEditor extends PatchEditorFrame {
 	}
 
 	/** Sets up the swell panel. */
-	private void setupSwellPanel(JPanel parentPanel, Patch patch) {
+	private void setupSwellPanel(JPanel parentPanel, PatchDataImpl patch) {
 		addWidget(parentPanel, new KnobWidget("Attack Time", patch, 0, 127, 0, new ScaledParamModel(patch,
 				48 + pgmDumpheaderSize, 127, 63), new CCSender(49)), 6, 0, 1, 1, 37);
 	}
 
 	/** Sets up the reverb panel. */
-	private void addReverbPanel(JPanel parentPanel, Patch patch) {
+	private void addReverbPanel(JPanel parentPanel, PatchDataImpl patch) {
 		JPanel reverbPanel = new JPanel();
 		reverbPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.RAISED), "Reverb", TitledBorder.CENTER,
 				TitledBorder.CENTER));
@@ -478,7 +478,7 @@ public class Line6Pod20SingleEditor extends PatchEditorFrame {
 	}
 
 	/** Sets up the delay panel. */
-	private void addDelayPanel(JPanel parentPanel, Patch patch) {
+	private void addDelayPanel(JPanel parentPanel, PatchDataImpl patch) {
 		JPanel delayPanel = new JPanel();
 		delayPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.RAISED), "Delay", TitledBorder.CENTER,
 				TitledBorder.CENTER));
@@ -510,12 +510,12 @@ public class Line6Pod20SingleEditor extends PatchEditorFrame {
 	 * instead. This causes the POD to retain all the settings in the editor.
 	 */
 	private class AmpModelSender extends SysexSender {
-		Patch patch;
+		PatchDataImpl patch;
 
 		/**
 		 * Constructs a AmpModelSender given the patch.
 		 */
-		public AmpModelSender(Patch p) {
+		public AmpModelSender(PatchDataImpl p) {
 			patch = p;
 		}
 
@@ -523,7 +523,7 @@ public class Line6Pod20SingleEditor extends PatchEditorFrame {
 		 * calls the setCtrlVisibility method, which determines if the drive 2 knob, presence knob, and bright checkbox
 		 * should be visible or not for the selected amp model and sends the patch as an edit buffer patch.
 		 */
-		public void send(IPatchDriver driver, int value) {
+		public void send(SynthDriverPatch driver, int value) {
 			setCtrlVisibility(value);
 			((Line6Pod20SingleDriver) driver).sendPatch(patch);
 		}
@@ -536,7 +536,7 @@ public class Line6Pod20SingleEditor extends PatchEditorFrame {
 	 */
 	class AmpModelModel extends ParamModel {
 		/** Constructs an AmpModelModel. */
-		private AmpModelModel(Patch p, int o) {
+		private AmpModelModel(PatchDataImpl p, int o) {
 			super(p, o);
 		}
 
@@ -614,7 +614,7 @@ public class Line6Pod20SingleEditor extends PatchEditorFrame {
 		 * Translates the value sent by the comboBoxWidget to the CC parameter for the effect model and sends the CC
 		 * message.
 		 */
-		public void send(IPatchDriver driver, int value) {
+		public void send(SynthDriverPatch driver, int value) {
 			setEffectPane(value);
 			super.send(driver, effectTranslate[value]);
 		}
@@ -626,7 +626,7 @@ public class Line6Pod20SingleEditor extends PatchEditorFrame {
 	 */
 	class EffectModel extends ParamModel {
 		/** Constructs a EffectModel. */
-		private EffectModel(Patch p, int o) {
+		private EffectModel(PatchDataImpl p, int o) {
 			super(p, o);
 		}
 

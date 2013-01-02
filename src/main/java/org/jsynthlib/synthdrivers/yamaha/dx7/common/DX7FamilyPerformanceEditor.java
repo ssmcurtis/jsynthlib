@@ -33,10 +33,10 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.ComboBoxWidget;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.PatchNameWidget;
 import org.jsynthlib.widgets.ScrollBarWidget;
 import org.jsynthlib.widgets.SysexSender;
@@ -103,13 +103,13 @@ public class DX7FamilyPerformanceEditor extends PatchEditorFrame {
 	private static final String[] AssignName = new String[] { "Off", "Pitch", "Amplitude", "Pitch + Amplitude",
 			"EG Bias", "Pitch + EG Bias", "Pitch + Amplitude", "Pitch + Amplitude + EG Bias" };
 
-	public DX7FamilyPerformanceEditor(String name, Patch patch) {
+	public DX7FamilyPerformanceEditor(String name, PatchDataImpl patch) {
 		super(name, patch);
 
 		buildEditor(patch);
 	}
 
-	protected void buildEditor(Patch patch) {
+	protected void buildEditor(PatchDataImpl patch) {
 
 		/*
 		 * Performance Parameter - Common settings
@@ -303,35 +303,35 @@ public class DX7FamilyPerformanceEditor extends PatchEditorFrame {
 		pack();
 	}
 
-	private boolean isDX1(Patch p) {
+	private boolean isDX1(PatchDataImpl p) {
 		if (p.getDevice().getModelName() == "DX1")
 			return true;
 		else
 			return false;
 	}
 
-	private boolean isDX5(Patch p) {
+	private boolean isDX5(PatchDataImpl p) {
 		if (p.getDevice().getModelName() == "DX5")
 			return true;
 		else
 			return false;
 	}
 
-	private boolean isDX7(Patch p) {
+	private boolean isDX7(PatchDataImpl p) {
 		if (p.getDevice().getModelName() == "DX7")
 			return true;
 		else
 			return false;
 	}
 
-	private boolean isTX7(Patch p) {
+	private boolean isTX7(PatchDataImpl p) {
 		if (p.getDevice().getModelName() == "TX7")
 			return true;
 		else
 			return false;
 	}
 
-	private boolean isTX816(Patch p) {
+	private boolean isTX816(PatchDataImpl p) {
 		if (p.getDevice().getModelName() == "TX816")
 			return true;
 		else
@@ -347,7 +347,7 @@ public class DX7FamilyPerformanceEditor extends PatchEditorFrame {
 	 * So we don't need to write an own editor for the DX7!
 	 */
 	class PerformanceSender extends SysexSender {
-		Patch patch;
+		PatchDataImpl patch;
 		int parameter;
 		byte[] b = new byte[7];
 		// translation table TX7->DX7 for Sensitivity parameters
@@ -355,7 +355,7 @@ public class DX7FamilyPerformanceEditor extends PatchEditorFrame {
 		byte[] TX2DXsensitivity = new byte[] { 0x00, 0x06, 0x0d, 0x13, 0x1A, 0x21, 0x27, 0x2E, 0x35, 0x3B, 0x42, 0x48,
 				0x4F, 0x56, 0x5C, 0x63 };
 
-		public PerformanceSender(Patch p, int param) {
+		public PerformanceSender(PatchDataImpl p, int param) {
 			patch = p;
 
 			if (isDX7(patch)) {

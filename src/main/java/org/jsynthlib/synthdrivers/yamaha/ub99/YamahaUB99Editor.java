@@ -38,13 +38,13 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.synthdrivers.yamaha.ub99.format.DoubleFormat;
 import org.jsynthlib.synthdrivers.yamaha.ub99.format.IFormat;
 import org.jsynthlib.synthdrivers.yamaha.ub99.format.IntFormat;
 import org.jsynthlib.synthdrivers.yamaha.ub99.format.ListFormat;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.tools.ErrorMsgUtil;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.PatchNameWidget;
@@ -329,7 +329,7 @@ class YamahaUB99Editor extends PatchEditorFrame {
 
 	private String[] cutFilterString;
 
-	private Patch patch;
+	private PatchDataImpl patch;
 	private JTabbedPane oTabs;
 	private JPanel knobPnl;
 
@@ -338,10 +338,10 @@ class YamahaUB99Editor extends PatchEditorFrame {
 	private Vector RegisterVector = new Vector(128);
 	private Vector KnobVector = new Vector(128);
 
-	public YamahaUB99Editor(Patch iPatch) {
+	public YamahaUB99Editor(PatchDataImpl iPatch) {
 		super("Yamaha UB99 Editor", iPatch);
 
-		patch = (Patch) iPatch;
+		patch = (PatchDataImpl) iPatch;
 
 		System.arraycopy(hipassString, 1, lshFreqString, 0, 104);
 		System.arraycopy(lopassString, 0, hshFreqString, 0, 101);
@@ -393,7 +393,7 @@ class YamahaUB99Editor extends PatchEditorFrame {
 			gbc.fill = fill;
 			parent.add(widget, gbc);
 		} catch (Exception e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 	}
 
@@ -789,7 +789,7 @@ class YamahaUB99Editor extends PatchEditorFrame {
 			break;
 
 		default:
-			ErrorMsg.reportStatus("Switch value " + index + " not handled! ");
+			ErrorMsgUtil.reportStatus("Switch value " + index + " not handled! ");
 		}
 		oTabs.setVisible(true);
 		KnobVector.add(new IdItem(107, "No Assign"));
@@ -797,7 +797,7 @@ class YamahaUB99Editor extends PatchEditorFrame {
 	}
 
 	private void setDefaultValues(int index) {
-		Patch p;
+		PatchDataImpl p;
 		p = ((YamahaUB99Driver) patch.getDriver()).getDefaultValues(patch, index);
 		if (p != null) {
 			patch = p;

@@ -8,7 +8,7 @@ package org.jsynthlib.synthdrivers.kawai.k5000;
 
 import java.util.prefs.Preferences;
 
-import org.jsynthlib.menu.patch.Device;
+import org.jsynthlib.model.device.Device;
 
 /**
  * @version $Id$

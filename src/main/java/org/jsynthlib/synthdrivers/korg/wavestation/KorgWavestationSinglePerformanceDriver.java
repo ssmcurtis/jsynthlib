@@ -1,9 +1,9 @@
 package org.jsynthlib.synthdrivers.korg.wavestation;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 /**
  * Driver for Korg Wavestation Single Performances
@@ -13,7 +13,7 @@ import org.jsynthlib.tools.ErrorMsg;
  * @author Gerrit Gehnen
  * @version $Id$
  */
-public class KorgWavestationSinglePerformanceDriver extends Driver {
+public class KorgWavestationSinglePerformanceDriver extends SynthDriverPatchImpl {
 
 	public KorgWavestationSinglePerformanceDriver() {
 		super("Single Performance", "Gerrit Gehnen");
@@ -35,7 +35,7 @@ public class KorgWavestationSinglePerformanceDriver extends Driver {
 
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		setBankNum(bankNum);
 		setPatchNum(patchNum);
 
@@ -44,11 +44,11 @@ public class KorgWavestationSinglePerformanceDriver extends Driver {
 		} catch (Exception e) {
 		}
 
-		((Patch) p).getSysex()[2] = (byte) (0x30 + getChannel() - 1);
+		((PatchDataImpl) p).getSysex()[2] = (byte) (0x30 + getChannel() - 1);
 		try {
-			send(((Patch) p).getSysex());
+			send(((PatchDataImpl) p).getSysex());
 		} catch (Exception e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 
 		try {
@@ -69,23 +69,23 @@ public class KorgWavestationSinglePerformanceDriver extends Driver {
 		try {
 			send(sysex);
 		} catch (Exception e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 
 	}
 
-	public void sendPatch(Patch p) {
-		((Patch) p).getSysex()[2] = (byte) (0x30 + getChannel() - 1); // the only thing to do is to set the byte to 3n
+	public void sendPatch(PatchDataImpl p) {
+		((PatchDataImpl) p).getSysex()[2] = (byte) (0x30 + getChannel() - 1); // the only thing to do is to set the byte to 3n
 																		// (n = channel)
 
 		try {
-			send(((Patch) p).getSysex());
+			send(((PatchDataImpl) p).getSysex());
 		} catch (Exception e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[1085];
 		sysex[0] = (byte) 0xF0;
 		sysex[1] = (byte) 0x42;
@@ -95,13 +95,13 @@ public class KorgWavestationSinglePerformanceDriver extends Driver {
 		sysex[5] = (byte) 0; /* bankNum */
 		sysex[6] = (byte) 0; /* patchNum */
 		sysex[1084] = (byte) 0xF7;
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		setPatchName(p, "New Patch");
 		calculateChecksum(p);
 		return p;
 	}
 
-	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
+	protected void calculateChecksum(PatchDataImpl p, int start, int end, int ofs) {
 		int i;
 		int sum = 0;
 

@@ -21,8 +21,8 @@
 
 package org.jsynthlib.synthdrivers.alesis.dm5;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.widgets.ParamModel;
 
 /**
  * The BitModel class allows a control to set the individual bits in a byte of the patch.sysex record. This is used when
@@ -49,7 +49,7 @@ class BitModel extends ParamModel {
 	/**
 	 * Constructs a BitModel given the patch, the offset into the sysex record, and the mask representing the parameter.
 	 */
-	BitModel(Patch p, int offset, byte mask) {
+	BitModel(PatchDataImpl p, int offset, byte mask) {
 		super(p, offset);
 		this.mask = mask;
 

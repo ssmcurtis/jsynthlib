@@ -8,15 +8,15 @@
 
 package org.jsynthlib.synthdrivers.roland.xv5080;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 //======================================================================================================================
 // Class: RolandXV5080PerfDriver
 //======================================================================================================================
 
-public class RolandXV5080PerfDriver extends Driver {
+public class RolandXV5080PerfDriver extends SynthDriverPatchImpl {
 	final static int[] PATCH_SYSEX_START = new int[] { 0, 65, 222, 286, 381, 405, 429, 453, 477, 501, 525, 549, 573,
 			597, 621, 645, 669, 693, 717, 741, 765, 810, 855, 900, 945, 990, 1035, 1080, 1125, 1170, 1215, 1260, 1305,
 			1350, 1395, 1440, 1485, 1530, 1575, 1620, 1665, 1710, 1755, 1800, 1845, 1890, 1935, 1980, 2025, 2070, 2115,
@@ -70,8 +70,8 @@ public class RolandXV5080PerfDriver extends Driver {
 	// RolandXV5080PerfDriver->storePatch
 	// ----------------------------------------------------------------------------------------------------------------------
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
-		updatePatchNum((Patch) p, patchNum);
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
+		updatePatchNum((PatchDataImpl) p, patchNum);
 		calculateChecksum(p);
 
 		sendPatchWorker(p);
@@ -87,7 +87,7 @@ public class RolandXV5080PerfDriver extends Driver {
 	// RolandXV5080PerfDriver->sendPatch
 	// ----------------------------------------------------------------------------------------------------------------------
 
-	public void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		storePatch(p, 0, 0);
 	}
 
@@ -110,7 +110,7 @@ public class RolandXV5080PerfDriver extends Driver {
 	// RolandXV5080PerfDriver->updatePatchNum
 	// ----------------------------------------------------------------------------------------------------------------------
 
-	public void updatePatchNum(Patch p, int patchNum) {
+	public void updatePatchNum(PatchDataImpl p, int patchNum) {
 		for (int i = 0; i < PATCH_SYSEX_START.length; i++)
 			p.getSysex()[PATCH_SYSEX_START[i] + PATCH_NUMBER_OFFSET] = (byte) (patchNum);
 	}
@@ -119,12 +119,12 @@ public class RolandXV5080PerfDriver extends Driver {
 	// RolandXV5080PerfDriver->calculateChecksum(Patch)
 	// ----------------------------------------------------------------------------------------------------------------------
 
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 		for (int i = 0; i < PATCH_SYSEX_START.length; i++) {
 			int checksumStart = PATCH_SYSEX_START[i] + CHECKSUM_START;
 			int checksumEnd = PATCH_SYSEX_START[i] + PATCH_SYSEX_SIZE[i] - 3;
 			int checksumOffset = checksumEnd + 1;
-			RolandXV5080PatchDriver.calculateChecksum(((Patch) p).getSysex(), checksumStart, checksumEnd,
+			RolandXV5080PatchDriver.calculateChecksum(((PatchDataImpl) p).getSysex(), checksumStart, checksumEnd,
 					checksumOffset);
 		}
 	}

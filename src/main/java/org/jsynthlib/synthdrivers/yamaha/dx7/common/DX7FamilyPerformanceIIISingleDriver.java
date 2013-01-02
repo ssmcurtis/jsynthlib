@@ -24,12 +24,12 @@
  */
 package org.jsynthlib.synthdrivers.yamaha.dx7.common;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
-public class DX7FamilyPerformanceIIISingleDriver extends Driver {
+public class DX7FamilyPerformanceIIISingleDriver extends SynthDriverPatchImpl {
 	byte[] initSysex;
 	String[] dxPatchNumbers;
 	String[] dxBankNumbers;
@@ -56,21 +56,21 @@ public class DX7FamilyPerformanceIIISingleDriver extends Driver {
 		sysexRequestDump = new SysexHandler("F0 43 @@ 7E 4C 4D 20 20 38 39 35 32 50 45 F7");
 	}
 
-	public Patch createNewPatch() {
-		return new Patch(initSysex, this);
+	public PatchDataImpl createNewPatch() {
+		return new PatchDataImpl(initSysex, this);
 	}
 
-	public JSLFrame editPatch(Patch p) {
+	public JSLFrame editPatch(PatchDataImpl p) {
 		return new DX7FamilyPerformanceIIIEditor(getManufacturerName() + " " + getModelName() + " \"" + getPatchType()
-				+ "\" Editor", (Patch) p);
+				+ "\" Editor", (PatchDataImpl) p);
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {
 		send(sysexRequestDump.toSysexMessage(getChannel() + 0x20));
 	}
 
-	public String getPatchName(Patch p) {
-		Patch ip = (Patch) p;
+	public String getPatchName(PatchDataImpl p) {
+		PatchDataImpl ip = (PatchDataImpl) p;
 		try {
 			byte[] b = new byte[patchNameSize / 2]; // 1 character encoded in 2 bytes!
 
@@ -87,7 +87,7 @@ public class DX7FamilyPerformanceIIISingleDriver extends Driver {
 		}
 	}
 
-	public void setPatchName(Patch p, String name) {
+	public void setPatchName(PatchDataImpl p, String name) {
 		byte[] namebytes = new byte[patchNameSize / 2]; // 1 character encoded in 2 bytes!
 
 		try {
@@ -97,9 +97,9 @@ public class DX7FamilyPerformanceIIISingleDriver extends Driver {
 			namebytes = name.getBytes("US-ASCII");
 
 			for (int i = 0; i < namebytes.length; i++) {
-				((Patch) p).getSysex()[16 + 2 * (96 + i)] = (byte) (DX7FamilyByteEncoding
+				((PatchDataImpl) p).getSysex()[16 + 2 * (96 + i)] = (byte) (DX7FamilyByteEncoding
 						.Value2AsciiHexHigh(namebytes[i]));
-				((Patch) p).getSysex()[16 + 2 * (96 + i) + 1] = (byte) (DX7FamilyByteEncoding
+				((PatchDataImpl) p).getSysex()[16 + 2 * (96 + i) + 1] = (byte) (DX7FamilyByteEncoding
 						.Value2AsciiHexLow(namebytes[i]));
 			}
 		} catch (Exception e) {

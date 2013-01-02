@@ -19,13 +19,13 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.ColumnLayout;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.helper.ColumnLayout;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
-public class NovationNova1SingleDriver extends Driver {
+public class NovationNova1SingleDriver extends SynthDriverPatchImpl {
 
 	public NovationNova1SingleDriver() {
 		super("Single", "Yves Lefebvre");
@@ -51,14 +51,14 @@ public class NovationNova1SingleDriver extends Driver {
 				"121-", "122-", "123-", "124-", "125-", "126-", "127" };
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		byte[] newsysex = new byte[297]; // a dump and write format is one byte longer than an edit buffer dump
-		System.arraycopy(((Patch) p).getSysex(), 0, newsysex, 0, 7);
+		System.arraycopy(((PatchDataImpl) p).getSysex(), 0, newsysex, 0, 7);
 		newsysex[7] = (byte) 0x02;
 		newsysex[8] = (byte) (0x05 + bankNum);
 		newsysex[9] = (byte) (patchNum);
-		System.arraycopy(((Patch) p).getSysex(), 9, newsysex, 10, 296 - 9); // -10);
-		Patch patchtowrite = new Patch(newsysex, this);
+		System.arraycopy(((PatchDataImpl) p).getSysex(), 9, newsysex, 10, 296 - 9); // -10);
+		PatchDataImpl patchtowrite = new PatchDataImpl(newsysex, this);
 		// need to convert to a "patch dump and write" format
 		try {
 			Thread.sleep(100);
@@ -73,26 +73,26 @@ public class NovationNova1SingleDriver extends Driver {
 		setPatchNum(patchNum);
 	}
 
-	public void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		if (NovationNova1PatchSender.bShowMenu == true) {
 			NovationNova1PatchSender.deviceIDoffset = deviceIDoffset;
 			NovationNova1PatchSender.channel = getChannel();
-			NovationNova1PatchSender nps = new NovationNova1PatchSender(null, (Patch) p, this);
+			NovationNova1PatchSender nps = new NovationNova1PatchSender(null, (PatchDataImpl) p, this);
 			nps.setVisible(true);
 		} else {
 			sendPatchWorker(p);
 		}
 	}
 
-	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
+	protected void calculateChecksum(PatchDataImpl p, int start, int end, int ofs) {
 		// no checksum
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[296];
 		System.arraycopy(NovationNova1InitPatch.initpatch, 0, sysex, 0, 296);
 		sysex[6] = (byte) (getChannel() - 1);
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		calculateChecksum(p);
 		return p;
 	}
@@ -113,16 +113,16 @@ public class NovationNova1SingleDriver extends Driver {
 
 class NovationNova1PatchSender extends JDialog {
 	public static boolean bShowMenu = true;
-	public Patch localPatch;
+	public PatchDataImpl localPatch;
 	public static int deviceIDoffset = 0;
 	public static int channel = 0;
 
-	public NovationNova1PatchSender(JFrame Parent, Patch p, Driver driver) {
+	public NovationNova1PatchSender(JFrame Parent, PatchDataImpl p, SynthDriverPatchImpl driver) {
 		super(Parent, "Nova1 Patch Sender", true);
 
 		byte[] newsysex = new byte[296];
 		System.arraycopy(p.getSysex(), 0, newsysex, 0, 296);
-		localPatch = new Patch(newsysex, driver);
+		localPatch = new PatchDataImpl(newsysex, driver);
 
 		JPanel container = new JPanel();
 		container.setLayout(new BorderLayout());
@@ -230,7 +230,7 @@ class NovationNova1PatchSender extends JDialog {
 		try {
 			localPatch.send();
 		} catch (Exception e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 		return;
 	}
@@ -243,7 +243,7 @@ class NovationNova1PatchSender extends JDialog {
 		try {
 			localPatch.send();
 		} catch (Exception e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 		return;
 	}

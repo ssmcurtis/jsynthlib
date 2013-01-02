@@ -46,9 +46,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.EnvelopeWidget;
@@ -96,7 +96,7 @@ class MIDIboxFMPatchEditor extends PatchEditorFrame {
 	ImageIcon wsIcon[] = new ImageIcon[8];
 	ImageIcon algIcon[] = new ImageIcon[4];
 
-	public MIDIboxFMPatchEditor(Patch patch) {
+	public MIDIboxFMPatchEditor(PatchDataImpl patch) {
 		super("MIDIbox FM Patch Editor", patch);
 		gbc.weightx = 0;
 		gbc.weighty = 0;
@@ -228,7 +228,7 @@ class MIDIboxFMPatchEditor extends PatchEditorFrame {
 
 			byte[] cooked_dump = dataModel.getCookedDump();
 			for (int j = 0; j < cooked_dump.length; ++j)
-				cooked_dump[j] = ((Patch) p).getSysex()[10 + 0x80 + j];
+				cooked_dump[j] = ((PatchDataImpl) p).getSysex()[10 + 0x80 + j];
 			dataModel.setCookedDump(cooked_dump);
 
 			table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -849,11 +849,11 @@ class MIDIboxFMPatchEditor extends PatchEditorFrame {
 		byte[] cooked_dump = dataModel.getCookedDump();
 
 		for (int i = 0; i < 4 * 32; ++i) {
-			byte stored_value = ((Patch) p).getSysex()[10 + 0x80 + i];
+			byte stored_value = ((PatchDataImpl) p).getSysex()[10 + 0x80 + i];
 			if (stored_value != cooked_dump[i]) {
 				System.out.println("Wavetable Field changed: " + i);
-				((Patch) p).getSysex()[10 + 0x80 + i] = cooked_dump[i];
-				SlowSender.sendParameter((Driver) ((Patch) p).getDriver(), 0x80 + i, cooked_dump[i], 50);
+				((PatchDataImpl) p).getSysex()[10 + 0x80 + i] = cooked_dump[i];
+				SlowSender.sendParameter((SynthDriverPatchImpl) ((PatchDataImpl) p).getDriver(), 0x80 + i, cooked_dump[i], 50);
 			}
 		}
 	}

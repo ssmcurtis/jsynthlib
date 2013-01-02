@@ -26,12 +26,12 @@ import java.io.UnsupportedEncodingException;
 import javax.swing.JOptionPane;
 
 import org.jsynthlib.PatchBayApplication;
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.DriverUtil;
 
-public class TCElectronicGMajorBankDriver extends BankDriver {
+public class TCElectronicGMajorBankDriver extends SynthDriverBank {
 
 	private static final SysexHandler SYS_REQ = new SysexHandler("F0 00 20 1F 00 48 45 *bankNum* *patchNum* F7");
 
@@ -54,47 +54,47 @@ public class TCElectronicGMajorBankDriver extends BankDriver {
 		singleSize = TCElectronicGMajorConst.SINGLE_SIZE;
 	}
 
-	public String getPatchName(Patch p, int patchNum) {
+	public String getPatchName(PatchDataImpl p, int patchNum) {
 		int nameOfst = singleSize * patchNum + TCElectronicGMajorConst.NAME_OFFSET;
 		try {
-			return new String(((Patch) p).getSysex(), nameOfst, patchNameSize, "US-ASCII");
+			return new String(((PatchDataImpl) p).getSysex(), nameOfst, patchNameSize, "US-ASCII");
 		} catch (UnsupportedEncodingException e) {
 			return "---";
 		}
 	}
 
-	public void setPatchName(Patch p, int patchNum, String name) {
+	public void setPatchName(PatchDataImpl p, int patchNum, String name) {
 		int nameOfst = singleSize * patchNum + TCElectronicGMajorConst.NAME_OFFSET;
 		byte[] namebytes = name.getBytes();
 		for (int i = 0; i < patchNameSize; i++)
-			((Patch) p).getSysex()[nameOfst + i] = namebytes[i];
+			((PatchDataImpl) p).getSysex()[nameOfst + i] = namebytes[i];
 	}
 
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 		for (int i = 0; i < TCElectronicGMajorConst.NUM_PATCH; i++)
 			singleDriver.calculateChecksum(p, (singleSize * i) + TCElectronicGMajorConst.CHECKSUMSTART,
 					(singleSize * i) + TCElectronicGMajorConst.CHECKSUMEND, (singleSize * i)
 							+ TCElectronicGMajorConst.CHECKSUMOFFSET);
 	}
 
-	public void putPatch(Patch bank, Patch p, int patchNum) {
-		System.arraycopy(((Patch) p).getSysex(), 0, ((Patch) bank).getSysex(), singleSize * patchNum, singleSize);
+	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) {
+		System.arraycopy(((PatchDataImpl) p).getSysex(), 0, ((PatchDataImpl) bank).getSysex(), singleSize * patchNum, singleSize);
 		singleDriver.calculateChecksum(bank, (singleSize * patchNum) + TCElectronicGMajorConst.CHECKSUMSTART,
 				(singleSize * patchNum) + TCElectronicGMajorConst.CHECKSUMEND, (singleSize * patchNum)
 						+ TCElectronicGMajorConst.CHECKSUMOFFSET);
 	}
 
-	public Patch getPatch(Patch bank, int patchNum) {
+	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
 		byte[] sysex = new byte[singleSize];
-		System.arraycopy(((Patch) bank).getSysex(), singleSize * patchNum, sysex, 0, singleSize);
+		System.arraycopy(((PatchDataImpl) bank).getSysex(), singleSize * patchNum, sysex, 0, singleSize);
 
-		return new Patch(sysex, singleDriver);
+		return new PatchDataImpl(sysex, singleDriver);
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[singleSize * TCElectronicGMajorConst.NUM_PATCH];
-		Patch bank = new Patch(sysex, this);
-		Patch p = singleDriver.createNewPatch();
+		PatchDataImpl bank = new PatchDataImpl(sysex, this);
+		PatchDataImpl p = singleDriver.createNewPatch();
 		for (int i = 0; i < TCElectronicGMajorConst.NUM_PATCH; i++)
 			putPatch(bank, p, i);
 		return bank;
@@ -110,7 +110,7 @@ public class TCElectronicGMajorBankDriver extends BankDriver {
 		}
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		if (bankNum == 0) {
 			JOptionPane.showMessageDialog(PatchBayApplication.getInstance(),
 					"You cannot store patches in the factory bank.\n\nPlease try the user bank...", "Store Patch",
@@ -119,13 +119,13 @@ public class TCElectronicGMajorBankDriver extends BankDriver {
 		}
 
 		byte[] sysex = new byte[singleSize];
-		Patch tmpPatch = new Patch(sysex, singleDriver);
+		PatchDataImpl tmpPatch = new PatchDataImpl(sysex, singleDriver);
 		for (int i = 0; i < TCElectronicGMajorConst.NUM_PATCH; i++) {
-			System.arraycopy(((Patch) p).getSysex(), singleSize * i, tmpPatch.getSysex(), 0, singleSize);
+			System.arraycopy(((PatchDataImpl) p).getSysex(), singleSize * i, tmpPatch.getSysex(), 0, singleSize);
 
 			// TODO: CREATE FACTORYBANK=0 AND USERBANK=1 CONSTANTS
-			((Patch) tmpPatch).getSysex()[7] = (byte) TCElectronicGMajorUtil.calcBankNum(1, i);
-			((Patch) tmpPatch).getSysex()[8] = (byte) TCElectronicGMajorUtil.calcPatchNum(1, i);
+			((PatchDataImpl) tmpPatch).getSysex()[7] = (byte) TCElectronicGMajorUtil.calcBankNum(1, i);
+			((PatchDataImpl) tmpPatch).getSysex()[8] = (byte) TCElectronicGMajorUtil.calcPatchNum(1, i);
 			sendPatchWorker(tmpPatch);
 			// TODO: SLEEPTIME IN FILE OR MENU OPTION IF I KEEP THIS STORE METHOD
 			try {

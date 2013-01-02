@@ -26,16 +26,16 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.jsynthlib.menu.patch.Device;
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.IConverter;
-import org.jsynthlib.menu.patch.IDriver;
-import org.jsynthlib.menu.patch.IPatch;
-import org.jsynthlib.menu.patch.IPatchDriver;
 import org.jsynthlib.menu.preferences.AppConfig;
+import org.jsynthlib.model.device.Device;
+import org.jsynthlib.model.driver.Converter;
+import org.jsynthlib.model.driver.SynthDriver;
+import org.jsynthlib.model.driver.SynthDriverPatch;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.Patch;
 
 /**
  * Utility Routines for Synth Drivers.
@@ -44,15 +44,12 @@ import org.jsynthlib.menu.preferences.AppConfig;
  * @author Hiroo Hayashi
  */
 public class DriverUtil {
-	// don't have to call constructor for Utility class.
-	private DriverUtil() {
-	}
 
 	/**
 	 * Factory method of Patch. Look up the driver for sysex byte array, and create a patch by using the driver found.
 	 * This is used for a byte array read from a Sysex file, for which a Driver is not known.
 	 */
-	public static IPatch[] createPatches(byte[] sysex, String filename) {
+	public static Patch[] createPatches(byte[] sysex, String filename) {
 		return createPatches(sysex, chooseDriver(sysex), filename);
 	}
 
@@ -63,78 +60,72 @@ public class DriverUtil {
 	 * @param device
 	 *            Device whose driver is looked up.
 	 */
-	public static IPatch[] createPatches(byte[] sysex, Device device, String filename) {
+	public static Patch[] createPatches(byte[] sysex, Device device, String filename) {
 		return createPatches(sysex, chooseDriver(sysex, device), filename);
 	}
 
-	public static IPatch[] createPatches(byte[] sysex, Device device) {
+	public static Patch[] createPatches(byte[] sysex, Device device) {
 		return createPatches(sysex, chooseDriver(sysex, device), "");
 	}
 
-	// TODO ssmcurtis ... split always F0..F7
-	private static IPatch[] createPatches(byte[] sysex, IDriver driver, String filename) {
+	// TODO ssmCurtis ... split always F0..F7
+	private static Patch[] createPatches(byte[] sysex, SynthDriver driver, String filename) {
 		if (driver == null) {
 			return null;
 		} else if (driver.isConverter()) {
 			// ErrorMsg.reportStatus(">>> IS Converter in " + DriverUtil.class.getName());
-			return ((IConverter) driver).createPatches(sysex);
+			return ((Converter) driver).createPatches(sysex);
 		} else {
 
-			// ByteBuffer byteBuffer = ByteBuffer.allocate(sysex.length);
-			// byteBuffer.put(sysex);
-			// TODO ssmcurtis - split always patches ...
-			// List<IPatch> li = new ArrayList<IPatch>();
-			// for (byte[] sysexSplit : splitSysexBytearray(byteBuffer)) {
-			// li.add(((IPatchDriver) driver).createPatch(sysexSplit, filename));
-			// }
+			ByteBuffer byteBuffer = ByteBuffer.allocate(sysex.length);
+			byteBuffer.put(sysex);
+			// TODO ssmCurtis - split always patches ...
+			List<Patch> li = new ArrayList<Patch>();
+			for (byte[] sysexSplit : splitSysexBytearray(byteBuffer)) {
+				li.add(((SynthDriverPatch) driver).createPatch(sysexSplit, filename));
+			}
 			// return li.toArray(new IPatch[] {});
-			
-			return new IPatch[] { ((IPatchDriver) driver).createPatch(sysex, filename) };
+			Patch p = ((SynthDriverPatch) driver).createPatch(sysex, filename);
+			return new Patch[] { p };
 		}
 	}
 
-	public static IPatch createPatch(byte[] sysex, String filename) {
-		IPatchDriver driver = (IPatchDriver) chooseDriver(sysex);
+	public static Patch createPatch(byte[] sysex, String filename) {
+		SynthDriverPatch driver = (SynthDriverPatch) chooseDriver(sysex);
 		return driver != null ? driver.createPatch(sysex, filename) : null;
 	}
 
-	public static Set<byte[]> splitSysexBytearray(ByteBuffer byteBuffer) {
-		System.out.println(">>> " + byteBuffer.capacity());
-		Set<byte[]> sysexArr = new HashSet<byte[]>();
-
-		int start = 0;
-		int end = 0;
-		for (int i = 0; i < byteBuffer.capacity(); i++) {
-			if (Hexa.isStartSysex(byteBuffer.get(i))) {
-				start = i;
-				// System.out.println(">>> set f0" + i);
+	public static List<byte[]> splitSysexBytearray(ByteBuffer byteBuffer) {
+		int bufSize = byteBuffer.capacity();
+		int cursor = 0;
+		List<byte[]> li = new ArrayList<byte[]>();
+		List<Byte> sysexList = new ArrayList<Byte>();
+		byte[] sysex = null;
+		boolean select = false;
+		while (cursor < bufSize) {
+			byte b = byteBuffer.get(cursor);
+			if (HexaUtil.isStartSysex(b)) {
+				select = true;
 			}
-			if (Hexa.isEndSysex(byteBuffer.get(i))) {
-				end = i;
-				// System.out.println(">>> set f7" + i);
+			if (select) {
+				sysexList.add(b);
 			}
-			// System.out.println("i: " + i + " start: " + start + " end:" + end);
-
-			if (end > start) {
-				int length = end - start + 1;
-				byte[] tmp = new byte[length];
-				
-				int pos = 0;
-				for (int j = start; j < end; j++) {
-					tmp[pos] = byteBuffer.get(j);
-					pos++;
+			if (HexaUtil.isEndSysex(b)) {
+				select = false;
+				sysex = new byte[sysexList.size()];
+				int bc = 0;
+				for (Byte byteFromList : sysexList) {
+					sysex[bc] = byteFromList.byteValue();
+					bc++;
 				}
-
-				sysexArr.add(tmp);
-
-				start = 0;
-				end = 0;
+				li.add(sysex);
+				sysexList = new ArrayList<Byte>();
 			}
+			cursor++;
 		}
-
-		System.out.println(">>>> " + sysexArr.size());
-		return sysexArr;
+		return li;
 	}
+	
 
 	/**
 	 * choose proper driver for sysex byte array.
@@ -142,16 +133,16 @@ public class DriverUtil {
 	 * @param sysex
 	 *            System Exclusive data byte array.
 	 * @return Driver object chosen
-	 * @see IDriver#supportsPatch
+	 * @see SynthDriver#supportsPatch
 	 */
-	public static IDriver chooseDriver(byte[] sysex) {
+	public static SynthDriver chooseDriver(byte[] sysex) {
 		String patchString = getPatchHeader(sysex);
 
 		for (int idev = 0; idev < AppConfig.deviceCount(); idev++) {
 			// Outer Loop, iterating over all installed devices
 			Device dev = AppConfig.getDevice(idev);
 			for (int idrv = 0; idrv < dev.driverCount(); idrv++) {
-				IPatchDriver drv = (IPatchDriver) dev.getDriver(idrv);
+				SynthDriverPatch drv = (SynthDriverPatch) dev.getDriver(idrv);
 				// Inner Loop, iterating over all Drivers of a device
 				if (drv.supportsPatch(patchString, sysex))
 					return drv;
@@ -169,12 +160,12 @@ public class DriverUtil {
 	 * @param dev
 	 *            Device
 	 * @return Driver object chosen
-	 * @see IDriver#supportsPatch
+	 * @see SynthDriver#supportsPatch
 	 */
-	public static IDriver chooseDriver(byte[] sysex, Device dev) {
+	public static SynthDriver chooseDriver(byte[] sysex, Device dev) {
 		String patchString = getPatchHeader(sysex);
 		for (int idrv = 0; idrv < dev.driverCount(); idrv++) {
-			IPatchDriver drv = (IPatchDriver) dev.getDriver(idrv);
+			SynthDriverPatch drv = (SynthDriverPatch) dev.getDriver(idrv);
 			// Inner Loop, iterating over all Drivers of a device
 			if (drv.supportsPatch(patchString, sysex))
 				return drv;
@@ -183,9 +174,10 @@ public class DriverUtil {
 	}
 
 	/**
-	 * Return a hexadecimal string for {@link IDriver#supportsPatch IDriver.suppportsPatch} at most 16 byte sysex data.
+	 * Return a hexadecimal string for {@link SynthDriver#supportsPatch IDriver.suppportsPatch} at most 16 byte sysex
+	 * data.
 	 * 
-	 * @see IDriver#supportsPatch
+	 * @see SynthDriver#supportsPatch
 	 */
 	public static String getPatchHeader(byte[] sysex) {
 		StringBuffer patchstring = new StringBuffer("F0");
@@ -218,7 +210,7 @@ public class DriverUtil {
 	 *            end offset
 	 * @param ofs
 	 *            offset of the checksum data
-	 * @see Driver#calculateChecksum(IPatch)
+	 * @see SynthDriverPatchImpl#calculateChecksum(Patch)
 	 */
 	public static void calculateChecksum(byte[] sysex, int start, int end, int ofs) {
 		int sum = 0;
@@ -256,9 +248,9 @@ public class DriverUtil {
 	 *            pattern String for java.text.DecimalFormat
 	 * @return an array of formatted numbers.
 	 * @see java.text.DecimalFormat
-	 * @see IPatchDriver#getPatchNumbers
-	 * @see IPatchDriver#getPatchNumbersForStore
-	 * @see IPatchDriver#getBankNumbers
+	 * @see SynthDriverPatch#getPatchNumbers
+	 * @see SynthDriverPatch#getPatchNumbersForStore
+	 * @see SynthDriverPatch#getBankNumbers
 	 */
 	public static String[] generateNumbers(int min, int max, String format) {
 		String retval[] = new String[max - min + 1];
@@ -280,9 +272,10 @@ public class DriverUtil {
 	 * @param size
 	 *            Sysex data size
 	 * @return IPatch object
-	 * @see IPatchDriver#createPatch()
+	 * @see SynthDriverPatch#createPatch()
 	 */
-	public static IPatch createNewPatch(IPatchDriver driver, String fileName, int size) { // Borrowed from DR660 driver
+	public static Patch createNewPatch(SynthDriverPatch driver, String fileName, int size) { // Borrowed from DR660
+																								// driver
 		byte[] buffer = new byte[size];
 
 		try {
@@ -296,7 +289,7 @@ public class DriverUtil {
 				throw new FileNotFoundException("File: " + fileName + " does not exist!");
 			}
 		} catch (IOException e) {
-			ErrorMsg.reportError("Error", "Unable to open " + fileName, e);
+			ErrorMsgUtil.reportError("Error", "Unable to open " + fileName, e);
 			return null;
 		}
 	}
@@ -308,10 +301,10 @@ public class DriverUtil {
 		byte[] test = new byte[] { hex };
 
 		System.out.printf("%d %32s%n", intHex, Integer.toBinaryString(intHex));
-		System.out.printf("%d %32s%n", hex & 0xff, Integer.toBinaryString(Hexa.byteToInt(hex)));
-		System.out.printf("%d %32s%n", hex & 0xff, Integer.toBinaryString(Hexa.byteToChar(hex)));
-		System.out.println(Hexa.byteToHexString(hex));
-		Hexa.isStartSysex(hex);
+		System.out.printf("%d %32s%n", hex & 0xff, Integer.toBinaryString(HexaUtil.byteToInt(hex)));
+		System.out.printf("%d %32s%n", hex & 0xff, Integer.toBinaryString(HexaUtil.byteToChar(hex)));
+		System.out.println(HexaUtil.byteToHexString(hex));
+		HexaUtil.isStartSysex(hex);
 	}
 
 }

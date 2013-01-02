@@ -1,7 +1,7 @@
 package org.jsynthlib.synthdrivers.korg.x3;
 
-import org.jsynthlib.menu.patch.Converter;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.driver.ConverterImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 /**
  * Converts Korg X3 Single Bank data from 188 bytes to 164 bytes. The actual patch sizes in JSynthLib are 212 and 187
@@ -10,7 +10,7 @@ import org.jsynthlib.menu.patch.Patch;
  * @author Juha Tukkinen
  * @version $Id$
  */
-public class KorgX3SingleConverter extends Converter {
+public class KorgX3SingleConverter extends ConverterImpl {
 
 	/**
 	 * Default constructor. Note that patchsize must be 212.
@@ -33,7 +33,7 @@ public class KorgX3SingleConverter extends Converter {
 	 *            Patch to be converted
 	 * @return Converted patch
 	 */
-	public Patch[] extractPatch(Patch p) {
+	public PatchDataImpl[] extractPatch(PatchDataImpl p) {
 		byte[] sysex = p.getByteArray();
 		byte[] ps; // source
 		byte[] pd; // destination
@@ -57,8 +57,8 @@ public class KorgX3SingleConverter extends Converter {
 			}
 		}
 
-		Patch[] pf = new Patch[1];
-		pf[0] = new Patch(pd);
+		PatchDataImpl[] pf = new PatchDataImpl[1];
+		pf[0] = new PatchDataImpl(pd);
 		return pf;
 	}
 }

@@ -22,14 +22,14 @@ package org.jsynthlib.synthdrivers.roland.jv80;
 
 import javax.sound.midi.SysexMessage;
 
-import org.jsynthlib.menu.patch.Converter;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.driver.ConverterImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 /**
  * @author Sander Brandenburg
  * @version $Id$
  */
-public class RolandJV80Converter extends Converter {
+public class RolandJV80Converter extends ConverterImpl {
 
 	final RolandJV80BankDriver bankDriver;
 	final RolandJV80PatchDriver singleDriver;
@@ -75,8 +75,8 @@ public class RolandJV80Converter extends Converter {
 		return sysex[0] == 0x41 && sysex[2] == 0x46 && sysex[3] == 0x12;
 	}
 
-	public Patch[] extractPatch(Patch p) {
-		Patch bpatch = bankDriver.createNewPatch();
+	public PatchDataImpl[] extractPatch(PatchDataImpl p) {
+		PatchDataImpl bpatch = bankDriver.createNewPatch();
 
 		SysexMessage[] msgs = p.getMessages();
 
@@ -98,6 +98,6 @@ public class RolandJV80Converter extends Converter {
 			}
 		}
 
-		return new Patch[] { bpatch };
+		return new PatchDataImpl[] { bpatch };
 	}
 }

@@ -21,14 +21,14 @@
 
 package org.jsynthlib.synthdrivers.tcelectronic.gmajor;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.widgets.ParamModel;
 
 class TCBitModel extends ParamModel {
 	protected int mask;
 	protected int shift;
 
-	TCBitModel(Patch p, int offset, int mask) {
+	TCBitModel(PatchDataImpl p, int offset, int mask) {
 		super(p, offset);
 
 		this.mask = mask;

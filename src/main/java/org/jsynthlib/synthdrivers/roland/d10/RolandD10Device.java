@@ -22,7 +22,7 @@ package org.jsynthlib.synthdrivers.roland.d10;
 
 import java.util.prefs.Preferences;
 
-import org.jsynthlib.menu.patch.Device;
+import org.jsynthlib.model.device.Device;
 
 /**
  * @author Roger Westerlund <roger.westerlund@home.se>

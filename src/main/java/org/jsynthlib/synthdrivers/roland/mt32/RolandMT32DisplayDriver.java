@@ -27,18 +27,18 @@
 
 package org.jsynthlib.synthdrivers.roland.mt32;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 /**
  * Display Driver for Roland MT32.
  * 
  * @version $Id$
  */
-public class RolandMT32DisplayDriver extends Driver {
+public class RolandMT32DisplayDriver extends SynthDriverPatchImpl {
 	//
 	/** Header Size of the Data set DT1 message. */
 	// Skeleton definition of the message received when sending the request
@@ -65,13 +65,13 @@ public class RolandMT32DisplayDriver extends Driver {
 	}
 
 	/* The message format here is Data set DT1 */
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		// setBankNum(bankNum); // Control change
 		// setPatchNum(patchNum); // Program change
 		try {
 			Thread.sleep(100);
 		} catch (Exception e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 		p.getSysex()[0] = (byte) 0xF0;
 		p.getSysex()[5] = (byte) 0x20; // Point to Display area
@@ -83,7 +83,7 @@ public class RolandMT32DisplayDriver extends Driver {
 			sendPatchWorker(p);
 			Thread.sleep(100);
 		} catch (Exception e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 		// setPatchNum(patchNum); // Program change
 	}
@@ -92,13 +92,13 @@ public class RolandMT32DisplayDriver extends Driver {
 	 * Send a Patch (bulk dump system exclusive message) to an edit buffer of MIDI device. Target should be Timbre Temp
 	 * Area 1 - 8. The message format here is Data set DT1
 	 */
-	public void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 
 		sendPatchWorker(p);
 	}
 
 	// not used
-	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
+	protected void calculateChecksum(PatchDataImpl p, int start, int end, int ofs) {
 		// Calculate the checksum
 		int sum = 0;
 		for (int i = start; i <= end; i++) {
@@ -109,7 +109,7 @@ public class RolandMT32DisplayDriver extends Driver {
 	}
 
 	// not used
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		// This is the data placed in a newly created Rythm setup
 		// The format is the same as a DT1, the checksum not filled in
 		byte[] sysex = new byte[HSIZE + SSIZE + 1];
@@ -144,12 +144,12 @@ public class RolandMT32DisplayDriver extends Driver {
 		sysex[HSIZE + 0x11] = (byte) '-';
 
 		sysex[HSIZE + SSIZE] = (byte) 0xF7;
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		calculateChecksum(p);
 		return p;
 	}
 
-	public JSLFrame editPatch(Patch p) {
+	public JSLFrame editPatch(PatchDataImpl p) {
 		return new RolandMT32DisplayEditor(p);
 	}
 

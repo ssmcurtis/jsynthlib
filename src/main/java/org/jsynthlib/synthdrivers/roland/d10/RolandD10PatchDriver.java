@@ -37,14 +37,14 @@ import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.PATCH_WRITE_REQ
 import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.SIZE_HEADER_DT1;
 import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.SIZE_TRAILER;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.synthdrivers.roland.d10.message.D10DataSetMessage;
 import org.jsynthlib.synthdrivers.roland.d10.message.D10RequestMessage;
 import org.jsynthlib.synthdrivers.roland.d10.message.D10TransferMessage;
 
-public class RolandD10PatchDriver extends Driver {
+public class RolandD10PatchDriver extends SynthDriverPatchImpl {
 
 	public RolandD10PatchDriver() {
 		super("Patch", "Roger Westerlund");
@@ -62,9 +62,9 @@ public class RolandD10PatchDriver extends Driver {
 		patchNumbers = RolandD10Support.createPatchNumbers();
 	}
 
-	protected Patch createNewPatch() {
+	protected PatchDataImpl createNewPatch() {
 		D10TransferMessage message = new D10DataSetMessage(PATCH_SIZE, Entity.ZERO);
-		Patch patch = new Patch(message.getBytes(), this);
+		PatchDataImpl patch = new PatchDataImpl(message.getBytes(), this);
 		setPatchName(patch, "New Patch");
 		calculateChecksum(patch);
 		return patch;
@@ -76,13 +76,13 @@ public class RolandD10PatchDriver extends Driver {
 		send(message.getBytes());
 	}
 
-	protected void sendPatch(Patch patch) {
+	public void sendPatch(PatchDataImpl patch) {
 		D10DataSetMessage message = new D10DataSetMessage(patch.getSysex());
 		message.setAddress(BASE_PATCH_TEMP_AREA);
 		send(message.getBytes());
 	}
 
-	protected void storePatch(Patch patch, int bankNum, int patchNumber) {
+	public void storePatch(PatchDataImpl patch, int bankNum, int patchNumber) {
 		sendPatch(patch);
 
 		D10DataSetMessage message = new D10DataSetMessage(2, BASE_WRITE_REQUEST.add(PATCH_WRITE_REQUEST).getDataValue());
@@ -91,11 +91,11 @@ public class RolandD10PatchDriver extends Driver {
 		send(message.getBytes());
 	}
 
-	public JSLFrame editPatch(Patch patch) {
+	public JSLFrame editPatch(PatchDataImpl patch) {
 		return new RolandD10PatchEditor(patch);
 	}
 
-	protected String getPatchName(Patch patch) {
+	public String getPatchName(PatchDataImpl patch) {
 		return RolandD10Support.trimName(super.getPatchName(patch));
 	}
 }

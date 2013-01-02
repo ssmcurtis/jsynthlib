@@ -7,7 +7,7 @@ import java.util.Map;
 import javax.swing.AbstractAction;
 
 import org.jsynthlib.PatchBayApplication;
-import org.jsynthlib.menu.ui.window.UploadPatchDialog;
+import org.jsynthlib.menu.window.UploadPatchDialog;
 
 public class UploadAction extends AbstractAction {
 	public UploadAction(Map<Serializable, Integer> mnemonics) {

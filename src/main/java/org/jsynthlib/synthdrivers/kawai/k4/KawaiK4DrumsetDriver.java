@@ -1,9 +1,9 @@
 package org.jsynthlib.synthdrivers.kawai.k4;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 /**
  * Driver Set Patch Driver for Kawai K4.
@@ -11,7 +11,7 @@ import org.jsynthlib.menu.ui.JSLFrame;
  * @author Gerrit Gehnen
  * @version $Id$
  */
-public class KawaiK4DrumsetDriver extends Driver {
+public class KawaiK4DrumsetDriver extends SynthDriverPatchImpl {
 	/** Header Size */
 	private static final int HSIZE = 8;
 	/** Single Patch size */
@@ -30,7 +30,7 @@ public class KawaiK4DrumsetDriver extends Driver {
 		patchNumbers = new String[] { "Drumset" };
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		try {
 			Thread.sleep(100);
 		} catch (Exception e) {
@@ -45,13 +45,13 @@ public class KawaiK4DrumsetDriver extends Driver {
 		}
 	}
 
-	public void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		p.getSysex()[3] = (byte) 0x23;
 		p.getSysex()[7] = (byte) 0x20;
 		sendPatchWorker(p);
 	}
 
-	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
+	protected void calculateChecksum(PatchDataImpl p, int start, int end, int ofs) {
 		// a litte strange this, but there is a checksum for each key!
 		for (int i = 8; i < HSIZE + SSIZE - 1; i += 11) {
 			int sum = 0;
@@ -63,7 +63,7 @@ public class KawaiK4DrumsetDriver extends Driver {
 		}
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[HSIZE + SSIZE + 1];
 		sysex[0] = (byte) 0xF0;
 		sysex[1] = (byte) 0x40;
@@ -80,16 +80,16 @@ public class KawaiK4DrumsetDriver extends Driver {
 		}
 
 		sysex[HSIZE + SSIZE] = (byte) 0xF7;
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		calculateChecksum(p);
 		return p;
 	}
 
-	public JSLFrame editPatch(Patch p) {
+	public JSLFrame editPatch(PatchDataImpl p) {
 		return new KawaiK4DrumsetEditor(p);
 	}
 
-	public String getPatchName(Patch ip) {
+	public String getPatchName(PatchDataImpl ip) {
 		return "Drumset";
 	}
 

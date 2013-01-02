@@ -7,16 +7,16 @@
 
 package org.jsynthlib.synthdrivers.kawai.k5000;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 //======================================================================================================================
 // Class: KawaiK5000CombiDriver
 //======================================================================================================================
 
-public class KawaiK5000CombiDriver extends Driver {
+public class KawaiK5000CombiDriver extends SynthDriverPatchImpl {
 	final static int PATCH_DATA_START = 8;
 	// PATCH_DATA_SIZE = (check sum) + (effect DATA) + (common DATA) + (Section DATA)*4 = 1 + 38 + 15 + 13 * 4 = 106
 	// ... however 103 works!!
@@ -63,16 +63,16 @@ public class KawaiK5000CombiDriver extends Driver {
 	// KawaiK5000CombiDriver->storePatch
 	// ----------------------------------------------------------------------------------------------------------------------
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
-		ErrorMsg.reportStatus("KawaiK5000CombiDriver->storePatch: " + bankNum + " | " + patchNum);
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
+		ErrorMsgUtil.reportStatus("KawaiK5000CombiDriver->storePatch: " + bankNum + " | " + patchNum);
 		setBankNum(bankNum);
 		setPatchNum(patchNum);
 		try {
 			Thread.sleep(300);
 		} catch (Exception e) {
 		}
-		((Patch) p).getSysex()[3] = (byte) 0x20;
-		((Patch) p).getSysex()[7] = (byte) (patchNum);
+		((PatchDataImpl) p).getSysex()[3] = (byte) 0x20;
+		((PatchDataImpl) p).getSysex()[7] = (byte) (patchNum);
 
 		sendPatchWorker(p);
 		try {
@@ -86,7 +86,7 @@ public class KawaiK5000CombiDriver extends Driver {
 	// KawaiK5000CombiDriver->sendPatch
 	// ----------------------------------------------------------------------------------------------------------------------
 
-	public void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		storePatch(p, 0, 0);
 	}
 
@@ -109,7 +109,7 @@ public class KawaiK5000CombiDriver extends Driver {
 	// KawaiK5000CombiDriver->calculateChecksum(Patch, int, int, int)
 	// ----------------------------------------------------------------------------------------------------------------------
 
-	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
+	protected void calculateChecksum(PatchDataImpl p, int start, int end, int ofs) {
 		// ErrorMsg.reportStatus("KawaiK5000CombiDriver->calculateChecksum");
 		int sum = 0;
 		for (int i = start; i <= end; i++)
@@ -122,9 +122,9 @@ public class KawaiK5000CombiDriver extends Driver {
 	// KawaiK5000CombiDriver->createNewPatch
 	// ----------------------------------------------------------------------------------------------------------------------
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		// ErrorMsg.reportStatus("KawaiK5000CombiDriver->createNewPatch");
-		Patch p = createPatchFromData(new byte[PATCH_DATA_SIZE], 0, PATCH_DATA_SIZE);
+		PatchDataImpl p = createPatchFromData(new byte[PATCH_DATA_SIZE], 0, PATCH_DATA_SIZE);
 		p.setName("New Patch");
 		p.calculateChecksum();
 		return p;
@@ -134,13 +134,13 @@ public class KawaiK5000CombiDriver extends Driver {
 	// static KawaiK5000CombIDriver->createPatchFromData
 	// ----------------------------------------------------------------------------------------------------------------------
 
-	static public Patch createPatchFromData(byte[] data, int dataOffset, int dataLength) {
+	static public PatchDataImpl createPatchFromData(byte[] data, int dataOffset, int dataLength) {
 		byte[] sysex = new byte[dataLength + BSYSEX_HEADER.length + 1];
 		System.arraycopy(BSYSEX_HEADER, 0, sysex, 0, BSYSEX_HEADER.length);
 		System.arraycopy(data, dataOffset, sysex, BSYSEX_HEADER.length, dataLength);
 		sysex[sysex.length - 1] = (byte) 0xF7;
 
-		Patch p = new Patch(sysex);
+		PatchDataImpl p = new PatchDataImpl(sysex);
 		p.calculateChecksum();
 
 		return p;

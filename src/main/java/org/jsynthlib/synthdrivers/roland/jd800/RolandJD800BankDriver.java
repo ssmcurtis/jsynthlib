@@ -26,12 +26,12 @@ import java.io.UnsupportedEncodingException;
 
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.IPatch;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.DriverUtil;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 /**
  * Patch Memory Area (bank) driver for Roland JD800. JD800 operates on memory areas instead of a patch concept. The
@@ -39,7 +39,7 @@ import org.jsynthlib.tools.ErrorMsg;
  * 96 sysex messages to send a bank. To simplify its operation the driver needs to concatenate the sysex messages into a
  * one single message.
  */
-public class RolandJD800BankDriver extends BankDriver {
+public class RolandJD800BankDriver extends SynthDriverBank {
 
 	private static final int patchNameSize = 16;
 
@@ -79,7 +79,7 @@ public class RolandJD800BankDriver extends BankDriver {
 	/**
 	 * Gets the name of the patch at the given number.
 	 */
-	public String getPatchName(Patch p, int patchNum) {
+	public String getPatchName(PatchDataImpl p, int patchNum) {
 		int nameStart = getPatchStart(patchNum);
 		try {
 			StringBuffer s = new StringBuffer(new String(p.getSysex(), nameStart, patchNameSize, "US-ASCII"));
@@ -90,7 +90,7 @@ public class RolandJD800BankDriver extends BankDriver {
 	}
 
 	/** Sets the name of the patch at the given number <code>patchNum</code>. */
-	public void setPatchName(Patch p, int patchNum, String name) {
+	public void setPatchName(PatchDataImpl p, int patchNum, String name) {
 
 		patchNameStart = getPatchStart(patchNum);
 
@@ -110,7 +110,7 @@ public class RolandJD800BankDriver extends BankDriver {
 	/**
 	 * Gets a single patch at the given number <code>patchNum</code> from a bank.
 	 */
-	public void putPatch(Patch bank, Patch p, int patchNum) {
+	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) {
 		if (!canHoldPatch(p)) {
 			JOptionPane.showMessageDialog(null, "This type of patch does not fit in to this type of bank.", "Error",
 					JOptionPane.ERROR_MESSAGE);
@@ -124,7 +124,7 @@ public class RolandJD800BankDriver extends BankDriver {
 	 * patch. It is overrided as it needs to serve for both sysex message sizes: original 96 sysex messages and single
 	 * concatenated one.
 	 * 
-	 * @see org.jsynthlib.menu.patch.Driver#supportsPatch(String, byte[])
+	 * @see org.jsynthlib.model.driver.SynthDriverPatchImpl#supportsPatch(String, byte[])
 	 */
 	public boolean supportsPatch(String patchString, byte[] sysex) {
 		// The statement below has been changed when compared to original. The rest is the same.
@@ -151,19 +151,19 @@ public class RolandJD800BankDriver extends BankDriver {
 	/**
 	 * Returns one concatenated message created from 96 sysex messages.
 	 */
-	public IPatch createPatch(byte[] sysex) {
+	public Patch createPatch(byte[] sysex) {
 		byte[] out = new byte[JD800.SizeOfSinglePatch * JD800.nrOfPatchesInABank + JD800.SizeOfSyxHeader];
 		System.arraycopy(sysex, 0, out, 0, JD800.SizeOfSyxHeader);
 		for (int i = 0; i < JD800.nrOfSyxForABank; i++)
 			System.arraycopy(sysex, JD800.SizeOfSyxHeader + i * JD800.SizeOfPatchSyx1, out, JD800.SizeOfSyxHeader + i
 					* JD800.MaxSyxDataBlock, JD800.MaxSyxDataBlock);
-		return new Patch(out, this);
+		return new PatchDataImpl(out, this);
 	};
 
 	/**
 	 * Returns a single patch from <code>bank</code> at the given number <code>patchNum</code>.
 	 */
-	public Patch getPatch(Patch bank, int patchNum) {
+	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
 		byte[] sysex = new byte[JD800.SizeOfSyxHeader + JD800.SizeOfSinglePatch];
 		sysex[0] = (byte) 0xF0;
 		sysex[1] = (byte) 0x41;
@@ -174,13 +174,13 @@ public class RolandJD800BankDriver extends BankDriver {
 		sysex[6] = (byte) RolandJD800SinglePatchDriver.Addr[patchNum];
 		sysex[7] = 0;
 		System.arraycopy(bank.getSysex(), getPatchStart(patchNum), sysex, JD800.SizeOfSyxHeader, JD800.SizeOfSinglePatch);
-		return new Patch(sysex, getDevice());
+		return new PatchDataImpl(sysex, getDevice());
 	}
 
 	/**
 	 * Creates a new bank from initial patch in JD800_InitialPatch.syx
 	 */
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[JD800.SizeOfSyxHeader + JD800.SizeOfSinglePatch * JD800.nrOfPatchesInABank];
 		byte[] buffer = new byte[JD800.SizeOfPatchSyx1 + JD800.SizeOfPatchSyx2];
 		try {
@@ -188,7 +188,7 @@ public class RolandJD800BankDriver extends BankDriver {
 			fileIn.read(buffer);
 			fileIn.close();
 		} catch (Exception e) {
-			ErrorMsg.reportError("Error", "Unable to find JD800_InitialPatch.syx", e);
+			ErrorMsgUtil.reportError("Error", "Unable to find JD800_InitialPatch.syx", e);
 			return null;
 		}
 		sysex[0] = (byte) 0xF0;
@@ -207,7 +207,7 @@ public class RolandJD800BankDriver extends BankDriver {
 					- JD800.MaxSyxDataBlock);
 		}
 		;
-		return new Patch(sysex, this);
+		return new PatchDataImpl(sysex, this);
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {
@@ -217,7 +217,7 @@ public class RolandJD800BankDriver extends BankDriver {
 	/**
 	 * Stores the bank to JD800. Ignores the parameters. It splits the data into 96 sysex messages.
 	 */
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		byte[] s = new byte[JD800.SizeOfPatchSyx1];
 		int AddrMSB, Addr;
 		s[0] = (byte) 0xF0;
@@ -235,7 +235,7 @@ public class RolandJD800BankDriver extends BankDriver {
 			System.arraycopy(p.getSysex(), JD800.SizeOfSyxHeader + i * JD800.MaxSyxDataBlock, s, JD800.SizeOfSyxHeader,
 					JD800.MaxSyxDataBlock);
 			DriverUtil.calculateChecksum(s, JD800.checksumStartSyx1, JD800.checksumEndSyx1, JD800.checksumOffsetSyx1);
-			sendPatchWorker(new Patch(s, this));
+			sendPatchWorker(new PatchDataImpl(s, this));
 			try {
 				Thread.sleep(25);
 			} catch (Exception e) {

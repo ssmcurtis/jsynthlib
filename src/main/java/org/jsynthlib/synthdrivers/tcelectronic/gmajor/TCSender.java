@@ -21,19 +21,19 @@
 
 package org.jsynthlib.synthdrivers.tcelectronic.gmajor;
 
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.SysexSender;
 
 class TCSender extends SysexSender {
 	int offs, delta;
-	Patch patch;
+	PatchDataImpl patch;
 
-	public TCSender(Patch iPatch, int iParam) {
+	public TCSender(PatchDataImpl iPatch, int iParam) {
 		patch = iPatch;
 		offs = iParam;
 	}
 
-	public TCSender(Patch iPatch, int iParam, int idelta) {
+	public TCSender(PatchDataImpl iPatch, int iParam, int idelta) {
 		this(iPatch, iParam);
 		delta = idelta;
 	}

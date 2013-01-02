@@ -1,14 +1,14 @@
 package org.jsynthlib.synthdrivers.kawai.k4;
 
-import org.jsynthlib.menu.patch.Converter;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.driver.ConverterImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 /**
  * Convert a bulk patch into an array of single bank, multi bank, drumset, and effect bank patches.
  * 
  * @version $Id$
  */
-public class KawaiK4BulkConverter extends Converter {
+public class KawaiK4BulkConverter extends ConverterImpl {
 	/** Header Size */
 	private static final int HSIZE = 8;
 	/** Single Bank size */
@@ -28,7 +28,7 @@ public class KawaiK4BulkConverter extends Converter {
 	/**
 	 * Convert a bulk patch into an array of single bank, multi bank, drumset, and effect bank patches.
 	 */
-	public Patch[] extractPatch(Patch p) {
+	public PatchDataImpl[] extractPatch(PatchDataImpl p) {
 		byte[] sysex = p.getByteArray();
 		// System.out.println("Length p: " + sysex.length);
 		byte[] sx = new byte[HSIZE + SSIZE + 1]; // Single Bank
@@ -65,12 +65,12 @@ public class KawaiK4BulkConverter extends Converter {
 		ex[3] = 0x21;
 		ex[6] = 1;
 
-		Patch[] pf = new Patch[4];
+		PatchDataImpl[] pf = new PatchDataImpl[4];
 		// use Patch(byte[], Driver) instead of Patch(byte[]). !!!FIXIT!!!
-		pf[0] = new Patch(sx);
-		pf[1] = new Patch(mx);
-		pf[2] = new Patch(ex);
-		pf[3] = new Patch(dx);
+		pf[0] = new PatchDataImpl(sx);
+		pf[1] = new PatchDataImpl(mx);
+		pf[2] = new PatchDataImpl(ex);
+		pf[3] = new PatchDataImpl(dx);
 
 		return pf;
 	}

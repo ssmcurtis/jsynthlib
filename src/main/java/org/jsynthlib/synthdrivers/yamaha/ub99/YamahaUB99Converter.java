@@ -21,10 +21,10 @@
 
 package org.jsynthlib.synthdrivers.yamaha.ub99;
 
-import org.jsynthlib.menu.patch.Converter;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.driver.ConverterImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
-public class YamahaUB99Converter extends Converter {
+public class YamahaUB99Converter extends ConverterImpl {
 
 	private final YamahaUB99Driver singleDriver;
 
@@ -48,11 +48,11 @@ public class YamahaUB99Converter extends Converter {
 		return ok;
 	}
 
-	public Patch[] extractPatch(Patch p) {
+	public PatchDataImpl[] extractPatch(PatchDataImpl p) {
 		byte[] sysex = p.getByteArray();
 		sysex[0] = (byte) 0xF0;
-		Patch[] newPatchArray = new Patch[1];
-		newPatchArray[0] = new Patch(sysex, new YamahaUB99BankDriver(singleDriver));
+		PatchDataImpl[] newPatchArray = new PatchDataImpl[1];
+		newPatchArray[0] = new PatchDataImpl(sysex, new YamahaUB99BankDriver(singleDriver));
 		return newPatchArray;
 	}
 

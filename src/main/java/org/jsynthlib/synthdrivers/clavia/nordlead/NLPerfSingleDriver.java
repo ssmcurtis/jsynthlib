@@ -3,12 +3,12 @@
 
 package org.jsynthlib.synthdrivers.clavia.nordlead;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
-public class NLPerfSingleDriver extends Driver {
+public class NLPerfSingleDriver extends SynthDriverPatchImpl {
 	static final String BANK_LIST[] = new String[] { "PCMCIA" };
 	static final String PATCH_LIST[] = new String[] { "A0", "A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "B0",
 			"B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8", "B9", "C0", "C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8",
@@ -122,7 +122,7 @@ public class NLPerfSingleDriver extends Driver {
 		patchNumbers = PATCH_LIST;
 	}
 
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 		// doesn't use checksum
 	}
 
@@ -130,49 +130,49 @@ public class NLPerfSingleDriver extends Driver {
 	// // doesn't use checksum
 	// }
 
-	public String getPatchName(Patch ip) {
-		return "perf" + (((Patch) ip).getSysex()[PATCH_NUM_OFFSET] + 1);
+	public String getPatchName(PatchDataImpl ip) {
+		return "perf" + (((PatchDataImpl) ip).getSysex()[PATCH_NUM_OFFSET] + 1);
 	}
 
-	public void setPatchName(Patch p, String name) {
+	public void setPatchName(PatchDataImpl p, String name) {
 	}
 
-	public void sendPatch(Patch p) {
-		sendPatch((Patch) p, 30, 0); // using edit buffer
+	public void sendPatch(PatchDataImpl p) {
+		sendPatch((PatchDataImpl) p, 30, 0); // using edit buffer
 	}
 
-	public void sendPatch(Patch p, int bankNum, int patchNum) {
-		Patch p2 = new Patch(p.getSysex());
+	public void sendPatch(PatchDataImpl p, int bankNum, int patchNum) {
+		PatchDataImpl p2 = new PatchDataImpl(p.getSysex());
 		p2.getSysex()[BANK_NUM_OFFSET] = (byte) bankNum;
 		p2.getSysex()[PATCH_NUM_OFFSET] = (byte) patchNum;
 		mySendPatch(p2);
 	}
 
 	// Sends a patch to a set location in the user bank
-	public void storePatch(Patch p, int bankNum, int patchNum) {
-		sendPatch((Patch) p, 31, patchNum);
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
+		sendPatch((PatchDataImpl) p, 31, patchNum);
 		setPatchNum(patchNum); // send program change to get new sound in edit buffer
 	}
 
-	protected void playPatch(Patch p) {
+	public void playPatch(PatchDataImpl p) {
 		byte sysex[] = new byte[patchSize];
-		System.arraycopy(((Patch) p).getSysex(), 0, sysex, 0, patchSize);
+		System.arraycopy(((PatchDataImpl) p).getSysex(), 0, sysex, 0, patchSize);
 		sysex[BANK_NUM_OFFSET] = 30; // edit buffer
 		sysex[PATCH_NUM_OFFSET] = 0;
-		Patch p2 = new Patch(sysex);
+		PatchDataImpl p2 = new PatchDataImpl(sysex);
 		super.playPatch(p2);
 	}
 
-	public Patch createNewPatch() {
-		return new Patch(NEW_PATCH, this);
+	public PatchDataImpl createNewPatch() {
+		return new PatchDataImpl(NEW_PATCH, this);
 	}
 
-	protected void mySendPatch(Patch p) {
+	protected void mySendPatch(PatchDataImpl p) {
 		p.getSysex()[deviceIDoffset] = (byte) (((NordLeadDevice) getDevice()).getGlobalChannel() - 1);
 		try {
 			send(p.getSysex());
 		} catch (Exception e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 	}
 

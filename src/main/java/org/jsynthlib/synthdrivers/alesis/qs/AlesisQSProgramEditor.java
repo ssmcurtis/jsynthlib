@@ -36,8 +36,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.EnvelopeWidget;
@@ -52,7 +52,7 @@ import org.jsynthlib.widgets.ScrollBarWidget;
  * @version $Id$
  */
 class AlesisQSProgramEditor extends PatchEditorFrame {
-	public AlesisQSProgramEditor(Patch patch) {
+	public AlesisQSProgramEditor(PatchDataImpl patch) {
 		super("Alesis QS series Program Editor", patch);
 
 		JPanel topPane = new JPanel();
@@ -147,7 +147,7 @@ class AlesisQSProgramEditor extends PatchEditorFrame {
 	// }
 
 	class voicePanel extends controlPanel {
-		public voicePanel(Patch patch, int snd) {
+		public voicePanel(PatchDataImpl patch, int snd) {
 			super("Voice");
 			int controlIdx = 0, yPos = 0;
 			// 1. Sample group 0 0 0 0 47 6 0:6-0:1
@@ -167,7 +167,7 @@ class AlesisQSProgramEditor extends PatchEditorFrame {
 	}
 
 	class levelPanel extends controlPanel {
-		public levelPanel(Patch patch, int snd) {
+		public levelPanel(PatchDataImpl patch, int snd) {
 			super("Level");
 			int controlIdx = 0, yPos = 0;
 			// 3. Sound volume 1 0 0 0 99 7 2:4-1:6
@@ -195,7 +195,7 @@ class AlesisQSProgramEditor extends PatchEditorFrame {
 	}
 
 	class pitchPanel extends controlPanel {
-		public pitchPanel(Patch patch, int snd) {
+		public pitchPanel(PatchDataImpl patch, int snd) {
 			super("Pitch");
 			int controlIdx = 0, yPos = 0;
 
@@ -248,7 +248,7 @@ class AlesisQSProgramEditor extends PatchEditorFrame {
 	}
 
 	class filterPanel extends controlPanel {
-		public filterPanel(Patch patch, int snd) {
+		public filterPanel(PatchDataImpl patch, int snd) {
 			super("Filter");
 			int controlIdx = 0, yPos = 0;
 			// 18. Sound filter frequency 4 0 0 0 99 7 11:7-11:1
@@ -283,7 +283,7 @@ class AlesisQSProgramEditor extends PatchEditorFrame {
 	}
 
 	class amplitudePanel extends controlPanel {
-		public amplitudePanel(Patch patch, int snd) {
+		public amplitudePanel(PatchDataImpl patch, int snd) {
 			super("Amplitude");
 			int controlIdx = 0, yPos = 0;
 
@@ -305,7 +305,7 @@ class AlesisQSProgramEditor extends PatchEditorFrame {
 	}
 
 	class rangePanel extends controlPanel {
-		public rangePanel(Patch patch, int snd) {
+		public rangePanel(PatchDataImpl patch, int snd) {
 			super("Range");
 			int controlIdx = 0, yPos = 0;
 
@@ -336,7 +336,7 @@ class AlesisQSProgramEditor extends PatchEditorFrame {
 		 * @param snd
 		 *            Sound number (0-3)
 		 */
-		public modifierPanel(Patch p, int snd) {
+		public modifierPanel(PatchDataImpl p, int snd) {
 
 			// setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.RAISED),
 			// "Modifiers",TitledBorder.CENTER,
@@ -443,7 +443,7 @@ class AlesisQSProgramEditor extends PatchEditorFrame {
 		 * @param msBit
 		 *            Starting bit of attack parameter
 		 */
-		public envelopePanel(String name, Patch p, int snd, int Func, int msByte, int msBit) {
+		public envelopePanel(String name, PatchDataImpl p, int snd, int Func, int msByte, int msBit) {
 			super(name);
 			int ofs = (msByte - 53) * 8 + msBit;
 			int controlIdx = 0, yPos = 0;
@@ -506,7 +506,7 @@ class AlesisQSProgramEditor extends PatchEditorFrame {
 		 * @param msBit
 		 *            Starting bit of waveform parameter
 		 */
-		public lfoPanel(String name, Patch p, int snd, int Func, int msByte, int msBit) {
+		public lfoPanel(String name, PatchDataImpl p, int snd, int Func, int msByte, int msBit) {
 			super(name);
 			int ofs = (msByte - 36) * 8 + msBit - 6;
 			int controlIdx = 0, yPos = 0;
@@ -555,7 +555,7 @@ class AlesisQSProgramEditor extends PatchEditorFrame {
 		 * @param snd
 		 *            Sound number (0-3)
 		 */
-		public modPanel(Patch p, int snd) {
+		public modPanel(PatchDataImpl p, int snd) {
 			super("Modulation");
 			setLayout(new GridBagLayout());
 			// setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.RAISED),
@@ -657,13 +657,13 @@ class GroupActionListener implements ActionListener {
 
 class SoundModel extends QSParamModel {
 	// Unsigned control
-	public SoundModel(Patch p, int sndIndex, int bitSize, int addressByte, int addressBit) {
+	public SoundModel(PatchDataImpl p, int sndIndex, int bitSize, int addressByte, int addressBit) {
 		// Sound 1 starts at 10, 2 at 95, 3 at 180, 4 at 265
 		super(p, (10 + sndIndex * 85 + addressByte) * 8 + addressBit, bitSize, 0);
 	}
 
 	// Signed control
-	public SoundModel(Patch p, int sndIndex, int bitSize, int addressByte, int addressBit, int offset) {
+	public SoundModel(PatchDataImpl p, int sndIndex, int bitSize, int addressByte, int addressBit, int offset) {
 		// Sound 1 starts at 10, 2 at 95, 3 at 180, 4 at 265
 		super(p, (10 + sndIndex * 85 + addressByte) * 8 + addressBit, bitSize, offset);
 	}

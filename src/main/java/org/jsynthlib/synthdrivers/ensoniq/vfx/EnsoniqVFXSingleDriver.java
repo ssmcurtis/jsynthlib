@@ -1,9 +1,9 @@
 package org.jsynthlib.synthdrivers.ensoniq.vfx;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 /**
  * Single driver for VFX. Nybble Hi 4 bytes are transmitted first.
@@ -11,7 +11,7 @@ import org.jsynthlib.tools.ErrorMsg;
  * @author <a href="mailto:dqueffeulou@free.fr">Denis Queffeulou</a> (created 17 Sep 2002)
  * @version $Id$
  */
-public class EnsoniqVFXSingleDriver extends Driver {
+public class EnsoniqVFXSingleDriver extends SynthDriverPatchImpl {
 	/** size of patch without header */
 	static final int PATCH_SIZE = 1060;
 
@@ -53,8 +53,8 @@ public class EnsoniqVFXSingleDriver extends Driver {
 	 *            Description of the Parameter
 	 * @return The patchName value
 	 */
-	public String getPatchName(Patch ip) {
-		return getPatchName(((Patch) ip).getSysex(), 6);
+	public String getPatchName(PatchDataImpl ip) {
+		return getPatchName(((PatchDataImpl) ip).getSysex(), 6);
 	}
 
 	/**
@@ -85,8 +85,8 @@ public class EnsoniqVFXSingleDriver extends Driver {
 	 * @param name
 	 *            The new patch Name value
 	 */
-	public void setPatchName(Patch p, String name) {
-		setPatchName(((Patch) p).getSysex(), name, HEADER_SIZE - 1);
+	public void setPatchName(PatchDataImpl p, String name) {
+		setPatchName(((PatchDataImpl) p).getSysex(), name, HEADER_SIZE - 1);
 	}
 
 	/**
@@ -129,7 +129,7 @@ public class EnsoniqVFXSingleDriver extends Driver {
 	 * @param patchNum
 	 *            Description of the Parameter
 	 */
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		// TODO choose the patchnum by sysex
 		sendPatch(p);
 	}
@@ -140,14 +140,14 @@ public class EnsoniqVFXSingleDriver extends Driver {
 	 * @param p
 	 *            Description of the Parameter
 	 */
-	public void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		sendPatchWorker(p);
-		ErrorMsg.reportWarning(
+		ErrorMsgUtil.reportWarning(
 				"Ensoniq VFX!",
 				"The patch has been placed in the edit buffer\nYou must now hold the 'write' button on the VFX's\nand choose a location to store the patch.");
 	}
 
-	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
+	protected void calculateChecksum(PatchDataImpl p, int start, int end, int ofs) {
 		// This synth does not use a checksum
 	}
 
@@ -156,14 +156,14 @@ public class EnsoniqVFXSingleDriver extends Driver {
 	 * 
 	 * @return Description of the Return Value
 	 */
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		return newPatch();
 	}
 
 	/**
 	 * Patch factory, static because no context is needed.
 	 */
-	static Patch newPatch() {
+	static PatchDataImpl newPatch() {
 		byte[] sysex = new byte[PATCH_AND_HEADER_SIZE];
 		sysex[0] = (byte) 0xF0;
 		sysex[1] = (byte) 0x0F;
@@ -173,7 +173,7 @@ public class EnsoniqVFXSingleDriver extends Driver {
 		sysex[5] = (byte) 0x02; // single patch sysex
 		sysex[PATCH_AND_HEADER_SIZE - 1] = (byte) 0xF7;
 		// Patch oPatch = new Patch(sysex, this);
-		Patch oPatch = new Patch(sysex);
+		PatchDataImpl oPatch = new PatchDataImpl(sysex);
 		setPatchName(oPatch.getSysex(), "NEWSND", HEADER_SIZE - 1);
 		return oPatch;
 	}
@@ -185,8 +185,8 @@ public class EnsoniqVFXSingleDriver extends Driver {
 	 *            offset in the sysex
 	 * @return the patch
 	 */
-	static Patch newPatch(byte aSysex[], int aOffset) {
-		Patch oNewPatch = newPatch();
+	static PatchDataImpl newPatch(byte aSysex[], int aOffset) {
+		PatchDataImpl oNewPatch = newPatch();
 		System.arraycopy(aSysex, aOffset, oNewPatch.getSysex(), HEADER_SIZE - 1, PATCH_SIZE);
 		return oNewPatch;
 	}

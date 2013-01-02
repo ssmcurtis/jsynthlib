@@ -11,12 +11,12 @@ import java.io.UnsupportedEncodingException;
 
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
-public class NovationNova1BankDriver extends BankDriver {
+public class NovationNova1BankDriver extends SynthDriverBank {
 	final static SysexHandler bankARequestDump = new SysexHandler("F0 00 20 29 01 21 @@ 12 05 F7 ");
 	final static SysexHandler bankBRequestDump = new SysexHandler("F0 00 20 29 01 21 @@ 12 06 F7 ");
 
@@ -48,17 +48,17 @@ public class NovationNova1BankDriver extends BankDriver {
 		return start;
 	}
 
-	public String getPatchName(Patch p, int patchNum) {
+	public String getPatchName(PatchDataImpl p, int patchNum) {
 		int nameStart = getPatchStart(patchNum);
 		try {
-			StringBuffer s = new StringBuffer(new String(((Patch) p).getSysex(), nameStart, 16, "US-ASCII"));
+			StringBuffer s = new StringBuffer(new String(((PatchDataImpl) p).getSysex(), nameStart, 16, "US-ASCII"));
 			return s.toString();
 		} catch (UnsupportedEncodingException ex) {
 			return "-";
 		}
 	}
 
-	public void setPatchName(Patch p, int patchNum, String name) {
+	public void setPatchName(PatchDataImpl p, int patchNum, String name) {
 		patchNameSize = 16;
 		patchNameStart = getPatchStart(patchNum);
 
@@ -69,7 +69,7 @@ public class NovationNova1BankDriver extends BankDriver {
 		try {
 			namebytes = name.getBytes("US-ASCII");
 			for (int i = 0; i < patchNameSize; i++)
-				((Patch) p).getSysex()[patchNameStart + i] = namebytes[i];
+				((PatchDataImpl) p).getSysex()[patchNameStart + i] = namebytes[i];
 		} catch (UnsupportedEncodingException ex) {
 			return;
 		}
@@ -80,11 +80,11 @@ public class NovationNova1BankDriver extends BankDriver {
 	//
 	// }
 
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 
 	}
 
-	public void putPatch(Patch bank, Patch p, int patchNum) {
+	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) {
 		// This method is called when doing a paste (from another bank or a single)
 		// the patch received will be a single dump (meant for the edit buffer)
 		// we need to extract the actual patch info and paste it in the bank itself
@@ -94,11 +94,11 @@ public class NovationNova1BankDriver extends BankDriver {
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-		System.arraycopy(((Patch) p).getSysex(), 9, ((Patch) bank).getSysex(), getPatchStart(patchNum), 296 - 9);
+		System.arraycopy(((PatchDataImpl) p).getSysex(), 9, ((PatchDataImpl) bank).getSysex(), getPatchStart(patchNum), 296 - 9);
 		calculateChecksum(bank);
 	}
 
-	public Patch getPatch(Patch bank, int patchNum) {
+	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
 		// this method is call when you have a bank opened and want to send or play individual patches
 		// OR when you do a Cut/Copy
 		// The method is call to retreive a single patch to send using the default sendPatch()
@@ -116,17 +116,17 @@ public class NovationNova1BankDriver extends BankDriver {
 			sysex[7] = (byte) 0x00;
 			sysex[8] = (byte) 0x09;
 			sysex[295] = (byte) 0xF7;
-			System.arraycopy(((Patch) bank).getSysex(), getPatchStart(patchNum), sysex, 9, 296 - 9);
-			Patch p = new Patch(sysex, getDevice());
+			System.arraycopy(((PatchDataImpl) bank).getSysex(), getPatchStart(patchNum), sysex, 9, 296 - 9);
+			PatchDataImpl p = new PatchDataImpl(sysex, getDevice());
 			p.calculateChecksum();
 			return p;
 		} catch (Exception e) {
-			ErrorMsg.reportError("Error", "Error in Nova1 Bank Driver", e);
+			ErrorMsgUtil.reportError("Error", "Error in Nova1 Bank Driver", e);
 			return null;
 		}
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		// On the Nova, Bank A or Bank B dump are just a collection of 128 writable single dump
 		// ie : single dump meant to go to a specific memory location (see the storePatch method
 		// of the SingleDriver. There is no additionnal header on the Bank dump itself.
@@ -147,7 +147,7 @@ public class NovationNova1BankDriver extends BankDriver {
 		sysexHeader[7] = (byte) 0x02;
 		sysexHeader[8] = (byte) (0x05); // default to create a bank A
 		sysexHeader[9] = (byte) 0x00; // this is the patch number
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		for (int i = 0; i < 128; i++) {
 			sysexHeader[9] = (byte) i;
 			System.arraycopy(sysexHeader, 0, p.getSysex(), i * 297, 10);
@@ -158,7 +158,7 @@ public class NovationNova1BankDriver extends BankDriver {
 		return p;
 	}
 
-	public void storePatch(Patch bank, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl bank, int bankNum, int patchNum) {
 		// This is called when the user want to Store a bank.
 		// The bank number (bank A or B) information is written in EACH writable single dump
 		// (a bank is just a group of individual single dump)
@@ -166,21 +166,21 @@ public class NovationNova1BankDriver extends BankDriver {
 		// either 5 (Nova bank A) or 6 (Nova bank B)
 
 		for (int i = 0; i < 128; i++) {
-			((Patch) bank).getSysex()[getPatchStart(i) - 2] = (byte) (bankNum + 5);
+			((PatchDataImpl) bank).getSysex()[getPatchStart(i) - 2] = (byte) (bankNum + 5);
 		}
 
 		byte[] newsysex = new byte[297];
-		Patch p = new Patch(newsysex);
+		PatchDataImpl p = new PatchDataImpl(newsysex);
 		try {
 			for (int i = 0; i < 128; i++) {
-				System.arraycopy(((Patch) bank).getSysex(), 297 * i, p.getSysex(), 0, 297);
+				System.arraycopy(((PatchDataImpl) bank).getSysex(), 297 * i, p.getSysex(), 0, 297);
 				sendPatchWorker(p);
 				Thread.sleep(150); // Nova have problem receiving too fast,
 									// NOTE : Do not modify this to send the bank in one shot! It will be faster but
 									// some patch will not be received correctly on the Nova!
 			}
 		} catch (Exception e) {
-			ErrorMsg.reportError("Error", "Unable to send Patch", e);
+			ErrorMsgUtil.reportError("Error", "Unable to send Patch", e);
 		}
 	}
 

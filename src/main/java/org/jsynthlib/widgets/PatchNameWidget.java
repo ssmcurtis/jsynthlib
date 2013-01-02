@@ -6,8 +6,8 @@ import java.awt.event.FocusListener;
 
 import javax.swing.JTextField;
 
-import org.jsynthlib.menu.patch.IPatch;
-import org.jsynthlib.menu.patch.IPatchDriver;
+import org.jsynthlib.model.driver.SynthDriverPatch;
+import org.jsynthlib.model.patch.Patch;
 
 /**
  * SysexWidget for patch name.
@@ -19,7 +19,7 @@ public class PatchNameWidget extends SysexWidget {
 	protected JTextField name;
 	protected int patchNameSize;
 
-	public PatchNameWidget(IPatch patch, IParameter param) {
+	public PatchNameWidget(Patch patch, IParameter param) {
 		super(patch, param);
 
 		patchNameSize = param.getLength();
@@ -35,7 +35,7 @@ public class PatchNameWidget extends SysexWidget {
 	 * @param patch
 	 *            a <code>Patch</code>, which is edited.
 	 */
-	public PatchNameWidget(String label, IPatch patch) {
+	public PatchNameWidget(String label, Patch patch) {
 		this(label, patch, patch.getNameSize());
 	}
 
@@ -49,7 +49,7 @@ public class PatchNameWidget extends SysexWidget {
 	 * @param patchNameSize
 	 *            maximum length of patch name
 	 */
-	public PatchNameWidget(String label, IPatch patch, int patchNameSize) {
+	public PatchNameWidget(String label, Patch patch, int patchNameSize) {
 		super(label, patch, null, null);
 
 		this.patchNameSize = patchNameSize;
@@ -83,7 +83,7 @@ public class PatchNameWidget extends SysexWidget {
 	 * invoked when focus is lost from the text field. <code>driver.setPatchName()</code> is called.
 	 */
 	protected void eventListener(FocusEvent e) {
-		IPatchDriver driver = getDriver();
+		SynthDriverPatch driver = getDriver();
 		/*
 		 * XXX: Need to handle the parameter case here, but we need param listeners first
 		 */

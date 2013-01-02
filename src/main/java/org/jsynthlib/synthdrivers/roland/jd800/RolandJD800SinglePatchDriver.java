@@ -23,20 +23,20 @@ package org.jsynthlib.synthdrivers.roland.jd800;
 
 import java.io.InputStream;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.IPatch;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.PatchSingle;
-import org.jsynthlib.menu.patch.SysexHandler;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.model.patch.PatchSingle;
 import org.jsynthlib.tools.DriverUtil;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 /**
  * Single Patch Driver for Roland JD800. JD800 operates on memory areas instead of a patch concept. The maximum size of
  * data send in one sysex message is 256 bytes. The single patch size is 384 bytes so it needs 2 sysex messages. The
  * author decided to join both sysex messages into one including the header of the the first one at the beginning.
  */
-public class RolandJD800SinglePatchDriver extends Driver {
+public class RolandJD800SinglePatchDriver extends SynthDriverPatchImpl {
 
 	private static final SysexHandler SYS_REQ = new SysexHandler("F0 41 @@ 3D 11 *AddrMSB* *Addr* 00 00 03 00 00 F7");
 	/** The MSB byte of the 3-byte patch address */
@@ -79,14 +79,14 @@ public class RolandJD800SinglePatchDriver extends Driver {
 	/**
 	 * Creates a patch from a byte array. It must concatenate two sysex messages into one.
 	 * 
-	 * @see org.jsynthlib.menu.patch.Driver#createPatch(byte[])
+	 * @see org.jsynthlib.model.driver.SynthDriverPatchImpl#createPatch(byte[])
 	 */
-	public IPatch createPatch(byte[] sysex) {
+	public Patch createPatch(byte[] sysex) {
 		byte[] out = new byte[JD800.SizeOfSinglePatch + JD800.SizeOfSyxHeader];
 		System.arraycopy(sysex, 0, out, 0, JD800.SizeOfSyxHeader + JD800.MaxSyxDataBlock);
 		System.arraycopy(sysex, JD800.SizeOfSyxHeader + JD800.SizeOfPatchSyx1, out, JD800.SizeOfSyxHeader
 				+ JD800.MaxSyxDataBlock, JD800.SizeOfSinglePatch - JD800.MaxSyxDataBlock);
-		return new Patch(out, this);
+		return new PatchDataImpl(out, this);
 	};
 
 	/**
@@ -94,7 +94,7 @@ public class RolandJD800SinglePatchDriver extends Driver {
 	 * patch. It is overrided as it needs to serve for both sysex message sizes: original two sysex messages and single
 	 * concatenated one.
 	 * 
-	 * @see org.jsynthlib.menu.patch.Driver#supportsPatch(String, byte[])
+	 * @see org.jsynthlib.model.driver.SynthDriverPatchImpl#supportsPatch(String, byte[])
 	 */
 	public boolean supportsPatch(String patchString, byte[] sysex) {
 		// The statement below has been changed when compared to original. The rest is the same.
@@ -122,9 +122,9 @@ public class RolandJD800SinglePatchDriver extends Driver {
 	 * Sends a patch to a set location on a synth. The method creates two sysex messages as it is expected for JD800.
 	 * <code>bankNum</code> is ignored.
 	 * 
-	 * @see Patch#send(int, int)
+	 * @see PatchDataImpl#send(int, int)
 	 */
-	protected void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 
 		byte[] s1 = new byte[JD800.SizeOfPatchSyx1];
 		byte[] s2 = new byte[JD800.SizeOfPatchSyx2];
@@ -139,7 +139,7 @@ public class RolandJD800SinglePatchDriver extends Driver {
 		System.arraycopy(p.getSysex(), JD800.SizeOfSyxHeader, s1, JD800.SizeOfSyxHeader, JD800.MaxSyxDataBlock);
 		DriverUtil.calculateChecksum(s1, JD800.checksumStartSyx1, JD800.checksumEndSyx1, JD800.checksumOffsetSyx1);
 		s1[265] = (byte) 0xF7;
-		sendPatchWorker(new Patch(s1, this));
+		sendPatchWorker(new PatchDataImpl(s1, this));
 		try {
 			Thread.sleep(25);
 		} catch (Exception e) {
@@ -158,18 +158,18 @@ public class RolandJD800SinglePatchDriver extends Driver {
 				JD800.SizeOfSinglePatch - JD800.MaxSyxDataBlock);
 		DriverUtil.calculateChecksum(s2, JD800.checksumStartSyx2, JD800.checksumEndSyx2, JD800.checksumOffsetSyx2);
 		s2[137] = (byte) 0xF7;
-		sendPatchWorker(new Patch(s2, this));
+		sendPatchWorker(new PatchDataImpl(s2, this));
 	};
 
 	/**
 	 * Sends a patch to the synth's edit buffer.
 	 * <p>
 	 * 
-	 * @see #storePatch(Patch, int, int)
-	 * @see Patch#send()
+	 * @see #storePatch(PatchDataImpl, int, int)
+	 * @see PatchDataImpl#send()
 	 * @see PatchSingle#send()
 	 */
-	protected void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		storePatch(p, 0, 0);
 	};
 
@@ -177,7 +177,7 @@ public class RolandJD800SinglePatchDriver extends Driver {
 	 * Creates a new initial patch. The patch is read from the JD800_InitialPatch.syx file which is a dump received from
 	 * the JD800 using Data Transfer button and 'Patch dump' option. The messages are concatenated into one.
 	 */
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] out = new byte[JD800.SizeOfSyxHeader + JD800.SizeOfSinglePatch];
 		InputStream fileIn = getClass().getResourceAsStream("JD800_InitialPatch.syx");
 		byte[] buffer = new byte[JD800.SizeOfPatchSyx1 + JD800.SizeOfPatchSyx2];
@@ -187,9 +187,9 @@ public class RolandJD800SinglePatchDriver extends Driver {
 			System.arraycopy(buffer, 0, out, 0, JD800.MaxSyxDataBlock + JD800.SizeOfSyxHeader);
 			System.arraycopy(buffer, JD800.SizeOfPatchSyx1 + JD800.SizeOfSyxHeader, out, JD800.SizeOfSyxHeader
 					+ JD800.MaxSyxDataBlock, JD800.SizeOfSinglePatch - JD800.MaxSyxDataBlock);
-			return new Patch(out, this);
+			return new PatchDataImpl(out, this);
 		} catch (Exception e) {
-			ErrorMsg.reportError("Error", "Unable to find JD800_InitialPatch.syx", e);
+			ErrorMsgUtil.reportError("Error", "Unable to find JD800_InitialPatch.syx", e);
 			return null;
 		}
 	};

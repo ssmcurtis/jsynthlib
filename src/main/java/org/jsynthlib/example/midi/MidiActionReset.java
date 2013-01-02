@@ -66,6 +66,7 @@ public class MidiActionReset implements Runnable, ThreadStop {
 					}
 					for (int channel = 0; channel < 16; channel++) {
 						t.appendText(deviceInfo.getName() + " channel: " + (channel + 1));
+						
 						ShortMessage allControllersOff = new ShortMessage();
 						ShortMessage allNotesOff = new ShortMessage();
 						try {
@@ -76,8 +77,9 @@ public class MidiActionReset implements Runnable, ThreadStop {
 						} catch (InvalidMidiDataException e) {
 							e.printStackTrace();
 						}
+						
+						
 						if (stopThread) {
-
 							t.appendText("Device reset stopped");
 							thread = null;
 							return;

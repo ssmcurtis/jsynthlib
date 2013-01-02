@@ -21,8 +21,8 @@
 
 package org.jsynthlib.synthdrivers.line6.pod20;
 
-import org.jsynthlib.menu.patch.Converter;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.driver.ConverterImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 /**
  * Removes "Garbage Data" from Line6 response to dump request and extracts desired patch.
@@ -36,7 +36,7 @@ import org.jsynthlib.menu.patch.Patch;
  * 
  * @author Jeff Weber
  */
-public class Line6Pod20Converter extends Converter {
+public class Line6Pod20Converter extends ConverterImpl {
 
 	/** Constructor for Line6Pod20Converter */
 	Line6Pod20Converter() {
@@ -76,17 +76,17 @@ public class Line6Pod20Converter extends Converter {
 	 * Extracts a Line6 patch from a Line6 patch dump response (block of data). Calls parseSysex to do the extraction.
 	 * If the extracted patch is an edit buffer patch, calls convertToProgramPatch.
 	 */
-	public Patch[] extractPatch(Patch p) {
+	public PatchDataImpl[] extractPatch(PatchDataImpl p) {
 		byte[] sysex = parseSysex(p.getByteArray());
 		if (sysex[6] == (byte) 0x01) { // Is this an edit buffer patch?
 			sysex = convertToProgramPatch(sysex);
 		}
 
-		Patch[] newPatchArray = new Patch[1];
+		PatchDataImpl[] newPatchArray = new PatchDataImpl[1];
 		if (sysex[6] == (byte) 0x00) { // Is this a program patch?
-			newPatchArray[0] = new Patch(sysex, new Line6Pod20SingleDriver());
+			newPatchArray[0] = new PatchDataImpl(sysex, new Line6Pod20SingleDriver());
 		} else {
-			newPatchArray[0] = new Patch(sysex, new Line6Pod20BankDriver());
+			newPatchArray[0] = new PatchDataImpl(sysex, new Line6Pod20BankDriver());
 		}
 		return newPatchArray;
 	}

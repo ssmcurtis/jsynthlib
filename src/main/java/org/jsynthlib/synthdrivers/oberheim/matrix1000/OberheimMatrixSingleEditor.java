@@ -21,14 +21,14 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
-import org.jsynthlib.tools.ErrorMsg;
-import org.jsynthlib.tools.Utility;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
+import org.jsynthlib.tools.UiUtil;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.EnvelopeWidget;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.PatchNameWidget;
 import org.jsynthlib.widgets.ScrollBarWidget;
 import org.jsynthlib.widgets.SysexSender;
@@ -52,7 +52,7 @@ class OberheimMatrixSingleEditor extends PatchEditorFrame {
 			"ENV3 Delay", "ENV3 Attack", "ENV3 Decay", "ENV3 Release", "ENV3 Amplitude", "LFO1 Speed",
 			"LFO1 Amplitude", "LFO2 Speed", "LFO2 Amplitude", "Portamento Time" };
 
-	public OberheimMatrixSingleEditor(Patch patch) {
+	public OberheimMatrixSingleEditor(PatchDataImpl patch) {
 		super("Oberheim Matrix Single Editor", patch);
 
 		JTabbedPane tabPane = new JTabbedPane();
@@ -578,9 +578,9 @@ class OberheimMatrixSingleEditor extends PatchEditorFrame {
 		gbc.fill = GridBagConstraints.BOTH;
 		scrollPane.add(tabPane, gbc);
 		pack();
-		if (Utility.getOSName().equals("Linux")) // Does J2SE 1.4 still require this?
+		if (UiUtil.getOSName().equals("Linux")) // Does J2SE 1.4 still require this?
 		{
-			ErrorMsg.reportStatus("Matrix1000Editor:  Linux Detected-- adding 30 pixels to window height to compensate for Sun/JRE bug");
+			ErrorMsgUtil.reportStatus("Matrix1000Editor:  Linux Detected-- adding 30 pixels to window height to compensate for Sun/JRE bug");
 			Dimension rv = getSize();
 			setSize(rv.width, rv.height + 30);
 		}
@@ -735,9 +735,9 @@ class OberheimMatrixSingleEditor extends PatchEditorFrame {
 	}
 
 	class CheckBoxCellRenderer implements TableCellRenderer {
-		Patch patch;
+		PatchDataImpl patch;
 
-		CheckBoxCellRenderer(Patch p) {
+		CheckBoxCellRenderer(PatchDataImpl p) {
 			patch = p;
 		}
 
@@ -862,7 +862,7 @@ class OberheimMatrixSingleEditor extends PatchEditorFrame {
 
 	// Parameter Model for most of the Matrix1000 Parameters
 	class MtxModel extends ParamModel {
-		public MtxModel(Patch p, int o) {
+		public MtxModel(PatchDataImpl p, int o) {
 			super(p, o * 2 + 5);
 		}
 
@@ -881,7 +881,7 @@ class OberheimMatrixSingleEditor extends PatchEditorFrame {
 	class BitModel extends ParamModel {
 		int bit;
 
-		public BitModel(Patch p, int o, int b) {
+		public BitModel(PatchDataImpl p, int o, int b) {
 			super(p, o * 2 + 5);
 			bit = b;
 		}
@@ -915,10 +915,10 @@ class OberheimMatrixSingleEditor extends PatchEditorFrame {
 	class BitSender extends SysexSender {
 		int parameter;
 		int ofs;
-		org.jsynthlib.menu.patch.Patch patch;
+		org.jsynthlib.model.patch.PatchDataImpl patch;
 		byte[] b = new byte[7];
 
-		public BitSender(org.jsynthlib.menu.patch.Patch p, int param, int o) {
+		public BitSender(org.jsynthlib.model.patch.PatchDataImpl p, int param, int o) {
 			parameter = param;
 			ofs = o * 2 + 5;
 			patch = p;
@@ -942,7 +942,7 @@ class OberheimMatrixSingleEditor extends PatchEditorFrame {
 	// didn't
 	// handle detune correctly. This sounds like it does the right thing though.
 	class DetuneModel extends ParamModel {
-		public DetuneModel(Patch p, int o) {
+		public DetuneModel(PatchDataImpl p, int o) {
 			super(p, o * 2 + 5);
 		}
 
@@ -991,7 +991,7 @@ class OberheimMatrixSingleEditor extends PatchEditorFrame {
 
 	// Model for Modulation Matrix Amount Parameters
 	class ModModel extends ParamModel {
-		public ModModel(Patch p, int o) {
+		public ModModel(PatchDataImpl p, int o) {
 			super(p, o * 2 + 5);
 		}
 
@@ -1017,10 +1017,10 @@ class OberheimMatrixSingleEditor extends PatchEditorFrame {
 	// In order to send a change to a ModMatrix entry, you gotta resend the entire entry...
 	class ModSender extends SysexSender {
 		int modnum;
-		Patch patch;
+		PatchDataImpl patch;
 		byte[] b = new byte[9];
 
-		public ModSender(org.jsynthlib.menu.patch.Patch p, int m) // m=# of mod matrix to send (0-9)
+		public ModSender(org.jsynthlib.model.patch.PatchDataImpl p, int m) // m=# of mod matrix to send (0-9)
 		{
 			modnum = m;
 			patch = p;

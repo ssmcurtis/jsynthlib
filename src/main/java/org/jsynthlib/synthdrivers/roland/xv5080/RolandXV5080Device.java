@@ -6,7 +6,7 @@ package org.jsynthlib.synthdrivers.roland.xv5080;
 
 import java.util.prefs.Preferences;
 
-import org.jsynthlib.menu.patch.Device;
+import org.jsynthlib.model.device.Device;
 
 /**
  * 

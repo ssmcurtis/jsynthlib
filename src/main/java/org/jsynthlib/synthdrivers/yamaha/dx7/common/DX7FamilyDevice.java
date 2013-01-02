@@ -34,7 +34,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.jsynthlib.menu.patch.Device;
+import org.jsynthlib.model.device.Device;
 
 public class DX7FamilyDevice extends Device {
 	// flag interpretation: bit1 - 1=on, 0=off

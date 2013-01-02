@@ -11,13 +11,13 @@ import java.io.UnsupportedEncodingException;
 
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 // XXX extending BankDriver.  Is this correct?
-public class NovationNova1SinglePerformanceDriver extends BankDriver {
+public class NovationNova1SinglePerformanceDriver extends SynthDriverBank {
 
 	public NovationNova1SinglePerformanceDriver() {
 		super("Peformance (single)", "Yves Lefebvre", 6, 1);
@@ -38,28 +38,28 @@ public class NovationNova1SinglePerformanceDriver extends BankDriver {
 		return start;
 	}
 
-	public String getPatchName(Patch ip) {
+	public String getPatchName(PatchDataImpl ip) {
 		// This method get the name of the performance
 		try {
-			StringBuffer s = new StringBuffer(new String(((Patch) ip).getSysex(), (296 * 8) + 8, 16, "US-ASCII"));
+			StringBuffer s = new StringBuffer(new String(((PatchDataImpl) ip).getSysex(), (296 * 8) + 8, 16, "US-ASCII"));
 			return s.toString();
 		} catch (UnsupportedEncodingException ex) {
 			return "-";
 		}
 	}
 
-	public String getPatchName(Patch p, int patchNum) {
+	public String getPatchName(PatchDataImpl p, int patchNum) {
 		// This method get the name of individual patch in the performance
 		int nameStart = getPatchStart(patchNum);
 		try {
-			StringBuffer s = new StringBuffer(new String(((Patch) p).getSysex(), nameStart, 16, "US-ASCII"));
+			StringBuffer s = new StringBuffer(new String(((PatchDataImpl) p).getSysex(), nameStart, 16, "US-ASCII"));
 			return s.toString();
 		} catch (UnsupportedEncodingException ex) {
 			return "-";
 		}
 	}
 
-	public void setPatchName(Patch p, int patchNum, String name) {
+	public void setPatchName(PatchDataImpl p, int patchNum, String name) {
 		patchNameSize = 16;
 		patchNameStart = getPatchStart(patchNum);
 
@@ -70,7 +70,7 @@ public class NovationNova1SinglePerformanceDriver extends BankDriver {
 		try {
 			namebytes = name.getBytes("US-ASCII");
 			for (int i = 0; i < patchNameSize; i++)
-				((Patch) p).getSysex()[patchNameStart + i] = namebytes[i];
+				((PatchDataImpl) p).getSysex()[patchNameStart + i] = namebytes[i];
 		} catch (UnsupportedEncodingException ex) {
 			return;
 		}
@@ -81,11 +81,11 @@ public class NovationNova1SinglePerformanceDriver extends BankDriver {
 	//
 	// }
 
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 
 	}
 
-	public void putPatch(Patch bank, Patch p, int patchNum) {
+	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) {
 		// This method is called when doing a paste (from another bank or a single)
 		// the patch received will be a single dump (meant for the edit buffer)
 		// we need to extract the actual patch info and paste it in the bank itself
@@ -96,11 +96,11 @@ public class NovationNova1SinglePerformanceDriver extends BankDriver {
 			return;
 		}
 
-		System.arraycopy(((Patch) p).getSysex(), 9, ((Patch) bank).getSysex(), getPatchStart(patchNum), 296 - 9);
+		System.arraycopy(((PatchDataImpl) p).getSysex(), 9, ((PatchDataImpl) bank).getSysex(), getPatchStart(patchNum), 296 - 9);
 		calculateChecksum(bank);
 	}
 
-	public Patch getPatch(Patch bank, int patchNum) {
+	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
 		// this method is call when you have a single perf opened and want to send or play individual patches
 		// OR when you do a Cut/Copy
 		// The method is call to retreive a single patch
@@ -118,17 +118,17 @@ public class NovationNova1SinglePerformanceDriver extends BankDriver {
 			sysex[7] = (byte) 0x00;
 			sysex[8] = (byte) 0x09;
 			sysex[295] = (byte) 0xF7;
-			System.arraycopy(((Patch) bank).getSysex(), getPatchStart(patchNum), sysex, 9, 296 - 9);
-			Patch p = new Patch(sysex, getDevice());
+			System.arraycopy(((PatchDataImpl) bank).getSysex(), getPatchStart(patchNum), sysex, 9, 296 - 9);
+			PatchDataImpl p = new PatchDataImpl(sysex, getDevice());
 			p.calculateChecksum();
 			return p;
 		} catch (Exception e) {
-			ErrorMsg.reportError("Error", "Error in Nova1 Bank Driver", e);
+			ErrorMsgUtil.reportError("Error", "Error in Nova1 Bank Driver", e);
 			return null;
 		}
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[((296 * 8) + 406)]; // 406 is the size of the actual Performance data
 													// Note that there is 8 part even if only 6 are usable
 													// this is to be compatible with the supernova
@@ -143,7 +143,7 @@ public class NovationNova1SinglePerformanceDriver extends BankDriver {
 		sysexHeader[7] = (byte) 0x00;
 		sysexHeader[8] = (byte) (0x00); // this is the part number in the performance
 
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		for (int i = 0; i < 8; i++) {
 			sysexHeader[8] = (byte) i;
 			System.arraycopy(sysexHeader, 0, p.getSysex(), i * 296, 9);
@@ -157,7 +157,7 @@ public class NovationNova1SinglePerformanceDriver extends BankDriver {
 		return p;
 	}
 
-	public void storePatch(Patch bank, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl bank, int bankNum, int patchNum) {
 		JOptionPane
 				.showMessageDialog(
 						null,

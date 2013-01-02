@@ -21,12 +21,12 @@
 
 package org.jsynthlib.synthdrivers.yamaha.a01v;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.DriverUtil;
 
-public class Yamaha01vDynamicsDriver extends Driver {
+public class Yamaha01vDynamicsDriver extends SynthDriverPatchImpl {
 
 	private static final SysexHandler SYS_REQ = new SysexHandler(
 			"F0 43 *ID* 7E 4C 4D 20 20 38 42 33 34 59 *patchNum* F7");
@@ -71,9 +71,9 @@ public class Yamaha01vDynamicsDriver extends Driver {
 	 * Sends a patch to a set location on a synth.
 	 * <p>
 	 * 
-	 * @see Patch#send(int, int)
+	 * @see PatchDataImpl#send(int, int)
 	 */
-	protected void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		patchNum = correctPatchNumber(patchNum);
 		setPatchNum(patchNum);
 		setBankNum(0);
@@ -84,11 +84,11 @@ public class Yamaha01vDynamicsDriver extends Driver {
 	}
 
 	/**
-	 * @see org.jsynthlib.menu.patch.Driver#createNewPatch()
+	 * @see org.jsynthlib.model.driver.SynthDriverPatchImpl#createNewPatch()
 	 */
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[patchSize];
-		Patch p;
+		PatchDataImpl p;
 
 		try {
 			java.io.InputStream fileIn = getClass().getResourceAsStream("01v_Dynamics.syx");
@@ -100,7 +100,7 @@ public class Yamaha01vDynamicsDriver extends Driver {
 		}
 		;
 
-		p = new Patch(sysex, this);
+		p = new PatchDataImpl(sysex, this);
 		return p;
 	}
 

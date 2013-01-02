@@ -5,11 +5,11 @@ package org.jsynthlib.synthdrivers.ensoniq.esq1;
 
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
-public class EnsoniqESQ1BankDriver extends BankDriver {
+public class EnsoniqESQ1BankDriver extends SynthDriverBank {
 
 	public EnsoniqESQ1BankDriver()
 
@@ -33,18 +33,18 @@ public class EnsoniqESQ1BankDriver extends BankDriver {
 		return start;
 	}
 
-	public String getPatchName(Patch p, int patchNum) {
+	public String getPatchName(PatchDataImpl p, int patchNum) {
 		int nameStart = getPatchStart(patchNum);
 		nameStart += 0; // offset of name in patch data
 
 		try {
 			byte[] b = new byte[6];
-			b[0] = ((byte) (((Patch) p).getSysex()[nameStart] + ((Patch) p).getSysex()[nameStart + 1] * 16));
-			b[1] = ((byte) (((Patch) p).getSysex()[nameStart + 2] + ((Patch) p).getSysex()[nameStart + 3] * 16));
-			b[2] = ((byte) (((Patch) p).getSysex()[nameStart + 4] + ((Patch) p).getSysex()[nameStart + 5] * 16));
-			b[3] = ((byte) (((Patch) p).getSysex()[nameStart + 6] + ((Patch) p).getSysex()[nameStart + 7] * 16));
-			b[4] = ((byte) (((Patch) p).getSysex()[nameStart + 8] + ((Patch) p).getSysex()[nameStart + 9] * 16));
-			b[5] = ((byte) (((Patch) p).getSysex()[nameStart + 10] + ((Patch) p).getSysex()[nameStart + 11] * 16));
+			b[0] = ((byte) (((PatchDataImpl) p).getSysex()[nameStart] + ((PatchDataImpl) p).getSysex()[nameStart + 1] * 16));
+			b[1] = ((byte) (((PatchDataImpl) p).getSysex()[nameStart + 2] + ((PatchDataImpl) p).getSysex()[nameStart + 3] * 16));
+			b[2] = ((byte) (((PatchDataImpl) p).getSysex()[nameStart + 4] + ((PatchDataImpl) p).getSysex()[nameStart + 5] * 16));
+			b[3] = ((byte) (((PatchDataImpl) p).getSysex()[nameStart + 6] + ((PatchDataImpl) p).getSysex()[nameStart + 7] * 16));
+			b[4] = ((byte) (((PatchDataImpl) p).getSysex()[nameStart + 8] + ((PatchDataImpl) p).getSysex()[nameStart + 9] * 16));
+			b[5] = ((byte) (((PatchDataImpl) p).getSysex()[nameStart + 10] + ((PatchDataImpl) p).getSysex()[nameStart + 11] * 16));
 			StringBuffer s = new StringBuffer(new String(b, 0, 6, "US-ASCII"));
 			return s.toString();
 		} catch (Exception ex) {
@@ -53,25 +53,25 @@ public class EnsoniqESQ1BankDriver extends BankDriver {
 
 	}
 
-	public void setPatchName(Patch p, int patchNum, String name) {
+	public void setPatchName(PatchDataImpl p, int patchNum, String name) {
 		byte[] namebytes = new byte[32];
 		int nameStart = getPatchStart(patchNum);
 		try {
 			if (name.length() < 6)
 				name = name + "        ";
 			namebytes = name.getBytes("US-ASCII");
-			((Patch) p).getSysex()[nameStart] = ((byte) (namebytes[0] % 16));
-			((Patch) p).getSysex()[nameStart + 1] = ((byte) (namebytes[0] / 16));
-			((Patch) p).getSysex()[nameStart + 2] = ((byte) (namebytes[1] % 16));
-			((Patch) p).getSysex()[nameStart + 3] = ((byte) (namebytes[1] / 16));
-			((Patch) p).getSysex()[nameStart + 4] = ((byte) (namebytes[2] % 16));
-			((Patch) p).getSysex()[nameStart + 5] = ((byte) (namebytes[2] / 16));
-			((Patch) p).getSysex()[nameStart + 6] = ((byte) (namebytes[3] % 16));
-			((Patch) p).getSysex()[nameStart + 7] = ((byte) (namebytes[3] / 16));
-			((Patch) p).getSysex()[nameStart + 8] = ((byte) (namebytes[4] % 16));
-			((Patch) p).getSysex()[nameStart + 9] = ((byte) (namebytes[4] / 16));
-			((Patch) p).getSysex()[nameStart + 10] = ((byte) (namebytes[5] % 16));
-			((Patch) p).getSysex()[nameStart + 11] = ((byte) (namebytes[5] / 16));
+			((PatchDataImpl) p).getSysex()[nameStart] = ((byte) (namebytes[0] % 16));
+			((PatchDataImpl) p).getSysex()[nameStart + 1] = ((byte) (namebytes[0] / 16));
+			((PatchDataImpl) p).getSysex()[nameStart + 2] = ((byte) (namebytes[1] % 16));
+			((PatchDataImpl) p).getSysex()[nameStart + 3] = ((byte) (namebytes[1] / 16));
+			((PatchDataImpl) p).getSysex()[nameStart + 4] = ((byte) (namebytes[2] % 16));
+			((PatchDataImpl) p).getSysex()[nameStart + 5] = ((byte) (namebytes[2] / 16));
+			((PatchDataImpl) p).getSysex()[nameStart + 6] = ((byte) (namebytes[3] % 16));
+			((PatchDataImpl) p).getSysex()[nameStart + 7] = ((byte) (namebytes[3] / 16));
+			((PatchDataImpl) p).getSysex()[nameStart + 8] = ((byte) (namebytes[4] % 16));
+			((PatchDataImpl) p).getSysex()[nameStart + 9] = ((byte) (namebytes[4] / 16));
+			((PatchDataImpl) p).getSysex()[nameStart + 10] = ((byte) (namebytes[5] % 16));
+			((PatchDataImpl) p).getSysex()[nameStart + 11] = ((byte) (namebytes[5] / 16));
 		} catch (Exception e) {
 		}
 
@@ -82,21 +82,21 @@ public class EnsoniqESQ1BankDriver extends BankDriver {
 	// {
 	// }
 
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 	}
 
-	public void putPatch(Patch bank, Patch p, int patchNum) {
+	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) {
 		if (!canHoldPatch(p)) {
 			JOptionPane.showMessageDialog(null, "This type of patch does not fit in to this type of bank.", "Error",
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
-		System.arraycopy(((Patch) p).getSysex(), 5, ((Patch) bank).getSysex(), getPatchStart(patchNum), 204);
+		System.arraycopy(((PatchDataImpl) p).getSysex(), 5, ((PatchDataImpl) bank).getSysex(), getPatchStart(patchNum), 204);
 		calculateChecksum(bank);
 	}
 
-	public Patch getPatch(Patch bank, int patchNum) {
+	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
 		try {
 			byte[] sysex = new byte[210];
 			sysex[00] = (byte) 0xF0;
@@ -105,17 +105,17 @@ public class EnsoniqESQ1BankDriver extends BankDriver {
 			sysex[03] = (byte) 0x00;
 			sysex[04] = (byte) 0x01;
 			sysex[209] = (byte) 0xF7;
-			System.arraycopy(((Patch) bank).getSysex(), getPatchStart(patchNum), sysex, 5, 204);
-			Patch p = new Patch(sysex, getDevice());
+			System.arraycopy(((PatchDataImpl) bank).getSysex(), getPatchStart(patchNum), sysex, 5, 204);
+			PatchDataImpl p = new PatchDataImpl(sysex, getDevice());
 			p.calculateChecksum();
 			return p;
 		} catch (Exception e) {
-			ErrorMsg.reportError("Error", "Error in ESQ1 Bank Driver", e);
+			ErrorMsgUtil.reportError("Error", "Error in ESQ1 Bank Driver", e);
 			return null;
 		}
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[15123];
 		sysex[0] = (byte) 0xF0;
 		sysex[1] = (byte) 0x40;
@@ -125,7 +125,7 @@ public class EnsoniqESQ1BankDriver extends BankDriver {
 		sysex[5] = (byte) 0x04;
 		sysex[6] = (byte) 0x0;
 		sysex[15122] = (byte) 0xF7;
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		for (int i = 0; i < 64; i++)
 			setPatchName(p, i, "NEWSND");
 		calculateChecksum(p);

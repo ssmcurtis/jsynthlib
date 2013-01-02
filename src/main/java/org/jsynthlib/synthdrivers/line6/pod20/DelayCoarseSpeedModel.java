@@ -21,8 +21,8 @@
 
 package org.jsynthlib.synthdrivers.line6.pod20;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.widgets.ParamModel;
 
 /**
  * Delay Speed is represented by three bytes in offsets 27-29. There are two controls in the editor, one for coarse
@@ -75,7 +75,7 @@ class DelayCoarseSpeedModel extends ParamModel {
 	 * the offset into the sysex record in non-nibblized bytes, not including the header bytes. int maxCC is the maximum
 	 * CC value. int maxSysex is the max sysex value
 	 */
-	DelayCoarseSpeedModel(Patch p, int o, int maxCC, int maxSysex) {
+	DelayCoarseSpeedModel(PatchDataImpl p, int o, int maxCC, int maxSysex) {
 		this(p, o, 0, maxCC, 0, maxSysex);
 	}
 
@@ -85,7 +85,7 @@ class DelayCoarseSpeedModel extends ParamModel {
 	 * are the minimum and maximum CC values, respectively. int minSysex and int maxSysex are the minimum and maximum
 	 * sysex values, respectively
 	 */
-	private DelayCoarseSpeedModel(Patch p, int o, int minCC, int maxCC, int minSysex, int maxSysex) {
+	private DelayCoarseSpeedModel(PatchDataImpl p, int o, int minCC, int maxCC, int minSysex, int maxSysex) {
 		super(p, o);
 		this.minCC = minCC;
 		this.maxCC = maxCC;

@@ -21,7 +21,7 @@
 
 package org.jsynthlib.synthdrivers.line6.basspod;
 
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 /**
  * Utility class for converting between nibblized and un-nibblized formats of Line6 sysex records.
@@ -45,7 +45,7 @@ class PatchBytes {
 	 * Converts a single byte to two nibblized bytes and writes it to the nibblized sysex record at the position given
 	 * by ofs. The value of ofs refers to the position within the un-nibblized record.
 	 */
-	static void setSysexByte(Patch p, int hSize, int ofs, byte b) {
+	static void setSysexByte(PatchDataImpl p, int hSize, int ofs, byte b) {
 		int offset = (ofs - hSize) * 2 + hSize;
 		int upper = (b & 0xF0) >>> 4;
 		int lower = b & 0x0F;

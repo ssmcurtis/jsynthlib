@@ -22,17 +22,17 @@ package org.jsynthlib.synthdrivers.roland.jv80;
 
 import java.util.Date;
 
-import org.jsynthlib.menu.patch.Device;
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.device.Device;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 /**
  * @author Sander Brandenburg
  * @version $Id$
  */
-public class RolandJV80PatchDriver extends Driver {
+public class RolandJV80PatchDriver extends SynthDriverPatchImpl {
 	final static SysexHandler SYSEX_SETPATCHCOMMONJV880 = new SysexHandler(
 	/* 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F */
 	/* 0000 */"f0 41 @@ 46 12 ** ** ** 00 49 4e 49 54 49 41 4c " +
@@ -103,7 +103,7 @@ public class RolandJV80PatchDriver extends Driver {
 	}
 
 	// Sends a patch to a set location on a synth.
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		setBankNum(bankNum);
 		setPatchNum(patchNum);
 
@@ -115,18 +115,18 @@ public class RolandJV80PatchDriver extends Driver {
 	}
 
 	// Sends a patch to the synth's edit buffer.
-	public void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		setPatchNum(p.getSysex(), 0, -1, -1);
 
 		calculateChecksum(p);
 		sendPatchWorker(p);
 	}
 
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 		calculateChecksum(p, 0);
 	}
 
-	public void calculateChecksum(Patch p, int offset) {
+	public void calculateChecksum(PatchDataImpl p, int offset) {
 		JV80Constants.calculateChecksum(p.getSysex(), offset, patchCommonLength - SYSEX_OVERHEAD);
 		for (int i = 0; i < 4; i++) {
 			JV80Constants.calculateChecksum(p.getSysex(), offset + patchToneOffsets[i], patchToneLength - SYSEX_OVERHEAD);
@@ -144,7 +144,7 @@ public class RolandJV80PatchDriver extends Driver {
 		}
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte sysex[] = new byte[patchSize];
 
 		byte sysexcommon[] = setPatchCommon.toByteArray(getDeviceID(), 00);
@@ -154,12 +154,12 @@ public class RolandJV80PatchDriver extends Driver {
 			System.arraycopy(sysextone, 0, sysex, patchToneOffsets[i], sysextone.length);
 		}
 
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		p.setDate(new Date().toString());
 		return p;
 	}
 
-	public JSLFrame editPatch(Patch p) {
+	public JSLFrame editPatch(PatchDataImpl p) {
 		return new RolandJV80PatchEditor(p);
 	}
 

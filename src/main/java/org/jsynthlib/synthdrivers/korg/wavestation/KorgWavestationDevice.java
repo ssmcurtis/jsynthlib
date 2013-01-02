@@ -8,7 +8,7 @@ package org.jsynthlib.synthdrivers.korg.wavestation;
 
 import java.util.prefs.Preferences;
 
-import org.jsynthlib.menu.patch.Device;
+import org.jsynthlib.model.device.Device;
 
 /**
  * 

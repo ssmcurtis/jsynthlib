@@ -7,8 +7,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.LabelWidget;
@@ -57,7 +57,7 @@ class KawaiK4MultiEditor extends PatchEditorFrame {
 			"C-6", "C-7", "C-8", "C-9", "C-10", "C-11", "C-12", "C-13", "C-14", "C-15", "C-16", "D-1", "D-2", "D-3",
 			"D-4", "D-5", "D-6", "D-7", "D-8", "D-9", "D-10", "D-11", "D-12", "D-13", "D-14", "D-15", "D-16" };
 
-	public KawaiK4MultiEditor(Patch patch) {
+	public KawaiK4MultiEditor(PatchDataImpl patch) {
 		super("Kawai K4 Multi Editor", patch);
 		// Common Pane
 		// gbc.weightx=5;

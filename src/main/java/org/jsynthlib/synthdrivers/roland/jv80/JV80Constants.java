@@ -24,10 +24,10 @@ package org.jsynthlib.synthdrivers.roland.jv80;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.SysexMessage;
 
-import org.jsynthlib.menu.patch.Device;
-import org.jsynthlib.menu.patch.SysexHandler;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.device.Device;
 import org.jsynthlib.tools.DriverUtil;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 /**
  * @author Sander Brandenburg
@@ -124,7 +124,7 @@ public class JV80Constants {
 			dev.send(sm);
 			postSendWait();
 		} catch (InvalidMidiDataException imde) {
-			ErrorMsg.reportError("program eror", "Tried to send invalid midi data", imde);
+			ErrorMsgUtil.reportError("program eror", "Tried to send invalid midi data", imde);
 		}
 	}
 }

@@ -24,34 +24,34 @@
 
 package org.jsynthlib.synthdrivers.midibox.fm;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.widgets.ParamModel;
 
 class MIDIboxFMModel extends ParamModel {
 	int flag;
 	int bitmask;
 	int[] mapped_values;
 
-	public MIDIboxFMModel(Patch _patch, int _offset) {
+	public MIDIboxFMModel(PatchDataImpl _patch, int _offset) {
 		super(_patch, _offset + 10);
 		flag = -1;
 	}
 
-	public MIDIboxFMModel(Patch _patch, int _offset, int _flag) {
+	public MIDIboxFMModel(PatchDataImpl _patch, int _offset, int _flag) {
 		super(_patch, _offset + 10);
 		flag = _flag;
 		bitmask = (1 << flag);
 		mapped_values = new int[] {}; // (empty)
 	}
 
-	public MIDIboxFMModel(Patch _patch, int _offset, int _flag, int _bitmask) {
+	public MIDIboxFMModel(PatchDataImpl _patch, int _offset, int _flag, int _bitmask) {
 		super(_patch, _offset + 10);
 		flag = _flag;
 		bitmask = _bitmask << flag;
 		mapped_values = new int[] {}; // (empty)
 	}
 
-	public MIDIboxFMModel(Patch _patch, int _offset, int _flag, int _bitmask, int[] _mapped_values) {
+	public MIDIboxFMModel(PatchDataImpl _patch, int _offset, int _flag, int _bitmask, int[] _mapped_values) {
 		super(_patch, _offset + 10);
 		flag = _flag;
 		bitmask = _bitmask << flag;

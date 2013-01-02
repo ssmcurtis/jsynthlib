@@ -21,12 +21,12 @@
 
 package org.jsynthlib.synthdrivers.alesis.dmpro;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
-public class AlesisDMProEffectDriver extends Driver {
+public class AlesisDMProEffectDriver extends SynthDriverPatchImpl {
 
 	public AlesisDMProEffectDriver() {
 		super("Effect", "Peter Hageus (peter.hageus@comhem.se)");
@@ -46,24 +46,24 @@ public class AlesisDMProEffectDriver extends Driver {
 
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		setBankNum(bankNum);
 		setPatchNum(patchNum);
-		((Patch) p).getSysex()[6] = (byte) patchNum;
+		((PatchDataImpl) p).getSysex()[6] = (byte) patchNum;
 		sendPatchWorker(p);
 		setPatchNum(patchNum);
 	}
 
-	public void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		// DM Pro editbuffer is named 64
-		((Patch) p).getSysex()[6] = 64;
+		((PatchDataImpl) p).getSysex()[6] = 64;
 		sendPatchWorker(p);
 	}
 
-	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
+	protected void calculateChecksum(PatchDataImpl p, int start, int end, int ofs) {
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 
 		byte[] sysex = new byte[36];
 		sysex[0] = (byte) 0xF0;
@@ -79,13 +79,13 @@ public class AlesisDMProEffectDriver extends Driver {
 
 		sysex[35] = (byte) 0xF7;
 
-		return new Patch(sysex, this);
+		return new PatchDataImpl(sysex, this);
 		// setPatchName(p,"New Effect");
 		// calculateChecksum(p);
 	}
 
-	public JSLFrame editPatch(Patch p) {
-		return new AlesisDMProEffectEditor((Patch) p);
+	public JSLFrame editPatch(PatchDataImpl p) {
+		return new AlesisDMProEffectEditor((PatchDataImpl) p);
 	}
 
 }

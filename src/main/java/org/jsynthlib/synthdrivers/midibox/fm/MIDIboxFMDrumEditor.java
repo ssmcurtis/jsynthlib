@@ -33,8 +33,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.KnobWidget;
@@ -53,7 +53,7 @@ class MIDIboxFMDrumEditor extends PatchEditorFrame {
 
 	ImageIcon wsIcon[] = new ImageIcon[8];
 
-	public MIDIboxFMDrumEditor(Patch patch) {
+	public MIDIboxFMDrumEditor(PatchDataImpl patch) {
 		super("MIDIbox FM Drum Editor", patch);
 		gbc.weightx = 0;
 		gbc.weighty = 0;

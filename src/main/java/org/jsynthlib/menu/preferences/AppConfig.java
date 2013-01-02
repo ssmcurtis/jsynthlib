@@ -19,13 +19,14 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
+import org.jsynthlib.JSynthConstants;
 import org.jsynthlib.JSynthLib;
 import org.jsynthlib.PatchBayApplication;
-import org.jsynthlib.menu.patch.Device;
-import org.jsynthlib.menu.patch.IPatchDriver;
-import org.jsynthlib.tools.ErrorMsg;
-import org.jsynthlib.tools.MacUtils;
-import org.jsynthlib.tools.midi.MidiUtil;
+import org.jsynthlib.model.device.Device;
+import org.jsynthlib.model.driver.SynthDriverPatch;
+import org.jsynthlib.tools.ErrorMsgUtil;
+import org.jsynthlib.tools.MacUtil;
+import org.jsynthlib.tools.MidiUtil;
 
 public class AppConfig {
 	public static final int GUI_MDI = 0;
@@ -45,7 +46,7 @@ public class AppConfig {
 		try {
 			prefs.sync();
 		} catch (BackingStoreException e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 		setLookAndFeel(getLookAndFeel());
 	}
@@ -58,23 +59,22 @@ public class AppConfig {
 			String[] devs;
 
 			// debug prefs
-//			devs = prefsDev.childrenNames();
-//			for (int i = 0; i < devs.length; i++) {
-//				if (prefsDev.nodeExists(devs[i])) {
-//					Preferences.userRoot().node(devs[i]).removeNode();
-//					prefsDev.removeNode();
-//				}
-//			}
-//			prefsDev.flush();
+			// devs = prefsDev.childrenNames();
+			// for (int i = 0; i < devs.length; i++) {
+			// if (prefsDev.nodeExists(devs[i])) {
+			// Preferences.userRoot().node(devs[i]).removeNode();
+			// prefsDev.removeNode();
+			// }
+			// }
+			// prefsDev.flush();
 			devs = prefsDev.childrenNames();
 
 			// Some classes assume that the 1st driver is a Generic Driver.
 			if (prefsDev.nodeExists("org.jsynthlib.synthdrivers.generic.GenericDevice#0")) {
-				addDevice("org.jsynthlib.synthdrivers.generic.GenericDevice",
-						prefsDev.node("org.jsynthlib.synthdrivers.generic.GenericDevice#0"));
+				addDevice(JSynthConstants.SYNTLIB_CLASS_GENERIC, prefsDev.node("org.jsynthlib.synthdrivers.generic.GenericDevice#0"));
 			} else {
 				// create for the 1st time.
-				addDevice("org.jsynthlib.synthdrivers.generic.GenericDevice");
+				addDevice(JSynthConstants.SYNTLIB_CLASS_GENERIC);
 			}
 
 			for (int i = 0; i < devs.length; i++) {
@@ -97,11 +97,11 @@ public class AppConfig {
 			// ErrorMsg.reportStatus("deviceList: " + deviceList);
 			return true;
 		} catch (BackingStoreException e) {
-			ErrorMsg.reportStatus("loadPrefs: " + e);
+			ErrorMsgUtil.reportStatus("loadPrefs: " + e);
 			e.printStackTrace();
 			return false;
 		} catch (Exception e) {
-  			ErrorMsg.reportStatus("loadPrefs: " + e);
+			ErrorMsgUtil.reportStatus("loadPrefs: " + e);
 			e.printStackTrace();
 			return false;
 		}
@@ -115,7 +115,7 @@ public class AppConfig {
 			// Save the appconfig
 			store();
 		} catch (Exception e) {
-			ErrorMsg.reportError("Error", "Unable to Save Preferences", e);
+			ErrorMsgUtil.reportError("Error", "Unable to Save Preferences", e);
 		}
 	}
 
@@ -208,8 +208,38 @@ public class AppConfig {
 	}
 
 	/** Setter for note */
-	public static void setSequenceOrdinal(int note) {
-		prefs.putInt("sequenceOrdinal", note);
+	public static void setSequenceOrdinal(int sequence) {
+		prefs.putInt("sequenceOrdinal", sequence);
+	}
+
+	/** Getter for note */
+	public static int getBpmOrdinal() {
+		return prefs.getInt("bpmOrdinal", 0);
+	}
+
+	/** Setter for note */
+	public static void setBpmOrdinal(int bpm) {
+		prefs.putInt("bpmOrdinal", bpm);
+	}
+
+	/** Getter for note */
+	public static int getOctaveOrdinal() {
+		return prefs.getInt("oactaveOrdinal", 0);
+	}
+
+	/** Setter for note */
+	public static void setOctaveOrdinal(int octave) {
+		prefs.putInt("oactaveOrdinal", octave);
+	}
+
+	/** Getter for note */
+	public static int getLoopcount() {
+		return prefs.getInt("loppCount", 0);
+	}
+
+	/** Setter for note */
+	public static void setLoopcount(int count) {
+		prefs.putInt("loppCount", count);
 	}
 
 	/** Getter for velocity */
@@ -223,7 +253,7 @@ public class AppConfig {
 	}
 
 	/** Getter for delay */
-	// TODO ssmcurtis - notelength ?
+	// TODO ssmCurtis - notelength ?
 	public static int getDelay() {
 		return prefs.getInt("delay", 0);
 	}
@@ -281,13 +311,13 @@ public class AppConfig {
 		try {
 			UIManager.setLookAndFeel(installedLF[lookAndFeel].getClassName());
 		} catch (Exception e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 	}
 
 	/** Getter for guiStyle */
 	public static int getGuiStyle() {
-		return prefs.getInt("guiStyle", MacUtils.isMac() ? GUI_SDI : GUI_MDI);
+		return prefs.getInt("guiStyle", MacUtil.isMac() ? GUI_SDI : GUI_MDI);
 	}
 
 	/** Setter for guiStyle */
@@ -297,13 +327,25 @@ public class AppConfig {
 
 	/** Getter for tool bar */
 	public static boolean getToolBar() {
-		return prefs.getBoolean("toolBar", MacUtils.isMac());
+		return prefs.getBoolean("toolBar", MacUtil.isMac());
 	}
 
 	/** Setter for tool bar */
 	public static void setToolBar(boolean b) {
 		prefs.putBoolean("toolBar", b);
 	}
+
+
+	/** Getter for tool bar */
+	public static boolean getMakeTableSortable() {
+		return prefs.getBoolean("makeTableSortable", false);
+	}
+
+	/** Setter for tool bar */
+	public static void setMakeTableSortable(boolean b) {
+		prefs.putBoolean("makeTableSortable", b);
+	}
+
 
 	/**
 	 * Getter for midiEnable. Returns false if either MIDI input nor output is not available.
@@ -456,6 +498,14 @@ public class AppConfig {
 		prefs.putBoolean("importDirectoryRecursive", enable);
 	}
 
+	public static boolean getAddParentDirectoryName() {
+		return prefs.getBoolean("addParentDirectoryName", false);
+	}
+
+	public static void setAddParentDirectoryName(boolean enable) {
+		prefs.putBoolean("addParentDirectoryName", enable);
+	}
+
 	/**
 	 * Add Device into <code>deviceList</code>.
 	 * 
@@ -489,7 +539,7 @@ public class AppConfig {
 
 	/** returns the 1st unused device node name for Preferences. */
 	private static Preferences getDeviceNode(String s) {
-		ErrorMsg.reportStatus("getDeviceNode: " + s);
+		ErrorMsgUtil.reportStatus("getDeviceNode: " + s);
 		// s = DevicesConfig.getShortNameForClassName(s);
 		// ErrorMsg.reportStatus("getDeviceNode: -> " + s);
 		int i;
@@ -498,7 +548,7 @@ public class AppConfig {
 				; // do nothing
 			return prefsDev.node(s + "#" + i);
 		} catch (BackingStoreException e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 			return null;
 		}
 	}
@@ -518,7 +568,7 @@ public class AppConfig {
 		try {
 			ret.getPreferences().removeNode();
 		} catch (BackingStoreException e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 		return ret;
 	}
@@ -536,8 +586,8 @@ public class AppConfig {
 	/**
 	 * Returns null driver of Generic Device. It is used when proper driver is not found.
 	 */
-	public static IPatchDriver getNullDriver() {
-		return (IPatchDriver) getDevice(0).getDriver(0);
+	public static SynthDriverPatch getNullDriver() {
+		return (SynthDriverPatch) getDevice(0).getDriver(0);
 	}
 
 }

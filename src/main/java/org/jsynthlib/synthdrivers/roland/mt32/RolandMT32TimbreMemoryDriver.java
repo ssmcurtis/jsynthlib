@@ -27,13 +27,13 @@
 
 package org.jsynthlib.synthdrivers.roland.mt32;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
-public class RolandMT32TimbreMemoryDriver extends Driver {
+public class RolandMT32TimbreMemoryDriver extends SynthDriverPatchImpl {
 	/** Header Size of the Data set DT1 message. */
 	private static final int HSIZE = 8;
 	/** Single Patch size */
@@ -65,13 +65,13 @@ public class RolandMT32TimbreMemoryDriver extends Driver {
 	/*
 	 * Send a patch (bulk dump system exclusive message) to MIDI device. The message format here is Data set DT1
 	 */
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		setBankNum(bankNum); // Control change
 		setPatchNum(patchNum); // Program change
 		try {
 			Thread.sleep(100);
 		} catch (Exception e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 
 		int timbreAddr = patchNum * 0x100;
@@ -88,7 +88,7 @@ public class RolandMT32TimbreMemoryDriver extends Driver {
 			sendPatchWorker(p);
 			Thread.sleep(100);
 		} catch (Exception e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 		setPatchNum(patchNum); // Program change
 	}
@@ -97,7 +97,7 @@ public class RolandMT32TimbreMemoryDriver extends Driver {
 	 * Send a Patch (bulk dump system exclusive message) to an edit buffer of MIDI device. Target should be Timbre Temp
 	 * Area 1 - 8. The message format here is Data set DT1
 	 */
-	public void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 
 		p.getSysex()[0] = (byte) 0xF0;
 		p.getSysex()[5] = (byte) 0x08;
@@ -106,7 +106,7 @@ public class RolandMT32TimbreMemoryDriver extends Driver {
 		sendPatchWorker(p);
 	}
 
-	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
+	protected void calculateChecksum(PatchDataImpl p, int start, int end, int ofs) {
 		int sum = 0;
 		for (int i = start; i <= end; i++) {
 			sum += p.getSysex()[i];
@@ -116,7 +116,7 @@ public class RolandMT32TimbreMemoryDriver extends Driver {
 	}
 
 	// not used
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[HSIZE + SSIZE + 1];
 		sysex[0] = (byte) 0xF0;
 		sysex[1] = (byte) 0x41;
@@ -126,13 +126,13 @@ public class RolandMT32TimbreMemoryDriver extends Driver {
 		sysex[5] = (byte) 0x08;
 		sysex[6] = (byte) 0x00;
 		sysex[HSIZE + SSIZE] = (byte) 0xF7;
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		setPatchName(p, "New Timbre");
 		calculateChecksum(p, 5, HSIZE + SSIZE - 2, HSIZE + SSIZE - 1);
 		return p;
 	}
 
-	public JSLFrame editPatch(Patch p) {
+	public JSLFrame editPatch(PatchDataImpl p) {
 		return new RolandMT32TimbreTempEditor(p);
 	}
 

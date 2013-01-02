@@ -15,7 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.SysexWidget;
 
 /**
@@ -24,8 +24,8 @@ import org.jsynthlib.widgets.SysexWidget;
 class PasteDialog extends JDialog {
 	private ButtonGroup rbg;
 	private JCheckBox mDest[] = new JCheckBox[8];
-	private Patch mSourcePatch;
-	private Patch mDestPatch;
+	private PatchDataImpl mSourcePatch;
+	private PatchDataImpl mDestPatch;
 	private ArrayList[] mWidgets;
 
 	/**
@@ -34,7 +34,7 @@ class PasteDialog extends JDialog {
 	 * @param aWidgets
 	 *            table of operator widgets lists
 	 */
-	PasteDialog(Frame aOwner, Patch aSource, Patch aDest, int aPart, ArrayList aWidgets[]) {
+	PasteDialog(Frame aOwner, PatchDataImpl aSource, PatchDataImpl aDest, int aPart, ArrayList aWidgets[]) {
 		super(aOwner, "Paste operators", true);
 
 		mSourcePatch = aSource;

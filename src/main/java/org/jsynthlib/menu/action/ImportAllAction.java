@@ -10,9 +10,9 @@ import javax.swing.JFileChooser;
 
 import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.preferences.AppConfig;
-import org.jsynthlib.menu.ui.window.CompatibleFileDialog;
-import org.jsynthlib.menu.ui.window.ImportAllDialog;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.window.CompatibleFileDialog;
+import org.jsynthlib.menu.window.ImportAllDialog;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 public class ImportAllAction extends AbstractAction {
 	public ImportAllAction(Map<Serializable, Integer> mnemonics) {
@@ -39,7 +39,7 @@ public class ImportAllAction extends AbstractAction {
 			ImportAllDialog sd = new ImportAllDialog(PatchBayApplication.getInstance(), file);
 			sd.setVisible(true);
 		} catch (Exception ex) {
-			ErrorMsg.reportError("Error", "Unable to Import Patches", ex);
+			ErrorMsgUtil.reportError("Error", "Unable to Import Patches", ex);
 		}
 	}
 }

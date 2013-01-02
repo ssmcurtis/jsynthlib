@@ -28,13 +28,13 @@ import java.io.UnsupportedEncodingException;
 
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.DriverUtil;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
-public class MIDIboxFMBankDriver extends BankDriver {
+public class MIDIboxFMBankDriver extends SynthDriverBank {
 	private byte sysex_type;
 	private int num_patches;
 
@@ -65,9 +65,9 @@ public class MIDIboxFMBankDriver extends BankDriver {
 		checksumOffset = num_patches * 256 + 10;
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		for (int i = 0; i < num_patches; ++i) {
-			Patch ps = getPatch(p, i);
+			PatchDataImpl ps = getPatch(p, i);
 			ps.getSysex()[8] = (byte) bankNum;
 			System.out.println("Sending Patch #" + i);
 			send(ps.getSysex());
@@ -89,12 +89,12 @@ public class MIDIboxFMBankDriver extends BankDriver {
 		return start;
 	}
 
-	public String getPatchName(Patch p, int patchNum) {
+	public String getPatchName(PatchDataImpl p, int patchNum) {
 		if (sysex_type < 0x10) {
 			int nameStart = getPatchStart(patchNum);
 			nameStart += 0; // offset of name in patch data
 			try {
-				StringBuffer s = new StringBuffer(new String(((Patch) p).getSysex(), nameStart, 16, "US-ASCII"));
+				StringBuffer s = new StringBuffer(new String(((PatchDataImpl) p).getSysex(), nameStart, 16, "US-ASCII"));
 				return s.toString();
 			} catch (UnsupportedEncodingException ex) {
 				return "-";
@@ -104,7 +104,7 @@ public class MIDIboxFMBankDriver extends BankDriver {
 		}
 	}
 
-	public void setPatchName(Patch p, int patchNum, String name) {
+	public void setPatchName(PatchDataImpl p, int patchNum, String name) {
 		if (sysex_type < 0x10) {
 			patchNameSize = 16;
 			patchNameStart = getPatchStart(patchNum);
@@ -115,25 +115,25 @@ public class MIDIboxFMBankDriver extends BankDriver {
 			try {
 				namebytes = name.getBytes("US-ASCII");
 				for (int i = 0; i < patchNameSize; i++)
-					((Patch) p).getSysex()[patchNameStart + i] = namebytes[i];
+					((PatchDataImpl) p).getSysex()[patchNameStart + i] = namebytes[i];
 			} catch (UnsupportedEncodingException ex) {
 				return;
 			}
 		}
 	}
 
-	public void putPatch(Patch bank, Patch p, int patchNum) {
+	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) {
 		if (!canHoldPatch(p)) {
 			JOptionPane.showMessageDialog(null, "This type of patch does not fit in to this type of bank.", "Error",
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
-		System.arraycopy(((Patch) p).getSysex(), 10, ((Patch) bank).getSysex(), getPatchStart(patchNum), 256);
+		System.arraycopy(((PatchDataImpl) p).getSysex(), 10, ((PatchDataImpl) bank).getSysex(), getPatchStart(patchNum), 256);
 		calculateChecksum(bank);
 	}
 
-	public Patch getPatch(Patch bank, int patchNum) {
+	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
 		try {
 			byte[] sysex = new byte[268];
 			sysex[0] = (byte) 0xF0;
@@ -148,12 +148,12 @@ public class MIDIboxFMBankDriver extends BankDriver {
 			sysex[9] = (byte) (patchNum);
 			sysex[267] = (byte) 0xF7;
 
-			System.arraycopy(((Patch) bank).getSysex(), getPatchStart(patchNum), sysex, 10, 256);
-			Patch p = new Patch(sysex, getDevice());
+			System.arraycopy(((PatchDataImpl) bank).getSysex(), getPatchStart(patchNum), sysex, 10, 256);
+			PatchDataImpl p = new PatchDataImpl(sysex, getDevice());
 			p.calculateChecksum();
 			return p;
 		} catch (Exception e) {
-			ErrorMsg.reportError("Error", "Error in MIDIboxFM Bank Driver", e);
+			ErrorMsgUtil.reportError("Error", "Error in MIDIboxFM Bank Driver", e);
 			return null;
 		}
 	}

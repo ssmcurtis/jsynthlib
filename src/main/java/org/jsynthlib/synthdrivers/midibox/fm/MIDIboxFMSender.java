@@ -24,18 +24,18 @@
 
 package org.jsynthlib.synthdrivers.midibox.fm;
 
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.SysexSender;
 
 class MIDIboxFMSender extends SysexSender {
-	Patch patch;
+	PatchDataImpl patch;
 	int parameter;
 	int flag;
 	int bitmask;
 	int[] mapped_values;
 	byte[] b = new byte[12];
 
-	private void MIDIboxFMSender_Hlp(Patch _patch, int type, int _parameter) {
+	private void MIDIboxFMSender_Hlp(PatchDataImpl _patch, int type, int _parameter) {
 		patch = _patch;
 		parameter = _parameter;
 		b[0] = (byte) 0xf0;
@@ -52,26 +52,26 @@ class MIDIboxFMSender extends SysexSender {
 		b[11] = (byte) 0xf7;
 	}
 
-	public MIDIboxFMSender(Patch _patch, int type, int parameter) {
+	public MIDIboxFMSender(PatchDataImpl _patch, int type, int parameter) {
 		flag = -1;
 		MIDIboxFMSender_Hlp(_patch, type, parameter);
 	}
 
-	public MIDIboxFMSender(Patch _patch, int type, int parameter, int _flag) {
+	public MIDIboxFMSender(PatchDataImpl _patch, int type, int parameter, int _flag) {
 		flag = _flag;
 		bitmask = (1 << _flag);
 		mapped_values = new int[] {}; // (empty)
 		MIDIboxFMSender_Hlp(_patch, type, parameter);
 	}
 
-	public MIDIboxFMSender(Patch _patch, int type, int parameter, int _flag, int _bitmask) {
+	public MIDIboxFMSender(PatchDataImpl _patch, int type, int parameter, int _flag, int _bitmask) {
 		flag = _flag;
 		bitmask = _bitmask << flag;
 		mapped_values = new int[] {}; // (empty)
 		MIDIboxFMSender_Hlp(_patch, type, parameter);
 	}
 
-	public MIDIboxFMSender(Patch _patch, int type, int parameter, int _flag, int _bitmask, int[] _mapped_values) {
+	public MIDIboxFMSender(PatchDataImpl _patch, int type, int parameter, int _flag, int _bitmask, int[] _mapped_values) {
 		flag = _flag;
 		bitmask = _bitmask << flag;
 		mapped_values = _mapped_values;

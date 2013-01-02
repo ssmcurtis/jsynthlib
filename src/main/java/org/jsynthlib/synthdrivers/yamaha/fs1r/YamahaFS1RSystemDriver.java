@@ -1,9 +1,9 @@
 package org.jsynthlib.synthdrivers.yamaha.fs1r;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 /**
  * System parameters driver for Yamaha FS1R.
@@ -11,7 +11,7 @@ import org.jsynthlib.menu.ui.JSLFrame;
  * @author Denis Queffeulou mailto:dqueffeulou@free.fr
  * @version $Id$
  */
-public class YamahaFS1RSystemDriver extends Driver {
+public class YamahaFS1RSystemDriver extends SynthDriverPatchImpl {
 	/** size of patch without header */
 	static final int PATCH_SIZE = 76;
 
@@ -44,14 +44,14 @@ public class YamahaFS1RSystemDriver extends Driver {
 	 * 
 	 * @return Description of the Return Value
 	 */
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		return newPatch();
 	}
 
 	/**
 	 * Patch factory, static because no context is needed.
 	 */
-	static Patch newPatch() {
+	static PatchDataImpl newPatch() {
 		byte[] sysex = new byte[PATCH_AND_HEADER_SIZE];
 		sysex[0] = (byte) 0xF0;
 		sysex[1] = (byte) 0x43;
@@ -63,7 +63,7 @@ public class YamahaFS1RSystemDriver extends Driver {
 		sysex[7] = (byte) 0x00;
 		sysex[8] = (byte) 0x00;
 		sysex[PATCH_AND_HEADER_SIZE - 1] = (byte) 0xF7;
-		Patch oPatch = new Patch(sysex);
+		PatchDataImpl oPatch = new PatchDataImpl(sysex);
 		return oPatch;
 	}
 
@@ -74,8 +74,8 @@ public class YamahaFS1RSystemDriver extends Driver {
 	 *            offset in the sysex
 	 * @return the patch
 	 */
-	static Patch newPatch(byte aSysex[], int aOffset) {
-		Patch oNewPatch = newPatch();
+	static PatchDataImpl newPatch(byte aSysex[], int aOffset) {
+		PatchDataImpl oNewPatch = newPatch();
 		System.arraycopy(aSysex, aOffset, oNewPatch.getSysex(), HEADER_SIZE - 1, PATCH_SIZE);
 		return oNewPatch;
 	}
@@ -87,7 +87,7 @@ public class YamahaFS1RSystemDriver extends Driver {
 	 *            Description of the Parameter
 	 * @return Description of the Return Value
 	 */
-	public JSLFrame editPatch(Patch p) {
-		return new YamahaFS1RSystemEditor((Patch) p);
+	public JSLFrame editPatch(PatchDataImpl p) {
+		return new YamahaFS1RSystemEditor((PatchDataImpl) p);
 	}
 }

@@ -8,16 +8,16 @@ import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.EnvelopeWidget;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.ScrollBarWidget;
 
 class P600ProgSingleEditor extends PatchEditorFrame {
-	public P600ProgSingleEditor(Patch patch) {
+	public P600ProgSingleEditor(PatchDataImpl patch) {
 		super("Sequential Prophet-600 Program Editor", patch);
 
 		JPanel leftPane = new JPanel();
@@ -192,7 +192,7 @@ class P6001ByteModel extends ParamModel {
 	int mask;
 	int shft;
 
-	public P6001ByteModel(Patch p, int o, int m, int s) {
+	public P6001ByteModel(PatchDataImpl p, int o, int m, int s) {
 		super(p, o);
 		mask = m;
 		shft = s;
@@ -221,7 +221,7 @@ class P6002ByteModel extends ParamModel {
 	int mask2;
 	int shft2;
 
-	public P6002ByteModel(Patch p, int o, int m1, int s1, int m2, int s2) {
+	public P6002ByteModel(PatchDataImpl p, int o, int m1, int s1, int m2, int s2) {
 		super(p, o);
 		mask1 = m1;
 		shft1 = s1;
@@ -257,7 +257,7 @@ class P6002FieldModel extends ParamModel {
 	int mask2;
 	int shft2;
 
-	public P6002FieldModel(Patch p, int o, int m1, int s1, int m2, int s2) {
+	public P6002FieldModel(PatchDataImpl p, int o, int m1, int s1, int m2, int s2) {
 		super(p, o);
 		mask1 = m1;
 		shft1 = s1;

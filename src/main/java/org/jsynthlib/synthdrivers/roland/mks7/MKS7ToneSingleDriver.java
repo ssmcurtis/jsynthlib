@@ -23,11 +23,11 @@
 
 package org.jsynthlib.synthdrivers.roland.mks7;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
-public class MKS7ToneSingleDriver extends Driver {
+public class MKS7ToneSingleDriver extends SynthDriverPatchImpl {
 	public MKS7ToneSingleDriver() {
 		super("Tone Single", "Federico Ferri");
 		sysexID = "F041300*";
@@ -44,7 +44,7 @@ public class MKS7ToneSingleDriver extends Driver {
 				"76-", "77-", "78-", "81-", "82-", "83-", "84-", "85-", "86-", "87-", "88-" };
 	}
 
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 		// MKS-7 doesn't use checksum
 	}
 
@@ -52,16 +52,16 @@ public class MKS7ToneSingleDriver extends Driver {
 		// MKS-7 doesn't have banks: pgm# 0-99 is the only accepted range
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte sysex[] = { (byte) 0xF0, (byte) 0x41, (byte) 0x30, (byte) 0x00, (byte) 0x00, (byte) 0x39, (byte) 0x2D,
 				(byte) 0x00, (byte) 0x37, (byte) 0x00, (byte) 0x55, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x19,
 				(byte) 0x34, (byte) 0x3B, (byte) 0x20, (byte) 0x56, (byte) 0x28, (byte) 0x00, (byte) 0x1A, (byte) 0x18,
 				(byte) 0xF7 };
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		return p;
 	}
 
-	public JSLFrame editPatch(Patch p) {
-		return new MKS7ToneSingleEditor((Patch) p);
+	public JSLFrame editPatch(PatchDataImpl p) {
+		return new MKS7ToneSingleEditor((PatchDataImpl) p);
 	}
 }

@@ -4,8 +4,8 @@ import java.awt.GridBagLayout;
 
 import javax.swing.JPanel;
 
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.ScrollBarWidget;
 
@@ -31,7 +31,7 @@ import org.jsynthlib.widgets.ScrollBarWidget;
  *          0A).
  */
 class GlobalEditor extends PatchEditorFrame {
-	public GlobalEditor(Patch patch) {
+	public GlobalEditor(PatchDataImpl patch) {
 		super("Alesis QS Global Editor", patch);
 
 		JPanel panel = new JPanel();

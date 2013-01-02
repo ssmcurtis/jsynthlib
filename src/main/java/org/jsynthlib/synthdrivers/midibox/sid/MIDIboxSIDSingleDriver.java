@@ -29,12 +29,12 @@ package org.jsynthlib.synthdrivers.midibox.sid;
 import javax.swing.JOptionPane;
 
 import org.jsynthlib.PatchBayApplication;
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
-public class MIDIboxSIDSingleDriver extends Driver {
+public class MIDIboxSIDSingleDriver extends SynthDriverPatchImpl {
 
 	public MIDIboxSIDSingleDriver() {
 		super("Single", "Thorsten Klose");
@@ -79,10 +79,10 @@ public class MIDIboxSIDSingleDriver extends Driver {
 					new SysexHandler.NameValue("patchNum", patchNum)));
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
-		((Patch) p).getSysex()[5] = (byte) ((getDeviceID() - 1) & 0x7f);
-		((Patch) p).getSysex()[6] = (byte) 0x02;
-		((Patch) p).getSysex()[7] = (byte) (patchNum);
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
+		((PatchDataImpl) p).getSysex()[5] = (byte) ((getDeviceID() - 1) & 0x7f);
+		((PatchDataImpl) p).getSysex()[6] = (byte) 0x02;
+		((PatchDataImpl) p).getSysex()[7] = (byte) (patchNum);
 		sendPatchWorker(p);
 		try {
 			Thread.sleep(100);
@@ -91,15 +91,15 @@ public class MIDIboxSIDSingleDriver extends Driver {
 		setPatchNum(patchNum);
 	}
 
-	public void sendPatch(Patch p) {
-		((Patch) p).getSysex()[5] = (byte) ((getDeviceID() - 1) & 0x7f);
-		((Patch) p).getSysex()[6] = (byte) 0x02;
-		((Patch) p).getSysex()[7] = (byte) 0x00;
+	public void sendPatch(PatchDataImpl p) {
+		((PatchDataImpl) p).getSysex()[5] = (byte) ((getDeviceID() - 1) & 0x7f);
+		((PatchDataImpl) p).getSysex()[6] = (byte) 0x02;
+		((PatchDataImpl) p).getSysex()[7] = (byte) 0x00;
 
 		sendPatchWorker(p);
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[266];
 
 		sysex[0] = (byte) 0xF0;
@@ -171,13 +171,13 @@ public class MIDIboxSIDSingleDriver extends Driver {
 		sysex[8 + 0x7b] = 0x40; // ENV2 release
 
 		sysex[265] = (byte) 0xF7;
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		setPatchName(p, "New Patch");
 		calculateChecksum(p);
 		return p;
 	}
 
-	public JSLFrame editPatch(Patch p) {
-		return new MIDIboxSIDSingleEditor((Patch) p);
+	public JSLFrame editPatch(PatchDataImpl p) {
+		return new MIDIboxSIDSingleEditor((PatchDataImpl) p);
 	}
 }

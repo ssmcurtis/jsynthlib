@@ -22,18 +22,18 @@ package org.jsynthlib.synthdrivers.roland.jv80;
 
 import java.util.Date;
 
-import org.jsynthlib.menu.patch.Device;
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.device.Device;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.DriverUtil;
 
 /**
  * @author Sander Brandenburg
  * @version $Id$
  */
-public class RolandJV80PerformanceDriver extends Driver {
+public class RolandJV80PerformanceDriver extends SynthDriverPatchImpl {
 
 	final static SysexHandler SYSEX_SETPERFORMANCECOMMONJV880 = new SysexHandler(
 	/* 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F */
@@ -98,24 +98,24 @@ public class RolandJV80PerformanceDriver extends Driver {
 			performancePartOffsets[i] = performanceCommonLength + i * performancePartLength;
 	}
 
-	public void storePatch(Patch p, int bankNum, int performanceNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int performanceNum) {
 		setPerformanceNum(p.getSysex(), bankNum, performanceNum);
 		calculateChecksum(p);
 		sendPatchWorker(p);
 	}
 
 	// Sends a patch to the synth's edit buffer.
-	public void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		setPerformanceNum(p.getSysex(), -1, 0);
 		calculateChecksum(p);
 		sendPatchWorker(p);
 	}
 
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 		calculateChecksum(p, 0);
 	}
 
-	public void calculateChecksum(Patch p, int offset) {
+	public void calculateChecksum(PatchDataImpl p, int offset) {
 		JV80Constants.calculateChecksum(p.getSysex(), offset, performanceCommonLength - SYSEX_OVERHEAD);
 		for (int i = 0; i < 8; i++) {
 			JV80Constants.calculateChecksum(p.getSysex(), offset + performancePartOffsets[i], performancePartLength
@@ -141,7 +141,7 @@ public class RolandJV80PerformanceDriver extends Driver {
 		}
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte sysex[] = new byte[patchSize];
 
 		byte sysexcommon[] = setPerformanceCommon.toByteArray(getDeviceID(), 00);
@@ -163,12 +163,12 @@ public class RolandJV80PerformanceDriver extends Driver {
 			System.arraycopy(sysexpart, 0, sysex, performancePartOffsets[i], performancePartLength);
 		}
 
-		Patch patch = new Patch(sysex, this);
+		PatchDataImpl patch = new PatchDataImpl(sysex, this);
 		patch.setDate(new Date().toString());
 		return patch;
 	}
 
-	public JSLFrame editPatch(Patch p) {
+	public JSLFrame editPatch(PatchDataImpl p) {
 		return new RolandJV80PerformanceEditor(p);
 	}
 

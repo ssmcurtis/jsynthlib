@@ -29,7 +29,7 @@ package org.jsynthlib.synthdrivers.roland.mt32;
 
 import java.util.prefs.Preferences;
 
-import org.jsynthlib.menu.patch.Device;
+import org.jsynthlib.model.device.Device;
 
 public class RolandMT32Device extends Device {
 	private static final String INFO_TEXT = "The driver for this synthesiser is created with an absolute minimal knowledge "

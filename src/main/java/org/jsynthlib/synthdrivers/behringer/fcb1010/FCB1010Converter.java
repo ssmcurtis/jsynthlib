@@ -21,8 +21,8 @@
 
 package org.jsynthlib.synthdrivers.behringer.fcb1010;
 
-import org.jsynthlib.menu.patch.Converter;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.driver.ConverterImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 /**
  * Removes "Garbage Data" from response to dump request and extracts desired patch.
@@ -34,7 +34,7 @@ import org.jsynthlib.menu.patch.Patch;
  * 
  * @author Jeff Weber
  */
-class FCB1010Converter extends Converter {
+class FCB1010Converter extends ConverterImpl {
 
 	/** Constructor for FCB1010Converter */
 	FCB1010Converter() {
@@ -83,11 +83,11 @@ class FCB1010Converter extends Converter {
 	/**
 	 * Extracts a patch from a patch dump response (block of data). Calls parseSysex to do the extraction.
 	 */
-	public Patch[] extractPatch(Patch p) {
+	public PatchDataImpl[] extractPatch(PatchDataImpl p) {
 		byte[] sysex = parseSysex(p.getByteArray());
 
-		Patch[] newPatchArray = new Patch[1];
-		newPatchArray[0] = new Patch(sysex, new FCB1010Driver());
+		PatchDataImpl[] newPatchArray = new PatchDataImpl[1];
+		newPatchArray[0] = new PatchDataImpl(sysex, new FCB1010Driver());
 		return newPatchArray;
 	}
 

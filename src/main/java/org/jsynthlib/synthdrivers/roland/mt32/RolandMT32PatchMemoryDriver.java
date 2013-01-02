@@ -25,13 +25,13 @@
  */
 package org.jsynthlib.synthdrivers.roland.mt32;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
-public class RolandMT32PatchMemoryDriver extends Driver {
+public class RolandMT32PatchMemoryDriver extends SynthDriverPatchImpl {
 	/** Header Size of the Data set DT1 message. */
 	private static final int HSIZE = 5;
 	/** Single Patch size */
@@ -66,13 +66,13 @@ public class RolandMT32PatchMemoryDriver extends Driver {
 	 * Send a patch (bulk dump system exclusive message) to MIDI device. Target should be Timbre Memory 1 - 64. TTA will
 	 * do for now. The message format here is Data set DT1
 	 */
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		setBankNum(bankNum); // Control change
 		setPatchNum(patchNum); // Program change
 		try {
 			Thread.sleep(100);
 		} catch (Exception e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 
 		int patchAddr = patchNum * 0x08;
@@ -87,14 +87,14 @@ public class RolandMT32PatchMemoryDriver extends Driver {
 
 		calculateChecksum(p, HSIZE, HSIZE + SSIZE - 2, HSIZE + SSIZE - 1);
 
-		ErrorMsg.reportStatus("Store patchNum " + patchNum + " to patAddrM/L " + patAddrM + " / " + patAddrL);
+		ErrorMsgUtil.reportStatus("Store patchNum " + patchNum + " to patAddrM/L " + patAddrM + " / " + patAddrL);
 		// sendPatchWorker(p);
 		// send(p.sysex);
 		try {
 			sendPatchWorker(p);
 			Thread.sleep(100);
 		} catch (Exception e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 		setPatchNum(patchNum); // Program change
 	}
@@ -103,13 +103,13 @@ public class RolandMT32PatchMemoryDriver extends Driver {
 	 * Send a Patch (bulk dump system exclusive message) to an edit buffer of MIDI device. Target should be Timbre Temp
 	 * Area 1 - 8. The message format here is Data set DT1
 	 */
-	public void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 
 		sendPatchWorker(p);
 	}
 
 	// not used
-	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
+	protected void calculateChecksum(PatchDataImpl p, int start, int end, int ofs) {
 		int sum = 0;
 		for (int i = start; i <= end; i++) {
 			sum += p.getSysex()[i];
@@ -119,7 +119,7 @@ public class RolandMT32PatchMemoryDriver extends Driver {
 	}
 
 	// New Patch has Data set format DT1
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[HSIZE + SSIZE + 1];
 		sysex[0] = (byte) 0xF0;
 		sysex[1] = (byte) 0x41;
@@ -129,13 +129,13 @@ public class RolandMT32PatchMemoryDriver extends Driver {
 		sysex[5] = (byte) 0x05;
 		sysex[6] = (byte) 0x0;
 		sysex[HSIZE + SSIZE] = (byte) 0xF7;
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		// setPatchName(p, "New PatchM");
 		calculateChecksum(p);
 		return p;
 	}
 
-	public JSLFrame editPatch(Patch p) {
+	public JSLFrame editPatch(PatchDataImpl p) {
 		return new RolandMT32PatchMemoryEditor(p);
 	}
 

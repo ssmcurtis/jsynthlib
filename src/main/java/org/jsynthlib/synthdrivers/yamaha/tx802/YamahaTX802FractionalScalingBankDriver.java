@@ -23,7 +23,7 @@
  */
 package org.jsynthlib.synthdrivers.yamaha.tx802;
 
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.synthdrivers.yamaha.dx7.common.DX7FamilyDevice;
 import org.jsynthlib.synthdrivers.yamaha.dx7.common.DX7FamilyFractionalScalingBankDriver;
 
@@ -34,11 +34,11 @@ public class YamahaTX802FractionalScalingBankDriver extends DX7FamilyFractionalS
 				YamahaTX802FractionalScalingConstants.BANK_FRACTIONAL_SCALING_BANK_NUMBERS);
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		return super.createNewPatch();
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		if ((((DX7FamilyDevice) (getDevice())).getTipsMsgFlag() & 0x01) == 1)
 			// show Information
 			YamahaTX802Strings.dxShowInformation(toString(), YamahaTX802Strings.FRACTIONAL_SCALING_CARTRIDGE_STRING);

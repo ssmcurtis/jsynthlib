@@ -29,16 +29,16 @@ import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.EnvelopeWidget;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.ScrollBarWidget;
 import org.jsynthlib.widgets.SysexSender;
 
 class MKS7ToneSingleEditor extends PatchEditorFrame {
-	public MKS7ToneSingleEditor(Patch patch) {
+	public MKS7ToneSingleEditor(PatchDataImpl patch) {
 		super("Roland MKS-7 Tone Single Editor", patch);
 
 		JPanel leftPane = new JPanel();
@@ -191,10 +191,10 @@ class MKSToneSender extends SysexSender {
 // instead of generating itself
 class MKSToneSenderDirect extends SysexSender {
 	byte b[] = { (byte) 0xF0, (byte) 0x41, (byte) 0x32, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0xF7 };
-	protected Patch patch;
+	protected PatchDataImpl patch;
 	protected int patch_off;
 
-	public MKSToneSenderDirect(int param, Patch p, int offset) {
+	public MKSToneSenderDirect(int param, PatchDataImpl p, int offset) {
 		this.patch = p;
 		this.patch_off = offset;
 
@@ -212,7 +212,7 @@ class ParamModelBit extends ParamModel {
 	protected byte mask;
 	protected int power = 0;
 
-	ParamModelBit(Patch p, int offset, int mask) {
+	ParamModelBit(PatchDataImpl p, int offset, int mask) {
 		super(p, offset);
 		this.mask = (byte) mask;
 
@@ -240,7 +240,7 @@ class ParamModelBitExp extends ParamModel {
 	protected byte mask;
 	protected int power = 0;
 
-	ParamModelBitExp(Patch p, int offset, int mask) {
+	ParamModelBitExp(PatchDataImpl p, int offset, int mask) {
 		super(p, offset);
 		this.mask = (byte) mask;
 

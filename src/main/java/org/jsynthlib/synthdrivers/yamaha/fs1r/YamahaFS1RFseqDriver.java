@@ -1,10 +1,10 @@
 package org.jsynthlib.synthdrivers.yamaha.fs1r;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.SysexSender;
 
 /**
@@ -14,7 +14,7 @@ import org.jsynthlib.widgets.SysexSender;
  * @author Denis Queffeulou mailto:dqueffeulou@free.fr
  * @version $Id$
  */
-public class YamahaFS1RFseqDriver extends Driver {
+public class YamahaFS1RFseqDriver extends SynthDriverPatchImpl {
 	/** header parameters size */
 	static final int FSEQHEADER_SIZE = 0x20;
 
@@ -71,7 +71,7 @@ public class YamahaFS1RFseqDriver extends Driver {
 	 * 
 	 * @return Description of the Return Value
 	 */
-	public Patch createNewPatch() {/*
+	public PatchDataImpl createNewPatch() {/*
 										 * byte[] sysex = new byte[PATCH_AND_HEADER_SIZE]; sysex[0] = (byte) 0xF0;
 										 * sysex[1] = (byte) 0x0F; sysex[2] = (byte) 0x05; sysex[3] = (byte) 0x00;
 										 * sysex[4] = (byte) 0x00; sysex[5] = (byte) 0x0B;
@@ -88,14 +88,14 @@ public class YamahaFS1RFseqDriver extends Driver {
 	 *            Description of the Parameter
 	 * @return Description of the Return Value
 	 */
-	public JSLFrame editPatch(Patch p) {
-		return new YamahaFS1RFseqEditor((Patch) p);
+	public JSLFrame editPatch(PatchDataImpl p) {
+		return new YamahaFS1RFseqEditor((PatchDataImpl) p);
 	}
 
 	/**
 	 * get fundamental pitch values. The unit is 5Hz from 0 to 925.
 	 */
-	static int[] getPitch(Patch p) {
+	static int[] getPitch(PatchDataImpl p) {
 		int oNbFrames = getNbFrames(p);
 		int oPitch[] = new int[oNbFrames];
 		for (int i = 0; i < oNbFrames; i++) {
@@ -112,7 +112,7 @@ public class YamahaFS1RFseqDriver extends Driver {
 	 * @param aOp
 	 *            operator 0..7
 	 */
-	static int[] getFrequencies(Patch p, int aOp, boolean aVoiced) {
+	static int[] getFrequencies(PatchDataImpl p, int aOp, boolean aVoiced) {
 		int oNbFrames = getNbFrames(p);
 		int oRet[] = new int[oNbFrames];
 		int offset = 0x1A;
@@ -127,7 +127,7 @@ public class YamahaFS1RFseqDriver extends Driver {
 		return oRet;
 	}
 
-	static int[] getLevels(Patch p, int aOp, boolean aVoiced) {
+	static int[] getLevels(PatchDataImpl p, int aOp, boolean aVoiced) {
 		int oNbFrames = getNbFrames(p);
 		int oRet[] = new int[oNbFrames];
 		int offset = 0x2A;
@@ -141,7 +141,7 @@ public class YamahaFS1RFseqDriver extends Driver {
 		return oRet;
 	}
 
-	static int getNbFrames(Patch p) {
+	static int getNbFrames(PatchDataImpl p) {
 		Model oFrameModel = new Model(p, 0x1B);
 		int oNbFrames = 128;
 		if (oFrameModel.get() == 1)
@@ -180,7 +180,7 @@ public class YamahaFS1RFseqDriver extends Driver {
 	}
 
 	static class Model extends ParamModel {
-		Model(Patch p, int offset) {
+		Model(PatchDataImpl p, int offset) {
 			super(p, (offset & 127) + DATA_START);
 		}
 
@@ -194,7 +194,7 @@ public class YamahaFS1RFseqDriver extends Driver {
 	}
 
 	static class DoubleModel extends Model {
-		DoubleModel(Patch p, int offset) {
+		DoubleModel(PatchDataImpl p, int offset) {
 			super(p, offset);
 		}
 

@@ -35,14 +35,14 @@ import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-import org.jsynthlib.menu.patch.IPatchDriver;
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.driver.SynthDriverPatch;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.EnvelopeWidget;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.ScrollBarLookupWidget;
 import org.jsynthlib.widgets.ScrollBarWidget;
 import org.jsynthlib.widgets.SysexWidget;
@@ -61,7 +61,7 @@ class WaldorfPulseSingleEditor extends PatchEditorFrame {
 			"Oscillator 3 Level", "Noise Level", "Cutoff", "Resonance", "Volume", "Panning", "LFO 1 Speed",
 			"Mod 1 Amount", };
 
-	public WaldorfPulseSingleEditor(Patch patch) {
+	public WaldorfPulseSingleEditor(PatchDataImpl patch) {
 		super("Waldorf Pulse/Pulse+ Single Editor", patch);
 
 		// Initialise attibutes
@@ -81,7 +81,7 @@ class WaldorfPulseSingleEditor extends PatchEditorFrame {
 		pack();
 	}
 
-	private void initTab1(Patch patch) {
+	private void initTab1(PatchDataImpl patch) {
 		// Column 1 Pane
 		{
 			JPanel column1Pane = new JPanel();
@@ -742,7 +742,7 @@ class WaldorfPulseSingleEditor extends PatchEditorFrame {
 	}
 
 	class TuneParamModel extends ParamModel {
-		public TuneParamModel(Patch p, int o) {
+		public TuneParamModel(PatchDataImpl p, int o) {
 			super(p, o);
 		}
 
@@ -778,13 +778,13 @@ class WaldorfPulseSingleEditor extends PatchEditorFrame {
 			this.mult = multiplier;
 		}
 
-		public void send(IPatchDriver driver, int value) {
+		public void send(SynthDriverPatch driver, int value) {
 			ShortMessage msg = new ShortMessage();
 			try {
 				msg.setMessage(ShortMessage.CONTROL_CHANGE, driver.getDevice().getChannel() - 1, param, value * mult);
 				driver.send(msg);
 			} catch (InvalidMidiDataException e) {
-				ErrorMsg.reportStatus(e);
+				ErrorMsgUtil.reportStatus(e);
 			}
 		}
 	}

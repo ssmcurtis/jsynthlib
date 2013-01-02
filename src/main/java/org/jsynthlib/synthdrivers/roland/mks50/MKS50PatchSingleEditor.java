@@ -7,11 +7,11 @@ import java.awt.GridBagLayout;
 
 import javax.swing.JPanel;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.PatchNameWidget;
 import org.jsynthlib.widgets.ScrollBarLookupWidget;
 import org.jsynthlib.widgets.ScrollBarWidget;
@@ -35,7 +35,7 @@ class MKS50PatchSingleEditor extends PatchEditorFrame {
 			"b54", "b55", "b56", "b57", "b58", "b61", "b62", "b63", "b64", "b65", "b66", "b67", "b68", "b71", "b72",
 			"b73", "b74", "b75", "b76", "b77", "b78", "b81", "b82", "b83", "b84", "b85", "b86", "b87", "b88" };
 
-	public MKS50PatchSingleEditor(Patch patch) {
+	public MKS50PatchSingleEditor(PatchDataImpl patch) {
 		super("Roland MKS-50 Patch Single Editor", patch);
 
 		JPanel leftPane = new JPanel();
@@ -110,7 +110,7 @@ class MKSPatchSender extends SysexSender {
 class MKSOfsModel extends ParamModel {
 	int pofs;
 
-	public MKSOfsModel(Patch p, int o, int po) {
+	public MKSOfsModel(PatchDataImpl p, int o, int po) {
 		super(p, o);
 		pofs = po;
 	}
@@ -151,7 +151,7 @@ class MKSOfsSender extends SysexSender {
 class MKSBitModel extends ParamModel {
 	int bit;
 
-	public MKSBitModel(Patch p, int o, int b) {
+	public MKSBitModel(PatchDataImpl p, int o, int b) {
 		super(p, o);
 		bit = b;
 	}
@@ -174,13 +174,13 @@ class MKSBitModel extends ParamModel {
 }
 
 class MKSBitSender extends SysexSender {
-	Patch patch;
+	PatchDataImpl patch;
 	int ofs;
 	int bit;
 	byte b[] = { (byte) 0xF0, (byte) 0x41, (byte) 0x36, (byte) 0x00, (byte) 0x23, (byte) 0x30, (byte) 0x01,
 			(byte) 0x00, (byte) 0x00, (byte) 0xF7 };
 
-	public MKSBitSender(Patch p, int o, int bt, int param) {
+	public MKSBitSender(PatchDataImpl p, int o, int bt, int param) {
 		patch = p;
 		ofs = o;
 		bit = bt;
@@ -204,7 +204,7 @@ class MKSBitSender extends SysexSender {
 class MKS2sCompModel extends ParamModel {
 	int max;
 
-	public MKS2sCompModel(Patch p, int o, int m) {
+	public MKS2sCompModel(PatchDataImpl p, int o, int m) {
 		super(p, o);
 		max = m;
 	}

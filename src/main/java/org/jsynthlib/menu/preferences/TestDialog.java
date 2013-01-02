@@ -12,8 +12,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.jsynthlib.example.style.TextComponentDemo;
-import org.jsynthlib.menu.ui.JSLDialog;
-import org.jsynthlib.tools.Utility;
+import org.jsynthlib.menu.JSLDialog;
+import org.jsynthlib.tools.UiUtil;
 
 public class TestDialog extends JSLDialog {
 
@@ -79,7 +79,7 @@ public class TestDialog extends JSLDialog {
 		getContentPane().add(container);
 		setSize(400, 600);
 
-		Utility.centerDialog(this);
+		UiUtil.centerDialog(this);
 	}
 
 	void okPressed() {

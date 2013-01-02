@@ -7,7 +7,7 @@ package org.jsynthlib.synthdrivers.kawai.k4;
 
 import java.util.prefs.Preferences;
 
-import org.jsynthlib.menu.patch.Device;
+import org.jsynthlib.model.device.Device;
 
 /**
  * Device class for KAWAI K4/K4r.

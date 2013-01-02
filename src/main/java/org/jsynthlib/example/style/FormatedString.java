@@ -6,6 +6,13 @@ public class FormatedString {
 	private String text = "";
 	private SimpleAttributeSet attributeSet = new SimpleAttributeSet();
 
+	public FormatedString() {
+	}
+
+	public FormatedString(String text) {
+		setText(text);
+	}
+
 	public String getText() {
 		return text;
 	}

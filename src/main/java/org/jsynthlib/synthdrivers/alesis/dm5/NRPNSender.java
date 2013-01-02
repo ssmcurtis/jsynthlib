@@ -24,8 +24,8 @@ package org.jsynthlib.synthdrivers.alesis.dm5;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.ShortMessage;
 
-import org.jsynthlib.menu.patch.IPatchDriver;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.model.driver.SynthDriverPatch;
+import org.jsynthlib.tools.ErrorMsgUtil;
 import org.jsynthlib.widgets.SysexWidget;
 
 /**
@@ -111,13 +111,13 @@ class NRPNSender implements SysexWidget.ISender {
 	 * single invocation of the send method will cause three NRPN messages to be sent: the MSB, the LSB representing the
 	 * selected parameter, followed by the Data Entry value for that parameter.
 	 */
-	public void send(IPatchDriver driver, int value) {
+	public void send(SynthDriverPatch driver, int value) {
 		try {
 			driver.send(newControlChange(driver, NRPN_MSB, 0)); // Send NRPN MSB
 			driver.send(newControlChange(driver, NRPN_LSB, param)); // Command to select the parameter
 			driver.send(newControlChange(driver, DATA_ENTRY_MSB, ccMap[value])); // Set the NRPN value using the table
 		} catch (InvalidMidiDataException e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 
 		try {
@@ -129,7 +129,7 @@ class NRPNSender implements SysexWidget.ISender {
 	/**
 	 * Returns a ShortMessage representing a single NRPN value.
 	 */
-	protected ShortMessage newControlChange(IPatchDriver driver, int controlNumber, int value)
+	protected ShortMessage newControlChange(SynthDriverPatch driver, int controlNumber, int value)
 			throws InvalidMidiDataException {
 		ShortMessage ccMessage = new ShortMessage();
 		ccMessage.setMessage(ShortMessage.CONTROL_CHANGE, driver.getDevice().getChannel() - 1, controlNumber, value);

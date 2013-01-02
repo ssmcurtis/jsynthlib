@@ -1,8 +1,8 @@
 package org.jsynthlib.synthdrivers.ensoniq.vfx;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 /**
  * Multi driver for VFX. Multi have no name. The message type seems to be 0B instead of 06 as the doc says. The size is
@@ -11,7 +11,7 @@ import org.jsynthlib.menu.patch.SysexHandler;
  * @author <a href="mailto:dqueffeulou@free.fr">Denis Queffeulou</a> (created 17 Sep 2002)
  * @version $Id$
  */
-public class EnsoniqVFXMultiDriver extends Driver {
+public class EnsoniqVFXMultiDriver extends SynthDriverPatchImpl {
 	/** size of patch without header */
 	static final int SIZE = 574;
 
@@ -52,7 +52,7 @@ public class EnsoniqVFXMultiDriver extends Driver {
 	 * @param patchNum
 	 *            Description of the Parameter
 	 */
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		sendPatchWorker(p);
 	}
 
@@ -62,11 +62,11 @@ public class EnsoniqVFXMultiDriver extends Driver {
 	 * @param p
 	 *            Description of the Parameter
 	 */
-	public void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		sendPatchWorker(p);
 	}
 
-	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
+	protected void calculateChecksum(PatchDataImpl p, int start, int end, int ofs) {
 		// This synth does not use a checksum
 	}
 
@@ -75,7 +75,7 @@ public class EnsoniqVFXMultiDriver extends Driver {
 	 * 
 	 * @return Description of the Return Value
 	 */
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[SIZE + 7];
 		sysex[0] = (byte) 0xF0;
 		sysex[1] = (byte) 0x0F;
@@ -84,7 +84,7 @@ public class EnsoniqVFXMultiDriver extends Driver {
 		sysex[4] = (byte) 0x00;
 		sysex[5] = (byte) 0x0B;
 		sysex[SIZE + 6] = (byte) 0xF7;
-		return new Patch(sysex, this);
+		return new PatchDataImpl(sysex, this);
 	}
 
 	/**

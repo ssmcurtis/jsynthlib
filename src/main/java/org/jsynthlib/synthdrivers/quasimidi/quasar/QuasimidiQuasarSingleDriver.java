@@ -26,11 +26,11 @@ import java.io.UnsupportedEncodingException;
 import javax.swing.JOptionPane;
 
 import org.jsynthlib.PatchBayApplication;
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 /**
  * Driver for Quasimidi Quasar Singles Performance's
@@ -38,7 +38,7 @@ import org.jsynthlib.tools.ErrorMsg;
  * @author Joachim Backhaus
  * @version $Id$
  */
-public class QuasimidiQuasarSingleDriver extends Driver {
+public class QuasimidiQuasarSingleDriver extends SynthDriverPatchImpl {
 
 	/*
 	 * The Quasar sends only all 100 RAM performances (22300 Bytes) or all temporary parameters and the system
@@ -71,7 +71,7 @@ public class QuasimidiQuasarSingleDriver extends Driver {
 	/**
 	 * The Quasar uses no checksum therefore this method is empty
 	 */
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 		// no checksum, do nothing
 	}
 
@@ -82,7 +82,7 @@ public class QuasimidiQuasarSingleDriver extends Driver {
 	 * @param p
 	 *            The patch containing the Performance parameters
 	 */
-	private final void doSendPatch(Patch p) {
+	private final void doSendPatch(PatchDataImpl p) {
 
 		if (deviceIDoffset > 0) {
 			int deviceID = (getDeviceID() - 1);
@@ -108,7 +108,7 @@ public class QuasimidiQuasarSingleDriver extends Driver {
 	 * @param patchNum
 	 *            The number where to store the Performance (0 - 99)
 	 */
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		int performanceOffset = patchNum + QuasarConstants.SYSEX_PERFORMANCE_OFFSET;
 
 		// Set the performance number
@@ -146,7 +146,7 @@ public class QuasimidiQuasarSingleDriver extends Driver {
 	 * @param p
 	 *            The patch containing the Performance parameters
 	 */
-	public void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		int performanceOffset = QuasarConstants.SYSEX_TEMPORARY_OFFSET;
 
 		// Set the performance number
@@ -211,9 +211,9 @@ public class QuasimidiQuasarSingleDriver extends Driver {
 	 * @param name
 	 *            The name of the Performance
 	 */
-	public void setPatchName(Patch p, String name) {
+	public void setPatchName(PatchDataImpl p, String name) {
 		if (patchNameSize == 0) {
-			ErrorMsg.reportError("Error", "The Driver for this patch does not support Patch Name Editing.");
+			ErrorMsgUtil.reportError("Error", "The Driver for this patch does not support Patch Name Editing.");
 			return;
 		}
 
@@ -254,7 +254,7 @@ public class QuasimidiQuasarSingleDriver extends Driver {
 	/**
 	 * Creates a new "Single Performance"
 	 */
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		return createNewPatch(0);
 	}
 
@@ -266,7 +266,7 @@ public class QuasimidiQuasarSingleDriver extends Driver {
 	 * @param performanceNumber
 	 *            The number where the Performance should be stored later
 	 */
-	private final Patch createNewPatch(int performanceNumber) {
+	private final PatchDataImpl createNewPatch(int performanceNumber) {
 		return createNewPatch(performanceNumber, QuasarConstants.SYSEX_TEMPORARY_OFFSET);
 	}
 
@@ -281,7 +281,7 @@ public class QuasimidiQuasarSingleDriver extends Driver {
 	 *            or<br>
 	 *            QuasarConstants.SYSEX_PERFORMANCE_OFFSET<br>
 	 */
-	public static final Patch createNewPatch(int performanceNumber, int sysexOffset) {
+	public static final PatchDataImpl createNewPatch(int performanceNumber, int sysexOffset) {
 		byte[] sysex = new byte[223];
 		int offset = 0;
 
@@ -473,11 +473,11 @@ public class QuasimidiQuasarSingleDriver extends Driver {
 		// 17 Bytes
 		// 206 Bytes + 17 Bytes = 223 Bytes
 
-		Patch p = new Patch(sysex);
+		PatchDataImpl p = new PatchDataImpl(sysex);
 		return p;
 	}
 
-	public JSLFrame editPatch(Patch p) {
+	public JSLFrame editPatch(PatchDataImpl p) {
 		return new QuasimidiQuasarSingleEditor(p);
 	}
 }

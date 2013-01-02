@@ -1,7 +1,7 @@
 package org.jsynthlib.synthdrivers.yamaha.motif;
 
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 /** Driver for Yamaha Motif Normal Voices */
 public class YamahaMotifNormalVoiceDriver extends YamahaMotifSingleDriver {
@@ -21,11 +21,11 @@ public class YamahaMotifNormalVoiceDriver extends YamahaMotifSingleDriver {
 		yamaha_init();
 	}
 
-	public JSLFrame editPatch(Patch p) {
-		return new YamahaMotifNormalVoiceEditor((Patch) p);
+	public JSLFrame editPatch(PatchDataImpl p) {
+		return new YamahaMotifNormalVoiceEditor((PatchDataImpl) p);
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		return super.createNewPatch();
 	}
 

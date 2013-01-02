@@ -24,16 +24,16 @@ package org.jsynthlib.synthdrivers.roland.vg88;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 /**
  * DataSystem Driver for Roland VG88
  */
 
-public final class RolandVG88SysDatDriver extends Driver {
+public final class RolandVG88SysDatDriver extends SynthDriverPatchImpl {
 	/** Format: dir1, dir2, dir3, dir4, len **/
 	static final int[] DISPLAY_CONTRAST = { 0x00, 0x00, 0x00, 0x00, 0x01 };
 	static final int[] GK_FUNK = { 0x01, 0x00, 0x00, 0x00, 0x02 };
@@ -84,44 +84,44 @@ public final class RolandVG88SysDatDriver extends Driver {
 	/**
 	 * Get Patch Name (not soported, nameSize for bank is 0)
 	 */
-	public String getPatchName(Patch p) {
+	public String getPatchName(PatchDataImpl p) {
 		return "System Data";
 	}
 
 	/**
 	 * Set Patch Name (not soported, nameSize for bank is 0)
 	 */
-	public void setPatchName(Patch p, String name) {
-		ErrorMsg warning = new ErrorMsg();
-		ErrorMsg.reportWarning("Advice:",
+	public void setPatchName(PatchDataImpl p, String name) {
+		ErrorMsgUtil warning = new ErrorMsgUtil();
+		ErrorMsgUtil.reportWarning("Advice:",
 				"If you want to assign a name to this System Data patch, use 'Field1' or 'Filed2' or 'Comment' fields");
 	}
 
 	/**
 	 * Store a patch
 	 */
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		adviceForOverwrite(p);
 	}
 
 	/**
 	 * Send a Patch
 	 */
-	public void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		adviceForOverwrite(p);
 	}
 
 	/**
 	 * Send to a Patch
 	 */
-	public void sendToPatch(Patch p) {
+	public void sendToPatch(PatchDataImpl p) {
 		adviceForOverwrite(p);
 	}
 
 	/**
 	 * Advice before overwrite system area
 	 */
-	public void adviceForOverwrite(Patch p) {
+	public void adviceForOverwrite(PatchDataImpl p) {
 		int n = JOptionPane.showConfirmDialog((JFrame) null,
 				"This command will overwrite your current System Area in the VG88. CONTINUE ?",
 				"Atention! Confirm this action:", JOptionPane.YES_NO_OPTION);
@@ -171,10 +171,10 @@ public final class RolandVG88SysDatDriver extends Driver {
 		try {
 			Thread.sleep(300); // wait .
 		} catch (Exception e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 	}
 
-	protected void playPatch(Patch p) {
+	public void playPatch(PatchDataImpl p) {
 	}
 }

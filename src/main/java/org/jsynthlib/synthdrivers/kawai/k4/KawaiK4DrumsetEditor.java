@@ -13,10 +13,10 @@ import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.ComboBoxWidget;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.ScrollBarWidget;
 import org.jsynthlib.widgets.SysexSender;
 import org.jsynthlib.widgets.SysexWidget;
@@ -81,7 +81,7 @@ class KawaiK4DrumsetEditor extends PatchEditorFrame {
 	static final String[] SUBMIX = new String[] { "A", "B", "C", "D", "E", "F", "G", "H" };
 	private int drum = 0;
 
-	public KawaiK4DrumsetEditor(Patch patch) {
+	public KawaiK4DrumsetEditor(PatchDataImpl patch) {
 		super("Kawai K4 Drumset Editor", patch);
 		// Common Pane
 		gbc.weightx = 0;
@@ -172,10 +172,10 @@ class KawaiK4DrumsetEditor extends PatchEditorFrame {
 	}
 
 	class K4DrumWaveModel implements SysexWidget.IParamModel {
-		private Patch patch;
+		private PatchDataImpl patch;
 		private int source;
 
-		public K4DrumWaveModel(Patch p, int s) {
+		public K4DrumWaveModel(PatchDataImpl p, int s) {
 			patch = p;
 			source = s;
 		}
@@ -195,13 +195,13 @@ class KawaiK4DrumsetEditor extends PatchEditorFrame {
 		private int bitmask;
 		private int mult;
 
-		public K4DrumModel(Patch p, int o) {
+		public K4DrumModel(PatchDataImpl p, int o) {
 			super(p, o + 8);
 			bitmask = 255;
 			mult = 1;
 		}
 
-		public K4DrumModel(Patch p, int o, int b) {
+		public K4DrumModel(PatchDataImpl p, int o, int b) {
 			super(p, o + 8);
 			bitmask = b;
 			if ((bitmask & 1) == 1)

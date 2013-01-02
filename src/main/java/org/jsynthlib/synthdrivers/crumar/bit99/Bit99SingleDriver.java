@@ -2,22 +2,22 @@ package org.jsynthlib.synthdrivers.crumar.bit99;
 
 import javax.sound.midi.MidiMessage;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.patch.SysexHandler.NameValue;
-import org.jsynthlib.tools.Utility;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.menu.helper.SysexHandler.NameValue;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.HexaUtil;
 
 /**
  * Single Voice Patch Driver for Kawai K4.
  * 
  * @version $Id$
  */
-public class Bit99SingleDriver extends Driver {
+public class Bit99SingleDriver extends SynthDriverPatchImpl {
 	/** Header Size */
 	private static final int HSIZE = Bit99.HEADER_SIZE.number();
 	/** Single Patch size */
-	private static final int SSIZE =  Bit99.PATCH_SIZE.number() - Bit99.HEADER_SIZE.number();
+	private static final int SSIZE = Bit99.PATCH_SIZE.number() - Bit99.HEADER_SIZE.number();
 
 	private static final SysexHandler SYS_REQ = new SysexHandler(Bit99.REQUEST_SINGLE_PATCH_TEMPLATE);
 
@@ -25,20 +25,20 @@ public class Bit99SingleDriver extends Driver {
 	private int patchNum = 0;
 
 	public Bit99SingleDriver() {
-		super("Single", "ssmcurtis");
+		super("Single", "ssmCurtis");
 		sysexID = Bit99.DEVICE_SYSEX_ID;
-		patchSize = Bit99.PATCH_SIZE.number(); // HSIZE + SSIZE + 1;
-		patchNameStart = Bit99.PATCH_NAME_START_AT.number(); // = HSIZE;
+		patchSize = Bit99.PATCH_SIZE.number();
+		patchNameStart = Bit99.PATCH_NAME_START_AT.number();
 		patchNameSize = Bit99.PATCH_NAME_END_AT.number();
 		deviceIDoffset = Bit99.DEVICE_ID_OFFSET.number();
-		// checksumStart = HSIZE;
-		// checksumEnd = HSIZE + SSIZE - 2;
-		// checksumOffset = HSIZE + SSIZE - 1;
+		
+		checksumOffset = Bit99.CHECKSUM_OFFSET.number();
+		
 		bankNumbers = Bit99.BANK_NAMES;
-		patchNumbers = Bit99Device.createPatchNumbers();
+		patchNumbers = Bit99.createPatchNumbers();
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		System.out.println(">>>> store patch");
 
 		setPatchNum(patchNum);
@@ -58,7 +58,7 @@ public class Bit99SingleDriver extends Driver {
 		setPatchNum(patchNum);
 	}
 
-	public void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		System.out.println(">>>> send patch");
 
 		super.sendPatch(p);
@@ -75,12 +75,8 @@ public class Bit99SingleDriver extends Driver {
 
 		MidiMessage msg = SYS_REQ.toSysexMessage(getChannel(), bank, patch);
 
-		System.out.println(">>>" + Utility.hexDumpOneLine(msg.getMessage(), 0, -1, 100));
+		System.out.println(">>>" + HexaUtil.hexDumpOneLine(msg.getMessage(), 0, -1, 100));
 		send(msg);
-	}
-	
-	protected void calculateChecksum(Patch p) {
-		// overwrite do not calculate a checksum
 	}
 
 }

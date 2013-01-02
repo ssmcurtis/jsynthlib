@@ -12,10 +12,11 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
 import org.jsynthlib.PatchBayApplication;
+import org.jsynthlib.menu.Actions;
+import org.jsynthlib.menu.helper.ExtensionFilter;
 import org.jsynthlib.menu.preferences.AppConfig;
-import org.jsynthlib.menu.ui.ExtensionFilter;
-import org.jsynthlib.menu.ui.window.CompatibleFileDialog;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.window.CompatibleFileDialog;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 public class ExportAction extends AbstractAction {
 	public ExportAction(Map<Serializable, Integer> mnemonics) {
@@ -35,7 +36,7 @@ public class ExportAction extends AbstractAction {
 		File file = fc3.getSelectedFile();
 		try {
 			if (Actions.getSelectedFrame() == null) {
-				ErrorMsg.reportError("Error", "Patch to export must be hilighted\n" + "in the currently focuses Library");
+				ErrorMsgUtil.reportError("Error", "Patch to export must be hilighted\n" + "in the currently focuses Library"+ getClass().getSimpleName());
 			} else {
 				if (!file.getName().toUpperCase().endsWith(".SYX")) {
 					file = new File(file.getPath() + ".syx");
@@ -47,7 +48,7 @@ public class ExportAction extends AbstractAction {
 				Actions.getSelectedFrame().exportPatch(file);
 			}
 		} catch (IOException ex) {
-			ErrorMsg.reportError("Error", "Unable to Save Exported Patch", ex);
+			ErrorMsgUtil.reportError("Error", "Unable to Save Exported Patch", ex);
 		}
 	}
 }

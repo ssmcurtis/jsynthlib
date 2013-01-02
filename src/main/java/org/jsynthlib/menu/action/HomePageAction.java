@@ -6,7 +6,8 @@ import java.util.Map;
 
 import javax.swing.AbstractAction;
 
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.Actions;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 public class HomePageAction extends AbstractAction {
 	public HomePageAction(Map<Serializable, Integer> mnemonics) {
@@ -26,7 +27,7 @@ public class HomePageAction extends AbstractAction {
 				// hpWin.setVisible(true);
 			}
 		} catch (Exception ex) {
-			ErrorMsg.reportError("Error", "Unable to show Documentation)", ex);
+			ErrorMsgUtil.reportError("Error", "Unable to show Documentation)", ex);
 		}
 	}
 }

@@ -37,9 +37,9 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.EnvelopeWidget;
@@ -108,7 +108,7 @@ class RolandMT32TimbreTempEditor extends PatchEditorFrame {
 	// "P,P -R"
 	// };
 
-	public RolandMT32TimbreTempEditor(Patch patch) {
+	public RolandMT32TimbreTempEditor(PatchDataImpl patch) {
 		super("Roland MT-32 Timbre Temp Editor", patch);
 
 		algoIcon[0] = new ImageIcon(getClass().getResource("01_ss-.gif"));
@@ -142,7 +142,7 @@ class RolandMT32TimbreTempEditor extends PatchEditorFrame {
 		int TTAAddrM = TTAModM.get();
 		int TTAAddrL = TTAModL.get();
 
-		ErrorMsg.reportStatus("Timbre source address: " + TTAAddrH + " / " + TTAAddrM + " / " + TTAAddrL);
+		ErrorMsgUtil.reportStatus("Timbre source address: " + TTAAddrH + " / " + TTAAddrM + " / " + TTAAddrL);
 
 		// Common Pane
 		gbc.weightx = 5;

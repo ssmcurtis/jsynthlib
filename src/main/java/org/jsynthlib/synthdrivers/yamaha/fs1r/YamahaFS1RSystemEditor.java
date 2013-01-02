@@ -4,10 +4,10 @@ import javax.swing.Box;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.ComboBoxWidget;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.SpinnerWidget;
 import org.jsynthlib.widgets.SysexSender;
 
@@ -18,7 +18,7 @@ import org.jsynthlib.widgets.SysexSender;
  */
 class YamahaFS1RSystemEditor extends PatchEditorFrame {
 
-	public YamahaFS1RSystemEditor(Patch patch) {
+	public YamahaFS1RSystemEditor(PatchDataImpl patch) {
 		super("Yamaha FS1R System Editor", patch);
 		// Master Pane
 		Box oMasterPane = Box.createVerticalBox();
@@ -68,7 +68,7 @@ class YamahaFS1RSystemEditor extends PatchEditorFrame {
 		 * @param offset
 		 *            dans la table
 		 */
-		public FS1RModel(Patch p, int offset) {
+		public FS1RModel(PatchDataImpl p, int offset) {
 			super(p, offset + YamahaFS1RSystemDriver.DATA_OFFSET);
 		}
 

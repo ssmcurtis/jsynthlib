@@ -24,12 +24,12 @@
  */
 package org.jsynthlib.synthdrivers.yamaha.dx7.common;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
-public class DX7FamilySystemSetupIIIDriver extends Driver {
+public class DX7FamilySystemSetupIIIDriver extends SynthDriverPatchImpl {
 	byte[] initSysex;
 	String[] dxPatchNumbers;
 	String[] dxBankNumbers;
@@ -56,13 +56,13 @@ public class DX7FamilySystemSetupIIIDriver extends Driver {
 		sysexRequestDump = new SysexHandler("F0 43 @@ 7E 4C 4D 20 20 38 39 35 32 53 20 F7");
 	}
 
-	public Patch createNewPatch() {
-		return new Patch(initSysex, getDevice());
+	public PatchDataImpl createNewPatch() {
+		return new PatchDataImpl(initSysex, getDevice());
 	}
 
-	public JSLFrame editPatch(Patch p) {
+	public JSLFrame editPatch(PatchDataImpl p) {
 		return new DX7FamilySystemSetupIIIEditor(getManufacturerName() + " " + getModelName() + " \"" + getPatchType()
-				+ "\" Editor", (Patch) p);
+				+ "\" Editor", (PatchDataImpl) p);
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {

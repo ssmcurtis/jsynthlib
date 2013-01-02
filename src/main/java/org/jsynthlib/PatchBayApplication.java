@@ -12,16 +12,16 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.action.Actions;
-import org.jsynthlib.menu.action.MenuDesktop;
+import org.jsynthlib.menu.Actions;
+import org.jsynthlib.menu.JSLDesktop;
+import org.jsynthlib.menu.MenuDesktop;
 import org.jsynthlib.menu.preferences.AppConfig;
 import org.jsynthlib.menu.preferences.PrefsDialog;
-import org.jsynthlib.menu.ui.JSLDesktop;
-import org.jsynthlib.menu.ui.window.WaitDialog;
-import org.jsynthlib.model.DevicesConfig;
-import org.jsynthlib.tools.ErrorMsg;
-import org.jsynthlib.tools.Utility;
-import org.jsynthlib.tools.midi.MidiUtil;
+import org.jsynthlib.menu.window.WaitDialog;
+import org.jsynthlib.model.descriptor.DevicesConfig;
+import org.jsynthlib.tools.ErrorMsgUtil;
+import org.jsynthlib.tools.MidiUtil;
+import org.jsynthlib.tools.UiUtil;
 
 /**
  * This is the main JSynthLib application object. It's called PatchEdit, which is probably ambiguous, but probably to
@@ -46,11 +46,11 @@ public final class PatchBayApplication {
 	 */
 	public PatchBayApplication(List<String> fileList, int debugLevel) {
 
-		ErrorMsg.setDebugLevel(debugLevel);
+		ErrorMsgUtil.setDebugLevel(debugLevel);
 
 		// for bug report
-		ErrorMsg.reportStatus("JSynthLib: " + Constants.VERSION + ", Java: " + Utility.getJavaVersion() + ", OS: " + Utility.getOSName()
-				+ ", " + Utility.getOSVersion());
+		ErrorMsgUtil.reportStatus("JSynthLib: " + JSynthConstants.VERSION + ", Java: " + UiUtil.getJavaVersion() + ", OS: " + UiUtil.getOSName()
+				+ ", " + UiUtil.getOSVersion());
 		// Load SynthDriver database (synthdrivers.properties)
 		deviceConfig = new DevicesConfig();
 
@@ -89,7 +89,7 @@ public final class PatchBayApplication {
 		// This is no longer normal. Maybe we shouldn't save prefs if this
 		// happens (could be difficult)
 		if (!loadPrefsSuccessfull)
-			ErrorMsg.reportError("Error", "Unable to load user preferences. Defaults loaded instead.");
+			ErrorMsgUtil.reportError("Error", "Unable to load user preferences. Defaults loaded instead.");
 
 		// popup menu for Library window, etc.
 		Actions.createPopupMenu();
@@ -108,7 +108,7 @@ public final class PatchBayApplication {
 		// open default library frame.
 		String fname = AppConfig.getDefaultLibrary();
 		if (!fname.equals("")) {
-			ErrorMsg.reportStatus("default lib: " + fname);
+			ErrorMsgUtil.reportStatus("default lib: " + fname);
 			Actions.openFrame(new File(fname));
 		}
 
@@ -116,13 +116,13 @@ public final class PatchBayApplication {
 		Iterator<String> it = fileList.iterator();
 		while (it.hasNext()) {
 			fname = (String) it.next();
-			ErrorMsg.reportStatus("file name: " + fname);
+			ErrorMsgUtil.reportStatus("file name: " + fname);
 			Actions.openFrame(new File(fname));
 		}
 	}
 
 	protected void finalize() { // ???
-		ErrorMsg.reportStatus("JSynthLib finalizing...");
+		ErrorMsgUtil.reportStatus("JSynthLib finalizing...");
 		masterInEnable(false);
 	}
 
@@ -170,7 +170,7 @@ public final class PatchBayApplication {
 				// icon = new ImageIcon(this.getClass().getResource(jarName));
 				icon = new ImageIcon(PatchBayApplication.class.getClass().getResource(jarName));
 			} catch (java.lang.NullPointerException e) {
-				ErrorMsg.reportStatus("ImageIcon:LoadIcon Could not find: " + name);
+				ErrorMsgUtil.reportStatus("ImageIcon:LoadIcon Could not find: " + name);
 			}
 		}
 		return (ImageIcon) icon;
@@ -211,7 +211,7 @@ public final class PatchBayApplication {
 														// Message
 				// I believe Sysex message must be ignored.
 				// || status == SysexMessage.SYSTEM_EXCLUSIVE)
-				ErrorMsg.reportStatus("MasterReceiver: " + message);
+				ErrorMsgUtil.reportStatus("MasterReceiver: " + message);
 				this.rcvr.send(message, timeStamp);
 				MidiUtil.log("RECV: ", message);
 			}
@@ -236,7 +236,7 @@ public final class PatchBayApplication {
 				// ErrorMsg.reportStatus("masterInEnable.rcvr1: " + rcvr1);
 				// ErrorMsg.reportStatus("masterInEnable.trns: " + trns);
 			} catch (MidiUnavailableException e) {
-				ErrorMsg.reportStatus(e);
+				ErrorMsgUtil.reportStatus(e);
 			}
 		} else {
 			if (trns != null)

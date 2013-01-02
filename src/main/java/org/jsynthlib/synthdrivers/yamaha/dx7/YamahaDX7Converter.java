@@ -23,10 +23,10 @@
  */
 package org.jsynthlib.synthdrivers.yamaha.dx7;
 
-import org.jsynthlib.menu.patch.Converter;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.driver.ConverterImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
-public class YamahaDX7Converter extends Converter {
+public class YamahaDX7Converter extends ConverterImpl {
 	public YamahaDX7Converter() {
 		super("SER7-Converter", "Torsten Tittmann");
 
@@ -36,7 +36,7 @@ public class YamahaDX7Converter extends Converter {
 		// trimSize=275;
 	}
 
-	public Patch[] extractPatch(Patch p) {
+	public PatchDataImpl[] extractPatch(PatchDataImpl p) {
 		byte[] sysex = p.getByteArray();
 		byte[] sx = new byte[163]; // single voice
 		byte[] tx = new byte[102]; // single performance
@@ -76,10 +76,10 @@ public class YamahaDX7Converter extends Converter {
 		byte[] fkt_data_string = { 32, 32, 70, 117, 110, 99, 116, 105, 111, 110, 32, 32, 68, 97, 116, 97 };
 		System.arraycopy(fkt_data_string, 0, tx, 6 + 74, 16);
 
-		Patch[] pf = new Patch[2];
+		PatchDataImpl[] pf = new PatchDataImpl[2];
 
-		pf[0] = new Patch(sx); // single voice
-		pf[1] = new Patch(tx); // single performance
+		pf[0] = new PatchDataImpl(sx); // single voice
+		pf[1] = new PatchDataImpl(tx); // single performance
 
 		return pf;
 	}

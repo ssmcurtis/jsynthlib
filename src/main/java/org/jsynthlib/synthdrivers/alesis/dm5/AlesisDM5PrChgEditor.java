@@ -23,10 +23,10 @@ package org.jsynthlib.synthdrivers.alesis.dm5;
 
 import javax.swing.JPanel;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.ComboBoxWidget;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.SysexSender;
 
 /**
@@ -49,7 +49,7 @@ public class AlesisDM5PrChgEditor extends PatchEditorFrame {
 	/**
 	 * Constructs a AlesisDM5PrChgEditor for the selected patch.
 	 */
-	AlesisDM5PrChgEditor(Patch patch) {
+	AlesisDM5PrChgEditor(PatchDataImpl patch) {
 		super("Alesis DM5 Program Change Table Editor", patch);
 		for (int i = 0; i < 128; i++) {
 			addWidgets(scrollPane, patch, i);
@@ -60,7 +60,7 @@ public class AlesisDM5PrChgEditor extends PatchEditorFrame {
 	/**
 	 * Adds ComboBoxes to the AlesisDM5PrChgEditor for the selected patch.
 	 */
-	private void addWidgets(JPanel panel, Patch patch, int prgChgNum) {
+	private void addWidgets(JPanel panel, PatchDataImpl patch, int prgChgNum) {
 		addWidget(panel, new ComboBoxWidget(String.valueOf(prgChgNum), patch, new ParamModel(patch, headerSize
 				+ prgChgNum), new DM5ProgChgSender(patch, 1), setNums), prgChgNum / 16, prgChgNum % 16, 1, 1, prgChgNum);
 	}
@@ -74,12 +74,12 @@ public class AlesisDM5PrChgEditor extends PatchEditorFrame {
 	 */
 	private class DM5ProgChgSender extends SysexSender {
 		int parameter;
-		Patch patch;
+		PatchDataImpl patch;
 
 		/**
 		 * Constructs a DM5ProgChgSender given the patch and the parameter.
 		 */
-		public DM5ProgChgSender(Patch p, int param) {
+		public DM5ProgChgSender(PatchDataImpl p, int param) {
 			parameter = param;
 			patch = p;
 		}

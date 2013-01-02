@@ -12,7 +12,7 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.jsynthlib.menu.patch.IPatch;
+import org.jsynthlib.model.patch.Patch;
 
 import com.dreamfabric.DKnob;
 
@@ -46,7 +46,7 @@ public class KnobWidget extends SysexWidget {
 	 * @param param
 	 *            a <code>Parameter</code> value.
 	 */
-	public KnobWidget(IPatch patch, IParameter param) {
+	public KnobWidget(Patch patch, IParameter param) {
 		this(patch, param, -1, -1);
 	}
 
@@ -62,7 +62,7 @@ public class KnobWidget extends SysexWidget {
 	 * @param height
 	 *            The height of the knob.
 	 */
-	public KnobWidget(IPatch patch, IParameter param, int width, int height) {
+	public KnobWidget(Patch patch, IParameter param, int width, int height) {
 		super(patch, param);
 
 		if (width > 0 && height > 0) {
@@ -92,7 +92,7 @@ public class KnobWidget extends SysexWidget {
 	 * @param sender
 	 *            a <code>ISender</code> object.
 	 */
-	public KnobWidget(String label, IPatch patch, int min, int max, int base, IParamModel pmodel, ISender sender) {
+	public KnobWidget(String label, Patch patch, int min, int max, int base, IParamModel pmodel, ISender sender) {
 		this(label, patch, min, max, base, pmodel, sender, null, -1, -1);
 	}
 
@@ -118,7 +118,7 @@ public class KnobWidget extends SysexWidget {
 	 * @param height
 	 *            The height of the knob.
 	 */
-	public KnobWidget(String label, IPatch patch, int min, int max, int base, IParamModel pmodel, ISender sender,
+	public KnobWidget(String label, Patch patch, int min, int max, int base, IParamModel pmodel, ISender sender,
 			int width, int height) {
 		this(label, patch, min, max, base, pmodel, sender, null, width, height);
 	}
@@ -129,7 +129,7 @@ public class KnobWidget extends SysexWidget {
 	 * @param aImages
 	 *            array of images corresponding to each value.
 	 */
-	public KnobWidget(String label, IPatch patch, int min, int max, int base, IParamModel pmodel, ISender sender,
+	public KnobWidget(String label, Patch patch, int min, int max, int base, IParamModel pmodel, ISender sender,
 			ImageIcon[] aImages) {
 		this(label, patch, min, max, base, pmodel, sender, aImages, -1, -1);
 	}
@@ -140,7 +140,7 @@ public class KnobWidget extends SysexWidget {
 	 * @param aImages
 	 *            array of images corresponding to each value.
 	 */
-	public KnobWidget(String label, IPatch patch, int min, int max, int base, IParamModel pmodel, ISender sender,
+	public KnobWidget(String label, Patch patch, int min, int max, int base, IParamModel pmodel, ISender sender,
 			ImageIcon[] aImages, int width, int height) {
 		super(label, patch, min, max, pmodel, sender);
 		mBase = base;
@@ -159,7 +159,7 @@ public class KnobWidget extends SysexWidget {
 	 * 
 	 * @deprecated
 	 */
-	protected KnobWidget(String label, IPatch patch, int min, int max, IParamModel pmodel, ISender sender) {
+	protected KnobWidget(String label, Patch patch, int min, int max, IParamModel pmodel, ISender sender) {
 		super(label, patch, min, max, pmodel, sender);
 
 		createWidgets();

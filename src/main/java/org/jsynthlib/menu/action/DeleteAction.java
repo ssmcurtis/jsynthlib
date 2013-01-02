@@ -6,7 +6,8 @@ import java.util.Map;
 
 import javax.swing.AbstractAction;
 
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.Actions;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 public class DeleteAction extends AbstractAction {
 	public DeleteAction(Map<Serializable, Integer> mnemonics) {
@@ -19,7 +20,7 @@ public class DeleteAction extends AbstractAction {
 		try {
 			Actions.getSelectedFrame().deleteSelectedPatches();
 		} catch (Exception ex) {
-			ErrorMsg.reportError("Error", "Patch to delete must be hilighted\nin the focused Window.", ex);
+			ErrorMsgUtil.reportError("Error", "Patch to delete must be hilighted\nin the focused Window."+ getClass().getSimpleName(), ex);
 		}
 	}
 }

@@ -33,13 +33,13 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.KnobLookupWidget;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.PatchNameWidget;
 import org.jsynthlib.widgets.ScrollBarLookupWidget;
 import org.jsynthlib.widgets.ScrollBarWidget;
@@ -71,7 +71,7 @@ final class TD6SingleEditor extends PatchEditorFrame {
 	 * @param patch
 	 *            a <code>Patch</code> value
 	 */
-	TD6SingleEditor(Patch patch) {
+	TD6SingleEditor(PatchDataImpl patch) {
 		super("Roland TD-6 Single Editor", patch);
 
 		// defined here since padList is used by TD6PadModel()
@@ -124,7 +124,7 @@ final class TD6SingleEditor extends PatchEditorFrame {
 			padPattern[i] = String.valueOf(i);
 	}
 
-	private JPanel createPadPane(Patch patch) {
+	private JPanel createPadPane(PatchDataImpl patch) {
 		JPanel padPane = new JPanel();
 		padPane.setLayout(new GridBagLayout());
 
@@ -275,7 +275,7 @@ final class TD6SingleEditor extends PatchEditorFrame {
 			"L4", "L3", "L2", "L1", "Center", "R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10", "R11",
 			"R12", "R13", "R14", "R15", "Random", "Alternative" };
 
-	private JPanel createMixerPane(Patch patch) {
+	private JPanel createMixerPane(PatchDataImpl patch) {
 		JPanel mixerPane = new JPanel();
 		mixerPane.setLayout(new GridBagLayout());
 
@@ -337,7 +337,7 @@ final class TD6SingleEditor extends PatchEditorFrame {
 	private static final String[] wall_type = { "Wood", "Plaster", "Glass" };
 	private static final String[] room_size = { "Small", "Medium", "Large" };
 
-	private JPanel createEffectPane(Patch patch) {
+	private JPanel createEffectPane(PatchDataImpl patch) {
 		JPanel effectPane = new JPanel();
 		effectPane.setLayout(new GridBagLayout());
 
@@ -483,7 +483,7 @@ final class TD6SingleEditor extends PatchEditorFrame {
 		 * @param patch
 		 *            a <code>Patch</code> value
 		 */
-		TD6InstModel(Patch patch) {
+		TD6InstModel(PatchDataImpl patch) {
 			super(patch, 0x0, true);
 		}
 
@@ -520,7 +520,7 @@ final class TD6SingleEditor extends PatchEditorFrame {
 		 * @param nibbled
 		 *            true if nibbled (4 byte) data
 		 */
-		TD6PadModel(Patch patch, int param, boolean nibbled) {
+		TD6PadModel(PatchDataImpl patch, int param, boolean nibbled) {
 			// 'ofs' is calculated when set() and/or get() is called.
 			super(patch, 0, nibbled);
 			this.param = param;
@@ -534,7 +534,7 @@ final class TD6SingleEditor extends PatchEditorFrame {
 		 * @param param
 		 *            relative offset address
 		 */
-		TD6PadModel(Patch patch, int param) {
+		TD6PadModel(PatchDataImpl patch, int param) {
 			this(patch, param, false);
 		}
 
@@ -665,7 +665,7 @@ class TD6KitModel extends ParamModel { // extended by TD6PadModel
 	 * @param nibbled
 	 *            true if nibbled (4 byte) data
 	 */
-	TD6KitModel(Patch patch, int param, boolean nibbled) {
+	TD6KitModel(PatchDataImpl patch, int param, boolean nibbled) {
 		super(patch, getOffset(param));
 		this.nibbled = nibbled; // need to check if 1 or 4?
 	}
@@ -678,7 +678,7 @@ class TD6KitModel extends ParamModel { // extended by TD6PadModel
 	 * @param param
 	 *            offset address in kit parameters.
 	 */
-	TD6KitModel(Patch p, int param) {
+	TD6KitModel(PatchDataImpl p, int param) {
 		this(p, param, false);
 	}
 
@@ -703,8 +703,8 @@ class TD6KitModel extends ParamModel { // extended by TD6PadModel
 	 *            an <code>int</code> value
 	 */
 	public void set(int d) {
-		ErrorMsg.reportStatus("TD6KitModel.set(): d =  " + d + " :" + nibbled);
-		ErrorMsg.reportStatus("TD6KitModel.set(): ofs =  " + ofs + "(0x" + Integer.toHexString(ofs) + ")");
+		ErrorMsgUtil.reportStatus("TD6KitModel.set(): d =  " + d + " :" + nibbled);
+		ErrorMsgUtil.reportStatus("TD6KitModel.set(): ofs =  " + ofs + "(0x" + Integer.toHexString(ofs) + ")");
 		if (nibbled) {
 			// 4bit each, MSB first
 			patch.getSysex()[ofs] = (byte) ((d >> 12) & 0xf);

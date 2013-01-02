@@ -30,8 +30,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.ScrollBarWidget;
@@ -87,7 +87,7 @@ class MIDIboxFMEnsEditor extends PatchEditorFrame {
 			"123 | Seashore        ", "124 | Bird Tweet      ", "125 | Telephone       ", "126 | Helicopter Blade",
 			"127 | Applause/Noise  ", "128 | Gunshot         " };
 
-	public MIDIboxFMEnsEditor(Patch patch) {
+	public MIDIboxFMEnsEditor(PatchDataImpl patch) {
 		super("MIDIbox FM Ensemble Editor", patch);
 		gbc.weightx = 0;
 		gbc.weighty = 0;

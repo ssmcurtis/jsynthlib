@@ -5,7 +5,7 @@ import java.awt.FlowLayout;
 import javax.swing.Box;
 import javax.swing.JPanel;
 
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.KnobWidget;
@@ -18,15 +18,15 @@ import org.jsynthlib.widgets.SpinnerWidget;
  */
 class FseqWindow extends JPanel {
 
-	private Patch p;
+	private PatchDataImpl p;
 
-	public Patch getPatch() {
+	public PatchDataImpl getPatch() {
 		return p;
 	}
 
 	private static final String[] mRatios = { "MIDI 1/4", "MIDI 1/2", "MIDI 1/1", "MIDI 2/1", "MIDI 4/1" };
 
-	FseqWindow(Patch aPatch) {
+	FseqWindow(PatchDataImpl aPatch) {
 		p = aPatch;
 		Box oPanel = Box.createVerticalBox();
 

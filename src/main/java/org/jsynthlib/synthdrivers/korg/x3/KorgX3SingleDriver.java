@@ -1,10 +1,10 @@
 package org.jsynthlib.synthdrivers.korg.x3;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 /**
  * This class is a single driver for Korg X3 -synthesizer to be used in JSynthLib-program. Might work directly with Korg
@@ -16,7 +16,7 @@ import org.jsynthlib.tools.ErrorMsg;
  * @author Juha Tukkinen
  * @version $Id$
  */
-public class KorgX3SingleDriver extends Driver {
+public class KorgX3SingleDriver extends SynthDriverPatchImpl {
 	// contains unneeded data: F0 42 30 35 23 f7 f0 42 30 35 40
 	public static final int EXTRA_HEADER = 23;
 
@@ -126,7 +126,7 @@ public class KorgX3SingleDriver extends Driver {
 	 * @param patchNum
 	 *            Patch number
 	 */
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		setBankNum(bankNum);
 		setPatchNum(patchNum);
 		try {
@@ -145,7 +145,7 @@ public class KorgX3SingleDriver extends Driver {
 			programWriteRequest[6] = (byte) patchNum;
 			send(programWriteRequest);
 		} catch (Exception e) {
-			ErrorMsg.reportError("Error", "Error with patch storing", e);
+			ErrorMsgUtil.reportError("Error", "Error with patch storing", e);
 		}
 		;
 	}
@@ -166,7 +166,7 @@ public class KorgX3SingleDriver extends Driver {
 	 *            Patch to be sent
 	 */
 	// protected void sendPatchWorker (Patch p)
-	protected void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		// ##TODO## first go to program edit mode so that the edit buffer will be active.
 		// then write PROGRAM PARAMETER DUMP, F0423g3540[data]F7
 		// [data] is 164 bytes converted to 188 bytes
@@ -184,8 +184,8 @@ public class KorgX3SingleDriver extends Driver {
 			byte b7 = (byte) 0x00;
 			for (int k = 0; k < 7; k++) {
 				if (i + k < 164) {
-					b7 += (((Patch) p).getSysex()[i + k + EXTRA_HEADER] & 128) >> (7 - k);
-					pd[j + k + 1 + 5] = (byte) (((Patch) p).getSysex()[i + k + EXTRA_HEADER] & (byte) 0x7F);
+					b7 += (((PatchDataImpl) p).getSysex()[i + k + EXTRA_HEADER] & 128) >> (7 - k);
+					pd[j + k + 1 + 5] = (byte) (((PatchDataImpl) p).getSysex()[i + k + EXTRA_HEADER] & (byte) 0x7F);
 				}
 			}
 			pd[j + 5] = b7;
@@ -196,7 +196,7 @@ public class KorgX3SingleDriver extends Driver {
 		try {
 			send(pd);
 		} catch (Exception e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 	}
 
@@ -205,7 +205,7 @@ public class KorgX3SingleDriver extends Driver {
 	 * 
 	 * @return A new empty patch
 	 */
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[187];
 		sysex[0] = (byte) 0xF0;
 		sysex[1] = (byte) 0x42;
@@ -239,7 +239,7 @@ public class KorgX3SingleDriver extends Driver {
 			sysex[i] = (byte) 0x20;
 		}
 
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 
 		setPatchName(p, "Init");
 
@@ -253,8 +253,8 @@ public class KorgX3SingleDriver extends Driver {
 	 *            Patch to be edited
 	 * @return Editor window
 	 */
-	public JSLFrame editPatch(Patch p) {
-		return new KorgX3SingleEditor((Patch) p);
+	public JSLFrame editPatch(PatchDataImpl p) {
+		return new KorgX3SingleEditor((PatchDataImpl) p);
 	}
 
 }

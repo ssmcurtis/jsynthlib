@@ -6,7 +6,8 @@ import java.util.Map;
 
 import javax.swing.AbstractAction;
 
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.Actions;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 public class StoreAction extends AbstractAction {
 	public StoreAction(Map<Serializable, Integer> mnemonics) {
@@ -19,7 +20,7 @@ public class StoreAction extends AbstractAction {
 		try {
 			Actions.getSelectedFrame().storeSelectedPatch();
 		} catch (Exception ex) {
-			ErrorMsg.reportError("Error", "Patch to Store must be highlighted in the focused Window.", ex);
+			ErrorMsgUtil.reportError("Error", "Patch to Store must be highlighted in the focused Window."+ getClass().getSimpleName(), ex);
 		}
 	}
 }

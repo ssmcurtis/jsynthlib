@@ -21,18 +21,18 @@
 
 package org.jsynthlib.synthdrivers.tcelectronic.gmajor;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.widgets.ParamModel;
 
 class TCModel extends ParamModel {
 	private int delta;
 
-	public TCModel(Patch p, int offset) {
+	public TCModel(PatchDataImpl p, int offset) {
 		super(p, offset);
 		delta = 0;
 	}
 
-	public TCModel(Patch p, int offset, int idelta) {
+	public TCModel(PatchDataImpl p, int offset, int idelta) {
 		super(p, offset);
 		delta = idelta;
 	}

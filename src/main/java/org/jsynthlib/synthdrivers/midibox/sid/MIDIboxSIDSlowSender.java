@@ -26,17 +26,17 @@
 
 package org.jsynthlib.synthdrivers.midibox.sid;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 public class MIDIboxSIDSlowSender {
-	public void sendSysEx(Driver driver, byte[] buffer, int delay) {
+	public void sendSysEx(SynthDriverPatchImpl driver, byte[] buffer, int delay) {
 		try {
 			// PatchEdit.MidiOut.writeLongMessage(port, buffer);
 			driver.send(buffer);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			ErrorMsg.reportStatus(ex);
+			ErrorMsgUtil.reportStatus(ex);
 		}
 
 		try {
@@ -46,7 +46,7 @@ public class MIDIboxSIDSlowSender {
 		;
 	}
 
-	public void sendParameter(Driver driver, int parameter, byte value, int delay) {
+	public void sendParameter(SynthDriverPatchImpl driver, int parameter, byte value, int delay) {
 		byte[] b = new byte[11];
 
 		b[0] = (byte) 0xF0;

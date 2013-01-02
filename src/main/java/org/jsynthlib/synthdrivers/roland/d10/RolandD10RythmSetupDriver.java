@@ -29,14 +29,14 @@ import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.RYTHM_SETUP_TON
 import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.SIZE_HEADER_DT1;
 import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.SIZE_TRAILER;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.synthdrivers.roland.d10.message.D10DataSetMessage;
 import org.jsynthlib.synthdrivers.roland.d10.message.D10RequestMessage;
 import org.jsynthlib.synthdrivers.roland.d10.message.D10TransferMessage;
 
-public class RolandD10RythmSetupDriver extends Driver {
+public class RolandD10RythmSetupDriver extends SynthDriverPatchImpl {
 
 	private static final String[] rythmSounds = new String[] { "r01 Closed High Hat-1", "r02 Closed High Hat-2",
 			"r03 Open High Hat-1", "r04 Open High Hat-2", "r05 Crash Cymbal", "r06 Crash Cymbal (short)",
@@ -66,7 +66,7 @@ public class RolandD10RythmSetupDriver extends Driver {
 		patchNumbers = RolandD10Support.createRythmSetupNumbers();
 	}
 
-	protected String getPatchName(Patch patch) {
+	public String getPatchName(PatchDataImpl patch) {
 
 		// Patch has no name in data so we generate a name.
 		D10DataSetMessage message = new D10DataSetMessage(patch.getSysex());
@@ -87,29 +87,29 @@ public class RolandD10RythmSetupDriver extends Driver {
 		send(request.getBytes());
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		D10TransferMessage message = new D10DataSetMessage(D10Constants.RYTHM_SETUP_SIZE, Entity.ZERO);
-		Patch patch = new Patch(message.getBytes(), this);
+		PatchDataImpl patch = new PatchDataImpl(message.getBytes(), this);
 		return patch;
 	}
 
-	protected void sendPatch(Patch patch) {
+	public void sendPatch(PatchDataImpl patch) {
 		D10DataSetMessage message = new D10DataSetMessage(patch.getSysex());
 		message.setAddress(Entity.createFromIntValue(1).multiply(RYTHM_SETUP_SIZE).add(BASE_RYTHM_SETUP_TEMP_AREA));
 		send(message.getBytes());
 	}
 
-	protected void storePatch(Patch patch, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl patch, int bankNum, int patchNum) {
 		D10DataSetMessage message = new D10DataSetMessage(patch.getSysex());
 		message.setAddress(Entity.createFromIntValue(patchNum).multiply(RYTHM_SETUP_SIZE).add(BASE_RYTHM_SETUP));
 		send(message.getBytes());
 	}
 
-	protected void playPatch(Patch p) {
+	public void playPatch(PatchDataImpl p) {
 		super.playPatch(p);
 	}
 
-	protected JSLFrame editPatch(Patch patch) {
+	public JSLFrame editPatch(PatchDataImpl patch) {
 		return new RolandD10RythmSetupEditor(patch);
 	}
 }

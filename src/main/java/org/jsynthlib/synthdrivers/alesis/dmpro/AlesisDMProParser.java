@@ -21,16 +21,16 @@
 
 package org.jsynthlib.synthdrivers.alesis.dmpro;
 
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 /**
  * Support class...
  */
 public class AlesisDMProParser {
 
-	private Patch m_p = null;
+	private PatchDataImpl m_p = null;
 
-	public AlesisDMProParser(Patch p) {
+	public AlesisDMProParser(PatchDataImpl p) {
 
 		m_p = p;
 	}

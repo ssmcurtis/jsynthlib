@@ -27,9 +27,9 @@
 
 package org.jsynthlib.synthdrivers.casio.cz1000;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 /**
  * Single patch driver for Casio CZ-101 and CZ-1000. Note : on the casio, if you initiate a dump (from the PC or the
@@ -39,7 +39,7 @@ import org.jsynthlib.tools.ErrorMsg;
  * @author Yves Lefebvre
  * @author Bill Zwicky
  */
-public class CasioCZ1000SingleDriver extends Driver {
+public class CasioCZ1000SingleDriver extends SynthDriverPatchImpl {
 	// mis-ordered to make Internal the default
 	private String[] BANK_NAMES = { "Internal", "Cartridge", "Preset" };
 	private int[] BANK_NUMS = { 0x20, 0x40, 0x00 };
@@ -64,9 +64,9 @@ public class CasioCZ1000SingleDriver extends Driver {
 		return BANK_NUMS[bankNum] + patchNum;
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		byte[] newsysex = new byte[264];
-		System.arraycopy(((Patch) p).getSysex(), 0, newsysex, 0, 264);
+		System.arraycopy(((PatchDataImpl) p).getSysex(), 0, newsysex, 0, 264);
 		newsysex[4] = (byte) (0x70 + getChannel() - 1); // must do it ourselve since sendPatchWorker didn't support
 		// adding midi channel info in half a byte
 		newsysex[5] = (byte) (0x20); // 20 is to send data to the Casio
@@ -79,7 +79,7 @@ public class CasioCZ1000SingleDriver extends Driver {
 		try {
 			send(newsysex);
 		} catch (Exception e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 		try {
 			Thread.sleep(100);
@@ -89,9 +89,9 @@ public class CasioCZ1000SingleDriver extends Driver {
 		setPatchNum(patchNum);
 	}
 
-	public void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		byte[] newsysex = new byte[264];
-		System.arraycopy(((Patch) p).getSysex(), 0, newsysex, 0, 264);
+		System.arraycopy(((PatchDataImpl) p).getSysex(), 0, newsysex, 0, 264);
 		newsysex[4] = (byte) (0x70 + getChannel() - 1); // must do it ourselve since sendPatchWorker didn't support
 		// adding midi channel info in half a byte
 		newsysex[5] = (byte) (0x20); // 0x20 is to send data to the Casio
@@ -99,7 +99,7 @@ public class CasioCZ1000SingleDriver extends Driver {
 		try {
 			send(newsysex);
 		} catch (Exception e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 	}
 
@@ -120,7 +120,7 @@ public class CasioCZ1000SingleDriver extends Driver {
 		send(sysex);
 	}
 
-	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
+	protected void calculateChecksum(PatchDataImpl p, int start, int end, int ofs) {
 		// no checksum
 	}
 
@@ -131,7 +131,7 @@ public class CasioCZ1000SingleDriver extends Driver {
 		return true;
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[264];
 		sysex[0] = (byte) 0xF0;
 		sysex[1] = (byte) 0x44;
@@ -141,7 +141,7 @@ public class CasioCZ1000SingleDriver extends Driver {
 		sysex[5] = (byte) 0x20;
 		sysex[6] = (byte) 0x60; // default is edit buffer
 		sysex[263] = (byte) 0xF7;
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		calculateChecksum(p);
 		return p;
 	}
@@ -169,6 +169,6 @@ public class CasioCZ1000SingleDriver extends Driver {
 //	}
 
 	/** No support, so ignore quietly. */
-	protected void setPatchName(Patch p, String name) {
+	public void setPatchName(PatchDataImpl p, String name) {
 	}
 }

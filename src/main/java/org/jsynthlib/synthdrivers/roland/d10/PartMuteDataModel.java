@@ -20,7 +20,7 @@
  */
 package org.jsynthlib.synthdrivers.roland.d10;
 
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 /**
  * This class handles bit manipulation for the pratial mute checkboxes which operates on the same underlying data byte.
@@ -31,7 +31,7 @@ import org.jsynthlib.menu.patch.Patch;
  */
 class PartMuteDataModel extends D10ParamModel {
 
-	public PartMuteDataModel(Patch patch, int offset) {
+	public PartMuteDataModel(PatchDataImpl patch, int offset) {
 		super(patch, offset);
 	}
 

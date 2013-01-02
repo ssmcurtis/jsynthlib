@@ -21,17 +21,17 @@
 
 package org.jsynthlib.synthdrivers.alesis.dm5;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 /**
  * Alesis DM5 Program Change Table Driver.
  * 
  * @author Jeff Weber
  */
-public class AlesisDM5PrChgDriver extends Driver {
+public class AlesisDM5PrChgDriver extends SynthDriverPatchImpl {
 
 	/**
 	 * DM5 Program Change Table Dump Request
@@ -102,7 +102,7 @@ public class AlesisDM5PrChgDriver extends Driver {
 	 * Calculates the checksum for the DM5 by calling calculateChecksum(Patch patch, int start, int end, int offset).
 	 * This needs to be included to override the version in the Driver class.
 	 */
-	protected void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p)  {
 		calculateChecksum(p, checksumStart, checksumEnd, checksumOffset);
 	}
 
@@ -110,7 +110,7 @@ public class AlesisDM5PrChgDriver extends Driver {
 	 * Calculates the checksum for the DM5. Equal to the mod 128 of the sum of all the bytes from offset header+1 to
 	 * offset total patchlength-3.
 	 */
-	protected void calculateChecksum(Patch patch, int start, int end, int offset) {
+	protected void calculateChecksum(PatchDataImpl patch, int start, int end, int offset) {
 		int sum = 0;
 
 		for (int i = start; i <= end; i++) {
@@ -129,8 +129,8 @@ public class AlesisDM5PrChgDriver extends Driver {
 	/**
 	 * Creates a new program change table patch with default values.
 	 */
-	protected Patch createNewPatch() {
-		Patch p = new Patch(NEW_SYSEX, this);
+	protected PatchDataImpl createNewPatch() {
+		PatchDataImpl p = new PatchDataImpl(NEW_SYSEX, this);
 		calculateChecksum(p);
 		return p;
 	}
@@ -138,7 +138,7 @@ public class AlesisDM5PrChgDriver extends Driver {
 	/**
 	 * Opens an edit window on the specified patch.
 	 */
-	protected JSLFrame editPatch(Patch p) {
-		return new AlesisDM5PrChgEditor((Patch) p);
+	public JSLFrame editPatch(PatchDataImpl p) {
+		return new AlesisDM5PrChgEditor((PatchDataImpl) p);
 	}
 }

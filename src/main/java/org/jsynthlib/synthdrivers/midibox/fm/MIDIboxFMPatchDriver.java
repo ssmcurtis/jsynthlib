@@ -24,8 +24,8 @@
 
 package org.jsynthlib.synthdrivers.midibox.fm;
 
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 public class MIDIboxFMPatchDriver extends MIDIboxFMSingleDriver {
 
@@ -33,7 +33,7 @@ public class MIDIboxFMPatchDriver extends MIDIboxFMSingleDriver {
 		super("Patch", 128, (byte) 0x00);
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[268];
 
 		sysex[0] = (byte) 0xf0;
@@ -163,13 +163,13 @@ public class MIDIboxFMPatchDriver extends MIDIboxFMSingleDriver {
 		sysex[10 + 0x7e] = 0x40; // Modwheel Depth
 
 		sysex[267] = (byte) 0xf7;
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		setPatchName(p, "New Patch");
 		calculateChecksum(p);
 		return p;
 	}
 
-	public JSLFrame editPatch(Patch p) {
-		return new MIDIboxFMPatchEditor((Patch) p);
+	public JSLFrame editPatch(PatchDataImpl p) {
+		return new MIDIboxFMPatchEditor((PatchDataImpl) p);
 	}
 }

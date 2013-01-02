@@ -29,13 +29,13 @@ import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-import org.jsynthlib.menu.patch.IPatchDriver;
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.driver.SynthDriverPatch;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.KnobWidget;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.PatchNameWidget;
 import org.jsynthlib.widgets.SysexSender;
 
@@ -122,7 +122,7 @@ public class Line6BassPodSingleEditor extends PatchEditorFrame {
 	private HideableKnobWidget midSweepKnob;
 
 	/** Constructs a Line6BassPodSingleEditor for the selected patch. */
-	Line6BassPodSingleEditor(Patch patch) {
+	Line6BassPodSingleEditor(PatchDataImpl patch) {
 		super("Line 6 Bass POD Single Editor", patch);
 		line6EditPanel = new JPanel();
 		line6EditPanel.setLayout(new BoxLayout(line6EditPanel, BoxLayout.X_AXIS));
@@ -148,14 +148,14 @@ public class Line6BassPodSingleEditor extends PatchEditorFrame {
 	/**
 	 * Adds the patch name panel to the left edit panel.
 	 */
-	private void addPatchNamePanel(JPanel parentPanel, Patch patch) {
+	private void addPatchNamePanel(JPanel parentPanel, PatchDataImpl patch) {
 		JPanel patchNamePanel = new JPanel();
 		parentPanel.add(patchNamePanel);
 		addWidget(patchNamePanel, new PatchNameWidget("Program Name ", patch), 0, 0, 1, 1, 1);
 	}
 
 	/** Adds the amp select panel. */
-	private void addAmpPane(JPanel parentPanel, Patch patch) {
+	private void addAmpPane(JPanel parentPanel, PatchDataImpl patch) {
 		JPanel modelPane = new JPanel();
 		modelPane.setLayout(new BoxLayout(modelPane, BoxLayout.Y_AXIS));
 		parentPanel.add(modelPane);
@@ -209,7 +209,7 @@ public class Line6BassPodSingleEditor extends PatchEditorFrame {
 	}
 
 	/** Adds the stompbox panel. */
-	private void addStompBoxPane(JPanel parentPanel, Patch patch) {
+	private void addStompBoxPane(JPanel parentPanel, PatchDataImpl patch) {
 		JPanel stompBoxPane = new JPanel();
 		stompBoxPane.setLayout(new BoxLayout(stompBoxPane, BoxLayout.X_AXIS));
 		parentPanel.add(stompBoxPane, gbc);
@@ -261,7 +261,7 @@ public class Line6BassPodSingleEditor extends PatchEditorFrame {
 	}
 
 	/** Adds the effects panel. */
-	private void addEffectsPanel(JPanel parentPanel, Patch patch) {
+	private void addEffectsPanel(JPanel parentPanel, PatchDataImpl patch) {
 		JPanel effectsPanel = new JPanel();
 		effectsPanel.setLayout(new BoxLayout(effectsPanel, BoxLayout.Y_AXIS));
 
@@ -285,7 +285,7 @@ public class Line6BassPodSingleEditor extends PatchEditorFrame {
 	}
 
 	/** Creates the different panels for each of the effects configurations. */
-	private void createCards(JPanel parentPanel, Patch patch) {
+	private void createCards(JPanel parentPanel, PatchDataImpl patch) {
 		// Panel 0--OctaveDown
 		JPanel panel0 = new JPanel();
 		setupOctaveDownPanel(panel0, patch);
@@ -369,7 +369,7 @@ public class Line6BassPodSingleEditor extends PatchEditorFrame {
 
 	// Panel 0--OctaveDown
 	/** Sets up the Octave Down effects panel. */
-	private void setupOctaveDownPanel(JPanel parentPanel, Patch patch) {
+	private void setupOctaveDownPanel(JPanel parentPanel, PatchDataImpl patch) {
 		parentPanel.setLayout(new BoxLayout(parentPanel, BoxLayout.Y_AXIS));
 		JPanel parmsPanel = new JPanel();
 		parentPanel.add(parmsPanel);
@@ -379,7 +379,7 @@ public class Line6BassPodSingleEditor extends PatchEditorFrame {
 
 	// Panel 1--AnalogChorus
 	/** Sets up the Analog Chorus effects panel. */
-	private void setupAnalogChorusPanel(JPanel parentPanel, Patch patch) {
+	private void setupAnalogChorusPanel(JPanel parentPanel, PatchDataImpl patch) {
 		parentPanel.setLayout(new BoxLayout(parentPanel, BoxLayout.Y_AXIS));
 		JPanel parmsPanel = new JPanel();
 		parentPanel.add(parmsPanel);
@@ -391,7 +391,7 @@ public class Line6BassPodSingleEditor extends PatchEditorFrame {
 
 	// Panel 2--Danish Chorus
 	/** Sets up the Danish Chorus effects panel. */
-	private void setupDanishChorusPanel(JPanel parentPanel, Patch patch) {
+	private void setupDanishChorusPanel(JPanel parentPanel, PatchDataImpl patch) {
 		parentPanel.setLayout(new BoxLayout(parentPanel, BoxLayout.Y_AXIS));
 		JPanel parmsPanel = new JPanel();
 		parentPanel.add(parmsPanel);
@@ -405,7 +405,7 @@ public class Line6BassPodSingleEditor extends PatchEditorFrame {
 
 	// Panel 3--Orange Phase
 	/** Sets up the Orange Phase effects panel. */
-	private void setupOPhasePanel(JPanel parentPanel, Patch patch) {
+	private void setupOPhasePanel(JPanel parentPanel, PatchDataImpl patch) {
 		parentPanel.setLayout(new BoxLayout(parentPanel, BoxLayout.Y_AXIS));
 		JPanel parmsPanel = new JPanel();
 		parentPanel.add(parmsPanel);
@@ -415,7 +415,7 @@ public class Line6BassPodSingleEditor extends PatchEditorFrame {
 
 	// Panel 4--Gray Flanger
 	/** Sets up the Gray Flanger effects panel. */
-	private void setupGrayFlangerPanel(JPanel parentPanel, Patch patch) {
+	private void setupGrayFlangerPanel(JPanel parentPanel, PatchDataImpl patch) {
 		parentPanel.setLayout(new BoxLayout(parentPanel, BoxLayout.Y_AXIS));
 		JPanel parmsPanel = new JPanel();
 		parentPanel.add(parmsPanel);
@@ -429,28 +429,28 @@ public class Line6BassPodSingleEditor extends PatchEditorFrame {
 
 	// Panel 5--Tron Down
 	/** Sets up the Tron Down effects panel. */
-	private void setupTronDownPanel(JPanel parentPanel, Patch patch) {
+	private void setupTronDownPanel(JPanel parentPanel, PatchDataImpl patch) {
 		addWidget(parentPanel, new KnobWidget("Peak", patch, 0, 127, 0, new ScaledParamModel(patch,
 				53 + pgmDumpheaderSize, 127, 63), new CCSender(39)), 6, 0, 1, 1, 31);
 	}
 
 	// Panel 6--Tron Up
 	/** Sets up the Tron Up effects panel. */
-	private void setupTronUpPanel(JPanel parentPanel, Patch patch) {
+	private void setupTronUpPanel(JPanel parentPanel, PatchDataImpl patch) {
 		addWidget(parentPanel, new KnobWidget("Peak", patch, 0, 127, 0, new ScaledParamModel(patch,
 				53 + pgmDumpheaderSize, 127, 63), new CCSender(40)), 6, 0, 1, 1, 32);
 	}
 
 	// Panel 7--Sample & Hold
 	/** Sets up the Sample & Hold effects panel. */
-	private void setupSHPanel(JPanel parentPanel, Patch patch) {
+	private void setupSHPanel(JPanel parentPanel, PatchDataImpl patch) {
 		addWidget(parentPanel, new KnobWidget("Speed", patch, 0, 127, 0, new ScaledParamModel(patch,
 				53 + pgmDumpheaderSize, 127, 63), new CCSender(41)), 6, 0, 1, 1, 33);
 	}
 
 	// Panel 7--S&H Flanger
 	/** Sets up the Sample & Hold Flanger effects panel. */
-	private void setupSHFlangerPanel(JPanel parentPanel, Patch patch) {
+	private void setupSHFlangerPanel(JPanel parentPanel, PatchDataImpl patch) {
 		addWidget(parentPanel, new KnobWidget("Width", patch, 0, 127, 0, new ScaledParamModel(patch,
 				56 + pgmDumpheaderSize, 127, 63), new CCSender(36)), 6, 0, 1, 1, 34);
 		addWidget(parentPanel, new KnobWidget("Speed", patch, 0, 127, 0, new ScaledParamModel(patch,
@@ -463,7 +463,7 @@ public class Line6BassPodSingleEditor extends PatchEditorFrame {
 
 	// Panel 9--S&H Driver
 	/** Sets up the Sample & Hold Driver effects panel. */
-	private void setupSHDriverPanel(JPanel parentPanel, Patch patch) {
+	private void setupSHDriverPanel(JPanel parentPanel, PatchDataImpl patch) {
 		addWidget(parentPanel, new KnobWidget("Speed", patch, 0, 127, 0, new ScaledParamModel(patch,
 				53 + pgmDumpheaderSize, 127, 63), new CCSender(41)), 6, 0, 1, 1, 38);
 		addWidget(parentPanel, new KnobWidget("Distortion", patch, 0, 127, 0, new ScaledParamModel(patch,
@@ -472,7 +472,7 @@ public class Line6BassPodSingleEditor extends PatchEditorFrame {
 
 	// Panel 10--Bass Synth
 	/** Sets up the Bass Synth effects panel. */
-	private void setupBassSynthPanel(JPanel parentPanel, Patch patch) {
+	private void setupBassSynthPanel(JPanel parentPanel, PatchDataImpl patch) {
 		addWidget(parentPanel, new KnobWidget("Decay", patch, 0, 127, 0, new ScaledParamModel(patch,
 				53 + pgmDumpheaderSize, 127, 63), new CCSender(52)), 6, 0, 1, 1, 40);
 		addWidget(parentPanel, new KnobWidget("Dry Mix", patch, 0, 127, 0, new ScaledParamModel(patch,
@@ -485,28 +485,28 @@ public class Line6BassPodSingleEditor extends PatchEditorFrame {
 
 	// Panel 11--Danish Driver
 	/** Sets up the Danish Driver effects panel. */
-	private void setupDanishDrvrPanel(JPanel parentPanel, Patch patch) {
+	private void setupDanishDrvrPanel(JPanel parentPanel, PatchDataImpl patch) {
 		addWidget(parentPanel, new KnobWidget("Distortion", patch, 0, 127, 0, new ScaledParamModel(patch,
 				53 + pgmDumpheaderSize, 127, 127), new CCSender(55)), 6, 0, 1, 1, 44);
 	}
 
 	// Panel 12--Large Pie
 	/** Sets up the Large Pie effects panel. */
-	private void setupLargePiePanel(JPanel parentPanel, Patch patch) {
+	private void setupLargePiePanel(JPanel parentPanel, PatchDataImpl patch) {
 		addWidget(parentPanel, new KnobWidget("Distortion", patch, 0, 127, 0, new ScaledParamModel(patch,
 				53 + pgmDumpheaderSize, 127, 127), new CCSender(56)), 6, 0, 1, 1, 45);
 	}
 
 	// Panel 13--Pig Foot
 	/** Sets up the Pig Foot effects panel. */
-	private void setupPigFootPanel(JPanel parentPanel, Patch patch) {
+	private void setupPigFootPanel(JPanel parentPanel, PatchDataImpl patch) {
 		addWidget(parentPanel, new KnobWidget("Distortion", patch, 0, 127, 0, new ScaledParamModel(patch,
 				53 + pgmDumpheaderSize, 127, 127), new CCSender(57)), 6, 0, 1, 1, 46);
 	}
 
 	// Panel 14--Rodent
 	/** Sets up the Rodent effects panel. */
-	private void setupRodentPanel(JPanel parentPanel, Patch patch) {
+	private void setupRodentPanel(JPanel parentPanel, PatchDataImpl patch) {
 		addWidget(parentPanel, new KnobWidget("Filter", patch, 0, 127, 0, new ScaledParamModel(patch,
 				54 + pgmDumpheaderSize, 127, 63), new CCSender(59)), 6, 0, 1, 1, 47);
 		addWidget(parentPanel, new KnobWidget("Distortion", patch, 0, 127, 0, new ScaledParamModel(patch,
@@ -516,7 +516,7 @@ public class Line6BassPodSingleEditor extends PatchEditorFrame {
 	// Panel 15--Bypass--no setup needed
 
 	/** Adds the parametric equalizer panel. */
-	private void addParametricPanel(JPanel parentPanel, Patch patch) {
+	private void addParametricPanel(JPanel parentPanel, PatchDataImpl patch) {
 		JPanel parametricPanel = new JPanel();
 		parametricPanel.setLayout(new BoxLayout(parametricPanel, BoxLayout.X_AXIS));
 		parentPanel.add(parametricPanel);
@@ -543,7 +543,7 @@ public class Line6BassPodSingleEditor extends PatchEditorFrame {
 	}
 
 	/** Adds the compressor panel. */
-	private void addCompressPanel(JPanel parentPanel, Patch patch) {
+	private void addCompressPanel(JPanel parentPanel, PatchDataImpl patch) {
 		JPanel compressPanel = new JPanel();
 		compressPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.RAISED), "Compression",
 				TitledBorder.CENTER, TitledBorder.CENTER));
@@ -574,12 +574,12 @@ public class Line6BassPodSingleEditor extends PatchEditorFrame {
 	 * instead. This causes the POD to retain all the settings in the editor.
 	 */
 	private class AmpModelSender extends SysexSender {
-		Patch patch;
+		PatchDataImpl patch;
 
 		/**
 		 * Constructs a AmpModelSender given the patch.
 		 */
-		public AmpModelSender(Patch p) {
+		public AmpModelSender(PatchDataImpl p) {
 			patch = p;
 		}
 
@@ -587,7 +587,7 @@ public class Line6BassPodSingleEditor extends PatchEditorFrame {
 		 * calls the setCtrlVisibility method, which determines if the mid sweep knobshould be visible or not for the
 		 * selected amp model and sends the patch as an edit buffer patch.
 		 */
-		public void send(IPatchDriver driver, int value) {
+		public void send(SynthDriverPatch driver, int value) {
 			setCtrlVisibility(value);
 			((Line6BassPodSingleDriver) driver).sendPatch(patch);
 		}
@@ -599,7 +599,7 @@ public class Line6BassPodSingleEditor extends PatchEditorFrame {
 	 */
 	class AmpModelModel extends ParamModel {
 		/** Constructs an AmpModelModel. */
-		private AmpModelModel(Patch p, int o) {
+		private AmpModelModel(PatchDataImpl p, int o) {
 			super(p, o);
 		}
 
@@ -650,7 +650,7 @@ public class Line6BassPodSingleEditor extends PatchEditorFrame {
 		 * Translates the value sent by the comboBoxWidget to the CC parameter for the cabinet model and sends the CC
 		 * message.
 		 */
-		public void send(IPatchDriver driver, int value) {
+		public void send(SynthDriverPatch driver, int value) {
 			super.send(driver, cabTranslate[value]);
 		}
 	}
@@ -661,7 +661,7 @@ public class Line6BassPodSingleEditor extends PatchEditorFrame {
 	 */
 	class CabTypeModel extends ParamModel {
 		/** Constructs a CabTypeModel. */
-		private CabTypeModel(Patch p, int o) {
+		private CabTypeModel(PatchDataImpl p, int o) {
 			super(p, o);
 		}
 
@@ -702,7 +702,7 @@ public class Line6BassPodSingleEditor extends PatchEditorFrame {
 		 * Translates the value sent by the comboBoxWidget to the CC parameter for the effect model and sends the CC
 		 * message.
 		 */
-		public void send(IPatchDriver driver, int value) {
+		public void send(SynthDriverPatch driver, int value) {
 			setEffectPane(value);
 			super.send(driver, effectTranslate[value]);
 		}
@@ -714,7 +714,7 @@ public class Line6BassPodSingleEditor extends PatchEditorFrame {
 	 */
 	class EffectModel extends ParamModel {
 		/** Constructs a EffectModel. */
-		private EffectModel(Patch p, int o) {
+		private EffectModel(PatchDataImpl p, int o) {
 			super(p, o);
 		}
 

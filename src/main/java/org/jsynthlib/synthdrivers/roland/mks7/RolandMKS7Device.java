@@ -25,7 +25,7 @@ package org.jsynthlib.synthdrivers.roland.mks7;
 
 import java.util.prefs.Preferences;
 
-import org.jsynthlib.menu.patch.Device;
+import org.jsynthlib.model.device.Device;
 
 public class RolandMKS7Device extends Device {
 	/** Creates new RolandMKS7Device */

@@ -23,9 +23,9 @@ package org.jsynthlib.synthdrivers.roland.td6;
 
 import java.io.UnsupportedEncodingException;
 
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 /**
  * Bank Driver for Roland Percussion Sound Module TD-6
@@ -33,7 +33,7 @@ import org.jsynthlib.menu.patch.SysexHandler;
  * @author <a href="mailto:hiroo.hayashi@computer.org">Hiroo Hayashi</a>
  * @version $Id$
  */
-public class TD6BankDriver extends BankDriver {
+public class TD6BankDriver extends SynthDriverBank {
 	/** Size of a single patch */
 	private static final int SINGLE_SIZE = 37 + 55 * 12;
 	/** Number of patches. */
@@ -81,7 +81,7 @@ public class TD6BankDriver extends BankDriver {
 		return SINGLE_SIZE * patchNum + ((pkt == 0) ? 0 : 37 + (pkt - 1) * 55);
 	}
 
-	public String getPatchName(Patch p, int patchNum) {
+	public String getPatchName(PatchDataImpl p, int patchNum) {
 		int nameOfst = SINGLE_SIZE * patchNum + NAME_OFFSET;
 		try {
 			return new String(p.getSysex(), nameOfst, patchNameSize, "US-ASCII");
@@ -90,7 +90,7 @@ public class TD6BankDriver extends BankDriver {
 		}
 	}
 
-	public void setPatchName(Patch p, int patchNum, String name) {
+	public void setPatchName(PatchDataImpl p, int patchNum, String name) {
 		int nameOfst = SINGLE_SIZE * patchNum + NAME_OFFSET;
 		name += "       ";
 		byte[] namebytes = name.getBytes();
@@ -98,12 +98,12 @@ public class TD6BankDriver extends BankDriver {
 			p.getSysex()[nameOfst + i] = namebytes[i];
 	}
 
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 		for (int i = 0; i < NUM_PATCH; i++)
 			singleDriver.calculateChecksum(p, SINGLE_SIZE * i);
 	}
 
-	public void putPatch(Patch bank, Patch p, int patchNum) {
+	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) {
 		System.arraycopy(p.getSysex(), 0, bank.getSysex(), SINGLE_SIZE * patchNum, SINGLE_SIZE);
 		for (int i = 0; i < TD6SingleDriver.NUM_PKT; i++) {
 			// adjust address field
@@ -112,16 +112,16 @@ public class TD6BankDriver extends BankDriver {
 		singleDriver.calculateChecksum(bank, SINGLE_SIZE * patchNum);
 	}
 
-	public Patch getPatch(Patch bank, int patchNum) {
+	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
 		byte[] sysex = new byte[SINGLE_SIZE];
 		System.arraycopy(bank.getSysex(), getPktOfst(patchNum, 0), sysex, 0, SINGLE_SIZE);
-		return new Patch(sysex, singleDriver);
+		return new PatchDataImpl(sysex, singleDriver);
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[PATCH_SIZE];
-		Patch bank = new Patch(sysex, this);
-		Patch p = singleDriver.createNewPatch();
+		PatchDataImpl bank = new PatchDataImpl(sysex, this);
+		PatchDataImpl p = singleDriver.createNewPatch();
 		for (int i = 0; i < NUM_PATCH; i++)
 			putPatch(bank, p, i);
 		return bank;
@@ -133,7 +133,7 @@ public class TD6BankDriver extends BankDriver {
 	}
 
 	// bankNum nor patchNum are not used.
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		int ofst = 0;
 		for (int i = 0; i < NUM_PATCH; i++, ofst += SINGLE_SIZE) {
 			singleDriver.storePatch(p.getSysex(), ofst, i);

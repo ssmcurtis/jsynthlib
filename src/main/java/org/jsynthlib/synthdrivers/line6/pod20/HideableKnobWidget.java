@@ -21,9 +21,9 @@
 
 package org.jsynthlib.synthdrivers.line6.pod20;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.KnobWidget;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.SysexSender;
 
 /**
@@ -33,7 +33,7 @@ import org.jsynthlib.widgets.SysexSender;
  */
 class HideableKnobWidget extends KnobWidget {
 	/** Constructs a HideableKnobWidget. */
-	HideableKnobWidget(String l, Patch p, int min, int max, int base, ParamModel ofs, SysexSender s) {
+	HideableKnobWidget(String l, PatchDataImpl p, int min, int max, int base, ParamModel ofs, SysexSender s) {
 		super(l, p, min, max, base, ofs, s);
 	}
 

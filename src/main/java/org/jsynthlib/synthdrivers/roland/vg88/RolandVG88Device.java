@@ -27,7 +27,7 @@ package org.jsynthlib.synthdrivers.roland.vg88;
 
 import java.util.prefs.Preferences;
 
-import org.jsynthlib.menu.patch.Device;
+import org.jsynthlib.model.device.Device;
 
 /**
  * @author Nacho Alonso

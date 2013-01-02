@@ -22,17 +22,17 @@ package org.jsynthlib.synthdrivers.roland.jv80;
 
 import java.util.Date;
 
-import org.jsynthlib.menu.patch.Device;
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.device.Device;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 /**
  * @author Sander Brandenburg
  * @version $Id$
  */
-public class RolandJV80SystemSetupDriver extends Driver {
+public class RolandJV80SystemSetupDriver extends SynthDriverPatchImpl {
 
 	final static SysexHandler SYSEX_SETSYSTEMCOMMONJV880 = new SysexHandler(
 	/* 00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F */
@@ -96,14 +96,14 @@ public class RolandJV80SystemSetupDriver extends Driver {
 		JV80Constants.sendRequestSysex(dev, se);
 	}
 
-	protected Patch createNewPatch() {
+	protected PatchDataImpl createNewPatch() {
 		byte[] sysex = setSystemCommon.toByteArray(getDeviceID() - 1, 0);
-		Patch patch = new Patch(sysex, this);
+		PatchDataImpl patch = new PatchDataImpl(sysex, this);
 		patch.setDate(new Date().toString());
 		return patch;
 	}
 
-	protected JSLFrame editPatch(Patch p) {
+	public JSLFrame editPatch(PatchDataImpl p) {
 		return new RolandJV80SystemSetupEditor(p);
 	}
 }

@@ -28,11 +28,11 @@ import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.TIMBRE_REVERB_S
 import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.TIMBRE_TONE_GROUP;
 import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.TIMBRE_TONE_NUMBER;
 
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 public class RolandD10TimbreEditor extends RolandD10EditorFrame {
 
-	protected RolandD10TimbreEditor(Patch patch) {
+	protected RolandD10TimbreEditor(PatchDataImpl patch) {
 		super("Roland D-10 Timbre Editor", patch);
 
 		EditSender.setDeviceId(patch.getSysex()[2]);

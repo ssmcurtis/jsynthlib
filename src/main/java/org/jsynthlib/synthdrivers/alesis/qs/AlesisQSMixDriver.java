@@ -1,10 +1,10 @@
 package org.jsynthlib.synthdrivers.alesis.qs;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.synthdrivers.alesis.SysexRoutines;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 /**
  * AlesisQSMixDriver.java
@@ -15,7 +15,7 @@ import org.jsynthlib.tools.ErrorMsg;
  * @version $Id$ GPL v2
  */
 
-public class AlesisQSMixDriver extends Driver {
+public class AlesisQSMixDriver extends SynthDriverPatchImpl {
 	public AlesisQSMixDriver() {
 		super("Mix", "Zellyn Hunter");
 		sysexID = "F000000E0E**";
@@ -51,9 +51,9 @@ public class AlesisQSMixDriver extends Driver {
 	 *            the patch to get the name from
 	 * @return the name of the patch
 	 */
-	public String getPatchName(Patch ip) {
+	public String getPatchName(PatchDataImpl ip) {
 		// ErrorMsg.reportStatus("Alesis getPatchName ", p.sysex);
-		return SysexRoutines.getChars(((Patch) ip).getSysex(), QSConstants.HEADER, QSConstants.MIX_NAME_START,
+		return SysexRoutines.getChars(((PatchDataImpl) ip).getSysex(), QSConstants.HEADER, QSConstants.MIX_NAME_START,
 				QSConstants.MIX_NAME_LENGTH);
 	}
 
@@ -65,9 +65,9 @@ public class AlesisQSMixDriver extends Driver {
 	 * @param name
 	 *            the string to set the name to
 	 */
-	public void setPatchName(Patch p, String name) {
+	public void setPatchName(PatchDataImpl p, String name) {
 		// ErrorMsg.reportStatus("Alesis setPatchName ", p.sysex);
-		SysexRoutines.setChars(name, ((Patch) p).getSysex(), QSConstants.HEADER, QSConstants.MIX_NAME_START,
+		SysexRoutines.setChars(name, ((PatchDataImpl) p).getSysex(), QSConstants.HEADER, QSConstants.MIX_NAME_START,
 				QSConstants.MIX_NAME_LENGTH);
 	}
 
@@ -83,7 +83,7 @@ public class AlesisQSMixDriver extends Driver {
 	 * @param ofs
 	 *            ignored
 	 */
-	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
+	protected void calculateChecksum(PatchDataImpl p, int start, int end, int ofs) {
 		// This synth does not use a checksum
 	}
 
@@ -92,7 +92,7 @@ public class AlesisQSMixDriver extends Driver {
 	 * 
 	 * @return the new Patch
 	 */
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		// Copy over the Alesis QS header
 		byte[] sysex = new byte[patchSize];
 		for (int i = 0; i < QSConstants.GENERIC_HEADER.length; i++) {
@@ -103,7 +103,7 @@ public class AlesisQSMixDriver extends Driver {
 		sysex[QSConstants.POSITION_LOCATION] = 0;
 
 		// Create the patch, and set the name
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		setPatchName(p, QSConstants.DEFAULT_NAME_MIX);
 		return p;
 	}
@@ -140,7 +140,7 @@ public class AlesisQSMixDriver extends Driver {
 	 * @param p
 	 *            the patch to send to the edit buffer
 	 */
-	public void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		storePatch(p, 0, QSConstants.MAX_LOCATION_MIX + 1);
 	}
 
@@ -155,18 +155,18 @@ public class AlesisQSMixDriver extends Driver {
 	 * @param patchNum
 	 *            the patch number to send it to
 	 */
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		// set specified patch in the User bank
 		byte location = (byte) patchNum;
 		byte opcode = QSConstants.OPCODE_MIDI_USER_MIX_DUMP;
-		byte oldOpcode = ((Patch) p).getSysex()[QSConstants.POSITION_OPCODE];
-		byte oldLocation = ((Patch) p).getSysex()[QSConstants.POSITION_LOCATION];
+		byte oldOpcode = ((PatchDataImpl) p).getSysex()[QSConstants.POSITION_OPCODE];
+		byte oldLocation = ((PatchDataImpl) p).getSysex()[QSConstants.POSITION_LOCATION];
 
 		// set the opcode and target location
-		((Patch) p).getSysex()[QSConstants.POSITION_OPCODE] = opcode;
-		((Patch) p).getSysex()[QSConstants.POSITION_LOCATION] = location;
+		((PatchDataImpl) p).getSysex()[QSConstants.POSITION_OPCODE] = opcode;
+		((PatchDataImpl) p).getSysex()[QSConstants.POSITION_LOCATION] = location;
 
-		ErrorMsg.reportStatus("foo", ((Patch) p).getSysex());
+		ErrorMsgUtil.reportStatus("foo", ((PatchDataImpl) p).getSysex());
 		// setBankNum (bankNum);
 		// setPatchNum (patchNum);
 
@@ -174,7 +174,7 @@ public class AlesisQSMixDriver extends Driver {
 		sendPatchWorker(p);
 
 		// restore the old values
-		((Patch) p).getSysex()[QSConstants.POSITION_OPCODE] = oldOpcode;
-		((Patch) p).getSysex()[QSConstants.POSITION_LOCATION] = oldLocation;
+		((PatchDataImpl) p).getSysex()[QSConstants.POSITION_OPCODE] = oldOpcode;
+		((PatchDataImpl) p).getSysex()[QSConstants.POSITION_LOCATION] = oldLocation;
 	}
 }

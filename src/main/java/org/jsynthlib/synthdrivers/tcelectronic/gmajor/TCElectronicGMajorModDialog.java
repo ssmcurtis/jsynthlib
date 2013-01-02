@@ -47,7 +47,7 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 public class TCElectronicGMajorModDialog extends JDialog implements ItemListener {
 	private static TCElectronicGMajorModDialog dialog;
@@ -88,7 +88,7 @@ public class TCElectronicGMajorModDialog extends JDialog implements ItemListener
 	private Vector listVector;
 	private TabListCellRenderer renderer;
 
-	private Patch patch;
+	private PatchDataImpl patch;
 
 	/**
 	 * Set up and show the dialog. The first Component argument determines which frame the dialog depends on; it should
@@ -96,7 +96,7 @@ public class TCElectronicGMajorModDialog extends JDialog implements ItemListener
 	 * dialog to come up with its left corner in the center of the screen; otherwise, it should be the component on top
 	 * of which the dialog should appear.
 	 */
-	public static void showDialog(Component frameComp, Component locationComp, Patch p) {
+	public static void showDialog(Component frameComp, Component locationComp, PatchDataImpl p) {
 		Frame frame = JOptionPane.getFrameForComponent(frameComp);
 		dialog = new TCElectronicGMajorModDialog(frame, locationComp, p);
 		try {
@@ -107,7 +107,7 @@ public class TCElectronicGMajorModDialog extends JDialog implements ItemListener
 		}
 	}
 
-	private TCElectronicGMajorModDialog(Frame frame, Component locationComp, Patch p) {
+	private TCElectronicGMajorModDialog(Frame frame, Component locationComp, PatchDataImpl p) {
 		super(frame, "Modifier Editor", true);
 		patch = p;
 

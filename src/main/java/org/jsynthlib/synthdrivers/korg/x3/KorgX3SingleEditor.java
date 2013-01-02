@@ -8,12 +8,12 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.EnvelopeWidget;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.PatchNameWidget;
 import org.jsynthlib.widgets.ScrollBarWidget;
 import org.jsynthlib.widgets.SysexSender;
@@ -94,7 +94,7 @@ class KorgX3SingleEditor extends PatchEditorFrame {
 	 * @param patch
 	 *            Patch to be edited
 	 */
-	public KorgX3SingleEditor(Patch patch) {
+	public KorgX3SingleEditor(PatchDataImpl patch) {
 		super("Korg X3 Single Editor", patch);
 
 		/** The tab pane under which all other JPanels lie */
@@ -522,7 +522,7 @@ class X3Model extends ParamModel {
 	 * @param o
 	 *            Offset
 	 */
-	public X3Model(Patch p, int o) {
+	public X3Model(PatchDataImpl p, int o) {
 		super(p, o);
 	}
 
@@ -536,7 +536,7 @@ class X3Model extends ParamModel {
 	 * @param bit
 	 *            Which bit to set (0-7)
 	 */
-	public X3Model(Patch p, int o, int bit) {
+	public X3Model(PatchDataImpl p, int o, int bit) {
 		super(p, o);
 		this.bit = bit;
 	}
@@ -553,7 +553,7 @@ class X3Model extends ParamModel {
 	 * @param bits
 	 *            How many bits affected from <code>bit</code>
 	 */
-	public X3Model(Patch p, int o, int bit, int bits) {
+	public X3Model(PatchDataImpl p, int o, int bit, int bits) {
 		super(p, o);
 		this.bit = bit;
 		this.bits = bits;
@@ -623,7 +623,7 @@ class X3Model extends ParamModel {
  * Special case for setting multisounds. Actually just uses two bytes instead of one that is has LSB and MSB.
  */
 class MultiSoundModel extends ParamModel {
-	public MultiSoundModel(Patch p, int o) {
+	public MultiSoundModel(PatchDataImpl p, int o) {
 		super(p, o);
 	}
 

@@ -24,12 +24,12 @@
  */
 package org.jsynthlib.synthdrivers.yamaha.dx7.common;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
-public class DX7FamilyFractionalScalingSingleDriver extends Driver {
+public class DX7FamilyFractionalScalingSingleDriver extends SynthDriverPatchImpl {
 	byte[] initSysex;
 	String[] dxPatchNumbers;
 	String[] dxBankNumbers;
@@ -56,12 +56,12 @@ public class DX7FamilyFractionalScalingSingleDriver extends Driver {
 		numSysexMsgs = 1;
 	}
 
-	public Patch createNewPatch() {
-		return new Patch(initSysex, this);
+	public PatchDataImpl createNewPatch() {
+		return new PatchDataImpl(initSysex, this);
 	}
 
-	public JSLFrame editPatch(Patch p) {
+	public JSLFrame editPatch(PatchDataImpl p) {
 		return new DX7FamilyFractionalScalingEditor(getManufacturerName() + " " + getModelName() + " \""
-				+ getPatchType() + "\" Editor", (Patch) p);
+				+ getPatchType() + "\" Editor", (PatchDataImpl) p);
 	}
 }

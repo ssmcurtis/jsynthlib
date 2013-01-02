@@ -6,7 +6,8 @@ import java.util.Map;
 
 import javax.swing.AbstractAction;
 
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.Actions;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 public class SendAction extends AbstractAction {
 	public SendAction(Map<Serializable, Integer> mnemonics) {
@@ -19,7 +20,7 @@ public class SendAction extends AbstractAction {
 		try {
 			Actions.getSelectedFrame().sendSelectedPatch();
 		} catch (Exception ex) {
-			ErrorMsg.reportError("Error", "Patch to Send must be highlighted in the focused Window.", ex);
+			ErrorMsgUtil.reportError("Error", "Patch to Send must be highlighted in the focused Window."+ getClass().getSimpleName(), ex);
 		}
 	}
 }

@@ -21,17 +21,17 @@
 
 package org.jsynthlib.synthdrivers.alesis.dm5;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 /**
  * Alesis DM5 Single Set Driver
  * 
  * @author Jeff Weber
  */
-public class AlesisDM5SgSetDriver extends Driver {
+public class AlesisDM5SgSetDriver extends SynthDriverPatchImpl {
 
 	/**
 	 * Single Program Dump Request
@@ -117,7 +117,7 @@ public class AlesisDM5SgSetDriver extends Driver {
 	 * not used. The input patch number specifies the location (0 thru 20). Location numbers in the DM5 are are
 	 * represented as binary 0010 0000 through 0011 0100 (32 plus patch number 0-20).
 	 */
-	protected void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		p.getSysex()[6] = (byte) (32 + patchNum);
 		calculateChecksum(p);
 		sendPatchWorker(p);
@@ -143,7 +143,7 @@ public class AlesisDM5SgSetDriver extends Driver {
 	 * <p>
 	 * Overrides the Driver.sendPatch method to embed the program number in the patch, in this case the value is 1.
 	 */
-	protected void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		p.getSysex()[6] = 1;
 		calculateChecksum(p);
 		sendPatchWorker(p);
@@ -153,7 +153,7 @@ public class AlesisDM5SgSetDriver extends Driver {
 	 * Calculates the checksum for the DM5. Equal to the mod 128 of the sum of all the bytes from offset header+1 to
 	 * offset total patchlength-3.
 	 */
-	protected void calculateChecksum(Patch patch, int start, int end, int offset) {
+	protected void calculateChecksum(PatchDataImpl patch, int start, int end, int offset) {
 		int sum = 0;
 
 		for (int i = start; i <= end; i++) {
@@ -174,8 +174,8 @@ public class AlesisDM5SgSetDriver extends Driver {
 	/**
 	 * Creates a new single drumset patch with default values.
 	 */
-	protected Patch createNewPatch() {
-		Patch p = new Patch(NEW_SYSEX, this);
+	protected PatchDataImpl createNewPatch() {
+		PatchDataImpl p = new PatchDataImpl(NEW_SYSEX, this);
 		setPatchName(p, "NewPatch      ");
 		calculateChecksum(p);
 		return p;
@@ -184,7 +184,7 @@ public class AlesisDM5SgSetDriver extends Driver {
 	/**
 	 * Opens an edit window on the specified patch.
 	 */
-	protected JSLFrame editPatch(Patch p) {
-		return new AlesisDM5SgSetEditor((Patch) p);
+	public JSLFrame editPatch(PatchDataImpl p) {
+		return new AlesisDM5SgSetEditor((PatchDataImpl) p);
 	}
 }

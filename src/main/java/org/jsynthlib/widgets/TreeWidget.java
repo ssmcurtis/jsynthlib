@@ -34,8 +34,8 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import org.jsynthlib.menu.patch.IPatch;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.model.patch.Patch;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 /**
  * A SysexWidget implementing JTree component.
@@ -75,7 +75,7 @@ public class TreeWidget extends SysexWidget {
 	 * @param sysexString
 	 *            SysexSender for transmitting the value at editing the parameter.
 	 */
-	public TreeWidget(String label, IPatch patch, Nodes treeNodes, IParamModel paramModel, ISender sysexString) {
+	public TreeWidget(String label, Patch patch, Nodes treeNodes, IParamModel paramModel, ISender sysexString) {
 		super(label, patch, paramModel, sysexString);
 		this.treeNodes = treeNodes;
 
@@ -197,7 +197,7 @@ public class TreeWidget extends SysexWidget {
 		for (int i = 0; i < indices.length; i++) {
 			TreeNode node = (TreeNode) path.getLastPathComponent();
 			path = path.pathByAddingChild(node.getChildAt(indices[i]));
-			ErrorMsg.reportStatus("getTreePath" + path);
+			ErrorMsgUtil.reportStatus("getTreePath" + path);
 		}
 		return path;
 	}

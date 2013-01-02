@@ -29,8 +29,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.ScrollBarWidget;
 import org.jsynthlib.widgets.SysexSender;
@@ -44,7 +44,7 @@ import org.jsynthlib.widgets.SysexWidget;
 class AlesisDMProEffectEditor extends PatchEditorFrame {
 
 	/** Creates a new instance of AlesisDMProEffectEditor */
-	public AlesisDMProEffectEditor(Patch patch) {
+	public AlesisDMProEffectEditor(PatchDataImpl patch) {
 		super("Alesis DM Pro Effect Editor", patch);
 
 		AlesisDMProParser oParser = new AlesisDMProParser(patch);

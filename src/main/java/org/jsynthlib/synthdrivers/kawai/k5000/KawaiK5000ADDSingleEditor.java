@@ -13,11 +13,11 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.PatchNameWidget;
 import org.jsynthlib.widgets.ScrollBarWidget;
 import org.jsynthlib.widgets.SysexSender;
@@ -58,9 +58,9 @@ class KawaiK5000ADDSingleEditor extends PatchEditorFrame {
 
 	final JPanel srcPanel[] = new JPanel[6];
 
-	Patch p;
+	PatchDataImpl p;
 
-	public KawaiK5000ADDSingleEditor(Patch patch) {
+	public KawaiK5000ADDSingleEditor(PatchDataImpl patch) {
 		super("Kawai K5000 Single Editor", patch);
 		p = patch;
 		// Common Pane
@@ -328,13 +328,13 @@ class K5kSrcSender extends SysexSender {
 }
 
 class K5kCmnModel extends ParamModel {
-	public K5kCmnModel(Patch patch, int offset) {
+	public K5kCmnModel(PatchDataImpl patch, int offset) {
 		super(patch, offset + 9);
 	}
 }
 
 class K5kSrcModel extends ParamModel {
-	public K5kSrcModel(Patch patch, int src, int offset) {
+	public K5kSrcModel(PatchDataImpl patch, int src, int offset) {
 		super(patch, 91 - 1 + offset + 86 * (src - 1));
 	}
 }
@@ -346,7 +346,7 @@ class K5kVelSwModel extends ParamModel {
 	 * @param part
 	 *            0 means we are doing the "T" part in manual, 1 is "V".
 	 */
-	public K5kVelSwModel(Patch patch, int src, int part) {
+	public K5kVelSwModel(PatchDataImpl patch, int src, int part) {
 		super(patch, 91 - 1 + 3 + 86 * (src - 1));
 		this.part = part;
 	}

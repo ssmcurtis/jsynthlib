@@ -8,7 +8,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -17,7 +16,7 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.jsynthlib.model.JSynthSequence;
+import org.jsynthlib.menu.Actions;
 
 /**
  * ConfigPanel for play note. Gives the user a way to change the note played... when the user changes something in a
@@ -37,14 +36,14 @@ public class NoteChooserConfigPanel extends ConfigPanel implements ActionListene
 
 	private JRadioButton seqButton;
 	private JRadioButton toneButton;
-	private JPanel sequencePanel;
+//	private JPanel sequencePanel;
 
 	private boolean sendPatchBeforePlay;
 	private JCheckBox sendPatchBeforePlayCheckBox;
 
 	// private final JTextField t0 = new JTextField(null, 20);
 
-	private JComboBox<String> comboBox = new JComboBox<String>(JSynthSequence.getNames());
+//	private JComboBox<String> comboBox = new JComboBox<String>(JSynthSequence.getNames());
 
 	// not used yet.
 	// private boolean sequencerEnable;
@@ -117,13 +116,13 @@ public class NoteChooserConfigPanel extends ConfigPanel implements ActionListene
 			// }
 			// });
 
-			sequencePanel = new JPanel();
-			sequencePanel.add(new JLabel("Sequence: "));
-			sequencePanel.add(comboBox);
+//			sequencePanel = new JPanel();
+//			sequencePanel.add(new JLabel("Sequence: "));
+//			sequencePanel.add(comboBox);
 			// sequencePanel.add(b0);
 
-			c.gridy++;
-			add(sequencePanel, c);
+//			c.gridy++;
+//			add(sequencePanel, c);
 
 			c.gridy++;
 			c.insets = new Insets(10, 0, 0, 0);
@@ -202,14 +201,16 @@ public class NoteChooserConfigPanel extends ConfigPanel implements ActionListene
 		});
 		nc.gridy = 3;
 		nc.gridx = 1;
-		notePanel.add(sendPatchBeforePlayCheckBox, nc);
 
 		c.gridy++;
 		add(notePanel, c);
+		
+		c.gridy++;
+		add(sendPatchBeforePlayCheckBox, c);
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		setContainerEnabled(sequencePanel, e.getActionCommand().equals(SEQ_LABEL));
+//		setContainerEnabled(sequencePanel, e.getActionCommand().equals(SEQ_LABEL));
 		setContainerEnabled(notePanel, e.getActionCommand().equals(TONE_LABEL));
 
 		setModified(true);
@@ -244,9 +245,9 @@ public class NoteChooserConfigPanel extends ConfigPanel implements ActionListene
 			boolean isSeq = AppConfig.getSequencerEnable();
 			seqButton.setSelected(isSeq);
 			toneButton.setSelected(!isSeq);
-			comboBox.setSelectedIndex(AppConfig.getSequenceOrdinal());
+//			comboBox.setSelectedIndex(AppConfig.getSequenceOrdinal());
 
-			setContainerEnabled(sequencePanel, isSeq);
+//			setContainerEnabled(sequencePanel, isSeq);
 			setContainerEnabled(notePanel, !isSeq);
 		}
 	}
@@ -255,7 +256,8 @@ public class NoteChooserConfigPanel extends ConfigPanel implements ActionListene
 		if (useSequencer == true) {
 			/* Sequencer related parts */
 			AppConfig.setSequencerEnable(seqButton.isSelected());
-			AppConfig.setSequenceOrdinal(comboBox.getSelectedIndex());
+			Actions.setEnabledAfterPreferences();
+//			AppConfig.setSequenceOrdinal(comboBox.getSelectedIndex());
 
 		}
 		AppConfig.setSendPatchBeforePlay(sendPatchBeforePlay);

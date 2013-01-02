@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.swing.AbstractAction;
 
+import org.jsynthlib.menu.Actions;
+
 
 public class EditAction extends AbstractAction {
 	public EditAction(Map<Serializable, Integer> mnemonics) {

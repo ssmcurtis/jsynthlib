@@ -8,13 +8,13 @@ import java.io.UnsupportedEncodingException;
 import javax.swing.JOptionPane;
 
 import org.jsynthlib.PatchBayApplication;
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.tools.ErrorMsg;
-import org.jsynthlib.tools.Utility;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
+import org.jsynthlib.tools.HexaUtil;
 
-public class KawaiK5000BankDriver extends BankDriver {
+public class KawaiK5000BankDriver extends SynthDriverBank {
 
 	// phil@muqus.com - see K5000W/S Midi Implementation, p23
 	final static SysexHandler SYSEX_REQUEST_A_DUMP = new SysexHandler("F0 40 @@ 01 00 0A 00 00 00 F7");
@@ -22,7 +22,7 @@ public class KawaiK5000BankDriver extends BankDriver {
 	final static SysexHandler SYSEX_REQUEST_D_DUMP = new SysexHandler("F0 40 @@ 01 00 0A 00 02 00 F7");
 
 	public int[] patchIndex = new int[129];
-	public Patch indexedPatch;
+	public PatchDataImpl indexedPatch;
 
 	public KawaiK5000BankDriver() {
 		super("Bank", "Brian Klock", 128, 4);
@@ -48,7 +48,7 @@ public class KawaiK5000BankDriver extends BankDriver {
 
 	// K5000 Banks have a variable number of patches from 1-128. This funtion
 	// determines the number of patches in the bank
-	public int numPatchesinBank(Patch p) {
+	public int numPatchesinBank(PatchDataImpl p) {
 		int num = 0;
 		for (int i = 8; i < 26; i++) {
 			if ((p.getSysex()[i] & 1) > 0)
@@ -69,7 +69,7 @@ public class KawaiK5000BankDriver extends BankDriver {
 		return num;
 	}
 
-	public boolean patchExists(Patch p, int num) {
+	public boolean patchExists(PatchDataImpl p, int num) {
 		int sub = p.getSysex()[8 + (num / 7)];
 		if (num % 7 == 0)
 			return ((sub & 1) > 0);
@@ -88,7 +88,7 @@ public class KawaiK5000BankDriver extends BankDriver {
 		return false;
 	}
 
-	public void setPatchExists(Patch p, int num, boolean exists) {
+	public void setPatchExists(PatchDataImpl p, int num, boolean exists) {
 		if (exists == patchExists(p, num))
 			return;
 		int sub = p.getSysex()[8 + (num / 7)];
@@ -112,7 +112,7 @@ public class KawaiK5000BankDriver extends BankDriver {
 		p.getSysex()[8 + (num / 7)] = (byte) sub;
 	}
 
-	public void generateIndex(Patch p) {
+	public void generateIndex(PatchDataImpl p) {
 		int currentPatchStart = 27;
 		if (indexedPatch == p)
 			return;
@@ -137,21 +137,21 @@ public class KawaiK5000BankDriver extends BankDriver {
 	}
 
 	public int getPatchStart(int patchNum) {
-		ErrorMsg.reportStatus("K5kBankDriver:Calling old getPatchStart-- redirecting");
+		ErrorMsgUtil.reportStatus("K5kBankDriver:Calling old getPatchStart-- redirecting");
 		return getPatchStart(indexedPatch, patchNum);
 	}
 
-	public int getPatchStart(Patch p, int patchNum) {
+	public int getPatchStart(PatchDataImpl p, int patchNum) {
 		generateIndex(p);
 		return patchIndex[patchNum];
 	}
 
-	public String getPatchName(Patch ip) {
-		return (((Patch) ip).getSysex().length / 1024) + " Kilobytes";
+	public String getPatchName(PatchDataImpl ip) {
+		return (((PatchDataImpl) ip).getSysex().length / 1024) + " Kilobytes";
 	}
 
-	public String getPatchName(Patch ip, int patchNum) {
-		Patch p = (Patch) ip;
+	public String getPatchName(PatchDataImpl ip, int patchNum) {
+		PatchDataImpl p = (PatchDataImpl) ip;
 		int nameStart = getPatchStart(p, patchNum);
 		if (nameStart == 0)
 			return "[empty]";
@@ -171,8 +171,8 @@ public class KawaiK5000BankDriver extends BankDriver {
 	// KawaiK5000BankDriver->setPatchName(Patch, int, String)
 	// ----------------------------------------------------------------------------------------------------------------------
 
-	public void setPatchName(Patch bank, int patchNum, String name) {
-		Patch p = getPatch(bank, patchNum);
+	public void setPatchName(PatchDataImpl bank, int patchNum, String name) {
+		PatchDataImpl p = getPatch(bank, patchNum);
 		p.setName(name);
 		p.calculateChecksum();
 		putPatch(bank, p, patchNum);
@@ -185,7 +185,7 @@ public class KawaiK5000BankDriver extends BankDriver {
 	//
 	// }
 
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 	}
 
 	// ----- Start phil@muqus.com
@@ -194,8 +194,8 @@ public class KawaiK5000BankDriver extends BankDriver {
 	// KawaiK5000BankDriver->putPatch
 	// ----------------------------------------------------------------------------------------------------------------------
 
-	public void putPatch(Patch b, Patch p, int patchNum) {
-		Patch bank = (Patch) b;
+	public void putPatch(PatchDataImpl b, PatchDataImpl p, int patchNum) {
+		PatchDataImpl bank = (PatchDataImpl) b;
 		if (!canHoldPatch(p)) {
 			JOptionPane.showMessageDialog(null, "This type of patch does not fit in to this type of bank.", "Error",
 					JOptionPane.ERROR_MESSAGE);
@@ -212,8 +212,8 @@ public class KawaiK5000BankDriver extends BankDriver {
 		System.out.println("Insert at patchNum: " + nextPatchNum + " | index: " + patchIndex[nextPatchNum]);
 
 		// p.sysex <DATA> starts at 9, ends just before trailing F7
-		((Patch) bank).setSysex(Utility.byteArrayReplace(((Patch) bank).getSysex(), patchIndex[nextPatchNum],
-				patchSize(bank, patchNum), ((Patch) p).getSysex(), 9, ((Patch) p).getSysex().length - 10));
+		((PatchDataImpl) bank).setSysex(HexaUtil.byteArrayReplace(((PatchDataImpl) bank).getSysex(), patchIndex[nextPatchNum],
+				patchSize(bank, patchNum), ((PatchDataImpl) p).getSysex(), 9, ((PatchDataImpl) p).getSysex().length - 10));
 
 		// Update index and checksum
 		indexedPatch = null;
@@ -224,8 +224,8 @@ public class KawaiK5000BankDriver extends BankDriver {
 
 	// ----- End phil@muqus.com
 
-	public Patch getPatch(Patch b, int patchNum) {
-		Patch bank = (Patch) b;
+	public PatchDataImpl getPatch(PatchDataImpl b, int patchNum) {
+		PatchDataImpl bank = (PatchDataImpl) b;
 		try {
 			generateIndex(bank);
 			int patchSize;
@@ -247,17 +247,17 @@ public class KawaiK5000BankDriver extends BankDriver {
 			sysex[07] = (byte) 0x00;
 			sysex[8] = (byte) 0x00;
 			sysex[patchSize - 1] = (byte) 0xF7;
-			System.arraycopy(((Patch) bank).getSysex(), getPatchStart(patchNum), sysex, 9, patchSize - 10);
-			Patch p = new Patch(sysex, getDevice());
+			System.arraycopy(((PatchDataImpl) bank).getSysex(), getPatchStart(patchNum), sysex, 9, patchSize - 10);
+			PatchDataImpl p = new PatchDataImpl(sysex, getDevice());
 			p.calculateChecksum();
 			return p;
 		} catch (Exception e) {
-			ErrorMsg.reportError("Error", "Error in K5000 Bank Driver", e);
+			ErrorMsgUtil.reportError("Error", "Error in K5000 Bank Driver", e);
 			return null;
 		}
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[28];
 		sysex[0] = (byte) 0xF0;
 		sysex[1] = (byte) 0x40;
@@ -267,14 +267,14 @@ public class KawaiK5000BankDriver extends BankDriver {
 		sysex[5] = (byte) 0x0a;
 		sysex[6] = (byte) 0x00;
 		sysex[27] = (byte) 0xF7;
-		return new Patch(sysex, this);
+		return new PatchDataImpl(sysex, this);
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		if (bankNum == 0)
-			((Patch) p).getSysex()[7] = 0; // bank a
+			((PatchDataImpl) p).getSysex()[7] = 0; // bank a
 		if (bankNum == 3)
-			((Patch) p).getSysex()[7] = 2; // bank d
+			((PatchDataImpl) p).getSysex()[7] = 2; // bank d
 		PatchBayApplication.showWaitDialog();
 		setBankNum(bankNum);
 		sendPatchWorker(p);
@@ -288,8 +288,8 @@ public class KawaiK5000BankDriver extends BankDriver {
 	// KawaiK5000BankDriver->deletePatch
 	// ----------------------------------------------------------------------------------------------------------------------
 
-	public void deletePatch(Patch b, int patchNum) {
-		Patch bank = (Patch) b;
+	public void deletePatch(PatchDataImpl b, int patchNum) {
+		PatchDataImpl bank = (PatchDataImpl) b;
 		if (!patchExists(bank, patchNum)) {
 			JOptionPane.showMessageDialog(null, "Patch does not exist, so can not be deleted.", "Error",
 					JOptionPane.ERROR_MESSAGE);
@@ -300,7 +300,7 @@ public class KawaiK5000BankDriver extends BankDriver {
 		generateIndex(bank);
 
 		// Delete patch from sysex
-		((Patch) bank).setSysex(Utility.byteArrayDelete(((Patch) bank).getSysex(), patchIndex[patchNum],
+		((PatchDataImpl) bank).setSysex(HexaUtil.byteArrayDelete(((PatchDataImpl) bank).getSysex(), patchIndex[patchNum],
 				patchSize(bank, patchNum)));
 
 		// Update index and checksum
@@ -316,7 +316,7 @@ public class KawaiK5000BankDriver extends BankDriver {
 	// Returns: Size of patch, patchNum ... or 0 if patch does not exist
 	// ----------------------------------------------------------------------------------------------------------------------
 
-	public int patchSize(Patch bank, int patchNum) {
+	public int patchSize(PatchDataImpl bank, int patchNum) {
 		if (patchExists(bank, patchNum)) {
 			int i = patchNum + 1;
 			while ((i < 128) && (patchIndex[i] == 0))

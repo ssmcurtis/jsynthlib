@@ -48,7 +48,7 @@ import java.awt.GridBagLayout;
 
 import javax.swing.JPanel;
 
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.PatchNameWidget;
 import org.jsynthlib.widgets.ScrollBarWidget;
@@ -58,7 +58,7 @@ public class RolandD10PatchEditor extends RolandD10EditorFrame {
 	/**
 	 * @param patch
 	 */
-	public RolandD10PatchEditor(Patch patch) {
+	public RolandD10PatchEditor(PatchDataImpl patch) {
 		super("Roland D-10 Patch Editor", patch);
 
 		EditSender.setDeviceId(patch.getSysex()[2]);
@@ -93,7 +93,7 @@ public class RolandD10PatchEditor extends RolandD10EditorFrame {
 
 	}
 
-	private JPanel createCommonPanel(String name, Patch patch) {
+	private JPanel createCommonPanel(String name, PatchDataImpl patch) {
 		JPanel panel = new JPanel(new GridBagLayout());
 
 		setNamedBorder(panel, name);
@@ -133,7 +133,7 @@ public class RolandD10PatchEditor extends RolandD10EditorFrame {
 		return panel;
 	}
 
-	private JPanel createTimbrePanel(String name, Patch patch, int[] offsets) {
+	private JPanel createTimbrePanel(String name, PatchDataImpl patch, int[] offsets) {
 		EditSender[] editSenders = new EditSender[] { EditSender.getPatchSender(offsets[0]),
 				EditSender.getPatchSender(offsets[1]), EditSender.getPatchSender(offsets[2]),
 				EditSender.getPatchSender(offsets[3]), EditSender.getPatchSender(offsets[4]),

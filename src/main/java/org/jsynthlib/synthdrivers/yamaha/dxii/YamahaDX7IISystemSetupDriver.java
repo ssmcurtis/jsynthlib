@@ -23,8 +23,8 @@
  */
 package org.jsynthlib.synthdrivers.yamaha.dxii;
 
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.synthdrivers.yamaha.dx7.common.DX7FamilyDevice;
 import org.jsynthlib.synthdrivers.yamaha.dx7.common.DX7FamilySystemSetupIIDriver;
 
@@ -36,15 +36,15 @@ public class YamahaDX7IISystemSetupDriver extends DX7FamilySystemSetupIIDriver {
 
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		return super.createNewPatch();
 	}
 
-	public JSLFrame editPatch(Patch p) {
+	public JSLFrame editPatch(PatchDataImpl p) {
 		return super.editPatch(p);
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		if ((((DX7FamilyDevice) (getDevice())).getSwOffMemProtFlag() & 0x01) == 1) {
 			// switch off memory protection (internal+cartridge!)
 			YamahaDX7IISysexHelpers.swOffMemProt(this, (byte) (getChannel() + 0x10), (byte) 0);

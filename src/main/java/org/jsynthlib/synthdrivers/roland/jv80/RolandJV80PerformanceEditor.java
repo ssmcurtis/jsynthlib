@@ -37,12 +37,12 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.DriverUtil;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.PatchNameWidget;
 import org.jsynthlib.widgets.ScrollBarWidget;
 import org.jsynthlib.widgets.SysexSender;
@@ -55,7 +55,7 @@ public class RolandJV80PerformanceEditor extends PatchEditorFrame {
 
 	private final boolean isJV80;
 
-	RolandJV80PerformanceEditor(Patch p) {
+	RolandJV80PerformanceEditor(PatchDataImpl p) {
 		super("Roland JV-880 Performance Editor", p);
 
 		isJV80 = ((RolandJV80PerformanceDriver) p.getDriver()).isJV80;
@@ -64,7 +64,7 @@ public class RolandJV80PerformanceEditor extends PatchEditorFrame {
 		buildEditor(p);
 	}
 
-	void buildEditor(final Patch patch) {
+	void buildEditor(final PatchDataImpl patch) {
 		GridBagConstraints gbc = new GridBagConstraints();
 
 		gbc.fill = GridBagConstraints.BOTH;
@@ -92,7 +92,7 @@ public class RolandJV80PerformanceEditor extends PatchEditorFrame {
 		pack();
 	}
 
-	JPanel buildChorus(Patch patch) {
+	JPanel buildChorus(PatchDataImpl patch) {
 		GridBagConstraints gbc = new GridBagConstraints();
 		JPanel panel = new JPanel(new GridBagLayout());
 		panel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.RAISED), "Chorus", TitledBorder.CENTER,
@@ -138,7 +138,7 @@ public class RolandJV80PerformanceEditor extends PatchEditorFrame {
 		return panel;
 	}
 
-	JPanel buildReverb(Patch patch) {
+	JPanel buildReverb(PatchDataImpl patch) {
 		GridBagConstraints gbc = new GridBagConstraints();
 
 		JPanel panel = new JPanel(new GridBagLayout());
@@ -175,7 +175,7 @@ public class RolandJV80PerformanceEditor extends PatchEditorFrame {
 		return panel;
 	}
 
-	JPanel buildCommon(Patch patch) {
+	JPanel buildCommon(PatchDataImpl patch) {
 		GridBagConstraints gbc = new GridBagConstraints();
 		JPanel panel = new JPanel(new GridBagLayout());
 		panel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.RAISED), "Common", TitledBorder.CENTER,
@@ -202,7 +202,7 @@ public class RolandJV80PerformanceEditor extends PatchEditorFrame {
 		return panel;
 	}
 
-	JPanel buildReserve(final Patch patch) {
+	JPanel buildReserve(final PatchDataImpl patch) {
 		GridBagConstraints gbc = new GridBagConstraints();
 		JPanel panel = new JPanel(new GridBagLayout());
 		panel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.RAISED), "Reserve", TitledBorder.CENTER,
@@ -266,7 +266,7 @@ public class RolandJV80PerformanceEditor extends PatchEditorFrame {
 		return panel;
 	}
 
-	JPanel buildParts(final Patch patch) {
+	JPanel buildParts(final PatchDataImpl patch) {
 		GridBagConstraints gbc = new GridBagConstraints();
 		JPanel panel = new JPanel(new GridBagLayout());
 		panel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.RAISED), "Performance Parts",
@@ -439,7 +439,7 @@ public class RolandJV80PerformanceEditor extends PatchEditorFrame {
 	class JVModel extends ParamModel {
 		final static int DATA_OFFSET = 9;
 
-		JVModel(Patch p, int part, int msg_offset) {
+		JVModel(PatchDataImpl p, int part, int msg_offset) {
 			super(p, DATA_OFFSET + msg_offset);
 			if (part >= 0)
 				ofs += ((RolandJV80PerformanceDriver) p.getDriver()).performancePartOffsets[part];
@@ -447,7 +447,7 @@ public class RolandJV80PerformanceEditor extends PatchEditorFrame {
 	}
 
 	class JV2Model extends JVModel {
-		JV2Model(Patch p, int tone, int msg_offset) {
+		JV2Model(PatchDataImpl p, int tone, int msg_offset) {
 			super(p, tone, msg_offset);
 		}
 

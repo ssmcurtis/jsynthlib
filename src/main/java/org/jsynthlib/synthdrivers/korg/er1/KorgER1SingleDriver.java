@@ -7,12 +7,12 @@
 
 package org.jsynthlib.synthdrivers.korg.er1;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
-public class KorgER1SingleDriver extends Driver {
+public class KorgER1SingleDriver extends SynthDriverPatchImpl {
 
 	public KorgER1SingleDriver() {
 		super("Single", "Yves Lefebvre");
@@ -34,7 +34,7 @@ public class KorgER1SingleDriver extends Driver {
 
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		int patchValue = patchNum;
 		int bankValue = 0;
 
@@ -53,11 +53,11 @@ public class KorgER1SingleDriver extends Driver {
 		} catch (Exception e) {
 		}
 
-		((Patch) p).getSysex()[2] = (byte) (0x30 + getChannel() - 1);
+		((PatchDataImpl) p).getSysex()[2] = (byte) (0x30 + getChannel() - 1);
 		try {
-			send(((Patch) p).getSysex());
+			send(((PatchDataImpl) p).getSysex());
 		} catch (Exception e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 
 		try {
@@ -78,23 +78,23 @@ public class KorgER1SingleDriver extends Driver {
 		try {
 			send(sysex);
 		} catch (Exception e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 
 	}
 
-	public void sendPatch(Patch p) {
-		((Patch) p).getSysex()[2] = (byte) (0x30 + getChannel() - 1); // the only thing to do is to set the byte to 3n
+	public void sendPatch(PatchDataImpl p) {
+		((PatchDataImpl) p).getSysex()[2] = (byte) (0x30 + getChannel() - 1); // the only thing to do is to set the byte to 3n
 																		// (n = channel)
 
 		try {
-			send(((Patch) p).getSysex());
+			send(((PatchDataImpl) p).getSysex());
 		} catch (Exception e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[1085];
 		sysex[0] = (byte) 0xF0;
 		sysex[1] = (byte) 0x42;
@@ -102,13 +102,13 @@ public class KorgER1SingleDriver extends Driver {
 		sysex[3] = (byte) 0x51;
 		sysex[4] = (byte) 0x40;
 		sysex[1084] = (byte) 0xF7;
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		setPatchName(p, "New Patch");
 		calculateChecksum(p);
 		return p;
 	}
 
-	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
+	protected void calculateChecksum(PatchDataImpl p, int start, int end, int ofs) {
 		// no checksum
 	}
 

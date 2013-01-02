@@ -28,10 +28,10 @@ import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.KnobWidget;
+import org.jsynthlib.widgets.ParamModel;
 
 /**
  * Alesis DM5 Trigger Setup Editor. Edits Gain, Velocity, Cross-Talk, Noise Floor, and Decay parameters for each of the
@@ -49,7 +49,7 @@ public class AlesisDM5TrSetEditor extends PatchEditorFrame {
 	 * Constructs an AlesisDM5TrSetEditor given the patch. The editor contains twelve panels containing the trigger
 	 * parameters for each of the twelve external triggers.
 	 */
-	AlesisDM5TrSetEditor(Patch patch) {
+	AlesisDM5TrSetEditor(PatchDataImpl patch) {
 		super("Alesis DM5 Trigger Setup Editor", patch);
 		scrollPane.setLayout(new GridLayout(0, 2));
 		for (int i = 0; i < 6; i++) {
@@ -62,7 +62,7 @@ public class AlesisDM5TrSetEditor extends PatchEditorFrame {
 	/**
 	 * Creates a panel in the editor window for a single external trigger.
 	 */
-	private void addTrigPane(Patch patch, int trigNum) {
+	private void addTrigPane(PatchDataImpl patch, int trigNum) {
 		JPanel dm5EditPanel = new JPanel();
 		dm5EditPanel.setLayout(new BoxLayout(dm5EditPanel, BoxLayout.X_AXIS));
 		dm5EditPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.RAISED), String.valueOf(trigNum + 1),
@@ -74,7 +74,7 @@ public class AlesisDM5TrSetEditor extends PatchEditorFrame {
 	/**
 	 * Creates the KnobWidgets within a single panel of the editor for a single external trigger.
 	 */
-	private void addWidgets(JPanel panel, Patch patch, int trigNum) {
+	private void addWidgets(JPanel panel, PatchDataImpl patch, int trigNum) {
 		int fdrNbrBase = trigNum * 5;
 		addWidget(panel, new KnobWidget("Gain", patch, 0, 99, 0, new ParamModel(patch, headerSize + trigNum),
 				new TrigSender(trigNum, TrigSender.TR_GAIN, 99)), 0, 0, 1, 1, fdrNbrBase + 1);

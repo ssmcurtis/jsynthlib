@@ -35,8 +35,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.ScrollBarWidget;
@@ -56,7 +56,7 @@ class RolandMT32RhythmSetupTempEditor extends PatchEditorFrame {
 	/** For Alignment, a size to scrollbar labels */
 	// private int labelWidth;
 
-	public RolandMT32RhythmSetupTempEditor(Patch patch) {
+	public RolandMT32RhythmSetupTempEditor(PatchDataImpl patch) {
 		super("Roland MT-32 Rhythm Setup Temp Editor", patch);
 		// Common Pane
 		gbc.weightx = 5;

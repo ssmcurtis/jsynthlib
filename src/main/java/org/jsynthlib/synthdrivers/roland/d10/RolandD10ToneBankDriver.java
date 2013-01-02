@@ -26,8 +26,8 @@ import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.SIZE_TRAILER;
 import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.TONE_COUNT;
 import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.TONE_RECORD_SIZE;
 
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.synthdrivers.roland.d10.message.D10DataSetMessage;
 import org.jsynthlib.synthdrivers.roland.d10.message.D10RequestMessage;
 import org.jsynthlib.synthdrivers.roland.d10.message.D10TransferMessage;
@@ -39,7 +39,7 @@ import org.jsynthlib.synthdrivers.roland.d10.message.D10TransferMessage;
  * 
  * @author Roger Westerlund <roger.westerlund@home.se>
  */
-public class RolandD10ToneBankDriver extends BankDriver {
+public class RolandD10ToneBankDriver extends SynthDriverBank {
 
 	private static final int EDIT_WINDOW_COLUMNS = 4;
 
@@ -66,10 +66,10 @@ public class RolandD10ToneBankDriver extends BankDriver {
 		patchNumbers = RolandD10Support.createToneNumbers();
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		D10TransferMessage message = new D10DataSetMessage(patchSize - (SIZE_HEADER_DT1 + SIZE_TRAILER),
 				BASE_TONE_MEMORY.getDataValue());
-		Patch bank = new Patch(message.getBytes(), this);
+		PatchDataImpl bank = new PatchDataImpl(message.getBytes(), this);
 		for (int patchNumber = 0; patchNumber < TONE_COUNT; patchNumber++) {
 			putPatch(bank, toneDriver.createNewPatch(), patchNumber);
 		}
@@ -82,23 +82,23 @@ public class RolandD10ToneBankDriver extends BankDriver {
 		send(requestMessage.getBytes());
 	}
 
-	public Patch getPatch(Patch bank, int patchNum) {
-		Patch patch = toneDriver.createNewPatch();
+	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+		PatchDataImpl patch = toneDriver.createNewPatch();
 		System.arraycopy(bank.getSysex(), patchNum * TONE_RECORD_SYSEX_SIZE, patch.getSysex(), 0, TONE_RECORD_SYSEX_SIZE);
 		return patch;
 	}
 
-	public void putPatch(Patch bank, Patch patch, int patchNum) {
+	public void putPatch(PatchDataImpl bank, PatchDataImpl patch, int patchNum) {
 		System.arraycopy(patch.getSysex(), 0, bank.getSysex(), patchNum * TONE_RECORD_SYSEX_SIZE, TONE_RECORD_SYSEX_SIZE);
 	}
 
-	public String getPatchName(Patch bank, int patchNum) {
-		Patch patch = getPatch(bank, patchNum);
+	public String getPatchName(PatchDataImpl bank, int patchNum) {
+		PatchDataImpl patch = getPatch(bank, patchNum);
 		return patch.getName();
 	}
 
-	public void setPatchName(Patch bank, int patchNum, String name) {
-		Patch patch = getPatch(bank, patchNum);
+	public void setPatchName(PatchDataImpl bank, int patchNum, String name) {
+		PatchDataImpl patch = getPatch(bank, patchNum);
 		patch.setName(name);
 		putPatch(bank, patch, patchNum);
 	}

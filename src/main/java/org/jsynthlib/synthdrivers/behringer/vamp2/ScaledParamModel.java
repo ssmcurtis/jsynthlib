@@ -21,8 +21,8 @@
 
 package org.jsynthlib.synthdrivers.behringer.vamp2;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.widgets.ParamModel;
 
 /**
  * Scalable ParamModel--to allow different max values for CC and Sysex.
@@ -57,7 +57,7 @@ class ScaledParamModel extends ParamModel {
 	 * @param o
 	 *            The offset into the patch to be edited.
 	 */
-	ScaledParamModel(Patch p, int o) {
+	ScaledParamModel(PatchDataImpl p, int o) {
 		this(p, o, 1, 1);
 	}
 
@@ -76,7 +76,7 @@ class ScaledParamModel extends ParamModel {
 	 * @param maxSysex
 	 *            The maximum sysex value that will be used for this parameter.
 	 */
-	ScaledParamModel(Patch p, int o, int maxCC, int maxSysex) {
+	ScaledParamModel(PatchDataImpl p, int o, int maxCC, int maxSysex) {
 		this(p, o, maxCC, maxSysex, false);
 	}
 
@@ -99,7 +99,7 @@ class ScaledParamModel extends ParamModel {
 	 *            A boolean value representing whether the values are reversed across the range of the parameter (eg.
 	 *            127 to 0. A value of true indicates the values will be reversed.
 	 */
-	ScaledParamModel(Patch p, int o, int maxCC, int maxSysex, boolean reverse) {
+	ScaledParamModel(PatchDataImpl p, int o, int maxCC, int maxSysex, boolean reverse) {
 		super(p, o);
 		this.maxCC = maxCC;
 		this.maxSysex = maxSysex;

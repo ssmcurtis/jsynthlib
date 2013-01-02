@@ -23,7 +23,7 @@ package org.jsynthlib.synthdrivers.waldorf.mw2;
 
 import java.util.prefs.Preferences;
 
-import org.jsynthlib.menu.patch.Device;
+import org.jsynthlib.model.device.Device;
 
 /**
  * Device class for Microwave 2 / XT / XTK

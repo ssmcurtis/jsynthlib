@@ -10,7 +10,7 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.jsynthlib.menu.patch.IPatch;
+import org.jsynthlib.model.patch.Patch;
 
 /**
  * Horizontal scrollbar SysexWidget.
@@ -31,7 +31,7 @@ public class ScrollBarWidget extends SysexWidget {
 	/** width of label widget */
 	protected int labelWidth;
 
-	public ScrollBarWidget(IPatch patch, IParameter param) {
+	public ScrollBarWidget(Patch patch, IParameter param) {
 		super(patch, param);
 
 		base = 0;
@@ -68,7 +68,7 @@ public class ScrollBarWidget extends SysexWidget {
 	 *            sysexSender for transmitting the value at editing the parameter
 	 * @see SysexWidget
 	 */
-	public ScrollBarWidget(String label, IPatch patch, int min, int max, int base, int labelWidth, IParamModel pmodel,
+	public ScrollBarWidget(String label, Patch patch, int min, int max, int base, int labelWidth, IParamModel pmodel,
 			ISender sender) {
 		super(label, patch, min, max, pmodel, sender);
 		this.base = base;
@@ -78,7 +78,7 @@ public class ScrollBarWidget extends SysexWidget {
 		layoutWidgets();
 	}
 
-	public ScrollBarWidget(String label, IPatch patch, int min, int max, int base, IParamModel pmodel, ISender sender) {
+	public ScrollBarWidget(String label, Patch patch, int min, int max, int base, IParamModel pmodel, ISender sender) {
 		this(label, patch, min, max, base, -1, pmodel, sender);
 	}
 

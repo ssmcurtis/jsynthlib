@@ -15,8 +15,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.MouseInputAdapter;
 
-import org.jsynthlib.menu.patch.IPatch;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.model.patch.Patch;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 /**
  * A SysexWidget implements an envelope editing function.
@@ -55,7 +55,7 @@ public class EnvelopeWidget extends SysexWidget {
 	 * @param ypadding
 	 *            space at the top and bottom border.
 	 */
-	public EnvelopeWidget(String label, IPatch patch, Node[] nodes, int xpadding, int ypadding) {
+	public EnvelopeWidget(String label, Patch patch, Node[] nodes, int xpadding, int ypadding) {
 		super(label, patch, null, null);
 		this.nodes = nodes;
 		this.xpadding = xpadding;
@@ -66,7 +66,7 @@ public class EnvelopeWidget extends SysexWidget {
 	}
 
 	/** <code>xpad</code> and <code>ypad</code> are set to zero. */
-	public EnvelopeWidget(String label, IPatch patch, Node[] options) {
+	public EnvelopeWidget(String label, Patch patch, Node[] options) {
 		this(label, patch, options, 0, 0);
 	}
 
@@ -553,7 +553,7 @@ public class EnvelopeWidget extends SysexWidget {
 			variableX = minX != maxX;
 			variableY = minY != maxY;
 			if (variableX && (pmodelX == null || senderX == null) || variableY && (pmodelY == null || senderY == null))
-				ErrorMsg.reportError("Illegal parameter",
+				ErrorMsgUtil.reportError("Illegal parameter",
 						"Parameter model and Sender must be set for variable parameter.");
 		}
 	}

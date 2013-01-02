@@ -25,12 +25,12 @@ import java.io.UnsupportedEncodingException;
 
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.PatchSingle;
-import org.jsynthlib.menu.patch.SysexHandler;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.model.patch.PatchSingle;
 import org.jsynthlib.tools.DriverUtil;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 /*
  * 
@@ -44,7 +44,7 @@ import org.jsynthlib.tools.ErrorMsg;
  * @author Joachim Backhaus
  * @version $Id$
  */
-public class WaldorfMW2BankDriver extends BankDriver {
+public class WaldorfMW2BankDriver extends SynthDriverBank {
 
 	public WaldorfMW2BankDriver() {
 		super("Bank", "Joachim Backhaus", MW2Constants.PATCH_NUMBERS, 4);
@@ -81,7 +81,7 @@ public class WaldorfMW2BankDriver extends BankDriver {
 	 * @param patchNo
 	 *            the number of the single program
 	 */
-	private void calculateChecksum(Patch p, int patchNo) {
+	private void calculateChecksum(PatchDataImpl p, int patchNo) {
 		int sum = 0;
 		int offset = patchNo * this.singleSize;
 
@@ -96,7 +96,7 @@ public class WaldorfMW2BankDriver extends BankDriver {
 	 * @param p
 	 *            a <code>Patch</code> value
 	 */
-	protected void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p)  {
 		for (int patchNo = 0; patchNo < this.patchNumbers.length; patchNo++) {
 			calculateChecksum(p, patchNo);
 		}
@@ -112,7 +112,7 @@ public class WaldorfMW2BankDriver extends BankDriver {
 	/**
 	 * Get the name of the patch at the given number
 	 */
-	protected String getPatchName(Patch p, int patchNum) {
+	public String getPatchName(PatchDataImpl p, int patchNum) {
 		int nameStart = getPatchStart(patchNum) + MW2Constants.PATCH_NAME_START - MW2Constants.SYSEX_HEADER_OFFSET;
 
 		try {
@@ -124,7 +124,7 @@ public class WaldorfMW2BankDriver extends BankDriver {
 	}
 
 	/** Set the name of the patch at the given number <code>patchNum</code>. */
-	protected void setPatchName(Patch p, int patchNum, String name) {
+	public void setPatchName(PatchDataImpl p, int patchNum, String name) {
 		setPatchName(p.getSysex(), patchNum, name);
 		calculateChecksum(p, patchNum);
 	}
@@ -150,7 +150,7 @@ public class WaldorfMW2BankDriver extends BankDriver {
 	/**
 	 * Puts a patch into the bank, converting it as needed
 	 */
-	protected void putPatch(Patch bank, Patch p, int patchNum) {
+	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) {
 		if (!canHoldPatch(p)) {
 			JOptionPane.showMessageDialog(null, "This type of patch does not fit in to this type of bank.", "Error",
 					JOptionPane.ERROR_MESSAGE);
@@ -169,10 +169,10 @@ public class WaldorfMW2BankDriver extends BankDriver {
 	 * Override this in the subclass if parameters or warnings need to be sent to the user (aka if the particular synth
 	 * does not have a edit buffer or it is not MIDI accessable).
 	 * 
-	 * @see Patch#send()
+	 * @see PatchDataImpl#send()
 	 * @see PatchSingle#send()
 	 */
-	protected void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		p.getSysex()[MW2Constants.DEVICE_ID_OFFSET] = (byte) (getDeviceID() - 1);
 
 		send(p.getSysex());
@@ -181,13 +181,13 @@ public class WaldorfMW2BankDriver extends BankDriver {
 	/**
 	 * Store the bank to a given bank on the synth. Ignores the patchNum parameter.
 	 * 
-	 * @see Patch#send(int, int)
+	 * @see PatchDataImpl#send(int, int)
 	 */
-	protected void storePatch(Patch bank, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl bank, int bankNum, int patchNum) {
 		// The Microwave XT hang up when I tried to send all 128 single programs
 		// of the bank at one time
 		calculateChecksum(bank);
-		Patch singlePatch;
+		PatchDataImpl singlePatch;
 
 		for (int patchNo = 0; patchNo < this.patchNumbers.length; patchNo++) {
 			singlePatch = getPatch(bank, bankNum, patchNo);
@@ -206,13 +206,13 @@ public class WaldorfMW2BankDriver extends BankDriver {
 	/**
 	 * Gets a patch from the bank, converting it as needed
 	 */
-	protected Patch getPatch(Patch bank, int bankNum, int patchNum) {
+	protected PatchDataImpl getPatch(PatchDataImpl bank, int bankNum, int patchNum) {
 		try {
 			byte[] sysex = new byte[this.singleSize];
 
 			System.arraycopy(bank.getSysex(), getPatchStart(patchNum), sysex, MW2Constants.SYSEX_HEADER_OFFSET,
 					MW2Constants.PURE_PATCH_SIZE);
-			Patch p = new Patch(sysex);
+			PatchDataImpl p = new PatchDataImpl(sysex);
 			WaldorfMW2SingleDriver.createPatchHeader(p, bankNum, patchNum);
 			p.getSysex()[264] = MW2Constants.SYSEX_END_BYTE;
 			WaldorfMW2SingleDriver.calculateChecksum(p.getSysex(), MW2Constants.SYSEX_HEADER_OFFSET,
@@ -221,7 +221,7 @@ public class WaldorfMW2BankDriver extends BankDriver {
 
 			return p;
 		} catch (Exception e) {
-			ErrorMsg.reportError("Error", "Error in WaldorfMW2 bank driver", e);
+			ErrorMsgUtil.reportError("Error", "Error in WaldorfMW2 bank driver", e);
 			return null;
 		}
 	}
@@ -229,7 +229,7 @@ public class WaldorfMW2BankDriver extends BankDriver {
 	/**
 	 * Gets a patch from the bank, converting it as needed.
 	 */
-	protected Patch getPatch(Patch bank, int patchNum) {
+	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
 		return getPatch(bank, 0, patchNum);
 	}
 
@@ -253,15 +253,15 @@ public class WaldorfMW2BankDriver extends BankDriver {
 	/**
 	 * Creates a new bank (128 user sounds)
 	 */
-	protected Patch createNewPatch() {
+	protected PatchDataImpl createNewPatch() {
 		byte[] bankSysex = new byte[this.patchSize];
-		Patch p;
+		PatchDataImpl p;
 		byte[] patchSysex = new byte[MW2Constants.PATCH_SIZE];
-		Patch tempPatch;
+		PatchDataImpl tempPatch;
 		int offset = 0;
 
 		for (int patchNo = 0; patchNo < patchNumbers.length; patchNo++) {
-			tempPatch = new Patch(patchSysex, getDevice());
+			tempPatch = new PatchDataImpl(patchSysex, getDevice());
 			WaldorfMW2SingleDriver.createPatchHeader(tempPatch, 0, patchNo);
 			tempPatch.getSysex()[264] = MW2Constants.SYSEX_END_BYTE;
 			System.arraycopy(patchSysex, 0, bankSysex, getPatchStart(patchNo) - MW2Constants.SYSEX_HEADER_OFFSET,
@@ -269,7 +269,7 @@ public class WaldorfMW2BankDriver extends BankDriver {
 			setPatchName(bankSysex, patchNo, "New sound " + patchNo);
 		}
 
-		p = new Patch(bankSysex);
+		p = new PatchDataImpl(bankSysex);
 
 		for (int patchNo = 0; patchNo < patchNumbers.length; patchNo++) {
 			WaldorfMW2SingleDriver.calculateChecksum(p.getSysex(), offset + this.checksumStart, offset + this.checksumEnd,

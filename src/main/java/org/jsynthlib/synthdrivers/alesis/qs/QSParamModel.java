@@ -1,6 +1,6 @@
 package org.jsynthlib.synthdrivers.alesis.qs;
 
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.synthdrivers.alesis.SysexRoutines;
 import org.jsynthlib.widgets.SysexWidget;
 
@@ -17,7 +17,7 @@ public class QSParamModel implements SysexWidget.IParamModel {
 	private int bitSize;
 	private boolean signed;
 	private int offset;
-	private Patch patch;
+	private PatchDataImpl patch;
 
 	/**
 	 * Create a new param model, given the starting and ending bytes and bits of the parameter. Assumes the standard QS
@@ -36,7 +36,7 @@ public class QSParamModel implements SysexWidget.IParamModel {
 	 * @param signed
 	 *            true if the value is signed, false otherwise
 	 */
-	public QSParamModel(Patch patch, int msByte, int msBit, int lsByte, int lsBit, boolean signed) {
+	public QSParamModel(PatchDataImpl patch, int msByte, int msBit, int lsByte, int lsBit, boolean signed) {
 		// count # of usable bits in the patch
 		int patchBits = (patch.getSysex().length - QSConstants.HEADER) * 7;
 
@@ -71,7 +71,7 @@ public class QSParamModel implements SysexWidget.IParamModel {
 	 * @param offset
 	 *            the value to add/subtract as given in sysex spec
 	 */
-	public QSParamModel(Patch patch, int msBit, int bitSize, int offset) {
+	public QSParamModel(PatchDataImpl patch, int msBit, int bitSize, int offset) {
 		// count # of usable bits in the patch
 		int patchBits = (patch.getSysex().length - QSConstants.HEADER) * 7;
 

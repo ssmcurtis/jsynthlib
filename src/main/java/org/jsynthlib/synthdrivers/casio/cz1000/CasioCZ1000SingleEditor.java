@@ -30,9 +30,9 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-import org.jsynthlib.menu.patch.IPatchDriver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.driver.SynthDriverPatch;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.EnvelopeWidget;
 import org.jsynthlib.widgets.ScrollBarLookupWidget;
@@ -54,7 +54,7 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 	/** FALSE for 'stack', TRUE for 'wide' */
 	protected boolean wideGui = false;
 
-	public CasioCZ1000SingleEditor(Patch patch) {
+	public CasioCZ1000SingleEditor(PatchDataImpl patch) {
 		super("Casio CZ-101/1000 Patch Editor", patch);
 
 		hackMode = "Extended".equals(patch.getDevice().getPreferences().get("paramMode", null));
@@ -72,7 +72,7 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 	/**
 	 * Control which envelope GUI we're going to use.
 	 */
-	protected JPanel getEnvelopeGUI(Patch patch, int firstOffset) {
+	protected JPanel getEnvelopeGUI(PatchDataImpl patch, int firstOffset) {
 		// env widg is broke
 		return getEnvelopeGUI1(patch, firstOffset);
 	}
@@ -84,7 +84,7 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 	 *            Patch to edit.
 	 * @return Complete GUI component.
 	 */
-	public JComponent getStackedGUI(Patch patch) {
+	public JComponent getStackedGUI(PatchDataImpl patch) {
 
 		JComponent paramgui = getParamGUI(patch);
 
@@ -115,7 +115,7 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 	 *            Patch to edit.
 	 * @return Complete GUI component.
 	 */
-	public JComponent getWideGUI(Patch patch) {
+	public JComponent getWideGUI(PatchDataImpl patch) {
 		JComponent paramgui = getParamGUI(patch);
 		paramgui.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.RAISED), "Parameters", TitledBorder.LEFT,
 				TitledBorder.CENTER));
@@ -142,7 +142,7 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 		return mainPane;
 	}
 
-	protected JPanel getDca2Panel(Patch patch) {
+	protected JPanel getDca2Panel(PatchDataImpl patch) {
 		JPanel dca2Panel = new JPanel();
 		dca2Panel.setLayout(new GridBagLayout());
 		if (hackMode)
@@ -155,7 +155,7 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 		return dca2Panel;
 	}
 
-	protected JPanel getDcw2Panel(Patch patch) {
+	protected JPanel getDcw2Panel(PatchDataImpl patch) {
 		JPanel dcw2Panel = new JPanel();
 		dcw2Panel.setLayout(new GridBagLayout());
 		if (hackMode)
@@ -168,21 +168,21 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 		return dcw2Panel;
 	}
 
-	protected JPanel getDco2Panel(Patch patch) {
+	protected JPanel getDco2Panel(PatchDataImpl patch) {
 		JPanel dco2Panel = new JPanel();
 		dco2Panel.setLayout(new GridBagLayout());
 		add(dco2Panel, getEnvelopeGUI(patch, CZModel.PSPL), 0, 0, 1, 1);
 		return dco2Panel;
 	}
 
-	protected JPanel getDco1Panel(Patch patch) {
+	protected JPanel getDco1Panel(PatchDataImpl patch) {
 		JPanel dco1Panel = new JPanel();
 		dco1Panel.setLayout(new GridBagLayout());
 		add(dco1Panel, getEnvelopeGUI(patch, CZModel.PMPL), 0, 0, 1, 1);
 		return dco1Panel;
 	}
 
-	protected JPanel getDca1Panel(Patch patch) {
+	protected JPanel getDca1Panel(PatchDataImpl patch) {
 		JPanel dca1Panel = new JPanel();
 		dca1Panel.setLayout(new GridBagLayout());
 		if (hackMode)
@@ -197,7 +197,7 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 		return dca1Panel;
 	}
 
-	protected JPanel getDcw1Panel(Patch patch) {
+	protected JPanel getDcw1Panel(PatchDataImpl patch) {
 		JPanel dcw1Panel = new JPanel();
 		dcw1Panel.setLayout(new GridBagLayout());
 		if (hackMode)
@@ -212,7 +212,7 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 		return dcw1Panel;
 	}
 
-	public JComponent getParamGUI(Patch patch) {
+	public JComponent getParamGUI(PatchDataImpl patch) {
 		gbc.weightx = 1;
 
 		JPanel miscPane = new JPanel();
@@ -259,7 +259,7 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 		parent.add(widget, gbc);
 	}
 
-	protected SysexWidget getDetuneStepGUI(Patch patch) {
+	protected SysexWidget getDetuneStepGUI(PatchDataImpl patch) {
 		int max = (hackMode ? 127 : 47);
 		String[] dsopts = new String[2 * max + 1];
 		dsopts[max] = "0";
@@ -272,7 +272,7 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 		// return new ScrollBarWidget("Detune Step",patch,-max,max,0,80,new DetuneStepModel(patch),null);
 	}
 
-	protected JPanel getVibratoGUI(Patch patch) {
+	protected JPanel getVibratoGUI(PatchDataImpl patch) {
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridBagLayout());
 		panel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.RAISED), "Vibrato", TitledBorder.LEFT,
@@ -308,7 +308,7 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 		return panel;
 	}
 
-	protected JPanel getWaveformGUI(Patch patch, int offset) {
+	protected JPanel getWaveformGUI(PatchDataImpl patch, int offset) {
 		// Hack Mode:
 		// Full access to all wave values, including undefined ones.
 		// W1=6 or W2=6 uses resonance wave R
@@ -348,7 +348,7 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 	 *            offset to "final stage" param
 	 * @return GUI for envelope.
 	 */
-	protected JPanel getEnvelopeGUI1(Patch patch, int firstOffset) {
+	protected JPanel getEnvelopeGUI1(PatchDataImpl patch, int firstOffset) {
 		// TODO non-hack-mode == only one stage can be sustain
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridBagLayout());
@@ -416,7 +416,7 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 	 *            offset to "final stage" param
 	 * @return GUI for envelope.
 	 */
-	protected JPanel getEnvelopeGUI2(Patch patch, int firstOffset) {
+	protected JPanel getEnvelopeGUI2(PatchDataImpl patch, int firstOffset) {
 		JPanel panel = new JPanel();
 		int maxval, row = 0;
 		panel.setLayout(new GridBagLayout());
@@ -484,7 +484,7 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 	class WordFieldModel extends CZModel {
 		int mask, shift;
 
-		WordFieldModel(Patch patch, int offset, int mask) {
+		WordFieldModel(PatchDataImpl patch, int offset, int mask) {
 			super(patch, offset);
 			if (mask == 0)
 				throw new IllegalArgumentException("Mask cannot be zero.");
@@ -507,7 +507,7 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 	}
 
 	class LineModel extends CZModel {
-		public LineModel(Patch p) {
+		public LineModel(PatchDataImpl p) {
 			super(p, TONE_DATA + CZModel.PFLAG);
 		}
 
@@ -524,7 +524,7 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 		final int MASK = 0x38;
 		final int[] VALS = { 0, 0x20, 0x18 };
 
-		public ModModel(Patch p) {
+		public ModModel(PatchDataImpl p) {
 			super(p, TONE_DATA + CZModel.MFW + 2);
 		}
 
@@ -550,7 +550,7 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 	}
 
 	class OctaveModel extends CZModel {
-		public OctaveModel(Patch p) {
+		public OctaveModel(PatchDataImpl p) {
 			super(p, TONE_DATA + CZModel.PFLAG);
 		}
 
@@ -569,7 +569,7 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 	}
 
 	class DetuneStepModel extends CZModel {
-		public DetuneStepModel(Patch p) {
+		public DetuneStepModel(PatchDataImpl p) {
 			super(p, TONE_DATA + CZModel.PDS);
 		}
 
@@ -587,7 +587,7 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 	}
 
 	class DetuneFineModel extends CZModel {
-		public DetuneFineModel(Patch p) {
+		public DetuneFineModel(PatchDataImpl p) {
 			super(p, TONE_DATA + CZModel.PDL);
 		}
 
@@ -603,7 +603,7 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 	class VibratoWaveModel extends CZModel {
 		final int[] VALS = { 0, 0x08, 0x04, 0x20, 0x02 };
 
-		public VibratoWaveModel(Patch p) {
+		public VibratoWaveModel(PatchDataImpl p) {
 			super(p, TONE_DATA + CZModel.PVK);
 		}
 
@@ -629,7 +629,7 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 		int[] multys;
 		int[] biases;
 
-		public VibratoModel(Patch p, int offset) {
+		public VibratoModel(PatchDataImpl p, int offset) {
 			super(p, TONE_DATA + offset);
 		}
 
@@ -656,7 +656,7 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 		int[] MULTYS = { 1, 2, 4, 8, 16, 32 };
 		int[] BIASES = { 0, 33, 67, 135, 271, 543 };
 
-		public VibratoDelayModel(Patch p) {
+		public VibratoDelayModel(PatchDataImpl p) {
 			super(p, CZModel.PVDLD);
 			stages = STAGES;
 			multys = MULTYS;
@@ -669,7 +669,7 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 		int[] MULTYS = { 32, 64, 128, 256, 512, 1024 };
 		int[] BIASES = { 0, 0x460, 0x8E0, 0x11E0, 0x23E0, 0x47E0 };
 
-		public VibratoRateModel(Patch p) {
+		public VibratoRateModel(PatchDataImpl p) {
 			super(p, CZModel.PVSD);
 			stages = STAGES;
 			multys = MULTYS;
@@ -682,7 +682,7 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 		int[] MULTYS = { 1, 2, 4, 8, 16, 32, 64 };
 		int[] BIASES = { 1, 0x23, 0x47, 0x8F, 0x11F, 0x23F, 0x300 };
 
-		public VibratoDepthModel(Patch p) {
+		public VibratoDepthModel(PatchDataImpl p) {
 			super(p, CZModel.PVDD);
 			stages = STAGES;
 			multys = MULTYS;
@@ -693,7 +693,7 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 	abstract class KeyFollowModel extends CZModel {
 		int[] map;
 
-		public KeyFollowModel(Patch p, int offset) {
+		public KeyFollowModel(PatchDataImpl p, int offset) {
 			super(p, TONE_DATA + offset);
 		}
 
@@ -714,7 +714,7 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 	class KeyFollowAModel extends KeyFollowModel {
 		int[] MAP = { 0x00, 0x08, 0x11, 0x1A, 0x24, 0x2F, 0x3A, 0x45, 0x52, 0x5F };
 
-		public KeyFollowAModel(Patch p, int offset) {
+		public KeyFollowAModel(PatchDataImpl p, int offset) {
 			super(p, offset);
 			map = MAP;
 		}
@@ -723,7 +723,7 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 	class KeyFollowWModel extends KeyFollowModel {
 		int[] MAP = { 0x00, 0x1F, 0x2C, 0x39, 0x46, 0x53, 0x60, 0x6E, 0x92, 0xFF };
 
-		public KeyFollowWModel(Patch p, int offset) {
+		public KeyFollowWModel(PatchDataImpl p, int offset) {
 			super(p, offset);
 			map = MAP;
 		}
@@ -740,7 +740,7 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 		 *            Offset of 'end step' param within tone data. Envelope data is assumed to follow. Block is 17 bytes
 		 *            total.
 		 */
-		public EnvelopeModel(Patch patch, int firstOffset) {
+		public EnvelopeModel(PatchDataImpl patch, int firstOffset) {
 			super(patch, TONE_DATA + firstOffset);
 		}
 
@@ -946,7 +946,7 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 		 * @param bit
 		 *            0..7, from right (LSB)
 		 */
-		public BitModel(Patch p, int offset, int bit) {
+		public BitModel(PatchDataImpl p, int offset, int bit) {
 			super(p, TONE_DATA + offset);
 			pos = 1 << bit;
 			neg = ~pos;
@@ -968,7 +968,7 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 	 * Dummy sender for those widgets that won't take null for an answer.
 	 */
 	class NullSender implements SysexWidget.ISender {
-		public void send(IPatchDriver driver, int value) {
+		public void send(SynthDriverPatch driver, int value) {
 		}
 	}
 }

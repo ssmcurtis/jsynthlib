@@ -4,10 +4,10 @@ import java.awt.Dimension;
 
 import javax.swing.JTable;
 
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.JSLFrame;
-import org.jsynthlib.menu.ui.window.BankEditorFrame;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.window.BankEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 /**
  * Specific bank editor for YamahaFS1R. This bank holds 128 voices + 128 performances.
@@ -21,7 +21,7 @@ public class YamahaFS1RBankEditor extends BankEditorFrame {
 		preferredColumnWidth = 130;
 	}
 
-	public YamahaFS1RBankEditor(Patch p) {
+	public YamahaFS1RBankEditor(PatchDataImpl p) {
 		super(p);
 	}
 
@@ -34,7 +34,7 @@ public class YamahaFS1RBankEditor extends BankEditorFrame {
 	 * @see YamahaFS1RPerformanceEditor
 	 */
 	public JSLFrame EditPatch(int aNumPatch, int aPart) {
-		Patch p = (Patch) bankData.get(aNumPatch);
+		PatchDataImpl p = (PatchDataImpl) bankData.get(aNumPatch);
 		if (p == null) {
 			return null;
 		}
@@ -45,8 +45,8 @@ public class YamahaFS1RBankEditor extends BankEditorFrame {
 		return pf;
 	}
 
-	public Patch getBankPatch() {
-		return (Patch) bankData;
+	public PatchDataImpl getBankPatch() {
+		return (PatchDataImpl) bankData;
 	}
 
 }

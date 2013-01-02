@@ -6,15 +6,15 @@ package org.jsynthlib.synthdrivers.generic;
 
 import java.util.prefs.Preferences;
 
-import org.jsynthlib.menu.patch.Device;
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
-import org.jsynthlib.menu.ui.window.HexDumpEditorHighlighted;
-import org.jsynthlib.menu.ui.window.SingleTextAreaFrame;
-import org.jsynthlib.model.ManufacturerLookup;
-import org.jsynthlib.tools.Utility;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.menu.window.HexDumpEditorHighlighted;
+import org.jsynthlib.menu.window.SingleTextAreaFrame;
+import org.jsynthlib.model.JSynthManufacturerLookup;
+import org.jsynthlib.model.device.Device;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.HexaUtil;
 
 /**
  * A Null Synth Driver.
@@ -35,18 +35,18 @@ public class GenericDevice extends Device {
 		addDriver(new IdentityDriver());
 	}
 
-	private class GenericDriver extends Driver {
+	private class GenericDriver extends SynthDriverPatchImpl {
 		private GenericDriver() {
 			super("-", "Brian Klock");
 			patchNumbers = new String[] { "0" };
 		}
 
-		protected JSLFrame editPatch(Patch p) {
+		public JSLFrame editPatch(PatchDataImpl p) {
 			return (new HexDumpEditorHighlighted(p));
 		}
 	}
 
-	private class IdentityDriver extends Driver {
+	private class IdentityDriver extends SynthDriverPatchImpl {
 		private IdentityDriver() {
 			super("Identity", "Joe Emenaker");
 			patchNumbers = new String[] { "0" };
@@ -54,17 +54,17 @@ public class GenericDevice extends Device {
 			sysexID = "F07E**0602"; // Match sysex identity reply messages
 		}
 
-		protected JSLFrame editPatch(Patch p) {
-			int lengthOfID = ManufacturerLookup.lengthOfID(p.getSysex(), 5);
-			String manuf = ManufacturerLookup.get(p.getSysex(), 5);
+		public JSLFrame editPatch(PatchDataImpl p) {
+			int lengthOfID = JSynthManufacturerLookup.lengthOfID(p.getSysex(), 5);
+			String manuf = JSynthManufacturerLookup.get(p.getSysex(), 5);
 
 			SingleTextAreaFrame f = new SingleTextAreaFrame("Identity Reply Details");
 			f.append("MIDI Channel         : " + p.getSysex()[2] + "\n");
-			f.append("Manuf ID             : " + Utility.hexDump(p.getSysex(), 5, lengthOfID, -1, true) + " (" + manuf
+			f.append("Manuf ID             : " + HexaUtil.hexDump(p.getSysex(), 5, lengthOfID, -1, true) + " (" + manuf
 					+ ")\n");
-			f.append("Family (LSB First)   : " + Utility.hexDump(p.getSysex(), 5 + lengthOfID, 2, -1, true) + "\n");
-			f.append("Product (LSB First)  : " + Utility.hexDump(p.getSysex(), 7 + lengthOfID, 2, -1, true) + "\n");
-			f.append("Software (LSB First) : " + Utility.hexDump(p.getSysex(), 9 + lengthOfID, 4, -1, true) + "\n");
+			f.append("Family (LSB First)   : " + HexaUtil.hexDump(p.getSysex(), 5 + lengthOfID, 2, -1, true) + "\n");
+			f.append("Product (LSB First)  : " + HexaUtil.hexDump(p.getSysex(), 7 + lengthOfID, 2, -1, true) + "\n");
+			f.append("Software (LSB First) : " + HexaUtil.hexDump(p.getSysex(), 9 + lengthOfID, 4, -1, true) + "\n");
 			return (f);
 			// return new HexDumpEditorFrame(p);
 		}

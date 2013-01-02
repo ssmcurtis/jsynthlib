@@ -31,7 +31,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.jsynthlib.menu.patch.Device;
+import org.jsynthlib.model.device.Device;
 
 /**
  * RolandTD6Device.java

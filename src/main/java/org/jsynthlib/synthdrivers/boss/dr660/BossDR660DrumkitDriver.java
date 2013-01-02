@@ -5,12 +5,12 @@ package org.jsynthlib.synthdrivers.boss.dr660;
 
 import java.io.InputStream;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.JSLFrame;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
-public class BossDR660DrumkitDriver extends Driver {
+public class BossDR660DrumkitDriver extends SynthDriverPatchImpl {
 	int[] xvrt;
 
 	public BossDR660DrumkitDriver() {
@@ -37,8 +37,8 @@ public class BossDR660DrumkitDriver extends Driver {
 		;
 	}
 
-	public void calculateChecksum(Patch ip) {
-		Patch p = (Patch) ip;
+	public void calculateChecksum(PatchDataImpl ip) {
+		PatchDataImpl p = (PatchDataImpl) ip;
 		for (int i = 0; i < 55; i++) {
 			calculateChecksum(p, 23 * i + 5, 23 * i + 20, 23 * i + 21);
 			p.getSysex()[i * 23 + 2] = ((byte) (getChannel() - 1));
@@ -55,7 +55,7 @@ public class BossDR660DrumkitDriver extends Driver {
 	}
 
 	// XXX this method can be commented out, because same as superclass.
-	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
+	protected void calculateChecksum(PatchDataImpl p, int start, int end, int ofs) {
 		int sum = 0;
 		for (int i = start; i <= end; i++)
 			sum += p.getSysex()[i];
@@ -66,7 +66,7 @@ public class BossDR660DrumkitDriver extends Driver {
 
 	}
 
-	public void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		setPatchNum(0);
 		sendPatchWorker(p);
 		try {
@@ -77,7 +77,7 @@ public class BossDR660DrumkitDriver extends Driver {
 		// setPatchNum(0);
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		// setBankNum(bankNum);
 		setPatchNum(patchNum);
 		sendPatchWorker(p);
@@ -93,7 +93,7 @@ public class BossDR660DrumkitDriver extends Driver {
 	public void setBankNum(int bankNum) {
 	}
 
-	protected void playPatch(Patch p) {
+	public void playPatch(PatchDataImpl p) {
 		try {
 
 			sendPatch(p);
@@ -111,25 +111,25 @@ public class BossDR660DrumkitDriver extends Driver {
 			Thread.sleep(100);
 			send((0x80 + (getChannel() - 1)), 46, 0);
 		} catch (Exception e) {
-			ErrorMsg.reportError("Error", "Unable to Play Drums", e);
+			ErrorMsgUtil.reportError("Error", "Unable to Play Drums", e);
 		}
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		try {
 			InputStream fileIn = getClass().getResourceAsStream("BossDR660Drumkit.new");
 			byte[] buffer = new byte[1387];
 			fileIn.read(buffer);
 			fileIn.close();
-			return new Patch(buffer, this);
+			return new PatchDataImpl(buffer, this);
 		} catch (Exception e) {
-			ErrorMsg.reportError("Error", "Unable to find Defaults", e);
+			ErrorMsgUtil.reportError("Error", "Unable to find Defaults", e);
 			return null;
 		}
 	}
 
-	public JSLFrame editPatch(Patch p) {
-		return new BossDR660DrumkitEditor((Patch) p);
+	public JSLFrame editPatch(PatchDataImpl p) {
+		return new BossDR660DrumkitEditor((PatchDataImpl) p);
 	}
 
 }

@@ -1,9 +1,9 @@
 package org.jsynthlib.synthdrivers.alesis.qs;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 /**
  * AlesisQSEffectsDriver.java
@@ -14,7 +14,7 @@ import org.jsynthlib.tools.ErrorMsg;
  * @version $Id$ GPL v2
  */
 
-public class AlesisQSEffectsDriver extends Driver {
+public class AlesisQSEffectsDriver extends SynthDriverPatchImpl {
 	public AlesisQSEffectsDriver() {
 		super("Effects", "Zellyn Hunter");
 		sysexID = "F000000E0E**";
@@ -55,7 +55,7 @@ public class AlesisQSEffectsDriver extends Driver {
 	 * @param ofs
 	 *            ignored
 	 */
-	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
+	protected void calculateChecksum(PatchDataImpl p, int start, int end, int ofs) {
 		// This synth does not use a checksum
 	}
 
@@ -64,7 +64,7 @@ public class AlesisQSEffectsDriver extends Driver {
 	 * 
 	 * @return the new Patch
 	 */
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		// Copy over the Alesis QS header
 		byte[] sysex = new byte[patchSize];
 		for (int i = 0; i < QSConstants.GENERIC_HEADER.length; i++) {
@@ -75,7 +75,7 @@ public class AlesisQSEffectsDriver extends Driver {
 		sysex[QSConstants.POSITION_LOCATION] = 0;
 
 		// Create the patch
-		return new Patch(sysex, this);
+		return new PatchDataImpl(sysex, this);
 	}
 
 	// public JSLFrame editPatch(Patch p)
@@ -117,7 +117,7 @@ public class AlesisQSEffectsDriver extends Driver {
 	 * @param p
 	 *            the patch to send to the edit buffer
 	 */
-	public void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		storePatch(p, 0, QSConstants.MAX_LOCATION_PROG + 1);
 	}
 
@@ -132,12 +132,12 @@ public class AlesisQSEffectsDriver extends Driver {
 	 * @param patchNum
 	 *            the patch number to send it to
 	 */
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		// default to simple case - set specified patch in the User bank
 		int location = patchNum;
 		byte opcode = QSConstants.OPCODE_MIDI_USER_EFFECTS_DUMP;
-		byte oldOpcode = ((Patch) p).getSysex()[QSConstants.POSITION_OPCODE];
-		byte oldLocation = ((Patch) p).getSysex()[QSConstants.POSITION_LOCATION];
+		byte oldOpcode = ((PatchDataImpl) p).getSysex()[QSConstants.POSITION_OPCODE];
+		byte oldLocation = ((PatchDataImpl) p).getSysex()[QSConstants.POSITION_LOCATION];
 
 		// if the patch number is > max location, get from Edit buffers
 		if (location > QSConstants.MAX_LOCATION_PROG) {
@@ -145,10 +145,10 @@ public class AlesisQSEffectsDriver extends Driver {
 			opcode = QSConstants.OPCODE_MIDI_EDIT_EFFECTS_DUMP;
 		}
 		// set the opcode and target location
-		((Patch) p).getSysex()[QSConstants.POSITION_OPCODE] = opcode;
-		((Patch) p).getSysex()[QSConstants.POSITION_LOCATION] = (byte) location;
+		((PatchDataImpl) p).getSysex()[QSConstants.POSITION_OPCODE] = opcode;
+		((PatchDataImpl) p).getSysex()[QSConstants.POSITION_LOCATION] = (byte) location;
 
-		ErrorMsg.reportStatus("foo", ((Patch) p).getSysex());
+		ErrorMsgUtil.reportStatus("foo", ((PatchDataImpl) p).getSysex());
 		// setBankNum (bankNum);
 		// setPatchNum (patchNum);
 
@@ -156,7 +156,7 @@ public class AlesisQSEffectsDriver extends Driver {
 		sendPatchWorker(p);
 
 		// restore the old values
-		((Patch) p).getSysex()[QSConstants.POSITION_OPCODE] = oldOpcode;
-		((Patch) p).getSysex()[QSConstants.POSITION_LOCATION] = oldLocation;
+		((PatchDataImpl) p).getSysex()[QSConstants.POSITION_OPCODE] = oldOpcode;
+		((PatchDataImpl) p).getSysex()[QSConstants.POSITION_LOCATION] = oldLocation;
 	}
 }

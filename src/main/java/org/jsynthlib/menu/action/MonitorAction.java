@@ -6,8 +6,9 @@ import java.util.Map;
 
 import javax.swing.AbstractAction;
 
-import org.jsynthlib.menu.ui.window.MidiMonitorDialog;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.Actions;
+import org.jsynthlib.menu.window.MidiMonitorDialog;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 public class MonitorAction extends AbstractAction {
 	public MonitorAction(Map<Serializable, Integer> mnemonics) {
@@ -22,7 +23,7 @@ public class MonitorAction extends AbstractAction {
 				Actions.setMidiMonitor(new MidiMonitorDialog());
 			Actions.getMidiMonitor().setVisible(true);
 		} catch (Exception ex) {
-			ErrorMsg.reportError("Error", "Unable to show MIDI Monitor)", ex);
+			ErrorMsgUtil.reportError("Error", "Unable to show MIDI Monitor)", ex);
 		}
 	}
 }

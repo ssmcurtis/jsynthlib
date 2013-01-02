@@ -4,18 +4,18 @@ import java.io.UnsupportedEncodingException;
 
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.DriverUtil;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 /**
  * Bank driver for KAWAI K4/K4r voice patch.
  * 
  * @version $Id$
  */
-public class KawaiK4BankDriver extends BankDriver {
+public class KawaiK4BankDriver extends SynthDriverBank {
 	/** Header Size */
 	private static final int HSIZE = 8;
 	/** Single Patch size */
@@ -47,7 +47,7 @@ public class KawaiK4BankDriver extends BankDriver {
 		return HSIZE + (SSIZE * patchNum);
 	}
 
-	public String getPatchName(Patch p, int patchNum) {
+	public String getPatchName(PatchDataImpl p, int patchNum) {
 		int nameStart = getPatchStart(patchNum);
 		nameStart += 0; // offset of name in patch data
 		try {
@@ -58,7 +58,7 @@ public class KawaiK4BankDriver extends BankDriver {
 		}
 	}
 
-	public void setPatchName(Patch p, int patchNum, String name) {
+	public void setPatchName(PatchDataImpl p, int patchNum, String name) {
 		patchNameSize = 10;
 		patchNameStart = getPatchStart(patchNum);
 
@@ -75,7 +75,7 @@ public class KawaiK4BankDriver extends BankDriver {
 		}
 	}
 
-	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
+	protected void calculateChecksum(PatchDataImpl p, int start, int end, int ofs) {
 		int i;
 		int sum = 0;
 
@@ -87,12 +87,12 @@ public class KawaiK4BankDriver extends BankDriver {
 		// p.sysex[ofs]=(byte)(p.sysex[ofs]+1);
 	}
 
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 		for (int i = 0; i < NS; i++)
 			calculateChecksum(p, HSIZE + (i * SSIZE), HSIZE + (i * SSIZE) + SSIZE - 2, HSIZE + (i * SSIZE) + SSIZE - 1);
 	}
 
-	public void putPatch(Patch bank, Patch p, int patchNum) {
+	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) {
 		if (!canHoldPatch(p)) {
 			JOptionPane.showMessageDialog(null, "This type of patch does not fit in to this type of bank.", "Error",
 					JOptionPane.ERROR_MESSAGE);
@@ -103,7 +103,7 @@ public class KawaiK4BankDriver extends BankDriver {
 		calculateChecksum(bank);
 	}
 
-	public Patch getPatch(Patch bank, int patchNum) {
+	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
 		byte[] sysex = new byte[HSIZE + SSIZE + 1];
 		sysex[0] = (byte) 0xF0;
 		sysex[1] = (byte) 0x40;
@@ -117,16 +117,16 @@ public class KawaiK4BankDriver extends BankDriver {
 		System.arraycopy(bank.getSysex(), getPatchStart(patchNum), sysex, HSIZE, SSIZE);
 		try {
 			// pass Single Driver !!!FIXIT!!!
-			Patch p = new Patch(sysex, getDevice());
+			PatchDataImpl p = new PatchDataImpl(sysex, getDevice());
 			p.calculateChecksum();
 			return p;
 		} catch (Exception e) {
-			ErrorMsg.reportError("Error", "Error in K4 Bank Driver", e);
+			ErrorMsgUtil.reportError("Error", "Error in K4 Bank Driver", e);
 			return null;
 		}
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[HSIZE + SSIZE * NS + 1];
 		sysex[0] = (byte) 0xF0;
 		sysex[1] = (byte) 0x40;
@@ -137,7 +137,7 @@ public class KawaiK4BankDriver extends BankDriver {
 		sysex[6] = (byte) 0x0;
 		sysex[7] = 0;
 		sysex[HSIZE + SSIZE * NS] = (byte) 0xF7;
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		for (int i = 0; i < NS; i++)
 			setPatchName(p, i, "New Patch");
 		calculateChecksum(p);
@@ -148,7 +148,7 @@ public class KawaiK4BankDriver extends BankDriver {
 		send(SYS_REQ.toSysexMessage(getChannel(), new SysexHandler.NameValue("bankNum", bankNum << 1)));
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		try {
 			Thread.sleep(100);
 		} catch (Exception e) {

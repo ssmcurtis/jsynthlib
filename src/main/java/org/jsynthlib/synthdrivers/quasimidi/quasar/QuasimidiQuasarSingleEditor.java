@@ -37,12 +37,12 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.KnobWidget;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.PatchNameWidget;
 import org.jsynthlib.widgets.SpinnerWidget;
 
@@ -60,10 +60,10 @@ public class QuasimidiQuasarSingleEditor extends PatchEditorFrame {
 	private KnobWidget[] fx1ParWidgets = new KnobWidget[6];
 	private KnobWidget[] fx2ParWidgets = new KnobWidget[9];
 
-	public QuasimidiQuasarSingleEditor(Patch iPatch) {
+	public QuasimidiQuasarSingleEditor(PatchDataImpl iPatch) {
 		super("Quasimidi Quasar Performance Editor", iPatch);
 
-		Patch patch = (Patch) iPatch;
+		PatchDataImpl patch = (PatchDataImpl) iPatch;
 
 		oTabs = new JTabbedPane();
 		scrollPane.add(oTabs);
@@ -96,7 +96,7 @@ public class QuasimidiQuasarSingleEditor extends PatchEditorFrame {
 	/**
 	 * Common parameter tab
 	 */
-	private Container buildCommonWindow(Patch patch) {
+	private Container buildCommonWindow(PatchDataImpl patch) {
 		Box verticalBox = Box.createVerticalBox();
 		GridBagLayout gridbag = new GridBagLayout();
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -173,7 +173,7 @@ public class QuasimidiQuasarSingleEditor extends PatchEditorFrame {
 	/**
 	 * Modulation matrix tab
 	 */
-	private Container buildModulationMatrix(Patch patch) {
+	private Container buildModulationMatrix(PatchDataImpl patch) {
 		Box verticalBox = Box.createVerticalBox();
 		GridBagLayout gridbag = new GridBagLayout();
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -281,7 +281,7 @@ public class QuasimidiQuasarSingleEditor extends PatchEditorFrame {
 	/**
 	 * FX 1 tab
 	 */
-	private Container buildFX1Window(Patch patch) {
+	private Container buildFX1Window(PatchDataImpl patch) {
 		Box verticalBox = Box.createVerticalBox();
 		GridBagLayout gridbag = new GridBagLayout();
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -338,7 +338,7 @@ public class QuasimidiQuasarSingleEditor extends PatchEditorFrame {
 	/**
 	 * FX 2 tab
 	 */
-	private Container buildFX2Window(Patch patch) {
+	private Container buildFX2Window(PatchDataImpl patch) {
 		Box verticalBox = Box.createVerticalBox();
 		GridBagLayout gridbag = new GridBagLayout();
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -405,7 +405,7 @@ public class QuasimidiQuasarSingleEditor extends PatchEditorFrame {
 	/**
 	 * FX 1 tab
 	 */
-	private Container buildArpWindow(Patch patch) {
+	private Container buildArpWindow(PatchDataImpl patch) {
 		Box verticalBox = Box.createVerticalBox();
 		GridBagLayout gridbag = new GridBagLayout();
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -458,7 +458,7 @@ public class QuasimidiQuasarSingleEditor extends PatchEditorFrame {
 	/**
 	 * Performance part parameter tab
 	 */
-	private Container buildPartWindow(final int partNo, Patch patch) {
+	private Container buildPartWindow(final int partNo, PatchDataImpl patch) {
 		int offset = QuasarConstants.PART_SIZE * (partNo - 1);
 
 		Box verticalBox = Box.createVerticalBox();

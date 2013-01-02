@@ -23,8 +23,8 @@
  */
 package org.jsynthlib.synthdrivers.yamaha.dx7;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.SysexHandler;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 
 class YamahaDX7SysexHelper {
 	// simulate panel button pushes constants
@@ -48,7 +48,7 @@ class YamahaDX7SysexHelper {
 	protected final static SysexHandler releaseStore = new SysexHandler("f0 43 @@ 08 20 00 f7"); // BUTTON release:
 
 	// make system informations available
-	protected static void mkSysInfoAvail(Driver d, byte ch) // driver, channel
+	protected static void mkSysInfoAvail(SynthDriverPatchImpl d, byte ch) // driver, channel
 	{
 		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("button", FUNCTION), new SysexHandler.NameValue(
 				"action", DEPRESS)));
@@ -77,7 +77,7 @@ class YamahaDX7SysexHelper {
 	}
 
 	// switch off memory protection
-	protected static void swOffMemProt(Driver d, byte ch, byte mp, byte bn) // driver, channel, memory protection of
+	protected static void swOffMemProt(SynthDriverPatchImpl d, byte ch, byte mp, byte bn) // driver, channel, memory protection of
 																			// internal/cartridge, internal/cartridge
 	{
 		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("button", mp), new SysexHandler.NameValue("action",
@@ -96,7 +96,7 @@ class YamahaDX7SysexHelper {
 	}
 
 	// transmit bank dump
-	protected static void xmitBankDump(Driver d, byte ch) // driver, channel
+	protected static void xmitBankDump(SynthDriverPatchImpl d, byte ch) // driver, channel
 	{
 		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("button", MIDI_XMIT), new SysexHandler.NameValue(
 				"action", DEPRESS)));
@@ -115,7 +115,7 @@ class YamahaDX7SysexHelper {
 	}
 
 	// switch to desired bank
-	protected static void chBank(Driver d, byte ch, byte bn) // driver, channel, internal/cartridge
+	protected static void chBank(SynthDriverPatchImpl d, byte ch, byte bn) // driver, channel, internal/cartridge
 	{
 		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("button", bn), new SysexHandler.NameValue("action",
 				DEPRESS)));
@@ -124,7 +124,7 @@ class YamahaDX7SysexHelper {
 	}
 
 	// switch to desired patch number
-	protected static void chPatch(Driver d, byte ch, byte pn) // driver, channel, patch number
+	protected static void chPatch(SynthDriverPatchImpl d, byte ch, byte pn) // driver, channel, patch number
 	{
 		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("button", pn), new SysexHandler.NameValue("action",
 				DEPRESS)));

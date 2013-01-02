@@ -21,12 +21,12 @@
 
 package org.jsynthlib.synthdrivers.alesis.dmpro;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
-public class AlesisDMProDrumKitDriver extends Driver {
+public class AlesisDMProDrumKitDriver extends SynthDriverPatchImpl {
 
 	private final char[] m_arChars = new char[] { ' ', '!', '"', '#', '$', '%', '&', '"', '(', ')', '*', '+', ',', '-',
 			'.', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=', '>', '?', '@', 'A', 'B',
@@ -52,24 +52,24 @@ public class AlesisDMProDrumKitDriver extends Driver {
 
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		setBankNum(bankNum);
 		setPatchNum(patchNum);
-		((Patch) p).getSysex()[6] = (byte) patchNum;
+		((PatchDataImpl) p).getSysex()[6] = (byte) patchNum;
 		sendPatchWorker(p);
 		setPatchNum(patchNum);
 	}
 
-	public void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		// DM Pro editbuffer is named 64
-		((Patch) p).getSysex()[6] = 64;
+		((PatchDataImpl) p).getSysex()[6] = 64;
 		sendPatchWorker(p);
 	}
 
-	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
+	protected void calculateChecksum(PatchDataImpl p, int start, int end, int ofs) {
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 
 		byte[] sysex = new byte[648];
 		sysex[0] = (byte) 0xF0;
@@ -86,26 +86,26 @@ public class AlesisDMProDrumKitDriver extends Driver {
 		sysex[647] = (byte) 0xF7;
 
 		// ToDO: Load up a dump as a basis...
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		setPatchName(p, "NewDrumKit");
 		calculateChecksum(p);
 		return p;
 	}
 
-	public JSLFrame editPatch(Patch p) {
-		return new AlesisDMProDrumKitEditor((Patch) p);
+	public JSLFrame editPatch(PatchDataImpl p) {
+		return new AlesisDMProDrumKitEditor((PatchDataImpl) p);
 	}
 
 	/**
 	 * Gets the name of the patch from the sysex. If the patch uses some weird format or encoding, this needs to be
 	 * overidden in the particular driver
 	 */
-	public String getPatchName(Patch ip) {
+	public String getPatchName(PatchDataImpl ip) {
 		StringBuffer str = new StringBuffer("");
 
 		try {
 
-			AlesisDMProParser oParser = new AlesisDMProParser((Patch) ip);
+			AlesisDMProParser oParser = new AlesisDMProParser((PatchDataImpl) ip);
 
 			str.append((char) m_arChars[oParser.getValue(0, 5, 7)]);
 			str.append((char) m_arChars[oParser.getValue(1, 4, 7)]);
@@ -125,9 +125,9 @@ public class AlesisDMProDrumKitDriver extends Driver {
 		return str.toString();
 	}
 
-	public void setPatchName(Patch p, String name) {
+	public void setPatchName(PatchDataImpl p, String name) {
 
-		AlesisDMProParser oParser = new AlesisDMProParser((Patch) p);
+		AlesisDMProParser oParser = new AlesisDMProParser((PatchDataImpl) p);
 		byte[] ar = new byte[10];
 		char arStr[] = name.toCharArray();
 

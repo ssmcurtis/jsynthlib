@@ -6,34 +6,34 @@ import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 
-import org.jsynthlib.menu.patch.IPatch;
-import org.jsynthlib.menu.ui.PatchTransferHandler;
+import org.jsynthlib.menu.PatchTransferHandler;
+import org.jsynthlib.model.patch.Patch;
 
 public class ClipboardUtil implements ClipboardOwner {
 	protected final static ClipboardUtil instance = new ClipboardUtil();
 
 	protected final static Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
 
-	public static void storePatch(IPatch p) {
+	public static void storePatch(Patch p) {
 		try {
 			c.setContents(p, instance);
 		} catch (IllegalStateException e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 	}
 
-	public static IPatch getPatch() { // not used
+	public static Patch getPatch() { // not used
 		try {
 			Transferable t = c.getContents(instance);
-			return (IPatch) t.getTransferData(PatchTransferHandler.PATCH_FLAVOR);
+			return (Patch) t.getTransferData(PatchTransferHandler.PATCH_FLAVOR);
 		} catch (IllegalStateException e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		} catch (ClassCastException e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		} catch (UnsupportedFlavorException e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		} catch (java.io.IOException e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 		return null;
 	}

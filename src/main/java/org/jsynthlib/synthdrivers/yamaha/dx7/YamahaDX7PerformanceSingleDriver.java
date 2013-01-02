@@ -23,8 +23,8 @@
  */
 package org.jsynthlib.synthdrivers.yamaha.dx7;
 
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.synthdrivers.yamaha.dx7.common.DX7FamilyDevice;
 import org.jsynthlib.synthdrivers.yamaha.dx7.common.DX7FamilyPerformanceSingleDriver;
 
@@ -35,11 +35,11 @@ public class YamahaDX7PerformanceSingleDriver extends DX7FamilyPerformanceSingle
 				YamahaDX7PerformanceConstants.SINGLE_PERFORMANCE_BANK_NUMBERS);
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		return super.createNewPatch();
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		if ((((DX7FamilyDevice) (getDevice())).getTipsMsgFlag() & 0x01) == 1)
 			// show Information
 			YamahaDX7Strings.dxShowInformation(toString(), YamahaDX7Strings.STORE_SINGLE_PERFORMANCE_STRING);
@@ -53,7 +53,7 @@ public class YamahaDX7PerformanceSingleDriver extends DX7FamilyPerformanceSingle
 			YamahaDX7Strings.dxShowInformation(toString(), YamahaDX7Strings.PERFORMANCE_STRING);
 	}
 
-	public JSLFrame editPatch(Patch p) {
+	public JSLFrame editPatch(PatchDataImpl p) {
 		if ((((DX7FamilyDevice) (getDevice())).getSPBPflag() & 0x01) == 1) {
 			// make Sys Info available
 			YamahaDX7SysexHelper.mkSysInfoAvail(this, (byte) (getChannel() + 0x10));

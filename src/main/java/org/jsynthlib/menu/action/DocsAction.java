@@ -7,8 +7,9 @@ import java.util.Map;
 import javax.swing.AbstractAction;
 
 import org.jsynthlib.JSynthResource;
-import org.jsynthlib.menu.ui.window.DocumentationWindow;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.Actions;
+import org.jsynthlib.menu.window.DocumentationWindow;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 public class DocsAction extends AbstractAction {
 	public DocsAction(Map<Serializable, Integer> mnemonics) {
@@ -24,7 +25,7 @@ public class DocsAction extends AbstractAction {
 						Actions.class.getResource(JSynthResource.RESOURCE_NAME_DOCUMENTATION.getUri())));
 			Actions.getDocWin().setVisible(true);
 		} catch (Exception ex) {
-			ErrorMsg.reportError("Error", "Unable to show Documentation)", ex);
+			ErrorMsgUtil.reportError("Error", "Unable to show Documentation)", ex);
 		}
 	}
 }

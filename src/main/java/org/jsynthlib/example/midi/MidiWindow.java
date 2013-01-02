@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import org.jsynthlib.tools.Utility;
+import org.jsynthlib.tools.UiUtil;
 
 public class MidiWindow implements WriteOutput {
 	private JFrame f; // Main frame
@@ -105,7 +105,7 @@ public class MidiWindow implements WriteOutput {
 
 		// Display Frame
 		f.pack(); // Adjusts frame to size of components
-		Utility.centerDialog(f);
+		UiUtil.centerDialog(f);
 		f.setVisible(true);
 	}
 

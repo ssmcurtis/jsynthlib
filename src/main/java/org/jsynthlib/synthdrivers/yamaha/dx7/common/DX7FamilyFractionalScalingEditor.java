@@ -32,9 +32,9 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import org.jsynthlib.PatchBayApplication;
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.SpinnerWidget;
 import org.jsynthlib.widgets.SysexSender;
 
@@ -92,13 +92,13 @@ public class DX7FamilyFractionalScalingEditor extends PatchEditorFrame {
 			" 230", " 231", " 232", " 233", " 234", " 235", " 236", " 237", " 238", " 239", " 240", " 241", " 242",
 			" 243", " 244", " 245", " 246", " 247", " 248", " 249", " 250", " 251", " 252", " 253", " 254", " 255" };
 
-	public DX7FamilyFractionalScalingEditor(String name, Patch patch) {
+	public DX7FamilyFractionalScalingEditor(String name, PatchDataImpl patch) {
 		super(name, patch);
 
 		buildEditor(patch);
 	}
 
-	protected void buildEditor(Patch patch) {
+	protected void buildEditor(PatchDataImpl patch) {
 		PatchBayApplication.showWaitDialog(); // Because it needs some time to build up the editor frame
 
 		int OpNum, KeyNum;
@@ -155,7 +155,7 @@ public class DX7FamilyFractionalScalingEditor extends PatchEditorFrame {
 	class FractionalScalingModel extends ParamModel {
 		int upper_nibble, lower_nibble;
 
-		public FractionalScalingModel(Patch p, int o) {
+		public FractionalScalingModel(PatchDataImpl p, int o) {
 			super(p, 16 + 2 * o);
 		}
 
@@ -173,11 +173,11 @@ public class DX7FamilyFractionalScalingEditor extends PatchEditorFrame {
 	 * SysexSender - Fractional Scaling (g=6; h=0)
 	 */
 	class FractionalScalingSender extends SysexSender {
-		Patch patch;
+		PatchDataImpl patch;
 		int keyNumber, opNumber;
 		byte[] b = new byte[10];
 
-		public FractionalScalingSender(Patch p, int o, int k) {
+		public FractionalScalingSender(PatchDataImpl p, int o, int k) {
 			patch = p;
 			opNumber = o;
 			keyNumber = k;

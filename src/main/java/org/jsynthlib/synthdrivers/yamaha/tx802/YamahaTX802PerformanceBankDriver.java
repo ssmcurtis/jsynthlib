@@ -23,7 +23,7 @@
  */
 package org.jsynthlib.synthdrivers.yamaha.tx802;
 
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.synthdrivers.yamaha.dx7.common.DX7FamilyDevice;
 import org.jsynthlib.synthdrivers.yamaha.dx7.common.DX7FamilyPerformanceIIIBankDriver;
 
@@ -34,11 +34,11 @@ public class YamahaTX802PerformanceBankDriver extends DX7FamilyPerformanceIIIBan
 				YamahaTX802PerformanceConstants.BANK_PERFORMANCE_BANK_NUMBERS);
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		return super.createNewPatch();
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		if ((((DX7FamilyDevice) (getDevice())).getSwOffMemProtFlag() & 0x01) == 1) {
 			// switch off memory protection
 			YamahaTX802SysexHelpers.swOffMemProt(this, (byte) (getChannel() + 0x10));

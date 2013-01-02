@@ -28,11 +28,11 @@ import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.SysexSender;
 
 /**
@@ -51,7 +51,7 @@ public class AlesisDM5SysInfoEditor extends PatchEditorFrame {
 	/**
 	 * Constructs a AlesisDM5SysInfoEditor for the selected patch.
 	 */
-	AlesisDM5SysInfoEditor(Patch patch) {
+	AlesisDM5SysInfoEditor(PatchDataImpl patch) {
 		super("Alesis DM5 System Info Editor", patch);
 		scrollPane.setLayout(new GridLayout(0, 1));
 		addTrigPane(patch);
@@ -61,7 +61,7 @@ public class AlesisDM5SysInfoEditor extends PatchEditorFrame {
 	/**
 	 * Adds the System Info pane.
 	 */
-	private void addTrigPane(Patch patch) {
+	private void addTrigPane(PatchDataImpl patch) {
 		JPanel dm5EditPanel = new JPanel();
 		dm5EditPanel.setLayout(new BoxLayout(dm5EditPanel, BoxLayout.Y_AXIS));
 		dm5EditPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.RAISED), "System Info",
@@ -73,7 +73,7 @@ public class AlesisDM5SysInfoEditor extends PatchEditorFrame {
 	/**
 	 * Adds the the widgets to the System Info pane.
 	 */
-	private void addWidgets(JPanel panel, Patch patch) {
+	private void addWidgets(JPanel panel, PatchDataImpl patch) {
 		addWidget(panel, new CheckBoxWidget("Omni Enable", patch, new DM5SysInfoModel(patch, headerSize + 0, 1, true),
 				new DM5SysInfoSender(patch, 1)), 0, 0, 1, 1, -1);
 
@@ -113,7 +113,7 @@ public class AlesisDM5SysInfoEditor extends PatchEditorFrame {
 		 * bit of the data, represented by a power of two, and a boolean representing whether the values are reversed
 		 * (low to high).
 		 */
-		public DM5SysInfoModel(Patch p, int o, int b, boolean r) {
+		public DM5SysInfoModel(PatchDataImpl p, int o, int b, boolean r) {
 			super(p, o);
 			bitmask = b;
 			reverse = r;
@@ -165,12 +165,12 @@ public class AlesisDM5SysInfoEditor extends PatchEditorFrame {
 	 */
 	private class DM5SysInfoSender extends SysexSender {
 		int parameter;
-		Patch patch;
+		PatchDataImpl patch;
 
 		/**
 		 * Constructs a DM5SysInfoSender.
 		 */
-		public DM5SysInfoSender(Patch p, int param) {
+		public DM5SysInfoSender(PatchDataImpl p, int param) {
 			parameter = param;
 			patch = p;
 		}

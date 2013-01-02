@@ -6,7 +6,8 @@ import java.util.Map;
 
 import javax.swing.AbstractAction;
 
-import org.jsynthlib.menu.ui.window.LibraryFrame;
+import org.jsynthlib.menu.Actions;
+import org.jsynthlib.menu.window.LibraryFrame;
 
 public class NewAction extends AbstractAction {
 	public NewAction(Map<Serializable, Integer> mnemonics) {

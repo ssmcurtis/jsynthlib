@@ -29,7 +29,7 @@ import java.util.prefs.Preferences;
 
 import javax.swing.JPanel;
 
-import org.jsynthlib.menu.patch.Device;
+import org.jsynthlib.model.device.Device;
 import org.jsynthlib.widgets.ComboBoxWidget;
 
 /**

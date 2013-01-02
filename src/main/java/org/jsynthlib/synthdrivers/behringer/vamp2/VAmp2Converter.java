@@ -21,10 +21,10 @@
 
 package org.jsynthlib.synthdrivers.behringer.vamp2;
 
-import org.jsynthlib.menu.patch.Converter;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.tools.ErrorMsg;
-import org.jsynthlib.tools.Utility;
+import org.jsynthlib.model.driver.ConverterImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
+import org.jsynthlib.tools.HexaUtil;
 
 /**
  * Removes "Garbage Data" from response to dump request and extracts desired patch.
@@ -36,7 +36,7 @@ import org.jsynthlib.tools.Utility;
  * 
  * @author Jeff Weber
  */
-public class VAmp2Converter extends Converter {
+public class VAmp2Converter extends ConverterImpl {
 
 	/**
 	 * Constructor for VAmp2Converter
@@ -110,14 +110,14 @@ public class VAmp2Converter extends Converter {
 	 * 
 	 * @return A patch object containing the extracted sysex data.
 	 */
-	public Patch[] extractPatch(Patch p) {
+	public PatchDataImpl[] extractPatch(PatchDataImpl p) {
 		byte[] sysex = parseSysex(p.getByteArray());
 
-		Patch[] newPatchArray = new Patch[1];
-		newPatchArray[0] = new Patch(sysex, new VAmp2SingleDriver());
+		PatchDataImpl[] newPatchArray = new PatchDataImpl[1];
+		newPatchArray[0] = new PatchDataImpl(sysex, new VAmp2SingleDriver());
 
 //		ErrorMsg.reportStatus(">>>>>>> Patch From Device <<<<<<<<<");
-		ErrorMsg.reportStatus("  " + Utility.hexDump(newPatchArray[0].getSysex(), 0, -1, 16));
+		ErrorMsgUtil.reportStatus("  " + HexaUtil.hexDump(newPatchArray[0].getSysex(), 0, -1, 16));
 //		ErrorMsg.reportStatus(">>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<");
 
 		return newPatchArray;

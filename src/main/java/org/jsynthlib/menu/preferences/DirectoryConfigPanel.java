@@ -16,9 +16,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import org.jsynthlib.PatchBayApplication;
-import org.jsynthlib.menu.ui.ExtensionFilter;
-import org.jsynthlib.menu.ui.window.CompatibleFileDialog;
-import org.jsynthlib.menu.ui.window.LibraryFrame;
+import org.jsynthlib.menu.helper.ExtensionFilter;
+import org.jsynthlib.menu.window.CompatibleFileDialog;
+import org.jsynthlib.menu.window.LibraryFrame;
 
 /**
  * ConfigPanel for directory setting.
@@ -37,7 +37,8 @@ public class DirectoryConfigPanel extends ConfigPanel {
 	private final JTextField tFile = new JTextField(null, 35);
 	private final JTextField tLib = new JTextField(null, 35);
 	private final JTextField tSyx = new JTextField(null, 35);
-	private JCheckBox cbxEnMidi;
+	private JCheckBox importSubdirectories;
+	private JCheckBox addParentDirectoryName;
 
 	public DirectoryConfigPanel(PrefsDialog parent) {
 		super(parent);
@@ -135,17 +136,29 @@ public class DirectoryConfigPanel extends ConfigPanel {
 		c.gridx = 2;
 		p.add(b, c);
 
-		cbxEnMidi = new JCheckBox("Import directories recursive");
+		importSubdirectories = new JCheckBox("Import subdirectories");
 		c.gridx = 0;
 		c.gridy++;
-		p.add(cbxEnMidi, c);
+		p.add(importSubdirectories, c);
 		// add actionListeners
-		cbxEnMidi.addActionListener(new ActionListener() {
+		importSubdirectories.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setModified(true);
 			}
 		});
 
+		
+		addParentDirectoryName = new JCheckBox("Add directory to filename");
+		c.gridx = 0;
+		c.gridy++;
+		p.add(addParentDirectoryName, c);
+		// add actionListeners
+		addParentDirectoryName.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setModified(true);
+			}
+		});
+		
 		add(p, BorderLayout.CENTER);
 
 		
@@ -158,14 +171,16 @@ public class DirectoryConfigPanel extends ConfigPanel {
 		tFile.setText(AppConfig.getDefaultLibrary());
 		tLib.setText(AppConfig.getLibPath());
 		tSyx.setText(AppConfig.getSysexPath());
-		cbxEnMidi.setSelected(AppConfig.getImportDirectoryRecursive());
+		importSubdirectories.setSelected(AppConfig.getImportDirectoryRecursive());
+		addParentDirectoryName.setSelected(AppConfig.getAddParentDirectoryName());
 	}
 
 	public void commitSettings() {
 		AppConfig.setDefaultLibrary(tFile.getText());
 		AppConfig.setLibPath(tLib.getText());
 		AppConfig.setSysexPath(tSyx.getText());
-		AppConfig.setImportDirectoryRecursive(cbxEnMidi.isSelected());
+		AppConfig.setImportDirectoryRecursive(importSubdirectories.isSelected());
+		AppConfig.setAddParentDirectoryName(addParentDirectoryName.isSelected());
 		setModified(false);
 	}
 }

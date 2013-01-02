@@ -7,12 +7,12 @@ package org.jsynthlib.synthdrivers.alesis.a6;
 import javax.swing.JOptionPane;
 
 import org.jsynthlib.PatchBayApplication;
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
-public class AlesisA6MixBankDriver extends BankDriver {
+public class AlesisA6MixBankDriver extends SynthDriverBank {
 
 	public AlesisA6MixBankDriver() {
 		super("Mix Bank", "Kenneth L. Martinez", AlesisA6PgmSingleDriver.patchList.length, 4);
@@ -28,7 +28,7 @@ public class AlesisA6MixBankDriver extends BankDriver {
 		singleSysexID = "F000000E1D04";
 	}
 
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 		// A6 doesn't use checksum
 	}
 
@@ -37,33 +37,33 @@ public class AlesisA6MixBankDriver extends BankDriver {
 	// // A6 doesn't use checksum
 	// }
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		if (bankNum == 1 || bankNum == 2)
 			JOptionPane.showMessageDialog(PatchBayApplication.getInstance(), "Cannot send to a preset bank", "Store Patch",
 					JOptionPane.WARNING_MESSAGE);
 		else
-			sendPatchWorker((Patch) p, bankNum);
+			sendPatchWorker((PatchDataImpl) p, bankNum);
 	}
 
-	public void putPatch(Patch bank, Patch p, int patchNum) {
+	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) {
 		if (!canHoldPatch(p)) {
-			ErrorMsg.reportError("Error", "This type of patch does not fit in to this type of bank.");
+			ErrorMsgUtil.reportError("Error", "This type of patch does not fit in to this type of bank.");
 			return;
 		}
 
-		System.arraycopy(((Patch) p).getSysex(), 0, ((Patch) bank).getSysex(), patchNum * 1180, 1180);
-		((Patch) bank).getSysex()[patchNum * 1180 + 6] = 0; // user bank
-		((Patch) bank).getSysex()[patchNum * 1180 + 7] = (byte) patchNum; // set mix #
+		System.arraycopy(((PatchDataImpl) p).getSysex(), 0, ((PatchDataImpl) bank).getSysex(), patchNum * 1180, 1180);
+		((PatchDataImpl) bank).getSysex()[patchNum * 1180 + 6] = 0; // user bank
+		((PatchDataImpl) bank).getSysex()[patchNum * 1180 + 7] = (byte) patchNum; // set mix #
 	}
 
-	public Patch getPatch(Patch bank, int patchNum) {
+	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
 		byte sysex[] = new byte[1180];
-		System.arraycopy(((Patch) bank).getSysex(), patchNum * 1180, sysex, 0, 1180);
-		return new Patch(sysex, getDevice());
+		System.arraycopy(((PatchDataImpl) bank).getSysex(), patchNum * 1180, sysex, 0, 1180);
+		return new PatchDataImpl(sysex, getDevice());
 	}
 
-	public String getPatchName(Patch p, int patchNum) {
-		Patch Mix = (Patch) getPatch(p, patchNum);
+	public String getPatchName(PatchDataImpl p, int patchNum) {
+		PatchDataImpl Mix = (PatchDataImpl) getPatch(p, patchNum);
 		try {
 			char c[] = new char[patchNameSize];
 			for (int i = 0; i < patchNameSize; i++)
@@ -74,8 +74,8 @@ public class AlesisA6MixBankDriver extends BankDriver {
 		}
 	}
 
-	public void setPatchName(Patch p, int patchNum, String name) {
-		Patch Mix = (Patch) getPatch(p, patchNum);
+	public void setPatchName(PatchDataImpl p, int patchNum, String name) {
+		PatchDataImpl Mix = (PatchDataImpl) getPatch(p, patchNum);
 		if (name.length() < patchNameSize + 4)
 			name = name + "                ";
 		byte nameByte[] = name.getBytes();
@@ -90,7 +90,7 @@ public class AlesisA6MixBankDriver extends BankDriver {
 	// sendPatchWorker((Patch)p, 0);
 	// }
 
-	protected void sendPatchWorker(Patch p, int bankNum) {
+	protected void sendPatchWorker(PatchDataImpl p, int bankNum) {
 		byte tmp[] = new byte[1180]; // send in 128 single-mix messages
 		try {
 			PatchBayApplication.showWaitDialog();
@@ -103,8 +103,8 @@ public class AlesisA6MixBankDriver extends BankDriver {
 			}
 			PatchBayApplication.hideWaitDialog();
 		} catch (Exception e) {
-			ErrorMsg.reportStatus(e);
-			ErrorMsg.reportError("Error", "Unable to send Patch");
+			ErrorMsgUtil.reportStatus(e);
+			ErrorMsgUtil.reportError("Error", "Unable to send Patch");
 		}
 	}
 

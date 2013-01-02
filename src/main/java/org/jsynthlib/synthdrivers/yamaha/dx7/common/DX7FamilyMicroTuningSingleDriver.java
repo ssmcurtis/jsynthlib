@@ -24,12 +24,12 @@
  */
 package org.jsynthlib.synthdrivers.yamaha.dx7.common;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
-public class DX7FamilyMicroTuningSingleDriver extends Driver {
+public class DX7FamilyMicroTuningSingleDriver extends SynthDriverPatchImpl {
 	byte[] initSysex;
 	String[] dxPatchNumbers;
 	String[] dxBankNumbers;
@@ -60,31 +60,31 @@ public class DX7FamilyMicroTuningSingleDriver extends Driver {
 		numSysexMsgs = 1;
 	}
 
-	public Patch createNewPatch() {
-		return new Patch(initSysex, this);
+	public PatchDataImpl createNewPatch() {
+		return new PatchDataImpl(initSysex, this);
 	}
 
-	public JSLFrame editPatch(Patch p) {
+	public JSLFrame editPatch(PatchDataImpl p) {
 		return new DX7FamilyMicroTuningEditor(getManufacturerName() + " " + getModelName() + " \"" + getPatchType()
-				+ "\" Editor", (Patch) p);
+				+ "\" Editor", (PatchDataImpl) p);
 	}
 
-	public void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		// This is an edit buffer patch!
-		((Patch) p).getSysex()[14] = (byte) (0x45);
-		((Patch) p).getSysex()[15] = (byte) (0x20);
+		((PatchDataImpl) p).getSysex()[14] = (byte) (0x45);
+		((PatchDataImpl) p).getSysex()[15] = (byte) (0x20);
 
 		super.sendPatch(p);
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		// Is it necessary to switch off Memory Protection for edit buffer and/or User 1,2?
 		if (patchNum == 0) { // edit buffer
-			((Patch) p).getSysex()[14] = (byte) (0x45);
-			((Patch) p).getSysex()[15] = (byte) (0x20);
+			((PatchDataImpl) p).getSysex()[14] = (byte) (0x45);
+			((PatchDataImpl) p).getSysex()[15] = (byte) (0x20);
 		} else { // User 1,2
-			((Patch) p).getSysex()[14] = (byte) (0x4D);
-			((Patch) p).getSysex()[15] = (byte) (0x00 + patchNum - 1);
+			((PatchDataImpl) p).getSysex()[14] = (byte) (0x4D);
+			((PatchDataImpl) p).getSysex()[15] = (byte) (0x00 + patchNum - 1);
 		}
 
 		super.sendPatch(p);

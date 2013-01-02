@@ -3,11 +3,11 @@
  */
 package org.jsynthlib.synthdrivers.yamaha.tg33;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
-public class YamahaTG33SingleDriver extends Driver {
+public class YamahaTG33SingleDriver extends SynthDriverPatchImpl {
 
 	public YamahaTG33SingleDriver() {
 		super("Single", "Brian Klock");
@@ -26,7 +26,7 @@ public class YamahaTG33SingleDriver extends Driver {
 
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 
 		setBankNum(bankNum);
 		setPatchNum(patchNum);
@@ -40,11 +40,11 @@ public class YamahaTG33SingleDriver extends Driver {
 			Thread.sleep(100);
 			send(new byte[] { (byte) 0xF0, (byte) 0x43, (byte) 0x16, (byte) 0x26, (byte) 0x07, (byte) 0x04, (byte) 0xF7 });
 		} catch (Exception e) {
-			ErrorMsg.reportError("Error", "Unable to Store Patch", e);
+			ErrorMsgUtil.reportError("Error", "Unable to Store Patch", e);
 		}
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[605];
 		sysex[00] = (byte) 0xF0;
 		sysex[01] = (byte) 0x43;
@@ -63,7 +63,7 @@ public class YamahaTG33SingleDriver extends Driver {
 		sysex[14] = (byte) 0x56;
 		sysex[15] = (byte) 0x45;
 		sysex[604] = (byte) 0xF7;
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		setPatchName(p, "NewPatch");
 		calculateChecksum(p);
 		return p;

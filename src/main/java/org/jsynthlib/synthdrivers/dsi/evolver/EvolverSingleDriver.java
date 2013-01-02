@@ -2,22 +2,22 @@ package org.jsynthlib.synthdrivers.dsi.evolver;
 
 import javax.sound.midi.MidiMessage;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.patch.SysexHandler.NameValue;
-import org.jsynthlib.tools.Utility;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.menu.helper.SysexHandler.NameValue;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.HexaUtil;
 
 /**
  * Single Voice Patch Driver for Kawai K4.
  * 
  * @version $Id$
  */
-public class EvolverSingleDriver extends Driver {
+public class EvolverSingleDriver extends SynthDriverPatchImpl {
 	/** Header Size */
-	private static final int HSIZE = Evolver.HEADER_SIZE.number();
+	private static final int HSIZE = Evolver.HEADER_SIZE;
 	/** Single Patch size */
-	private static final int SSIZE =  Evolver.PATCH_SIZE.number() - Evolver.HEADER_SIZE.number();
+	private static final int SSIZE = Evolver.PATCH_DUMP_SIZE - Evolver.HEADER_SIZE;
 
 	private static final SysexHandler SYS_REQ = new SysexHandler(Evolver.REQUEST_SINGLE_PATCH_TEMPLATE);
 
@@ -25,20 +25,19 @@ public class EvolverSingleDriver extends Driver {
 	private int patchNum = 0;
 
 	public EvolverSingleDriver() {
-		super("Single", "ssmcurtis");
+		super("Single", "ssmCurtis");
 		sysexID = Evolver.DEVICE_SYSEX_ID;
-		patchSize = Evolver.PATCH_SIZE.number(); // HSIZE + SSIZE + 1;
-		patchNameStart = Evolver.PATCH_NAME_START_AT.number(); // = HSIZE;
+		patchSize = Evolver.PATCH_DUMP_SIZE;
+		patchNameStart = Evolver.PATCH_NAME_START_AT.number();
 		patchNameSize = Evolver.PATCH_NAME_END_AT.number();
 		deviceIDoffset = Evolver.DEVICE_ID_OFFSET.number();
-		// checksumStart = HSIZE;
-		// checksumEnd = HSIZE + SSIZE - 2;
-		// checksumOffset = HSIZE + SSIZE - 1;
+
+//		checksumOffset = Evolver.CHECKSUM_START_AT.number();
 		bankNumbers = Evolver.BANK_NAMES;
-		patchNumbers = EvolverDevice.createPatchNumbers();
+		patchNumbers = Evolver.createPatchNumbers();
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		System.out.println(">>>> store patch");
 
 		setBankNum(bankNum);
@@ -57,13 +56,21 @@ public class EvolverSingleDriver extends Driver {
 			Thread.sleep(100);
 		} catch (Exception e) {
 		}
+		
 		setPatchNum(patchNum);
 	}
 
-	public void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		System.out.println(">>>> send patch");
-
-		super.sendPatch(p);
+		
+		//System.out.println(">>>" + HexaUtil.hexDumpOneLine(p.getSysex(), 0, -1, 100));
+		
+		PatchDataImpl patchClone = (PatchDataImpl) p.clone();
+		patchClone.getSysex()[Evolver.BANK_AT.number()] = 0; 
+		patchClone.getSysex()[Evolver.PATCH_AT.number()] = 0; 
+		
+		// System.out.prtln(">>>" + HexaUtil.hexDumpOneLine(p2.getSysex(), 0, -1, 100));
+		super.sendPatch(patchClone);
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {
@@ -72,13 +79,10 @@ public class EvolverSingleDriver extends Driver {
 		this.bankNum = bankNum;
 		this.patchNum = patchNum;
 
-		NameValue bank = new SysexHandler.NameValue("bankNum", bankNum << 1);
+		NameValue bank = new SysexHandler.NameValue("bankNum", bankNum);
 		NameValue patch = new SysexHandler.NameValue("patchNum", patchNum);
-
 		MidiMessage msg = SYS_REQ.toSysexMessage(getChannel(), bank, patch);
-
-		System.out.println(">>>" + Utility.hexDumpOneLine(msg.getMessage(), 0, -1, 100));
+		System.out.println(">>>" + HexaUtil.hexDumpOneLine(msg.getMessage(), 0, -1, 100));
 		send(msg);
 	}
-
 }

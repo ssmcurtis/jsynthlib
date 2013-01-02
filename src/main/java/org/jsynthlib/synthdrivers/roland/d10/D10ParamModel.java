@@ -20,8 +20,8 @@
  */
 package org.jsynthlib.synthdrivers.roland.d10;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.widgets.ParamModel;
 
 /**
  * This class extends the ParamModel to relocate the offset specified into a the sysex message offset.
@@ -29,7 +29,7 @@ import org.jsynthlib.menu.patch.Patch;
  * @author Roger Westerlund
  */
 public class D10ParamModel extends ParamModel {
-	public D10ParamModel(Patch patch, int offset) {
+	public D10ParamModel(PatchDataImpl patch, int offset) {
 		// Relocate the offset taking the header into account.
 		super(patch, D10Constants.SIZE_HEADER_DT1 + offset);
 	}

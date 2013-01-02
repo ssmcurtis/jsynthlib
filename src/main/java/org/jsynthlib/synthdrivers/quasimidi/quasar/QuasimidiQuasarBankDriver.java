@@ -26,10 +26,10 @@ import java.io.UnsupportedEncodingException;
 import javax.swing.JOptionPane;
 
 import org.jsynthlib.PatchBayApplication;
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 /**
  * Driver for Quasimidi Quasar Performance Bank's
@@ -37,7 +37,7 @@ import org.jsynthlib.tools.ErrorMsg;
  * @author Joachim Backhaus
  * @version $Id$
  */
-public class QuasimidiQuasarBankDriver extends BankDriver {
+public class QuasimidiQuasarBankDriver extends SynthDriverBank {
 	public QuasimidiQuasarBankDriver() {
 		super("Performance Bank", "Joachim Backhaus", QuasarConstants.PATCH_NUMBERS.length, 5);
 
@@ -61,7 +61,7 @@ public class QuasimidiQuasarBankDriver extends BankDriver {
 	/**
 	 * The Quasar uses no checksum therefore this method is empty
 	 */
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 		// no checksum, do nothing
 	}
 
@@ -69,7 +69,7 @@ public class QuasimidiQuasarBankDriver extends BankDriver {
 	 * Replacement for sendPatchWorker which doesn't work here as the Device ID has to be set in each one of the 6 SysEx
 	 * sub parts
 	 */
-	private final void doSendPatch(Patch p) {
+	private final void doSendPatch(PatchDataImpl p) {
 		if (deviceIDoffset > 0) {
 			int deviceID = (getDeviceID() - 1);
 			int temporaryOffset = 0;
@@ -99,7 +99,7 @@ public class QuasimidiQuasarBankDriver extends BankDriver {
 	 * @param patchNum
 	 *            Ignored
 	 */
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		doSendPatch(p);
 	}
 
@@ -115,7 +115,7 @@ public class QuasimidiQuasarBankDriver extends BankDriver {
 	/**
 	 * Puts a patch into the bank, converting it as needed
 	 */
-	public void putPatch(Patch bank, Patch p, int patchNum) {
+	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) {
 		if (!canHoldPatch(p)) {
 			JOptionPane.showMessageDialog(null, "This type of patch does not fit in to this type of bank.", "Error",
 					JOptionPane.ERROR_MESSAGE);
@@ -129,16 +129,16 @@ public class QuasimidiQuasarBankDriver extends BankDriver {
 	/**
 	 * Gets a patch from the bank, converting it as needed
 	 */
-	public Patch getPatch(Patch bank, int patchNum) {
+	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
 		try {
 			byte[] sysex = new byte[this.singleSize];
 
 			System.arraycopy(bank.getSysex(), getPatchStart(patchNum), sysex, 0, this.singleSize);
-			Patch p = new Patch(sysex);
+			PatchDataImpl p = new PatchDataImpl(sysex);
 
 			return p;
 		} catch (Exception e) {
-			ErrorMsg.reportError("Error", "Error in Quasar Bank Driver", e);
+			ErrorMsgUtil.reportError("Error", "Error in Quasar Bank Driver", e);
 			return null;
 		}
 	}
@@ -146,7 +146,7 @@ public class QuasimidiQuasarBankDriver extends BankDriver {
 	/**
 	 * Get the name of the patch at the given number
 	 */
-	public String getPatchName(Patch p, int patchNum) {
+	public String getPatchName(PatchDataImpl p, int patchNum) {
 		int nameStart = getPatchStart(patchNum);
 		nameStart += QuasarConstants.PATCH_NAME_START; // offset of name in patch data
 		try {
@@ -159,7 +159,7 @@ public class QuasimidiQuasarBankDriver extends BankDriver {
 	}
 
 	/** Set the name of the patch at the given number <code>patchNum</code>. */
-	public void setPatchName(Patch p, int patchNum, String name) {
+	public void setPatchName(PatchDataImpl p, int patchNum, String name) {
 		int tempPatchNameStart = QuasarConstants.PATCH_NAME_START + this.getPatchStart(patchNum);
 
 		while (name.length() < patchNameSize)
@@ -197,7 +197,7 @@ public class QuasimidiQuasarBankDriver extends BankDriver {
 						// Wait a little bit so that everything is in the correct sequence
 						Thread.sleep(50);
 					} catch (Exception ex) {
-						ErrorMsg.reportError("Error", "Error requesting all Quasar RAM performances.", ex);
+						ErrorMsgUtil.reportError("Error", "Error requesting all Quasar RAM performances.", ex);
 					}
 				}
 			}
@@ -207,10 +207,10 @@ public class QuasimidiQuasarBankDriver extends BankDriver {
 	/**
 	 * Creates a new bank with 100 new Quasar Performances
 	 */
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[this.patchSize];
 
-		Patch tempPatch;
+		PatchDataImpl tempPatch;
 
 		for (int patchNo = 0; patchNo < patchNumbers.length; patchNo++) {
 			tempPatch = QuasimidiQuasarSingleDriver.createNewPatch(patchNo, QuasarConstants.SYSEX_PERFORMANCE_OFFSET);
@@ -218,7 +218,7 @@ public class QuasimidiQuasarBankDriver extends BankDriver {
 			System.arraycopy(tempPatch.getSysex(), 0, sysex, (patchNo * singleSize), singleSize);
 		}
 
-		Patch p = new Patch(sysex);
+		PatchDataImpl p = new PatchDataImpl(sysex);
 
 		return p;
 	}

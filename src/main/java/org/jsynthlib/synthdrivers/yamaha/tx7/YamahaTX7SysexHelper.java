@@ -23,7 +23,7 @@
  */
 package org.jsynthlib.synthdrivers.yamaha.tx7;
 
-import org.jsynthlib.menu.patch.SysexHandler;
+import org.jsynthlib.menu.helper.SysexHandler;
 
 public class YamahaTX7SysexHelper {
 	protected final static SysexHandler swOffMemProt = new SysexHandler("f0 43 @@ 11 07 00 f7"); // switch off internal

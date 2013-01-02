@@ -21,13 +21,13 @@
 
 package org.jsynthlib.synthdrivers.yamaha.ub99;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.widgets.ParamModel;
 
 class YamahaUB99Model extends ParamModel {
 	boolean twobytes;
 
-	public YamahaUB99Model(Patch p, int address) {
+	public YamahaUB99Model(PatchDataImpl p, int address) {
 		super(p, address);
 		if (address > 0x200114)
 			twobytes = false;

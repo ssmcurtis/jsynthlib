@@ -24,9 +24,9 @@ package org.jsynthlib.synthdrivers.behringer.vamp2;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.ShortMessage;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.IPatchDriver;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.model.driver.SynthDriverPatch;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 import org.jsynthlib.widgets.SysexSender;
 import org.jsynthlib.widgets.SysexWidget;
 
@@ -141,7 +141,7 @@ class CCSender extends SysexSender implements SysexWidget.ISender {
 	 * @param value
 	 *            Value of associated widget.
 	 */
-	public void send(IPatchDriver driver, int value) {
+	public void send(SynthDriverPatch driver, int value) {
 		value = Math.min(127, value * multiplier);
 		if (reverse) {
 			value = 127 - value;
@@ -150,10 +150,10 @@ class CCSender extends SysexSender implements SysexWidget.ISender {
 
 		ShortMessage m = new ShortMessage();
 		try {
-			m.setMessage(ShortMessage.CONTROL_CHANGE, ((Driver) driver).getChannel(), param, value);
+			m.setMessage(ShortMessage.CONTROL_CHANGE, ((SynthDriverPatchImpl) driver).getChannel(), param, value);
 			driver.send(m);
 		} catch (InvalidMidiDataException e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 	}
 }

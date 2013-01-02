@@ -7,12 +7,12 @@ package org.jsynthlib.synthdrivers.alesis.a6;
 import javax.swing.JOptionPane;
 
 import org.jsynthlib.PatchBayApplication;
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
-public class AlesisA6PgmSingleDriver extends Driver {
+public class AlesisA6PgmSingleDriver extends SynthDriverPatchImpl {
 	static final String bankList[] = new String[] { "User", "Preset1", "Preset2", "Card 1", "Card 2", "Card 3",
 			"Card 4", "Card 5", "Card 6", "Card 7", "Card 8" };
 	static final String patchList[] = new String[] { "000", "001", "002", "003", "004", "005", "006", "007", "008",
@@ -38,7 +38,7 @@ public class AlesisA6PgmSingleDriver extends Driver {
 		patchNumbers = patchList;
 	}
 
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 		// A6 doesn't use checksum
 	}
 
@@ -85,8 +85,8 @@ public class AlesisA6PgmSingleDriver extends Driver {
 		sysex[9 + offset] = (byte) ((sysex[9 + offset] & ~dstMask2) | ((b & srcMask2) >> (7 - modulus)));
 	}
 
-	public String getPatchName(Patch ip) {
-		Patch p = (Patch) ip;
+	public String getPatchName(PatchDataImpl ip) {
+		PatchDataImpl p = (PatchDataImpl) ip;
 		try {
 			char c[] = new char[patchNameSize];
 			for (int i = 0; i < patchNameSize; i++)
@@ -97,56 +97,56 @@ public class AlesisA6PgmSingleDriver extends Driver {
 		}
 	}
 
-	public void setPatchName(Patch p, String name) {
+	public void setPatchName(PatchDataImpl p, String name) {
 		if (name.length() < patchNameSize + 4)
 			name = name + "                ";
 		byte nameByte[] = name.getBytes();
 		for (int i = 0; i < patchNameSize; i++) {
-			setA6PgmByte(nameByte[i], ((Patch) p).getSysex(), i + patchNameStart);
+			setA6PgmByte(nameByte[i], ((PatchDataImpl) p).getSysex(), i + patchNameStart);
 		}
 	}
 
-	public void sendPatch(Patch p) {
-		sendPatch((Patch) p, 0, 127); // using user program # 127 as edit buffer
+	public void sendPatch(PatchDataImpl p) {
+		sendPatch((PatchDataImpl) p, 0, 127); // using user program # 127 as edit buffer
 	}
 
-	public void sendPatch(Patch p, int bankNum, int patchNum) {
-		Patch p2 = new Patch(p.getSysex());
+	public void sendPatch(PatchDataImpl p, int bankNum, int patchNum) {
+		PatchDataImpl p2 = new PatchDataImpl(p.getSysex());
 		p2.getSysex()[6] = (byte) bankNum;
 		p2.getSysex()[7] = (byte) patchNum;
 		sendPatchWorker(p2);
 	}
 
 	// Sends a patch to a set location in the user bank
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		if (bankNum == 1 || bankNum == 2)
 			JOptionPane.showMessageDialog(PatchBayApplication.getInstance(), "Cannot send to a preset bank", "Store Patch",
 					JOptionPane.WARNING_MESSAGE);
 		else {
 			setBankNum(bankNum);
 			setPatchNum(patchNum);
-			sendPatch((Patch) p, bankNum, patchNum);
+			sendPatch((PatchDataImpl) p, bankNum, patchNum);
 		}
 	}
 
 	// Kludge: A6 doesn't seem to receive edit buffer dump, so user program 127
 	// is being used for that purpose.
-	protected void playPatch(Patch p) {
+	public void playPatch(PatchDataImpl p) {
 		byte sysex[] = new byte[2352];
-		System.arraycopy(((Patch) p).getSysex(), 0, sysex, 0, 2350);
+		System.arraycopy(((PatchDataImpl) p).getSysex(), 0, sysex, 0, 2350);
 		sysex[6] = 0; // user bank
 		sysex[7] = 127; // program # 127
 		sysex[2350] = (byte) (0xC0 + getChannel() - 1); // program change
 		sysex[2351] = (byte) 127; // program # 127
-		Patch p2 = new Patch(sysex);
+		PatchDataImpl p2 = new PatchDataImpl(sysex);
 		try {
 			super.playPatch(p2);
 		} catch (Exception e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte sysex[] = { (byte) 0xF0, (byte) 0x00, (byte) 0x00, (byte) 0x0E, (byte) 0x1D, (byte) 0x00, (byte) 0x00,
 				(byte) 0x7F, (byte) 0x26, (byte) 0x15, (byte) 0x38, (byte) 0x2A, (byte) 0x76, (byte) 0x0E, (byte) 0x54,
 				(byte) 0x30, (byte) 0x74, (byte) 0x46, (byte) 0x21, (byte) 0x03, (byte) 0x02, (byte) 0x04, (byte) 0x08,
@@ -441,7 +441,7 @@ public class AlesisA6PgmSingleDriver extends Driver {
 				(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
 				(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
 				(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0xF7 };
-		return new Patch(sysex, this);
+		return new PatchDataImpl(sysex, this);
 		// setPatchName(p, "NewPatch");
 	}
 }

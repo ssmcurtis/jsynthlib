@@ -5,11 +5,11 @@ package org.jsynthlib.synthdrivers.novation.xiosynth;
 
 import java.io.UnsupportedEncodingException;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
-public class NovationXioSynthSingleDriver extends Driver {
+public class NovationXioSynthSingleDriver extends SynthDriverPatchImpl {
 	public NovationXioSynthSingleDriver() {
 		super("Single", "Nicolas Boulicault");
 		sysexID = "F000202901427F0";
@@ -18,7 +18,7 @@ public class NovationXioSynthSingleDriver extends Driver {
 		deviceIDoffset = 0;
 	}
 
-	public void setPatchName(Patch p, String name) {
+	public void setPatchName(PatchDataImpl p, String name) {
 		while (name.length() < patchNameSize)
 			name = name + " ";
 
@@ -33,11 +33,11 @@ public class NovationXioSynthSingleDriver extends Driver {
 		}
 	}
 
-	public String getPatchName(Patch p, int patchNum) {
+	public String getPatchName(PatchDataImpl p, int patchNum) {
 		int nameStart = 164;
 
 		try {
-			StringBuffer s = new StringBuffer(new String(((Patch) p).getSysex(), nameStart, 16, "US-ASCII"));
+			StringBuffer s = new StringBuffer(new String(((PatchDataImpl) p).getSysex(), nameStart, 16, "US-ASCII"));
 			return s.toString();
 		} catch (UnsupportedEncodingException ex) {
 			return "-";
@@ -69,20 +69,20 @@ public class NovationXioSynthSingleDriver extends Driver {
 		return (compareString.toString().equalsIgnoreCase(patchString.substring(0, sysexID.length())));
 	}
 
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 		/* I think there's no checksum on xio.. */
 	}
 
 	protected void setPatchNum(int patchNum) {
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		sendPatch(p);
 	}
 
 	/* I took new patch from InitProgram in Xio */
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[] { (byte) 0xF0, (byte) 0x00, (byte) 0x20, (byte) 0x29, (byte) 0x01, (byte) 0x42,
 				(byte) 0x7F, (byte) 0x00, (byte) 0x00, (byte) 0x10, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x38,
 				(byte) 0x19, (byte) 0x00, (byte) 0x00, (byte) 0x40, (byte) 0x00, (byte) 0x15, (byte) 0x40, (byte) 0x40,
@@ -118,12 +118,12 @@ public class NovationXioSynthSingleDriver extends Driver {
 				(byte) 0x07, (byte) 0x07, (byte) 0x00, (byte) 0x3F, (byte) 0x07, (byte) 0x3F, (byte) 0x00, (byte) 0x3F,
 				(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0xF7 };
 
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		calculateChecksum(p);
 		return p;
 	}
 
-	public JSLFrame editPatch(Patch p) {
-		return new NovationXioSynthSingleEditor((Patch) p);
+	public JSLFrame editPatch(PatchDataImpl p) {
+		return new NovationXioSynthSingleEditor((PatchDataImpl) p);
 	}
 }

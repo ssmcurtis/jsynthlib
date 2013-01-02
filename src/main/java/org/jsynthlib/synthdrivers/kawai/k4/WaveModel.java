@@ -1,13 +1,13 @@
 package org.jsynthlib.synthdrivers.kawai.k4;
 
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.SysexWidget;
 
 class WaveModel implements SysexWidget.IParamModel {
-	private Patch patch;
+	private PatchDataImpl patch;
 	private int source;
 
-	public WaveModel(Patch p, int s) {
+	public WaveModel(PatchDataImpl p, int s) {
 		patch = p;
 		source = s;
 	}

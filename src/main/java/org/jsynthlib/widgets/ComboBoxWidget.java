@@ -8,7 +8,7 @@ import java.awt.event.ItemListener;
 
 import javax.swing.JComboBox;
 
-import org.jsynthlib.menu.patch.IPatch;
+import org.jsynthlib.model.patch.Patch;
 
 /**
  * A SysexWidget class features JComboBox widget.
@@ -23,7 +23,7 @@ public class ComboBoxWidget extends SysexWidget {
 	/** An array of the list of the options in the ComboBox. */
 	protected Object[] options;
 
-	public ComboBoxWidget(IPatch patch, IParameter param) {
+	public ComboBoxWidget(Patch patch, IParameter param) {
 		super(patch, param);
 		options = param.getValues();
 
@@ -48,7 +48,7 @@ public class ComboBoxWidget extends SysexWidget {
 	 *            Array, which contains the list of the options in the combobox.
 	 * @see SysexWidget
 	 */
-	public ComboBoxWidget(String label, IPatch patch, int min, IParamModel pmodel, ISender sender, Object[] options) {
+	public ComboBoxWidget(String label, Patch patch, int min, IParamModel pmodel, ISender sender, Object[] options) {
 		super(label, patch, min, min + options.length - 1, pmodel, sender);
 		this.options = options;
 
@@ -57,7 +57,7 @@ public class ComboBoxWidget extends SysexWidget {
 	}
 
 	/** <code>min</code> is set to 0. */
-	public ComboBoxWidget(String label, IPatch patch, IParamModel pmodel, ISender sender, Object[] options) {
+	public ComboBoxWidget(String label, Patch patch, IParamModel pmodel, ISender sender, Object[] options) {
 		this(label, patch, 0, pmodel, sender, options);
 	}
 

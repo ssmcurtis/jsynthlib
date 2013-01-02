@@ -7,8 +7,9 @@ import java.util.Map;
 import javax.swing.AbstractAction;
 
 import org.jsynthlib.PatchBayApplication;
-import org.jsynthlib.menu.ui.window.SearchDialog;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.Actions;
+import org.jsynthlib.menu.window.SearchDialog;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 public class SearchAction extends AbstractAction {
 	public SearchAction(Map<Serializable, Integer> mnemonics) {
@@ -23,7 +24,7 @@ public class SearchAction extends AbstractAction {
 				Actions.setSearchDialog(new SearchDialog(PatchBayApplication.getInstance()));
 			Actions.getSearchDialog().setVisible(true);
 		} catch (Exception ex) {
-			ErrorMsg.reportError("Error", "Library to Sort must be Focused", ex);
+			ErrorMsgUtil.reportError("Error", "Library to Sort must be Focused"+ getClass().getSimpleName(), ex);
 		}
 	}
 }

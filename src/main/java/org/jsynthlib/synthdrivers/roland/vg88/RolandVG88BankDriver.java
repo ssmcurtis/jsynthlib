@@ -24,15 +24,15 @@ package org.jsynthlib.synthdrivers.roland.vg88;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.DriverUtil;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 /**
  * Bank Driver for Roland VG88
  */
-public class RolandVG88BankDriver extends BankDriver {
+public class RolandVG88BankDriver extends SynthDriverBank {
 
 	/** Number of columns for displaying the patches in a table. */
 	private static final int NUM_COLUMNS = 5;
@@ -64,14 +64,14 @@ public class RolandVG88BankDriver extends BankDriver {
 	/**
 	 * Get Bank Name (not soported, nameSize for bank is 0)
 	 */
-	public String getPatchName(Patch p) {
+	public String getPatchName(PatchDataImpl p) {
 		return bankNumbers[0];
 	}
 
 	/**
 	 * Set Bank Name (not soported, nameSize for bank is 0)
 	 */
-	public void setPatchName(Patch p, String name) {
+	public void setPatchName(PatchDataImpl p, String name) {
 		JOptionPane
 				.showMessageDialog(
 						(JFrame) null,
@@ -82,15 +82,15 @@ public class RolandVG88BankDriver extends BankDriver {
 	/**
 	 * Get a patch name
 	 */
-	public String getPatchName(Patch p, int patchNum) {
+	public String getPatchName(PatchDataImpl p, int patchNum) {
 		return singleDriver.getPatchName(getPatch(p, patchNum));
 	}
 
 	/**
 	 * Set a patch name
 	 */
-	public void setPatchName(Patch p, int patchNum, String name) {
-		Patch pAux = getPatch(p, patchNum);
+	public void setPatchName(PatchDataImpl p, int patchNum, String name) {
+		PatchDataImpl pAux = getPatch(p, patchNum);
 		singleDriver.setPatchName(pAux, name);
 		putPatch(p, pAux, patchNum);
 	}
@@ -98,7 +98,7 @@ public class RolandVG88BankDriver extends BankDriver {
 	/**
 	 * Calculate checkSum for each patch in a bank
 	 */
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 		for (int i = 0; i < RolandVG88SingleDriver.NUM_PATCH; i++)
 			singleDriver.calculateChecksum(p, singleSize * i);
 	}
@@ -106,7 +106,7 @@ public class RolandVG88BankDriver extends BankDriver {
 	/**
 	 * Put a patch into a bank
 	 */
-	public void putPatch(Patch bank, Patch p, int patchNum) {
+	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) {
 		singleDriver.arrangePatchVG88(p, patchNum);
 		System.arraycopy(p.getSysex(), 0, bank.getSysex(), singleSize * patchNum, singleSize);
 	}
@@ -114,17 +114,17 @@ public class RolandVG88BankDriver extends BankDriver {
 	/**
 	 * Get a patch into a bank
 	 */
-	public Patch getPatch(Patch bank, int patchNum) {
+	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
 		byte[] sysex = new byte[singleSize];
 		System.arraycopy(bank.getSysex(), singleSize * patchNum, sysex, 0, singleSize);
-		return new Patch(sysex, singleDriver);
+		return new PatchDataImpl(sysex, singleDriver);
 	}
 
 	/**
 	 * Create a new bank
 	 */
-	public Patch createNewPatch() {
-		Patch bank = (Patch) DriverUtil.createNewPatch(this, bankDefFileName, this.patchSize);
+	public PatchDataImpl createNewPatch() {
+		PatchDataImpl bank = (PatchDataImpl) DriverUtil.createNewPatch(this, bankDefFileName, this.patchSize);
 		// byte[] sysex = new byte[patchSize];
 		// Patch bank = new Patch(sysex, this);
 		// Patch p = singleDriver.createNewPatch();
@@ -145,7 +145,7 @@ public class RolandVG88BankDriver extends BankDriver {
 			try {
 				Thread.sleep(600); // wait .
 			} catch (Exception e) {
-				ErrorMsg.reportStatus(e);
+				ErrorMsgUtil.reportStatus(e);
 			}
 		}
 		patchSize = patchSize + BANK_NAME_SIZE;
@@ -154,7 +154,7 @@ public class RolandVG88BankDriver extends BankDriver {
 	/**
 	 * Store all user Patchs BankNum nor patchNum are not used. Request all user Patchs
 	 */
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		int ofst = 0;
 		for (int i = 0; i < RolandVG88SingleDriver.NUM_PATCH; i++, ofst += singleSize) {
 			singleDriver.storePatch(getPatch(p, i), 0, i);

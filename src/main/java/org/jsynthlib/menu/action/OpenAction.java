@@ -10,10 +10,11 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
 import org.jsynthlib.PatchBayApplication;
+import org.jsynthlib.menu.Actions;
+import org.jsynthlib.menu.helper.ExtensionFilter;
 import org.jsynthlib.menu.preferences.AppConfig;
-import org.jsynthlib.menu.ui.ExtensionFilter;
-import org.jsynthlib.menu.ui.window.CompatibleFileDialog;
-import org.jsynthlib.menu.ui.window.LibraryFrame;
+import org.jsynthlib.menu.window.CompatibleFileDialog;
+import org.jsynthlib.menu.window.LibraryFrame;
 
 public class OpenAction extends AbstractAction {
 	static final FileFilter filter;

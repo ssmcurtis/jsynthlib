@@ -28,9 +28,9 @@ import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.ShortMessage;
 import javax.sound.midi.SysexMessage;
 
-import org.jsynthlib.menu.patch.IPatchDriver;
-import org.jsynthlib.tools.ErrorMsg;
-import org.jsynthlib.tools.Utility;
+import org.jsynthlib.model.driver.SynthDriverPatch;
+import org.jsynthlib.tools.ErrorMsgUtil;
+import org.jsynthlib.tools.HexaUtil;
 import org.jsynthlib.widgets.SysexWidget;
 
 /**
@@ -138,7 +138,7 @@ public class RolandDT1Sender implements SysexWidget.ISender {
 	 *                if an error occurs
 	 */
 	protected void setValue(int addr, int value) throws IllegalArgumentException {
-		ErrorMsg.reportStatus("RolandDT1Sender: addr 0x" + Integer.toHexString(addr) + ", data 0x"
+		ErrorMsgUtil.reportStatus("RolandDT1Sender: addr 0x" + Integer.toHexString(addr) + ", data 0x"
 				+ Integer.toHexString(value));
 		if (addr >= 0) {
 			if (addrSize == 3) {
@@ -182,7 +182,7 @@ public class RolandDT1Sender implements SysexWidget.ISender {
 	}
 
 	// SysexWidget.ISender method
-	public void send(IPatchDriver driver, int value) {
+	public void send(SynthDriverPatch driver, int value) {
 		// set data (and address optionally).
 		setValue(value);
 
@@ -193,14 +193,14 @@ public class RolandDT1Sender implements SysexWidget.ISender {
 		for (int i = chkSumOfst; i <= b.length - 3; i++)
 			sum += b[i];
 		b[b.length - 2] = (byte) (-sum & 0x7f);
-		ErrorMsg.reportStatus(toString());
+		ErrorMsgUtil.reportStatus(toString());
 		// create and send MIDI message
 		SysexMessage m = new SysexMessage();
 		try {
 			m.setMessage(b, b.length);
 			driver.send(m);
 		} catch (InvalidMidiDataException e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 	}
 
@@ -210,6 +210,6 @@ public class RolandDT1Sender implements SysexWidget.ISender {
 	 * @return string like "f0 a3 00 "
 	 */
 	public String toString() {
-		return Utility.hexDump(b, 0, b.length, 0);
+		return HexaUtil.hexDump(b, 0, b.length, 0);
 	}
 } // RolandDT1Sender

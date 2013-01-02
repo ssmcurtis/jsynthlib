@@ -5,9 +5,9 @@ import java.text.DecimalFormat;
 
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 /**
  * Bank driver for Yamaha FS1R Il n'y a pas de format SYSEX de banque donc ? On reunit 128 perf + 128 voices dans la
@@ -16,7 +16,7 @@ import org.jsynthlib.menu.ui.JSLFrame;
  * @author Denis Queffeulou mailto:dqueffeulou@free.fr
  * @version $Id$
  */
-public class YamahaFS1RBankDriver extends BankDriver {
+public class YamahaFS1RBankDriver extends SynthDriverBank {
 	static final int PATCHNAME_SIZE = 10;
 	static final int BANK_NB_PATCHES = 256;
 	static final int HEADER_SIZE = 6 + PATCHNAME_SIZE;
@@ -64,23 +64,23 @@ public class YamahaFS1RBankDriver extends BankDriver {
 		return mInstance;
 	}
 
-	public void setPatchName(Patch p, String name) {
+	public void setPatchName(PatchDataImpl p, String name) {
 		if (name.length() < patchNameSize)
 			name = name + "            ";
 		byte[] namebytes = new byte[64];
 		try {
 			namebytes = name.getBytes("US-ASCII");
 			for (int i = 0; i < patchNameSize; i++)
-				((Patch) p).getSysex()[patchNameStart + i] = namebytes[i];
+				((PatchDataImpl) p).getSysex()[patchNameStart + i] = namebytes[i];
 		} catch (UnsupportedEncodingException ex) {
 			return;
 		}
 		calculateChecksum(p);
 	}
 
-	public String getPatchName(Patch ip) {
+	public String getPatchName(PatchDataImpl ip) {
 		try {
-			StringBuffer s = new StringBuffer(new String(((Patch) ip).getSysex(), patchNameStart, patchNameSize,
+			StringBuffer s = new StringBuffer(new String(((PatchDataImpl) ip).getSysex(), patchNameStart, patchNameSize,
 					"US-ASCII"));
 			return s.toString();
 		} catch (UnsupportedEncodingException ex) {
@@ -107,26 +107,26 @@ public class YamahaFS1RBankDriver extends BankDriver {
 	}
 
 	/** Gets a patch from the bank, converting it as needed */
-	public Patch getPatch(Patch bank, int patchNum) {
+	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
 		int oStart = getPatchStart(patchNum);
 		int oSize = (patchNum > 127 ? YamahaFS1RVoiceDriver.PATCH_AND_HEADER_SIZE
 				: YamahaFS1RPerformanceDriver.PATCH_AND_HEADER_SIZE);
 		byte oPatch[] = new byte[oSize];
-		System.arraycopy(((Patch) bank).getSysex(), oStart, oPatch, 0, oSize);
-		return new Patch(oPatch);
+		System.arraycopy(((PatchDataImpl) bank).getSysex(), oStart, oPatch, 0, oSize);
+		return new PatchDataImpl(oPatch);
 	}
 
 	/** Puts a patch into the bank, converting it as needed */
-	public void putPatch(Patch bank, Patch p, int patchNum) {
+	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) {
 		int oStart = getPatchStart(patchNum);
 		int oSize = (patchNum > 127 ? YamahaFS1RVoiceDriver.PATCH_AND_HEADER_SIZE
 				: YamahaFS1RPerformanceDriver.PATCH_AND_HEADER_SIZE);
-		if (oSize != ((Patch) p).getSysex().length) {
+		if (oSize != ((PatchDataImpl) p).getSysex().length) {
 			JOptionPane.showMessageDialog(null, "Performances in P000-P127, Voices in V000-V127 ", "Error",
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-		System.arraycopy(((Patch) p).getSysex(), 0, ((Patch) bank).getSysex(), oStart, oSize);
+		System.arraycopy(((PatchDataImpl) p).getSysex(), 0, ((PatchDataImpl) bank).getSysex(), oStart, oSize);
 	}
 
 	/**
@@ -138,8 +138,8 @@ public class YamahaFS1RBankDriver extends BankDriver {
 	 *            number of the patch in the bank
 	 * @return The patchName
 	 */
-	public String getPatchName(Patch ip, int patchNum) {
-		Patch p = (Patch) ip;
+	public String getPatchName(PatchDataImpl ip, int patchNum) {
+		PatchDataImpl p = (PatchDataImpl) ip;
 		int oPatchStart = getPatchStart(patchNum);
 		// System.out.println("getPatchName "+patchNum+" start = "+oPatchStart);
 		if (patchNum > 127)
@@ -158,8 +158,8 @@ public class YamahaFS1RBankDriver extends BankDriver {
 	 * @param name
 	 *            The new patchName value
 	 */
-	public void setPatchName(Patch ip, int patchNum, String name) {
-		Patch p = (Patch) ip;
+	public void setPatchName(PatchDataImpl ip, int patchNum, String name) {
+		PatchDataImpl p = (PatchDataImpl) ip;
 		int oPatchStart = getPatchStart(patchNum);
 		if (patchNum > 127)
 			YamahaFS1RVoiceDriver.getInstance().setPatchName(p, name, oPatchStart);
@@ -167,16 +167,16 @@ public class YamahaFS1RBankDriver extends BankDriver {
 			YamahaFS1RPerformanceDriver.getInstance().setPatchName(p, name, oPatchStart);
 	}
 
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 		// no checksum
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		// TODO patch by patch
 	}
 
 	/** Creates an editor window to edit this bank */
-	public JSLFrame editPatch(Patch p) {
+	public JSLFrame editPatch(PatchDataImpl p) {
 		return new YamahaFS1RBankEditor(p);
 	}
 
@@ -185,7 +185,7 @@ public class YamahaFS1RBankDriver extends BankDriver {
 	 * 
 	 * @return the new "empty" bank
 	 */
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		// System.out.println("createNewPatch");
 		byte[] sysex = new byte[BANK_AND_HEADER_SIZE];
 		// dummy sysex header (FS1R has no bank sysex)
@@ -214,15 +214,15 @@ public class YamahaFS1RBankDriver extends BankDriver {
 					* YamahaFS1RPerformanceDriver.PATCH_AND_HEADER_SIZE + i
 					* YamahaFS1RVoiceDriver.PATCH_AND_HEADER_SIZE);
 		}
-		return new Patch(sysex, this);
+		return new PatchDataImpl(sysex, this);
 	}
 
 	/**
 	 * FS1R bank holds 2 types of patch, performance and voice.
 	 */
-	protected boolean canHoldPatch(Patch p) {
+	public boolean canHoldPatch(PatchDataImpl p) {
 		// TODO
-		return (((Patch) p).getSysex().length == YamahaFS1RPerformanceDriver.PATCH_AND_HEADER_SIZE || ((Patch) p).getSysex().length == YamahaFS1RVoiceDriver.PATCH_AND_HEADER_SIZE);
+		return (((PatchDataImpl) p).getSysex().length == YamahaFS1RPerformanceDriver.PATCH_AND_HEADER_SIZE || ((PatchDataImpl) p).getSysex().length == YamahaFS1RVoiceDriver.PATCH_AND_HEADER_SIZE);
 	}
 
 }

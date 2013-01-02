@@ -24,10 +24,10 @@ package org.jsynthlib.synthdrivers.novation.sbs;
 //import core.JSLFrame;
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
-public class NovationSBSProgramDriver extends Driver {
+public class NovationSBSProgramDriver extends SynthDriverPatchImpl {
 
 	public NovationSBSProgramDriver() {
 		super("Program", "Robert Wirski");
@@ -48,18 +48,18 @@ public class NovationSBSProgramDriver extends Driver {
 	 * Sends a patch to a set location on a synth.
 	 * <p>
 	 * 
-	 * @see Patch#send(int, int)
+	 * @see PatchDataImpl#send(int, int)
 	 */
-	protected void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		sendPatchWorker(p);
 	}
 
 	/**
-	 * @see org.jsynthlib.menu.patch.Driver#createNewPatch()
+	 * @see org.jsynthlib.model.driver.SynthDriverPatchImpl#createNewPatch()
 	 */
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[patchSize];
-		Patch p;
+		PatchDataImpl p;
 
 		try {
 			java.io.InputStream fileIn = getClass().getResourceAsStream("SBS_ProgramInit.syx");
@@ -71,11 +71,11 @@ public class NovationSBSProgramDriver extends Driver {
 		}
 		;
 
-		p = new Patch(sysex, this);
+		p = new PatchDataImpl(sysex, this);
 		return p;
 	}
 
-	protected void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p)  {
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {

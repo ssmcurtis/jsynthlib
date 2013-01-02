@@ -6,7 +6,7 @@ package org.jsynthlib.synthdrivers.peavey.pc1600;
 
 import java.util.prefs.Preferences;
 
-import org.jsynthlib.menu.patch.Device;
+import org.jsynthlib.model.device.Device;
 
 /**
  * 

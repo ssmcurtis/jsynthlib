@@ -20,7 +20,7 @@
  */
 package org.jsynthlib.synthdrivers.roland.d10;
 
-import org.jsynthlib.menu.patch.IPatchDriver;
+import org.jsynthlib.model.driver.SynthDriverPatch;
 import org.jsynthlib.widgets.SysexWidget.ISender;
 
 /**
@@ -44,7 +44,7 @@ class PartMuteSender implements ISender {
 		this.model = model;
 	}
 
-	public void send(IPatchDriver driver, int value) {
+	public void send(SynthDriverPatch driver, int value) {
 		sender.send(driver, model.getData());
 	}
 }

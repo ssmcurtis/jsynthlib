@@ -17,7 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
-import org.jsynthlib.tools.Utility;
+import org.jsynthlib.tools.UiUtil;
 
 /**
  * User Preference Dialog Window.
@@ -183,7 +183,7 @@ public class PrefsDialog extends JDialog {
 		container.add(buttonPanel, BorderLayout.SOUTH);
 		getContentPane().add(container);
 		pack();
-		Utility.centerDialog(this);
+		UiUtil.centerDialog(this);
 	}
 
 	/**

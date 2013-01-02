@@ -21,12 +21,12 @@
 
 package org.jsynthlib.synthdrivers.roland.td6;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.DriverUtil;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 /**
  * Single Driver for Roland Percussion Sound Module TD-6
@@ -34,7 +34,7 @@ import org.jsynthlib.tools.ErrorMsg;
  * @author <a href="mailto:hiroo.hayashi@computer.org">Hiroo Hayashi</a>
  * @version $Id$
  */
-public final class TD6SingleDriver extends Driver {
+public final class TD6SingleDriver extends SynthDriverPatchImpl {
 	/** Size of a single patch */
 	private static final int SINGLE_SIZE = 37 + 55 * 12;
 	/** Number of patches. */
@@ -99,7 +99,7 @@ public final class TD6SingleDriver extends Driver {
 	 * @param patchNum
 	 *            drum kit number (0: drum kit 1, ..., 98: drum kit 99)
 	 */
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		// ErrorMsg.reportStatus("storePatch: " + p);
 		// ErrorMsg.reportStatus("storePatch: " + device);
 		storePatch(p.getSysex(), 0, patchNum);
@@ -122,7 +122,7 @@ public final class TD6SingleDriver extends Driver {
 			size = PKT_SIZE[i];
 			byte[] tmpSysex = new byte[size];
 			System.arraycopy(sysex, offset, tmpSysex, 0, size);
-			Patch p = new Patch(tmpSysex, (Driver) null);
+			PatchDataImpl p = new PatchDataImpl(tmpSysex, (SynthDriverPatchImpl) null);
 
 			p.getSysex()[2] = (byte) (getDeviceID() - 1);
 			// Drum kit : kk, address 41 kk ii 00
@@ -134,12 +134,12 @@ public final class TD6SingleDriver extends Driver {
 			try {
 				send(p.getSysex());
 			} catch (Exception e) {
-				ErrorMsg.reportStatus(e);
+				ErrorMsgUtil.reportStatus(e);
 			}
 			try {
 				Thread.sleep(50); // wait at least 50 milliseconds.
 			} catch (Exception e) {
-				ErrorMsg.reportStatus(e);
+				ErrorMsgUtil.reportStatus(e);
 			}
 		}
 	}
@@ -152,7 +152,7 @@ public final class TD6SingleDriver extends Driver {
 	 * @param p
 	 *            a <code>Patch</code> value
 	 */
-	public void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		storePatch(p, 0, NUM_PATCH - 1);
 	}
 
@@ -179,7 +179,7 @@ public final class TD6SingleDriver extends Driver {
 	 * @param offset
 	 *            offset index to calculate the check sum.
 	 */
-	void calculateChecksum(Patch p, int offset) {
+	void calculateChecksum(PatchDataImpl p, int offset) {
 		// ErrorMsg.reportStatus("offset = " + offset);
 		int size;
 		for (int i = 0; i < NUM_PKT; i++, offset += size) {
@@ -196,7 +196,7 @@ public final class TD6SingleDriver extends Driver {
 	 * @param p
 	 *            a <code>Patch</code> value
 	 */
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 		calculateChecksum(p, 0);
 	}
 
@@ -205,8 +205,8 @@ public final class TD6SingleDriver extends Driver {
 	 * 
 	 * @return a <code>Patch</code> value
 	 */
-	public Patch createNewPatch() {
-		return (Patch) DriverUtil.createNewPatch(this, patchFileName, SINGLE_SIZE);
+	public PatchDataImpl createNewPatch() {
+		return (PatchDataImpl) DriverUtil.createNewPatch(this, patchFileName, SINGLE_SIZE);
 	}
 
 	/**
@@ -231,7 +231,7 @@ public final class TD6SingleDriver extends Driver {
 	 *            a <code>Patch</code> value
 	 * @return a <code>JSLFrame</code> value
 	 */
-	public JSLFrame editPatch(Patch p) {
+	public JSLFrame editPatch(PatchDataImpl p) {
 		// ErrorMsg.reportStatus("editPatch: " + device);
 		return new TD6SingleEditor(p);
 	}

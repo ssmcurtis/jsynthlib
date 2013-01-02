@@ -32,14 +32,14 @@ import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.TIMBRE_TONE_GRO
 import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.TIMBRE_TONE_NUMBER;
 import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.TIMBRE_WRITE_REQUEST;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.synthdrivers.roland.d10.message.D10DataSetMessage;
 import org.jsynthlib.synthdrivers.roland.d10.message.D10RequestMessage;
 import org.jsynthlib.synthdrivers.roland.d10.message.D10TransferMessage;
 
-public class RolandD10TimbreDriver extends Driver {
+public class RolandD10TimbreDriver extends SynthDriverPatchImpl {
 
 	public RolandD10TimbreDriver() {
 		super("Timbre", "Roger Westerlund");
@@ -54,7 +54,7 @@ public class RolandD10TimbreDriver extends Driver {
 		patchNumbers = RolandD10Support.createPatchNumbers();
 	}
 
-	protected String getPatchName(Patch patch) {
+	public String getPatchName(PatchDataImpl patch) {
 
 		// Patch has no name in data so we generate a name.
 		D10DataSetMessage message = new D10DataSetMessage(patch.getSysex());
@@ -72,19 +72,19 @@ public class RolandD10TimbreDriver extends Driver {
 		send(request.getBytes());
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		D10TransferMessage message = new D10DataSetMessage(TIMBRE_SIZE, Entity.ZERO);
-		Patch patch = new Patch(message.getBytes(), this);
+		PatchDataImpl patch = new PatchDataImpl(message.getBytes(), this);
 		return patch;
 	}
 
-	protected void sendPatch(Patch patch) {
+	public void sendPatch(PatchDataImpl patch) {
 		D10DataSetMessage message = new D10DataSetMessage(patch.getSysex());
 		message.setAddress(BASE_TIMBRE_TEMP_AREA);
 		send(message.getBytes());
 	}
 
-	protected void storePatch(Patch patch, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl patch, int bankNum, int patchNum) {
 		sendPatch(patch);
 
 		D10DataSetMessage message = new D10DataSetMessage(2, BASE_WRITE_REQUEST.add(TIMBRE_WRITE_REQUEST)
@@ -94,7 +94,7 @@ public class RolandD10TimbreDriver extends Driver {
 		send(message.getBytes());
 	}
 
-	public JSLFrame editPatch(Patch patch) {
+	public JSLFrame editPatch(PatchDataImpl patch) {
 		return new RolandD10TimbreEditor(patch);
 	}
 }

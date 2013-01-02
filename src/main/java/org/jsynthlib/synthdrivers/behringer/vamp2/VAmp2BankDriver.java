@@ -25,10 +25,10 @@ import java.io.UnsupportedEncodingException;
 
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 /**
  * V-Amp 2 Bank Driver. Used for V-Amp 2 bank patch. The V-Amp 2 appears to the user to have 25 banks consisting of five
@@ -37,7 +37,7 @@ import org.jsynthlib.tools.ErrorMsg;
  * 
  * @author Jeff Weber
  */
-public class VAmp2BankDriver extends BankDriver {
+public class VAmp2BankDriver extends SynthDriverBank {
 	/**
 	 * Bank Dump Request
 	 */
@@ -90,7 +90,7 @@ public class VAmp2BankDriver extends BankDriver {
 	 * @param patchNum
 	 *            The location within the bank where the patch will be placed.
 	 */
-	protected void putPatch(Patch bank, Patch p, int patchNum) {
+	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) {
 		if (!canHoldPatch(p)) {
 			JOptionPane.showMessageDialog(null, "This type of patch does not fit in to this type of bank.", "Error",
 					JOptionPane.ERROR_MESSAGE);
@@ -111,7 +111,7 @@ public class VAmp2BankDriver extends BankDriver {
 	 *            The location of the requested patch within the bank.
 	 * @return A reference to the requested patch.
 	 */
-	protected Patch getPatch(Patch bank, int patchNum) {
+	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
 		byte[] sysex = new byte[singleSize];
 		System.arraycopy(Constants.VAMP2_DUMP_HDR_BYTES, 0, sysex, 0, Constants.HDR_SIZE);
 		sysex[4] = (byte) getChannel();
@@ -119,10 +119,10 @@ public class VAmp2BankDriver extends BankDriver {
 		sysex[singleSize - 1] = (byte) 0xF7;
 		System.arraycopy(bank.getSysex(), getPatchStart(patchNum), sysex, Constants.HDR_SIZE, Constants.SINGLE_PATCH_SIZE);
 		try {
-			Patch p = new Patch(sysex, getDevice());
+			PatchDataImpl p = new PatchDataImpl(sysex, getDevice());
 			return p;
 		} catch (Exception e) {
-			ErrorMsg.reportError("Error", "Error in Bass Pod Bank Driver", e);
+			ErrorMsgUtil.reportError("Error", "Error in Bass Pod Bank Driver", e);
 			return null;
 		}
 	}
@@ -137,7 +137,7 @@ public class VAmp2BankDriver extends BankDriver {
 	 *            The location within the bank of the single patch whose name is to be retrieved.
 	 * @return A String containing the patch name.
 	 */
-	protected String getPatchName(Patch p, int patchNum) {
+	public String getPatchName(PatchDataImpl p, int patchNum) {
 		int nameStart = getPatchStart(patchNum) + Constants.PATCH_NAME_START;
 		try {
 			StringBuffer s = new StringBuffer(new String(p.getSysex(), nameStart, patchNameSize, "US-ASCII"));
@@ -159,7 +159,7 @@ public class VAmp2BankDriver extends BankDriver {
 	 * @param name
 	 *            A String containing the new patch name.
 	 */
-	protected void setPatchName(Patch p, int patchNum, String name) {
+	public void setPatchName(PatchDataImpl p, int patchNum, String name) {
 		int nameStart = getPatchStart(patchNum) + Constants.PATCH_NAME_START;
 
 		if (name.length() < patchNameSize) {
@@ -183,12 +183,12 @@ public class VAmp2BankDriver extends BankDriver {
 	 * 
 	 * @return A reference to the new bank patch.
 	 */
-	protected Patch createNewPatch() {
+	protected PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[Constants.HDR_SIZE + (Constants.SINGLE_PATCH_SIZE * Constants.PATCHES_PER_BANK) + 1];
 		System.arraycopy(Constants.BANK_DUMP_HDR_BYTES, 0, sysex, 0, Constants.HDR_SIZE);
 		sysex[4] = (byte) getChannel();
 		sysex[Constants.HDR_SIZE + (Constants.SINGLE_PATCH_SIZE * Constants.PATCHES_PER_BANK)] = (byte) 0xF7;
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		for (int i = 0; i < Constants.PATCHES_PER_BANK; i++) {
 			System.arraycopy(Constants.NEW_SINGLE_SYSEX, Constants.HDR_SIZE, p.getSysex(), getPatchStart(i),
 					Constants.SINGLE_PATCH_SIZE);
@@ -222,8 +222,8 @@ public class VAmp2BankDriver extends BankDriver {
 	 * @param patchNum
 	 *            Parameter provided to match the method in the superclass. Values pased in this parameter are ignored.
 	 */
-	protected void storePatch(Patch p, int bankNum, int patchNum) {
-		Patch[] thisPatch = new Patch[Constants.PATCHES_PER_BANK];
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
+		PatchDataImpl[] thisPatch = new PatchDataImpl[Constants.PATCHES_PER_BANK];
 		for (int progNbr = 0; progNbr < Constants.PATCHES_PER_BANK; progNbr++) {
 			thisPatch[progNbr] = getPatch(p, progNbr);
 		}

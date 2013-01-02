@@ -23,8 +23,8 @@
  */
 package org.jsynthlib.synthdrivers.yamaha.tx7;
 
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.synthdrivers.yamaha.dx7.common.DX7FamilyDevice;
 import org.jsynthlib.synthdrivers.yamaha.dx7.common.DX7FamilyPerformanceSingleDriver;
 
@@ -35,15 +35,15 @@ public class YamahaTX7PerformanceSingleDriver extends DX7FamilyPerformanceSingle
 				YamahaTX7PerformanceConstants.SINGLE_PERFORMANCE_BANK_NUMBERS);
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		return super.createNewPatch();
 	}
 
-	public JSLFrame editPatch(Patch p) {
+	public JSLFrame editPatch(PatchDataImpl p) {
 		return super.editPatch(p);
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		if ((((DX7FamilyDevice) (getDevice())).getTipsMsgFlag() & 0x01) == 1)
 			// show Information
 			YamahaTX7Strings.dxShowInformation(toString(), YamahaTX7Strings.STORE_SINGLE_PERFORMANCE_STRING);

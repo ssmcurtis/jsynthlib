@@ -23,8 +23,8 @@
  */
 package org.jsynthlib.synthdrivers.yamaha.dx7s;
 
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.synthdrivers.yamaha.dx7.common.DX7FamilyMicroTuningSingleDriver;
 
 public class YamahaDX7sMicroTuningSingleDriver extends DX7FamilyMicroTuningSingleDriver {
@@ -34,11 +34,11 @@ public class YamahaDX7sMicroTuningSingleDriver extends DX7FamilyMicroTuningSingl
 				YamahaDX7sMicroTuningConstants.SINGLE_MICRO_TUNING_BANK_NUMBERS);
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		return super.createNewPatch();
 	}
 
-	public JSLFrame editPatch(Patch p) {
+	public JSLFrame editPatch(PatchDataImpl p) {
 		return super.editPatch(p);
 	}
 }

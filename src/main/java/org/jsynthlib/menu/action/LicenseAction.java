@@ -7,8 +7,9 @@ import java.util.Map;
 import javax.swing.AbstractAction;
 
 import org.jsynthlib.JSynthResource;
-import org.jsynthlib.menu.ui.window.DocumentationWindow;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.Actions;
+import org.jsynthlib.menu.window.DocumentationWindow;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 public class LicenseAction extends AbstractAction {
 	public LicenseAction(Map<Serializable, Integer> mnemonics) {
@@ -24,7 +25,7 @@ public class LicenseAction extends AbstractAction {
 						.getResource(JSynthResource.RESOURCE_NAME_LICENSE.getUri())));
 			Actions.getLicWin().setVisible(true);
 		} catch (Exception ex) {
-			ErrorMsg.reportError("Error", "Unable to show Documentation)", ex);
+			ErrorMsgUtil.reportError("Error", "Unable to show Documentation)", ex);
 		}
 	}
 }

@@ -38,10 +38,10 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.jsynthlib.PatchBayApplication;
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.ComboBoxWidget;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.ScrollBarWidget;
 import org.jsynthlib.widgets.SpinnerWidget;
 import org.jsynthlib.widgets.SysexSender;
@@ -86,13 +86,13 @@ public class DX7FamilySystemSetupIIIEditor extends PatchEditorFrame {
 			"105 ", "106 ", "107 ", "108 ", "109 ", "110 ", "111 ", "112 ", "113 ", "114 ", "115 ", "116 ", "117 ",
 			"118 ", "119 ", "120 ", "121 ", "122 ", "123 ", "124 ", "125 ", "126 ", "127 " };
 
-	public DX7FamilySystemSetupIIIEditor(String name, Patch patch) {
+	public DX7FamilySystemSetupIIIEditor(String name, PatchDataImpl patch) {
 		super(name, patch);
 
 		buildEditor(patch);
 	}
 
-	protected void buildEditor(Patch patch) {
+	protected void buildEditor(PatchDataImpl patch) {
 		PatchBayApplication.showWaitDialog(); // Because it needs some time to build up the editor frame
 
 		int ofs = 1; // auxiliary value, because parameter 0 (PROTCT) isn't transmitted!

@@ -27,9 +27,9 @@ import javax.swing.table.TableColumn;
 
 import org.jsynthlib.JSynthLib;
 import org.jsynthlib.example.midi.MidiActionPlayNote;
-import org.jsynthlib.menu.patch.Device;
-import org.jsynthlib.tools.Utility;
-import org.jsynthlib.tools.midi.MidiUtil;
+import org.jsynthlib.model.device.Device;
+import org.jsynthlib.tools.MidiUtil;
+import org.jsynthlib.tools.UiUtil;
 
 /**
  * ConfigPanel for Synthesizer Configuration
@@ -125,14 +125,14 @@ public class SynthConfigPanel extends ConfigPanel {
 		JButton playButton = new JButton("8 notes (~" + ((8 * 500 / 1000) + 1) + " sec)");
 		playButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// TODO ssmcurtis ... sort ?
-				Device myDevice = AppConfig.getDevice(table.getSelectedRow());
-				int port = multiMIDI ? myDevice.getPort() : AppConfig.getInitPortOut();
+				if (table.getSelectedRowCount() > 0) {
+					Device myDevice = AppConfig.getDevice(table.getSelectedRow());
+					int port = multiMIDI ? myDevice.getPort() : AppConfig.getInitPortOut();
 
-				System.out.println("Port: " + port + " Channel: " + myDevice.getChannel());
+					System.out.println("Port: " + port + " Channel: " + myDevice.getChannel());
 
-				new MidiActionPlayNote(port, myDevice.getChannel());
-
+					new MidiActionPlayNote(port, myDevice.getChannel());
+				}
 			}
 		});
 		buttonPanel.add(playButton);
@@ -187,7 +187,7 @@ public class SynthConfigPanel extends ConfigPanel {
 		if (JOptionPane.showConfirmDialog(null, "Are you sure?", "Remove Device?", JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION)
 			return;
 		AppConfig.removeDevice(table.getSelectedRow());
-		Utility.revalidateLibraries();
+		UiUtil.revalidateLibraries();
 		((TableModel) table.getModel()).fireTableDataChanged();
 		table.repaint();
 	}
@@ -195,14 +195,14 @@ public class SynthConfigPanel extends ConfigPanel {
 	private void showDeviceProperty() {
 		if ((table.getSelectedRow() == -1)) // not selected
 			return;
-		AppConfig.getDevice(table.getSelectedRow()).showDetails(Utility.getFrame(this));
+		AppConfig.getDevice(table.getSelectedRow()).showDetails(UiUtil.getFrame(this));
 		// ((TableModel) table.getModel()).fireTableDataChanged();
 	}
 
 	private void addDevice() {
 		DeviceDialog dad = new DeviceDialog(null, false);
 		dad.setVisible(true);
-		Utility.revalidateLibraries();
+		UiUtil.revalidateLibraries();
 		((TableModel) table.getModel()).fireTableDataChanged();
 	}
 

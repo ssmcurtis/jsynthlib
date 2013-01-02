@@ -28,13 +28,13 @@ import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.PATCH_SIZE;
 import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.SIZE_HEADER_DT1;
 import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.SIZE_TRAILER;
 
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.synthdrivers.roland.d10.message.D10DataSetMessage;
 import org.jsynthlib.synthdrivers.roland.d10.message.D10RequestMessage;
 import org.jsynthlib.synthdrivers.roland.d10.message.D10TransferMessage;
 
-public class RolandD10PatchBankDriver extends BankDriver {
+public class RolandD10PatchBankDriver extends SynthDriverBank {
 
 	private static final int COLUMN_COUNT = 4;
 
@@ -55,10 +55,10 @@ public class RolandD10PatchBankDriver extends BankDriver {
 		patchNumbers = RolandD10Support.createPatchNumbers();
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		D10TransferMessage message = new D10DataSetMessage(patchSize - (SIZE_HEADER_DT1 + SIZE_TRAILER),
 				BASE_PATCH_MEMORY.getDataValue());
-		Patch bank = new Patch(message.getBytes(), this);
+		PatchDataImpl bank = new PatchDataImpl(message.getBytes(), this);
 		for (int patchNumber = 0; patchNumber < PATCH_COUNT; patchNumber++) {
 			putPatch(bank, patchDriver.createNewPatch(), patchNumber);
 		}
@@ -71,23 +71,23 @@ public class RolandD10PatchBankDriver extends BankDriver {
 		send(requestMessage.getBytes());
 	}
 
-	protected Patch getPatch(Patch bank, int patchNum) {
-		Patch patch = patchDriver.createNewPatch();
+	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+		PatchDataImpl patch = patchDriver.createNewPatch();
 		RolandD10Support.copyPatchFromBank(patchNum, bank.getSysex(), patch.getSysex());
 		return patch;
 	}
 
-	protected void putPatch(Patch bank, Patch patch, int patchNum) {
+	public void putPatch(PatchDataImpl bank, PatchDataImpl patch, int patchNum) {
 		RolandD10Support.copyPatchToBank(patchNum, bank.getSysex(), patch.getSysex());
 	}
 
-	protected String getPatchName(Patch bank, int patchNum) {
-		Patch patch = getPatch(bank, patchNum);
+	public String getPatchName(PatchDataImpl bank, int patchNum) {
+		PatchDataImpl patch = getPatch(bank, patchNum);
 		return patch.getName();
 	}
 
-	protected void setPatchName(Patch bank, int patchNum, String name) {
-		Patch patch = getPatch(bank, patchNum);
+	public void setPatchName(PatchDataImpl bank, int patchNum, String name) {
+		PatchDataImpl patch = getPatch(bank, patchNum);
 		patch.setName(name);
 		putPatch(bank, patch, patchNum);
 	}

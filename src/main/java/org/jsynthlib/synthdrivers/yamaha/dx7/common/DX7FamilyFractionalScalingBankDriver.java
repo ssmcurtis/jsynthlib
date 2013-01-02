@@ -24,12 +24,12 @@
  */
 package org.jsynthlib.synthdrivers.yamaha.dx7.common;
 
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
-public class DX7FamilyFractionalScalingBankDriver extends BankDriver {
+public class DX7FamilyFractionalScalingBankDriver extends SynthDriverBank {
 	byte[] initSysex;
 	String[] dxPatchNumbers;
 	String[] dxBankNumbers;
@@ -61,7 +61,7 @@ public class DX7FamilyFractionalScalingBankDriver extends BankDriver {
 		trimSize = patchSize;
 	}
 
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 		// This patch doesn't uses an over-all checksum for bank bulk data. Do nothing!
 	}
 
@@ -69,7 +69,7 @@ public class DX7FamilyFractionalScalingBankDriver extends BankDriver {
 		return (dxSinglePackedSize * patchNum) + dxSysexHeaderSize;
 	}
 
-	public void putPatch(Patch bank, Patch p, int patchNum) // puts a patch into the bank, converting it
+	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) // puts a patch into the bank, converting it
 																			// as needed
 	{
 		if (!canHoldPatch(p)) {
@@ -78,21 +78,21 @@ public class DX7FamilyFractionalScalingBankDriver extends BankDriver {
 		}
 
 		// Transform Voice Data to Bulk Dump Packed Format
-		((Patch) bank).getSysex()[getPatchStart(patchNum) + 0] = (byte) (0x03); // Byte Count MSB
-		((Patch) bank).getSysex()[getPatchStart(patchNum) + 1] = (byte) (0x76); // Byte Count LSB
-		((Patch) bank).getSysex()[getPatchStart(patchNum) + 2] = (byte) (0x4c); // "L"
-		((Patch) bank).getSysex()[getPatchStart(patchNum) + 3] = (byte) (0x4d); // "M"
-		((Patch) bank).getSysex()[getPatchStart(patchNum) + 4] = (byte) (0x20); // " "
-		((Patch) bank).getSysex()[getPatchStart(patchNum) + 5] = (byte) (0x20); // " "
-		((Patch) bank).getSysex()[getPatchStart(patchNum) + 6] = (byte) (0x46); // "F"
-		((Patch) bank).getSysex()[getPatchStart(patchNum) + 7] = (byte) (0x4b); // "K"
-		((Patch) bank).getSysex()[getPatchStart(patchNum) + 8] = (byte) (0x53); // "S"
-		((Patch) bank).getSysex()[getPatchStart(patchNum) + 9] = (byte) (0x59); // "Y"
-		((Patch) bank).getSysex()[getPatchStart(patchNum) + 10] = (byte) (0x43); // "C"
-		((Patch) bank).getSysex()[getPatchStart(patchNum) + 11] = (byte) (0x20); // " "
+		((PatchDataImpl) bank).getSysex()[getPatchStart(patchNum) + 0] = (byte) (0x03); // Byte Count MSB
+		((PatchDataImpl) bank).getSysex()[getPatchStart(patchNum) + 1] = (byte) (0x76); // Byte Count LSB
+		((PatchDataImpl) bank).getSysex()[getPatchStart(patchNum) + 2] = (byte) (0x4c); // "L"
+		((PatchDataImpl) bank).getSysex()[getPatchStart(patchNum) + 3] = (byte) (0x4d); // "M"
+		((PatchDataImpl) bank).getSysex()[getPatchStart(patchNum) + 4] = (byte) (0x20); // " "
+		((PatchDataImpl) bank).getSysex()[getPatchStart(patchNum) + 5] = (byte) (0x20); // " "
+		((PatchDataImpl) bank).getSysex()[getPatchStart(patchNum) + 6] = (byte) (0x46); // "F"
+		((PatchDataImpl) bank).getSysex()[getPatchStart(patchNum) + 7] = (byte) (0x4b); // "K"
+		((PatchDataImpl) bank).getSysex()[getPatchStart(patchNum) + 8] = (byte) (0x53); // "S"
+		((PatchDataImpl) bank).getSysex()[getPatchStart(patchNum) + 9] = (byte) (0x59); // "Y"
+		((PatchDataImpl) bank).getSysex()[getPatchStart(patchNum) + 10] = (byte) (0x43); // "C"
+		((PatchDataImpl) bank).getSysex()[getPatchStart(patchNum) + 11] = (byte) (0x20); // " "
 
 		for (int i = 0; i < 492; i++) {
-			((Patch) bank).getSysex()[getPatchStart(patchNum) + 12 + i] = (byte) ((Patch) p).getSysex()[16 + i];
+			((PatchDataImpl) bank).getSysex()[getPatchStart(patchNum) + 12 + i] = (byte) ((PatchDataImpl) p).getSysex()[16 + i];
 		}
 
 		// Calculate checkSum of single bulk data
@@ -100,7 +100,7 @@ public class DX7FamilyFractionalScalingBankDriver extends BankDriver {
 				getPatchStart(patchNum) + 12 + 492);
 	}
 
-	public Patch getPatch(Patch bank, int patchNum) // Gets a patch from the bank, converting it as needed
+	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) // Gets a patch from the bank, converting it as needed
 	{
 		try {
 			byte[] sysex = new byte[singleSize];
@@ -125,20 +125,20 @@ public class DX7FamilyFractionalScalingBankDriver extends BankDriver {
 			sysex[singleSize - 1] = (byte) 0xf7;
 
 			for (int i = 0; i < 492; i++) {
-				sysex[16 + i] = (byte) (((Patch) bank).getSysex()[getPatchStart(patchNum) + 12 + i]);
+				sysex[16 + i] = (byte) (((PatchDataImpl) bank).getSysex()[getPatchStart(patchNum) + 12 + i]);
 			}
 
-			Patch p = new Patch(sysex, getDevice()); // single sysex
+			PatchDataImpl p = new PatchDataImpl(sysex, getDevice()); // single sysex
 			p.calculateChecksum();
 
 			return p;
 		} catch (Exception e) {
-			ErrorMsg.reportError(getManufacturerName() + " " + getModelName(), "Error in " + toString(), e);
+			ErrorMsgUtil.reportError(getManufacturerName() + " " + getModelName(), "Error in " + toString(), e);
 			return null;
 		}
 	}
 
-	public Patch createNewPatch() // create a bank with 32 fractional scaling patches
+	public PatchDataImpl createNewPatch() // create a bank with 32 fractional scaling patches
 	{
 		byte[] sysex = new byte[trimSize];
 
@@ -148,8 +148,8 @@ public class DX7FamilyFractionalScalingBankDriver extends BankDriver {
 		sysex[3] = (byte) 0x7e;
 		sysex[trimSize - 1] = (byte) 0xF7;
 
-		Patch v = new Patch(initSysex, getDevice()); // single sysex
-		Patch p = new Patch(sysex, this); // bank sysex
+		PatchDataImpl v = new PatchDataImpl(initSysex, getDevice()); // single sysex
+		PatchDataImpl p = new PatchDataImpl(sysex, this); // bank sysex
 
 		for (int i = 0; i < getNumPatches(); i++)
 			putPatch(p, v, i);
@@ -157,11 +157,11 @@ public class DX7FamilyFractionalScalingBankDriver extends BankDriver {
 		return p;
 	}
 
-	protected String getPatchName(Patch bank, int patchNum) {
+	public String getPatchName(PatchDataImpl bank, int patchNum) {
 		return "-";
 	}
 
-	protected void setPatchName(Patch bank, int patchNum, String name) {
+	public void setPatchName(PatchDataImpl bank, int patchNum, String name) {
 		// do nothing
 	}
 }

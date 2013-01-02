@@ -25,10 +25,10 @@ import java.io.UnsupportedEncodingException;
 
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 /**
  * Line6 Bank Driver. Used for Line6 bank patch. Line6 devices appear to the user to have nine banks consisting of four
@@ -37,7 +37,7 @@ import org.jsynthlib.tools.ErrorMsg;
  * 
  * @author Jeff Weber
  */
-public class Line6BassPodBankDriver extends BankDriver {
+public class Line6BassPodBankDriver extends SynthDriverBank {
 	/**
 	 * Program Bank Dump Request
 	 */
@@ -81,7 +81,7 @@ public class Line6BassPodBankDriver extends BankDriver {
 	 * Gets the name of a patch within the bank. Patch p is the bank patch. int patchNum represents the location of the
 	 * single patch within the bank, designated by a number between 0 and 35.
 	 */
-	protected String getPatchName(Patch p, int patchNum) {
+	public String getPatchName(PatchDataImpl p, int patchNum) {
 		int nameOfs = getUnNibblizedPatchStart(patchNum);
 		nameOfs += nameStart; // offset of name in patch data
 		char c[] = new char[patchNameSize];
@@ -97,7 +97,7 @@ public class Line6BassPodBankDriver extends BankDriver {
 	 * single patch within the bank, designated by a number between 0 and 35. String name contains the name to be
 	 * assigned to the patch.
 	 */
-	protected void setPatchName(Patch p, int patchNum, String name) {
+	public void setPatchName(PatchDataImpl p, int patchNum, String name) {
 		int nameOfs = getUnNibblizedPatchStart(patchNum);
 		nameOfs += nameStart; // offset of name in patch data
 		if (name.length() < patchNameSize)
@@ -118,7 +118,7 @@ public class Line6BassPodBankDriver extends BankDriver {
 	 * within the bank is given by patchNum, where patchNum is in the range 0 through 35. The header and trailer bytes
 	 * are stripped from the sysex data and the target location within the bank is overwritten.
 	 */
-	protected void putPatch(Patch bank, Patch p, int patchNum) // Tested?? // Retest with new version of
+	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) // Tested?? // Retest with new version of
 																				// Core.*
 	{
 		if (!canHoldPatch(p)) {
@@ -136,7 +136,7 @@ public class Line6BassPodBankDriver extends BankDriver {
 	 * within the bank is given by patchNum, where patchNum is in the range 0 through 35. The patch is extracted from
 	 * the bank and a valid Line6 program patch header is appended at the beginning and 0xF7 is appended at the end.
 	 */
-	protected Patch getPatch(Patch bank, int patchNum) {
+	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
 		byte[] sysex = new byte[Constants.SIGL_SIZE + Constants.PDMP_HDR_SIZE + 1];
 		System.arraycopy(Constants.SIGL_DUMP_HDR_BYTES, 0, sysex, 0, Constants.PDMP_HDR_SIZE);
 		sysex[7] = (byte) patchNum;
@@ -144,10 +144,10 @@ public class Line6BassPodBankDriver extends BankDriver {
 		System.arraycopy(bank.getSysex(), getNibblizedSysexStart(patchNum), sysex, Constants.PDMP_HDR_SIZE,
 				Constants.SIGL_SIZE);
 		try {
-			Patch p = new Patch(sysex, getDevice());
+			PatchDataImpl p = new PatchDataImpl(sysex, getDevice());
 			return p;
 		} catch (Exception e) {
-			ErrorMsg.reportError("Error", "Error in Bass Pod Bank Driver", e);
+			ErrorMsgUtil.reportError("Error", "Error in Bass Pod Bank Driver", e);
 			return null;
 		}
 	}
@@ -164,11 +164,11 @@ public class Line6BassPodBankDriver extends BankDriver {
 	}
 
 	/** Creates a new bank patch. */
-	protected Patch createNewPatch() {
+	protected PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[Constants.BDMP_HDR_SIZE + (Constants.SIGL_SIZE * Constants.PATCHES_PER_BANK) + 1];
 		System.arraycopy(Constants.BANK_DUMP_HDR_BYTES, 0, sysex, 0, Constants.BDMP_HDR_SIZE);
 		sysex[Constants.BDMP_HDR_SIZE + (Constants.SIGL_SIZE * Constants.PATCHES_PER_BANK)] = (byte) 0xF7;
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		for (int i = 0; i < Constants.PATCHES_PER_BANK; i++) {
 			System.arraycopy(Constants.NEW_SYSEX, Constants.PDMP_HDR_SIZE, p.getSysex(), getNibblizedSysexStart(i),
 					Constants.SIGL_SIZE);
@@ -188,8 +188,8 @@ public class Line6BassPodBankDriver extends BankDriver {
 	 * Sends a bank patch to the device. Patch p represents the bank patch to be stored. For the Pods, the bankNum and
 	 * patchNum parameters are ignored (since the Pod only has one bank).
 	 */
-	protected void storePatch(Patch p, int bankNum, int patchNum) {
-		Patch[] thisPatch = new Patch[Constants.PATCHES_PER_BANK];
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
+		PatchDataImpl[] thisPatch = new PatchDataImpl[Constants.PATCHES_PER_BANK];
 		for (int progNbr = 0; progNbr < Constants.PATCHES_PER_BANK; progNbr++) {
 			thisPatch[progNbr] = getPatch(p, progNbr);
 		}

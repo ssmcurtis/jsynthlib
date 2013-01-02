@@ -8,7 +8,7 @@ import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Receiver;
 import javax.sound.midi.ShortMessage;
 
-import org.jsynthlib.tools.midi.MidiUtil;
+import org.jsynthlib.tools.MidiUtil;
 
 public class MidiActionPlayNote implements Runnable, ThreadStop {
 

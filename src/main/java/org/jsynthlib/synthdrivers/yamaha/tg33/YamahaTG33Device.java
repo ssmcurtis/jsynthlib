@@ -8,7 +8,7 @@ package org.jsynthlib.synthdrivers.yamaha.tg33;
 
 import java.util.prefs.Preferences;
 
-import org.jsynthlib.menu.patch.Device;
+import org.jsynthlib.model.device.Device;
 
 /**
  * 

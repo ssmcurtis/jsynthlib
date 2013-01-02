@@ -22,7 +22,7 @@ package org.jsynthlib.synthdrivers.waldorf.pulse;
 
 import java.util.prefs.Preferences;
 
-import org.jsynthlib.menu.patch.Device;
+import org.jsynthlib.model.device.Device;
 
 public class WaldorfPulseDevice extends Device {
 	public WaldorfPulseDevice() {

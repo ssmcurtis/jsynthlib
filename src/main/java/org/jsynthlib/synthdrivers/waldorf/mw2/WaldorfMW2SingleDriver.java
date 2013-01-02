@@ -26,12 +26,12 @@ import javax.sound.midi.ShortMessage;
 import javax.swing.JOptionPane;
 
 import org.jsynthlib.PatchBayApplication;
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.PatchSingle;
-import org.jsynthlib.menu.patch.SysexHandler;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.model.patch.PatchSingle;
 import org.jsynthlib.tools.DriverUtil;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 /**
  * Driver for Microwave 2 / XT / XTK single programs
@@ -39,7 +39,7 @@ import org.jsynthlib.tools.ErrorMsg;
  * @author Joachim Backhaus
  * @version $Id$
  */
-public class WaldorfMW2SingleDriver extends Driver {
+public class WaldorfMW2SingleDriver extends SynthDriverPatchImpl {
 
 	public WaldorfMW2SingleDriver() {
 		super("Single program", "Joachim Backhaus");
@@ -72,7 +72,7 @@ public class WaldorfMW2SingleDriver extends Driver {
 		d[ofs] = (byte) (sum & 0x7F);
 	}
 
-	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
+	protected void calculateChecksum(PatchDataImpl p, int start, int end, int ofs) {
 		calculateChecksum(p.getSysex(), start, end, ofs);
 	}
 
@@ -83,14 +83,14 @@ public class WaldorfMW2SingleDriver extends Driver {
 	 * @param p
 	 *            a <code>Patch</code> value
 	 */
-	protected void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p)  {
 		calculateChecksum(p.getSysex(), this.checksumStart, this.checksumEnd, this.checksumOffset);
 	}
 
 	/**
 	 * Send Control Change (Bank Select) MIDI message.
 	 * 
-	 * @see #storePatch(Patch, int, int)
+	 * @see #storePatch(PatchDataImpl, int, int)
 	 */
 	protected void setBankNum(int bankNum) {
 		try {
@@ -99,7 +99,7 @@ public class WaldorfMW2SingleDriver extends Driver {
 					bankNum); // Bank Number (MSB)
 			send(msg);
 		} catch (InvalidMidiDataException e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 	}
 
@@ -107,9 +107,9 @@ public class WaldorfMW2SingleDriver extends Driver {
 	 * Sends a patch to a set location on a synth.
 	 * <p>
 	 * 
-	 * @see Patch#send(int, int)
+	 * @see PatchDataImpl#send(int, int)
 	 */
-	protected void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		setBankNum(bankNum);
 		setPatchNum(patchNum);
 
@@ -124,10 +124,10 @@ public class WaldorfMW2SingleDriver extends Driver {
 	 * Sends a patch to the synth's edit buffer.
 	 * <p>
 	 * 
-	 * @see Patch#send()
+	 * @see PatchDataImpl#send()
 	 * @see PatchSingle#send()
 	 */
-	protected void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		p.getSysex()[5] = (byte) 0x20; // Location (use Edit Buffer)
 		p.getSysex()[6] = (byte) 0x00; // Location (use Edit Buffer)
 		calculateChecksum(p);
@@ -135,7 +135,7 @@ public class WaldorfMW2SingleDriver extends Driver {
 		sendPatchWorker(p);
 	}
 
-	protected static void createPatchHeader(Patch tempPatch, int bankNo, int patchNo) {
+	protected static void createPatchHeader(PatchDataImpl tempPatch, int bankNo, int patchNo) {
 		if (tempPatch.getSysex().length > 8) {
 			tempPatch.getSysex()[0] = MW2Constants.SYSEX_START_BYTE;
 			tempPatch.getSysex()[1] = (byte) 0x3E; // Waldorf Electronics GmbH ID
@@ -148,28 +148,28 @@ public class WaldorfMW2SingleDriver extends Driver {
 		}
 	}
 
-	protected void createPatchHeader(Patch tempPatch) {
+	protected void createPatchHeader(PatchDataImpl tempPatch) {
 		// Location (use Edit Buffer)
 		createPatchHeader(tempPatch, 0x20, 0x00);
 	}
 
 	/**
-	 * @see org.jsynthlib.menu.patch.Driver#createNewPatch()
+	 * @see org.jsynthlib.model.driver.SynthDriverPatchImpl#createNewPatch()
 	 */
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[MW2Constants.PATCH_SIZE];
-		Patch p;
+		PatchDataImpl p;
 
 		try {
 			java.io.InputStream fileIn = getClass().getResourceAsStream(MW2Constants.DEFAULT_SYSEX_FILENAME);
 			fileIn.read(sysex);
 			fileIn.close();
-			p = new Patch(sysex, this);
+			p = new PatchDataImpl(sysex, this);
 
 		} catch (Exception e) {
 			System.err.println("Unable to find " + MW2Constants.DEFAULT_SYSEX_FILENAME + " using hardcoded default.");
 
-			p = new Patch(sysex, this);
+			p = new PatchDataImpl(sysex, this);
 			createPatchHeader(p);
 			// createPatchFooter(p);
 			// p.sysex[263] = (byte) 0x00; // Checksum

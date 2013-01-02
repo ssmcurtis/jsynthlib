@@ -24,16 +24,16 @@
 
 package org.jsynthlib.synthdrivers.midibox.fm;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 public class MIDIboxFMSlowSender {
-	public void sendSysEx(Driver driver, byte[] buffer, int delay) {
+	public void sendSysEx(SynthDriverPatchImpl driver, byte[] buffer, int delay) {
 		try {
 			driver.send(buffer);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			ErrorMsg.reportStatus(ex);
+			ErrorMsgUtil.reportStatus(ex);
 		}
 
 		try {
@@ -43,7 +43,7 @@ public class MIDIboxFMSlowSender {
 		;
 	}
 
-	public void sendParameter(Driver driver, int parameter, byte value, int delay) {
+	public void sendParameter(SynthDriverPatchImpl driver, int parameter, byte value, int delay) {
 		byte[] b = new byte[12];
 
 		b[0] = (byte) 0xF0;

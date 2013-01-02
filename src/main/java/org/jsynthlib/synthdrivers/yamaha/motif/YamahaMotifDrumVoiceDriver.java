@@ -1,6 +1,6 @@
 package org.jsynthlib.synthdrivers.yamaha.motif;
 
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 /** Driver for Yamaha Motif Normal Voices */
 public class YamahaMotifDrumVoiceDriver extends YamahaMotifSingleDriver {
@@ -20,7 +20,7 @@ public class YamahaMotifDrumVoiceDriver extends YamahaMotifSingleDriver {
 	}
 
 	// The driver has to define this method for the option to be available.
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		return super.createNewPatch();
 	}
 

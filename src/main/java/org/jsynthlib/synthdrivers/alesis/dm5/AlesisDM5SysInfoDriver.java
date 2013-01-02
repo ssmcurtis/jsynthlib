@@ -21,17 +21,17 @@
 
 package org.jsynthlib.synthdrivers.alesis.dm5;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 /**
  * Alesis DM5 System Info Driver.
  * 
  * @author Jeff Weber
  */
-public class AlesisDM5SysInfoDriver extends Driver {
+public class AlesisDM5SysInfoDriver extends SynthDriverPatchImpl {
 
 	/**
 	 * DM5 System Info Dump Request
@@ -89,21 +89,21 @@ public class AlesisDM5SysInfoDriver extends Driver {
 	/**
 	 * Alesis DM5SysInfoDriver patch does not have checksum. This is overridden by a null method.
 	 */
-	protected void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p)  {
 	}
 
 	/**
 	 * Creates a new system info patch with default values.
 	 */
-	protected Patch createNewPatch() {
-		Patch p = new Patch(NEW_SYSEX, this);
+	protected PatchDataImpl createNewPatch() {
+		PatchDataImpl p = new PatchDataImpl(NEW_SYSEX, this);
 		return p;
 	}
 
 	/**
 	 * Opens an edit window on the specified patch.
 	 */
-	protected JSLFrame editPatch(Patch p) {
-		return new AlesisDM5SysInfoEditor((Patch) p);
+	public JSLFrame editPatch(PatchDataImpl p) {
+		return new AlesisDM5SysInfoEditor((PatchDataImpl) p);
 	}
 }

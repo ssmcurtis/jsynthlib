@@ -1,9 +1,9 @@
 package org.jsynthlib.synthdrivers.roland.gp16;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.DriverUtil;
 
 /**
@@ -11,7 +11,7 @@ import org.jsynthlib.tools.DriverUtil;
  * 
  * @version $Id$
  */
-public class RolandGP16SingleDriver extends Driver {
+public class RolandGP16SingleDriver extends SynthDriverPatchImpl {
 	/** Header Size */
 	private static final int HSIZE = 5;
 	/** Single Patch size */
@@ -51,7 +51,7 @@ public class RolandGP16SingleDriver extends Driver {
 		SysexHandler.NameValue nVs[] = new SysexHandler.NameValue[2];
 		nVs[0] = new SysexHandler.NameValue("patchnumber", bankNum * 8 + patchNum);
 		nVs[1] = new SysexHandler.NameValue("checksum", 0);
-		Patch p = new Patch(SYS_REQ.toByteArray(getChannel(), nVs));
+		PatchDataImpl p = new PatchDataImpl(SYS_REQ.toByteArray(getChannel(), nVs));
 		calculateChecksum(p, 5, 10, 11); // the gp-16 requires correct checksum when requesting a patch
 		send(p.getSysex());
 		try {
@@ -61,10 +61,10 @@ public class RolandGP16SingleDriver extends Driver {
 	}
 
 	/** Store patch in a specified location, the GP-16 way. */
-	public void storePatch(Patch p, int bankNum, int patchNum) {
-		((Patch) p).getSysex()[5] = (byte) 0x09;
-		((Patch) p).getSysex()[6] = (byte) (bankNum * 8 + patchNum);
-		((Patch) p).getSysex()[7] = (byte) 0x00;
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
+		((PatchDataImpl) p).getSysex()[5] = (byte) 0x09;
+		((PatchDataImpl) p).getSysex()[6] = (byte) (bankNum * 8 + patchNum);
+		((PatchDataImpl) p).getSysex()[7] = (byte) 0x00;
 		sendPatchWorker(p);
 		try {
 			Thread.sleep(sleepTime);
@@ -73,10 +73,10 @@ public class RolandGP16SingleDriver extends Driver {
 	}
 
 	/** Send patch to the temporary edit memory of the GP-16. */
-	public void sendPatch(Patch p) {
-		((Patch) p).getSysex()[5] = (byte) 0x08;
-		((Patch) p).getSysex()[6] = (byte) 0x00;
-		((Patch) p).getSysex()[7] = (byte) 0x00;
+	public void sendPatch(PatchDataImpl p) {
+		((PatchDataImpl) p).getSysex()[5] = (byte) 0x08;
+		((PatchDataImpl) p).getSysex()[6] = (byte) 0x00;
+		((PatchDataImpl) p).getSysex()[7] = (byte) 0x00;
 		try {
 			Thread.sleep(sleepTime);
 		} catch (Exception e) {
@@ -86,7 +86,7 @@ public class RolandGP16SingleDriver extends Driver {
 	}
 
 	/** Create an empty patch in acceptable GP-16 format. */
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[HSIZE + SSIZE + 1];
 		sysex[0] = (byte) 0xF0;
 		sysex[1] = (byte) 0x41;
@@ -104,18 +104,18 @@ public class RolandGP16SingleDriver extends Driver {
 		sysex[18] = (byte) 0x0A;
 		sysex[19] = (byte) 0x0B;
 		sysex[HSIZE + SSIZE] = (byte) 0xF7;
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		setPatchName(p, "New Patch");
 		calculateChecksum(p);
 		return p;
 	}
 
-	public JSLFrame editPatch(Patch p) {
-		return new RolandGP16SingleEditor((Patch) p);
+	public JSLFrame editPatch(PatchDataImpl p) {
+		return new RolandGP16SingleEditor((PatchDataImpl) p);
 	}
 
 	/** for Bank Driver, etc. */
-	void calcChecksum(Patch p) {
+	void calcChecksum(PatchDataImpl p) {
 		calculateChecksum(p);
 	}
 }

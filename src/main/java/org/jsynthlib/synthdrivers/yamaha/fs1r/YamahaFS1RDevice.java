@@ -2,7 +2,7 @@ package org.jsynthlib.synthdrivers.yamaha.fs1r;
 
 import java.util.prefs.Preferences;
 
-import org.jsynthlib.menu.patch.Device;
+import org.jsynthlib.model.device.Device;
 
 /**
  * Yamaha FS1R device.

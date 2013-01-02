@@ -7,12 +7,12 @@ package org.jsynthlib.synthdrivers.alesis.a6;
 import javax.swing.JOptionPane;
 
 import org.jsynthlib.PatchBayApplication;
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
-public class AlesisA6MixSingleDriver extends Driver {
+public class AlesisA6MixSingleDriver extends SynthDriverPatchImpl {
 	public AlesisA6MixSingleDriver() {
 		super("Mix Single", "Kenneth L. Martinez");
 		sysexID = "F000000E1D04****";
@@ -25,7 +25,7 @@ public class AlesisA6MixSingleDriver extends Driver {
 		patchNumbers = AlesisA6PgmSingleDriver.patchList;
 	}
 
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 		// A6 doesn't use checksum
 	}
 
@@ -34,8 +34,8 @@ public class AlesisA6MixSingleDriver extends Driver {
 	// // A6 doesn't use checksum
 	// }
 
-	public String getPatchName(Patch ip) {
-		Patch p = (Patch) ip;
+	public String getPatchName(PatchDataImpl ip) {
+		PatchDataImpl p = (PatchDataImpl) ip;
 		try {
 			char c[] = new char[patchNameSize];
 			for (int i = 0; i < patchNameSize; i++)
@@ -46,56 +46,56 @@ public class AlesisA6MixSingleDriver extends Driver {
 		}
 	}
 
-	public void setPatchName(Patch p, String name) {
+	public void setPatchName(PatchDataImpl p, String name) {
 		if (name.length() < patchNameSize + 4)
 			name = name + "                ";
 		byte nameByte[] = name.getBytes();
 		for (int i = 0; i < patchNameSize; i++) {
-			AlesisA6PgmSingleDriver.setA6PgmByte(nameByte[i], ((Patch) p).getSysex(), i + patchNameStart);
+			AlesisA6PgmSingleDriver.setA6PgmByte(nameByte[i], ((PatchDataImpl) p).getSysex(), i + patchNameStart);
 		}
 	}
 
-	public void sendPatch(Patch p) {
-		sendPatch((Patch) p, 0, 127); // using user mix # 127 as edit buffer
+	public void sendPatch(PatchDataImpl p) {
+		sendPatch((PatchDataImpl) p, 0, 127); // using user mix # 127 as edit buffer
 	}
 
-	public void sendPatch(Patch p, int bankNum, int patchNum) {
-		Patch p2 = new Patch(p.getSysex());
+	public void sendPatch(PatchDataImpl p, int bankNum, int patchNum) {
+		PatchDataImpl p2 = new PatchDataImpl(p.getSysex());
 		p2.getSysex()[6] = (byte) bankNum;
 		p2.getSysex()[7] = (byte) patchNum;
 		sendPatchWorker(p2);
 	}
 
 	// Sends a patch to a set location in the user bank
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		if (bankNum == 1 || bankNum == 2)
 			JOptionPane.showMessageDialog(PatchBayApplication.getInstance(), "Cannot send to a preset bank", "Store Patch",
 					JOptionPane.WARNING_MESSAGE);
 		else {
 			setBankNum(bankNum);
 			setPatchNum(patchNum);
-			sendPatch((Patch) p, bankNum, patchNum);
+			sendPatch((PatchDataImpl) p, bankNum, patchNum);
 		}
 	}
 
 	// Kludge: A6 doesn't seem to receive edit buffer dump, so user mix 127
 	// is being used for that purpose.
-	protected void playPatch(Patch p) {
+	public void playPatch(PatchDataImpl p) {
 		byte sysex[] = new byte[1182];
-		System.arraycopy(((Patch) p).getSysex(), 0, sysex, 0, 1180);
+		System.arraycopy(((PatchDataImpl) p).getSysex(), 0, sysex, 0, 1180);
 		sysex[6] = 0; // user bank
 		sysex[7] = 127; // mix # 127
 		sysex[1180] = (byte) (0xC0 + getChannel() - 1); // program change
 		sysex[1181] = (byte) 127; // mix # 127
-		Patch p2 = new Patch(sysex);
+		PatchDataImpl p2 = new PatchDataImpl(sysex);
 		try {
 			super.playPatch(p2);
 		} catch (Exception e) {
-			ErrorMsg.reportStatus(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte sysex[] = { (byte) 0xF0, (byte) 0x00, (byte) 0x00, (byte) 0x0E, (byte) 0x1D, (byte) 0x04, (byte) 0x00,
 				(byte) 0x7F, (byte) 0x36, (byte) 0x15, (byte) 0x30, (byte) 0x0A, (byte) 0x16, (byte) 0x2F, (byte) 0x19,
 				(byte) 0x39, (byte) 0x20, (byte) 0x20, (byte) 0x05, (byte) 0x23, (byte) 0x06, (byte) 0x24, (byte) 0x0C,
@@ -244,7 +244,7 @@ public class AlesisA6MixSingleDriver extends Driver {
 				(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
 				(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
 				(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0xF7 };
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		setPatchName(p, "NewPatch");
 		return p;
 	}

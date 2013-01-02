@@ -7,7 +7,7 @@ package org.jsynthlib.synthdrivers.yamaha.motif;
 
 import java.util.prefs.Preferences;
 
-import org.jsynthlib.menu.patch.Device;
+import org.jsynthlib.model.device.Device;
 
 /**
  * @author Ryan Brown

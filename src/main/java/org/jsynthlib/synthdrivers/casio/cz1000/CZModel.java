@@ -20,8 +20,8 @@
  */
 package org.jsynthlib.synthdrivers.casio.cz1000;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.widgets.ParamModel;
 
 /**
  * Unmangle CZ data. Nybbles in a byte are swapped, and bytes in a word are *sometimes* swapped, then each nybble is
@@ -32,7 +32,7 @@ import org.jsynthlib.menu.patch.Patch;
  * memory always have the 7 byte header.
  */
 class CZModel extends ParamModel {
-	public CZModel(Patch p, int offset) {
+	public CZModel(PatchDataImpl p, int offset) {
 		super(p, offset);
 	}
 

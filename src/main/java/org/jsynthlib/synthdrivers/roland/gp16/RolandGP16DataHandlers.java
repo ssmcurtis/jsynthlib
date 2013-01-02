@@ -10,13 +10,13 @@ import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.IPatch;
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.Patch;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.PatchNameWidget;
 import org.jsynthlib.widgets.ScrollBarWidget;
 import org.jsynthlib.widgets.SysexSender;
@@ -127,12 +127,12 @@ class BigValSender extends SysexSender {
 
 /** Almost a direct copy of the MKSBitSender. */
 class GP16BitSender extends SysexSender {
-	Patch patch;
+	PatchDataImpl patch;
 	int ofs;
 	int bit;
 	byte[] b;
 
-	public GP16BitSender(Patch p, int o, int bt) {
+	public GP16BitSender(PatchDataImpl p, int o, int bt) {
 		patch = p;
 		ofs = o;
 		bit = bt;
@@ -141,15 +141,15 @@ class GP16BitSender extends SysexSender {
 	}
 
 	public byte[] generate(int value) {
-		ErrorMsg.reportStatus("GP16BitSender: got value " + (byte) value);
+		ErrorMsgUtil.reportStatus("GP16BitSender: got value " + (byte) value);
 		int mask = ~(1 << bit);
 		int bitfield = patch.getSysex()[ofs + 8] & mask;
-		ErrorMsg.reportStatus("GP16BitSender: computed bitfield " + (byte) bitfield);
+		ErrorMsgUtil.reportStatus("GP16BitSender: computed bitfield " + (byte) bitfield);
 		if (value == 1)
 			bitfield |= (1 << bit);
 		b[2] = (byte) (channel - 1);
 		b[8] = (byte) bitfield;
-		ErrorMsg.reportStatus("GP16BitSender: sending data " + (byte) bitfield);
+		ErrorMsgUtil.reportStatus("GP16BitSender: sending data " + (byte) bitfield);
 		return b;
 	}
 }
@@ -158,7 +158,7 @@ class GP16BitSender extends SysexSender {
 class GP16BitModel extends ParamModel {
 	int bit;
 
-	public GP16BitModel(Patch p, int o, int b) {
+	public GP16BitModel(PatchDataImpl p, int o, int b) {
 		super(p, o);
 		bit = b;
 	}
@@ -168,12 +168,12 @@ class GP16BitModel extends ParamModel {
 		int value = patch.getSysex()[ofs] & mask;
 		if (i == 1)
 			value |= (1 << bit);
-		ErrorMsg.reportStatus("GP16BitModel: setting status " + (byte) value + " to adress " + ofs);
+		ErrorMsgUtil.reportStatus("GP16BitModel: setting status " + (byte) value + " to adress " + ofs);
 		patch.getSysex()[ofs] = (byte) value;
 	}
 
 	public int get() {
-		ErrorMsg.reportStatus("GP16BitModel: getting status " + patch.getSysex()[ofs] + " from adress " + ofs);
+		ErrorMsgUtil.reportStatus("GP16BitModel: getting status " + patch.getSysex()[ofs] + " from adress " + ofs);
 		int mask = 1 << bit;
 		if ((patch.getSysex()[ofs] & mask) > 0)
 			return 1;
@@ -184,7 +184,7 @@ class GP16BitModel extends ParamModel {
 
 /** Model for representing joint data of effects Block B. */
 class BBParamModel extends ParamModel {
-	public BBParamModel(Patch patch, int offset) {
+	public BBParamModel(PatchDataImpl patch, int offset) {
 		super(patch, offset);
 	}
 
@@ -199,7 +199,7 @@ class BBParamModel extends ParamModel {
 
 /** Model for expression assign data. */
 class EParamModel extends ParamModel {
-	public EParamModel(Patch patch, int offset) {
+	public EParamModel(PatchDataImpl patch, int offset) {
 		super(patch, offset);
 	}
 
@@ -219,7 +219,7 @@ class EParamModel extends ParamModel {
 
 /** Model for expression min/max level data. */
 class BigValParamModel extends ParamModel {
-	public BigValParamModel(Patch patch, int offset) {
+	public BigValParamModel(PatchDataImpl patch, int offset) {
 		super(patch, offset);
 	}
 
@@ -238,9 +238,9 @@ class RolandGP16PatchNameWidget extends PatchNameWidget {
 	byte[] b = new byte[26];
 	int channel;
 
-	public RolandGP16PatchNameWidget(String label, IPatch patch) {
+	public RolandGP16PatchNameWidget(String label, Patch patch) {
 		super(label, patch);
-		Driver driver = (Driver) getDriver();
+		SynthDriverPatchImpl driver = (SynthDriverPatchImpl) getDriver();
 		if (driver != null) {
 			channel = driver.getDeviceID();
 		} else {
@@ -259,7 +259,7 @@ class RolandGP16PatchNameWidget extends PatchNameWidget {
 
 	/** We want a reaction when the patch name changes, not when patch name loses focus. */
 	protected void createWidgets() {
-		Driver driver = (Driver) getDriver();
+		SynthDriverPatchImpl driver = (SynthDriverPatchImpl) getDriver();
 		if (driver != null) {
 			name = new JTextField(getPatch().getName(), 16);
 		} else {
@@ -281,7 +281,7 @@ class RolandGP16PatchNameWidget extends PatchNameWidget {
 
 	/** The reaction that a keyrelease in the Name field causes. */
 	protected void eventListener(KeyEvent e) {
-		Driver driver = (Driver) getDriver();
+		SynthDriverPatchImpl driver = (SynthDriverPatchImpl) getDriver();
 		byte[] shortName = new byte[(name.getText()).length()];
 		byte[] longName = new byte[16];
 		int shortLength = shortName.length;
@@ -310,17 +310,17 @@ class RolandGP16PatchNameWidget extends PatchNameWidget {
  */
 class ExpLevScrollBarWidget extends ScrollBarWidget implements ItemListener {
 	protected int subDiv;
-	private Patch thisPatch;
+	private PatchDataImpl thisPatch;
 
-	public ExpLevScrollBarWidget(String label, IPatch patch, int min, int max, int base, int labelWidth,
+	public ExpLevScrollBarWidget(String label, Patch patch, int min, int max, int base, int labelWidth,
 			ParamModel pmodel, SysexSender sender, int initSubDiv) {
 		super(label, patch, min, max, base, labelWidth, pmodel, sender);
 		subDiv = initSubDiv;
-		thisPatch = (Patch) patch;
+		thisPatch = (PatchDataImpl) patch;
 		text.setText(new Double((double) (getValue() + base) / subDiv).toString());
 	}
 
-	public ExpLevScrollBarWidget(String label, IPatch patch, int min, int max, int base, ParamModel pmodel,
+	public ExpLevScrollBarWidget(String label, Patch patch, int min, int max, int base, ParamModel pmodel,
 			SysexSender sender, int initSubDiv) {
 		this(label, patch, min, max, base, -1, pmodel, sender, initSubDiv);
 	}
@@ -334,7 +334,7 @@ class ExpLevScrollBarWidget extends ScrollBarWidget implements ItemListener {
 			Thread.sleep(100);
 		} catch (Exception ex) {
 		}
-		((Driver) thisPatch.getDriver()).send(sndChange(((Driver) thisPatch.getDriver()).getChannel()));
+		((SynthDriverPatchImpl) thisPatch.getDriver()).send(sndChange(((SynthDriverPatchImpl) thisPatch.getDriver()).getChannel()));
 	}
 
 	/** Generate the sound change request on correct channel. */
@@ -347,7 +347,7 @@ class ExpLevScrollBarWidget extends ScrollBarWidget implements ItemListener {
 	public void itemStateChanged(ItemEvent e) {
 		int chosen = ((JComboBox) e.getSource()).getSelectedIndex() - 1;
 
-		ErrorMsg.reportStatus("ExpLevScrollBarWidget: Received ItemEvent " + chosen);
+		ErrorMsgUtil.reportStatus("ExpLevScrollBarWidget: Received ItemEvent " + chosen);
 		switch (chosen) {
 		case -1:
 			setRange(0, 0, 0, 1);
@@ -452,7 +452,7 @@ class ExpLevScrollBarWidget extends ScrollBarWidget implements ItemListener {
 
 	/** Set the range parameters of the RolandGP16ScrollBarWidget. */
 	private void setRange(int newMin, int newMax, int newBase, int newSubDiv) {
-		ErrorMsg.reportStatus("ExpLevScrollBarWidget: Setting quadruple " + newMin + "," + newMax + "," + newBase + ","
+		ErrorMsgUtil.reportStatus("ExpLevScrollBarWidget: Setting quadruple " + newMin + "," + newMax + "," + newBase + ","
 				+ newSubDiv);
 		// setMinMax(newMin, newMax);
 		setMin(newMin);
@@ -469,24 +469,24 @@ class ExpLevScrollBarWidget extends ScrollBarWidget implements ItemListener {
  */
 class GP16ComboBoxWidget extends ComboBoxWidget {
 
-	private Patch thisPatch;
+	private PatchDataImpl thisPatch;
 	private boolean autoUpdate;
 	private GP16JointPolice updater;
 
-	public GP16ComboBoxWidget(String l, IPatch p, int min, ParamModel ofs, SysexSender s, Object[] o, boolean a,
+	public GP16ComboBoxWidget(String l, Patch p, int min, ParamModel ofs, SysexSender s, Object[] o, boolean a,
 			GP16JointPolice upd) {
 		super(l, p, min, ofs, s, o);
-		thisPatch = (Patch) p;
+		thisPatch = (PatchDataImpl) p;
 		autoUpdate = a;
 		updater = upd;
 	}
 
-	public GP16ComboBoxWidget(String l, IPatch p, ParamModel ofs, SysexSender s, Object[] o, boolean a,
+	public GP16ComboBoxWidget(String l, Patch p, ParamModel ofs, SysexSender s, Object[] o, boolean a,
 			GP16JointPolice upd) {
 		this(l, p, 0, ofs, s, o, a, upd);
 	}
 
-	public GP16ComboBoxWidget(String l, IPatch p, ParamModel ofs, SysexSender s, Object[] o, boolean a) {
+	public GP16ComboBoxWidget(String l, Patch p, ParamModel ofs, SysexSender s, Object[] o, boolean a) {
 		this(l, p, 0, ofs, s, o, a, null);
 	}
 
@@ -499,7 +499,7 @@ class GP16ComboBoxWidget extends ComboBoxWidget {
 					Thread.sleep(100);
 				} catch (Exception ex) {
 				}
-				((Driver) thisPatch.getDriver()).send(sndChange(((Driver) thisPatch.getDriver()).getChannel()));
+				((SynthDriverPatchImpl) thisPatch.getDriver()).send(sndChange(((SynthDriverPatchImpl) thisPatch.getDriver()).getChannel()));
 			} else
 				updater.itemStateChanged();
 		}
@@ -515,11 +515,11 @@ class GP16ComboBoxWidget extends ComboBoxWidget {
 /** It is necessary to send a sound change request to update the sound in the processor. */
 class GP16CheckBoxWidget extends CheckBoxWidget {
 
-	private Patch thisPatch;
+	private PatchDataImpl thisPatch;
 
-	public GP16CheckBoxWidget(String l, IPatch p, ParamModel ofs, SysexSender s) {
+	public GP16CheckBoxWidget(String l, Patch p, ParamModel ofs, SysexSender s) {
 		super(l, p, ofs, s);
-		thisPatch = (Patch) p;
+		thisPatch = (PatchDataImpl) p;
 	}
 
 	/** invoked when the check box is toggled. Also send sound change request. */
@@ -532,7 +532,7 @@ class GP16CheckBoxWidget extends CheckBoxWidget {
 			Thread.sleep(100);
 		} catch (Exception ex) {
 		}
-		((Driver) thisPatch.getDriver()).send(sndChange(((Driver) thisPatch.getDriver()).getChannel()));
+		((SynthDriverPatchImpl) thisPatch.getDriver()).send(sndChange(((SynthDriverPatchImpl) thisPatch.getDriver()).getChannel()));
 	}
 
 	/** Generate the sound change request on correct channel. */
@@ -545,20 +545,20 @@ class GP16CheckBoxWidget extends CheckBoxWidget {
 /** Requests a sound change after changes to the joint data, if the latter is consistent. */
 class GP16JointPolice {
 	/** An array to store the Combos. */
-	private Patch thisPatch;
+	private PatchDataImpl thisPatch;
 	private int offset;
 
 	/** A simple constructor. */
-	public GP16JointPolice(Patch p, int ofs) {
+	public GP16JointPolice(PatchDataImpl p, int ofs) {
 		thisPatch = p;
 		offset = ofs;
 	}
 
 	/** This method gets called when an item is changed. Sends sound change req if joint data is ok. */
 	public void itemStateChanged() {
-		ErrorMsg.reportStatus("GP16JointPolice: Got event, checking says " + sendOk());
+		ErrorMsgUtil.reportStatus("GP16JointPolice: Got event, checking says " + sendOk());
 		if (sendOk())
-			((Driver) thisPatch.getDriver()).send(sndChange(((Driver) thisPatch.getDriver()).getChannel()));
+			((SynthDriverPatchImpl) thisPatch.getDriver()).send(sndChange(((SynthDriverPatchImpl) thisPatch.getDriver()).getChannel()));
 	}
 
 	/** Checks if joint data is consistent. */
@@ -567,7 +567,7 @@ class GP16JointPolice {
 		boolean[] used = new boolean[] { false, false, false, false, false };
 		for (int dum = 0; dum < 5; dum++) {
 			temp = thisPatch.getSysex()[dum + offset + 8] - offset;
-			ErrorMsg.reportStatus("GP16JointPolice: dum=" + dum + " temp=" + temp + " used[temp]=" + used[temp]);
+			ErrorMsgUtil.reportStatus("GP16JointPolice: dum=" + dum + " temp=" + temp + " used[temp]=" + used[temp]);
 			if (used[temp])
 				return false;
 			used[temp] = true;

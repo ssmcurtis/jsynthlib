@@ -23,7 +23,7 @@ package org.jsynthlib.synthdrivers.alesis.dmpro;
 
 import java.util.prefs.Preferences;
 
-import org.jsynthlib.menu.patch.Device;
+import org.jsynthlib.model.device.Device;
 
 /**
  * Created on 25. December2001, 14:00

@@ -5,12 +5,12 @@ package org.jsynthlib.synthdrivers.kawai.k5000;
 
 import java.io.InputStream;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
-public class KawaiK5000ADDSingleDriver extends Driver {
+public class KawaiK5000ADDSingleDriver extends SynthDriverPatchImpl {
 	final static SysexHandler SYSEX_REQUEST_A_DUMP = new SysexHandler("F0 40 @@ 00 00 0A 00 00 *patchNum* F7"); // phil@muqus.com
 																												// (p23)
 	final static SysexHandler SYSEX_REQUEST_D_DUMP = new SysexHandler("F0 40 @@ 00 00 0A 00 02 *patchNum* F7"); // phil@muqus.com
@@ -39,19 +39,19 @@ public class KawaiK5000ADDSingleDriver extends Driver {
 
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		setBankNum(bankNum);
 		setPatchNum(patchNum);
 		try {
 			Thread.sleep(100);
 		} catch (Exception e) {
 		}
-		((Patch) p).getSysex()[3] = (byte) 0x20;
-		((Patch) p).getSysex()[8] = (byte) (patchNum);
+		((PatchDataImpl) p).getSysex()[3] = (byte) 0x20;
+		((PatchDataImpl) p).getSysex()[8] = (byte) (patchNum);
 		if (bankNum == 0)
-			((Patch) p).getSysex()[7] = 0; // bank a
+			((PatchDataImpl) p).getSysex()[7] = 0; // bank a
 		if (bankNum == 3)
-			((Patch) p).getSysex()[7] = 2; // bank d
+			((PatchDataImpl) p).getSysex()[7] = 2; // bank d
 
 		sendPatchWorker(p);
 		try {
@@ -61,12 +61,12 @@ public class KawaiK5000ADDSingleDriver extends Driver {
 		setPatchNum(patchNum);
 	}
 
-	public void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		storePatch(p, 0, 0);
 	}
 
-	public void calculateChecksum(Patch ip) {
-		Patch p = (Patch) ip;
+	public void calculateChecksum(PatchDataImpl ip) {
+		PatchDataImpl p = (PatchDataImpl) ip;
 		calculateChecksum(p, checksumStart, 90 + p.getSysex()[60] * 86, checksumOffset);
 		int sourceDataStart = 91;
 		int numWaveData = 0;
@@ -83,7 +83,7 @@ public class KawaiK5000ADDSingleDriver extends Driver {
 		}
 	}
 
-	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
+	protected void calculateChecksum(PatchDataImpl p, int start, int end, int ofs) {
 		int sum = 0;
 		for (int i = start; i <= end; i++)
 			sum += p.getSysex()[i];
@@ -119,15 +119,15 @@ public class KawaiK5000ADDSingleDriver extends Driver {
 //		return new KawaiK5000ADDSingleEditor((Patch) p);
 //	}
 //
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		try {
 			InputStream fileIn = getClass().getResourceAsStream("k5k.syx");
 			byte[] buffer = new byte[2768];
 			fileIn.read(buffer);
 			fileIn.close();
-			return new Patch(buffer, this);
+			return new PatchDataImpl(buffer, this);
 		} catch (Exception e) {
-			ErrorMsg.reportError("Error", "Unable to find Defaults", e);
+			ErrorMsgUtil.reportError("Error", "Unable to find Defaults", e);
 			return null;
 		}
 	}

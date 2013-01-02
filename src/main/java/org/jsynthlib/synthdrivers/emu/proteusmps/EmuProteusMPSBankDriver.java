@@ -7,11 +7,11 @@ import java.io.UnsupportedEncodingException;
 
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.patch.BankDriver;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.tools.ErrorMsg;
+import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
-public class EmuProteusMPSBankDriver extends BankDriver {
+public class EmuProteusMPSBankDriver extends SynthDriverBank {
 
 	public EmuProteusMPSBankDriver() {
 		super("Bank", "Brian Klock", 100, 5);
@@ -37,11 +37,11 @@ public class EmuProteusMPSBankDriver extends BankDriver {
 		return start;
 	}
 
-	public String getPatchName(Patch p, int patchNum) {
+	public String getPatchName(PatchDataImpl p, int patchNum) {
 		int nameStart = getPatchStart(patchNum);
 		nameStart += 7; // offset of name in patch data
 		try {
-			StringBuffer s = new StringBuffer(new String(((Patch) p).getSysex(), nameStart, 24, "US-ASCII"));
+			StringBuffer s = new StringBuffer(new String(((PatchDataImpl) p).getSysex(), nameStart, 24, "US-ASCII"));
 			for (int i = 1; i < s.length(); i++)
 				s.deleteCharAt(i);
 			return s.toString();
@@ -51,7 +51,7 @@ public class EmuProteusMPSBankDriver extends BankDriver {
 
 	}
 
-	public void setPatchName(Patch p, int patchNum, String name) {
+	public void setPatchName(PatchDataImpl p, int patchNum, String name) {
 		patchNameSize = 12;
 		patchNameStart = getPatchStart(patchNum) + 7;
 
@@ -61,14 +61,14 @@ public class EmuProteusMPSBankDriver extends BankDriver {
 		try {
 			namebytes = name.getBytes("US-ASCII");
 			for (int i = 0; i < patchNameSize; i++)
-				((Patch) p).getSysex()[patchNameStart + (i * 2)] = namebytes[i];
+				((PatchDataImpl) p).getSysex()[patchNameStart + (i * 2)] = namebytes[i];
 
 		} catch (UnsupportedEncodingException ex) {
 			return;
 		}
 	}
 
-	protected void calculateChecksum(Patch p, int start, int end, int ofs) {
+	protected void calculateChecksum(PatchDataImpl p, int start, int end, int ofs) {
 		int i;
 		int sum = 0;
 
@@ -78,45 +78,45 @@ public class EmuProteusMPSBankDriver extends BankDriver {
 
 	}
 
-	public void calculateChecksum(Patch p) {
+	public void calculateChecksum(PatchDataImpl p) {
 		for (int i = 0; i < 100; i++)
 			calculateChecksum(p, 7 + (i * 319), 7 + (i * 319) + 309, 7 + (i * 319) + 310);
 	}
 
-	public void putPatch(Patch bank, Patch p, int patchNum) {
+	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) {
 		if (!canHoldPatch(p)) {
 			JOptionPane.showMessageDialog(null, "This type of patch does not fit in to this type of bank.", "Error",
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
-		System.arraycopy(((Patch) p).getSysex(), 0, ((Patch) bank).getSysex(), getPatchStart(patchNum), 319);
+		System.arraycopy(((PatchDataImpl) p).getSysex(), 0, ((PatchDataImpl) bank).getSysex(), getPatchStart(patchNum), 319);
 		calculateChecksum(bank);
 	}
 
-	public Patch getPatch(Patch bank, int patchNum) {
+	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
 		try {
 			byte[] sysex = new byte[319];
-			System.arraycopy(((Patch) bank).getSysex(), getPatchStart(patchNum), sysex, 0, 319);
-			Patch p = new Patch(sysex, getDevice());
+			System.arraycopy(((PatchDataImpl) bank).getSysex(), getPatchStart(patchNum), sysex, 0, 319);
+			PatchDataImpl p = new PatchDataImpl(sysex, getDevice());
 			p.calculateChecksum();
 			return p;
 		} catch (Exception e) {
-			ErrorMsg.reportError("Error", "Error in Proteus MPS Bank Driver", e);
+			ErrorMsgUtil.reportError("Error", "Error in Proteus MPS Bank Driver", e);
 			return null;
 		}
 	}
 
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		setBankNum(bankNum);
 		for (int i = 0; i < 100; i++) {
-			((Patch) p).getSysex()[getPatchStart(i) + 5] = (byte) ((bankNum * 100 + i) % 128);
-			((Patch) p).getSysex()[getPatchStart(i) + 6] = (byte) ((bankNum * 100 + i) / 128);
+			((PatchDataImpl) p).getSysex()[getPatchStart(i) + 5] = (byte) ((bankNum * 100 + i) % 128);
+			((PatchDataImpl) p).getSysex()[getPatchStart(i) + 6] = (byte) ((bankNum * 100 + i) / 128);
 		}
 		sendPatchWorker(p);
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[31900];
 		for (int i = 0; i < 100; i++) {
 			sysex[i * 319 + 0] = (byte) 0xF0;
@@ -126,7 +126,7 @@ public class EmuProteusMPSBankDriver extends BankDriver {
 			sysex[i * 319 + 4] = (byte) 0x01;
 			sysex[i * 319 + 318] = (byte) 0xF7;
 		}
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		for (int i = 0; i < 100; i++)
 			setPatchName(p, i, "New Patch");
 		calculateChecksum(p);

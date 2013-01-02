@@ -23,7 +23,7 @@ package org.jsynthlib.synthdrivers.line6.basspod;
 
 import java.util.prefs.Preferences;
 
-import org.jsynthlib.menu.patch.Device;
+import org.jsynthlib.model.device.Device;
 
 /**
  * Device file for Line6 Pod

@@ -2,11 +2,11 @@ package org.jsynthlib.synthdrivers.yamaha.fs1r;
 
 import java.io.UnsupportedEncodingException;
 
-import org.jsynthlib.menu.patch.Driver;
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.patch.SysexHandler;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.SysexSender;
 
 /**
@@ -15,7 +15,7 @@ import org.jsynthlib.widgets.SysexSender;
  * @author Denis Queffeulou mailto:dqueffeulou@free.fr
  * @version $Id$
  */
-public class YamahaFS1RPerformanceDriver extends Driver {
+public class YamahaFS1RPerformanceDriver extends SynthDriverPatchImpl {
 	/** size of patch without header */
 	static final int PATCH_SIZE = 400;
 
@@ -116,7 +116,7 @@ public class YamahaFS1RPerformanceDriver extends Driver {
 		// il ne faut pas envoyer de prog change
 	}
 
-	public void sendPatch(Patch p) {
+	public void sendPatch(PatchDataImpl p) {
 		// le cs n'est pas toujours calcule donc je le rajoute ici
 		super.calculateChecksum(p);
 		super.sendPatch(p);
@@ -136,11 +136,11 @@ public class YamahaFS1RPerformanceDriver extends Driver {
 	}
 
 	/** Sends a patch to a set location on a synth. */
-	public void storePatch(Patch p, int bankNum, int patchNum) {
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		// change the address to internal performance
-		((Patch) p).getSysex()[6] = (byte) 0x11;
-		((Patch) p).getSysex()[7] = (byte) 0;
-		((Patch) p).getSysex()[8] = (byte) patchNum;
+		((PatchDataImpl) p).getSysex()[6] = (byte) 0x11;
+		((PatchDataImpl) p).getSysex()[7] = (byte) 0;
+		((PatchDataImpl) p).getSysex()[8] = (byte) patchNum;
 		calculateChecksum(p);
 		sendPatch(p);
 	}
@@ -151,7 +151,7 @@ public class YamahaFS1RPerformanceDriver extends Driver {
 	 * @param aPatchOffset
 	 *            offset of performance in patch sysex
 	 */
-	String getPatchName(Patch p, int aPatchOffset) {
+	String getPatchName(PatchDataImpl p, int aPatchOffset) {
 		if (patchNameSize == 0)
 			return ("-");
 		try {
@@ -168,7 +168,7 @@ public class YamahaFS1RPerformanceDriver extends Driver {
 	 * @param aPatchOffset
 	 *            offset of performance in patch sysex
 	 */
-	public void setPatchName(Patch p, String name, int aPatchOffset) {
+	public void setPatchName(PatchDataImpl p, String name, int aPatchOffset) {
 		if (name.length() < patchNameSize)
 			name = name + "            ";
 		byte[] namebytes = new byte[64];
@@ -187,10 +187,10 @@ public class YamahaFS1RPerformanceDriver extends Driver {
 	 * 
 	 * @return Description of the Return Value
 	 */
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[PATCH_AND_HEADER_SIZE];
 		initPatch(sysex, 0);
-		return new Patch(sysex, this);
+		return new PatchDataImpl(sysex, this);
 	}
 
 	static void initPatch(byte[] sysex, int aOffset) {
@@ -206,15 +206,15 @@ public class YamahaFS1RPerformanceDriver extends Driver {
 	 *            data of the performance
 	 * @return Description of the Return Value
 	 */
-	public JSLFrame editPatch(Patch ip) {
-		Patch p = (Patch) ip;
+	public JSLFrame editPatch(PatchDataImpl ip) {
+		PatchDataImpl p = (PatchDataImpl) ip;
 		// set the address to "current performance" so when patch is sent
 		// the FS1R display show this "in edit" performance whenever it comes from.
 		p.getSysex()[6] = (byte) 0x10;
 		p.getSysex()[7] = (byte) 0;
 		p.getSysex()[8] = (byte) 0;
 		calculateChecksum(p);
-		return new YamahaFS1RPerformanceEditor((Patch) p);
+		return new YamahaFS1RPerformanceEditor((PatchDataImpl) p);
 	}
 
 	static class Sender extends SysexSender {
@@ -268,7 +268,7 @@ public class YamahaFS1RPerformanceDriver extends Driver {
 		 * @param offset
 		 *            dans la table (7bits MSB + 7bits LSB)
 		 */
-		Model(Patch p, int offset) {
+		Model(PatchDataImpl p, int offset) {
 			// l'offset indique dans la doc ne correspond pas a un offset lineaire
 			// dans le sysex, il faut recalculer la valeur sur 16bits lineaires
 			super(p, (offset & 127) + ((offset >> 1) & 0x3F80) + DATA_START);
@@ -287,7 +287,7 @@ public class YamahaFS1RPerformanceDriver extends Driver {
 		 * @param aPart
 		 *            part number 1..4
 		 */
-		Model(Patch p, int offset, int aPart) {
+		Model(PatchDataImpl p, int offset, int aPart) {
 			this(p, offset);
 			mPart = aPart;
 			if (aPart > 0) {
@@ -327,7 +327,7 @@ public class YamahaFS1RPerformanceDriver extends Driver {
 		 * @param offset
 		 *            decalage soit sur common soit sur part
 		 */
-		BitModel(Patch p, int offset, int aPart, int aMask, int aShift) {
+		BitModel(PatchDataImpl p, int offset, int aPart, int aMask, int aShift) {
 			super(p, offset, aPart);
 			mMask = aMask;
 			mShift = aShift;
@@ -347,10 +347,10 @@ public class YamahaFS1RPerformanceDriver extends Driver {
 	}
 
 	static class BitSender extends Sender {
-		private Patch mPatch;
+		private PatchDataImpl mPatch;
 
 		/** Common parameter */
-		BitSender(Patch aPatch, int param) {
+		BitSender(PatchDataImpl aPatch, int param) {
 			super(param);
 			mPatch = aPatch;
 		}
@@ -361,7 +361,7 @@ public class YamahaFS1RPerformanceDriver extends Driver {
 		 * @param aPart
 		 *            number 1..4
 		 */
-		BitSender(Patch aPatch, int param, int aPart) {
+		BitSender(PatchDataImpl aPatch, int param, int aPart) {
 			super(param, aPart);
 			mPatch = aPatch;
 		}

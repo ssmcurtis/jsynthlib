@@ -9,18 +9,18 @@ import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-import org.jsynthlib.menu.patch.ParamModel;
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.window.PatchEditorFrame;
+import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.CheckBoxWidget;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.EnvelopeWidget;
+import org.jsynthlib.widgets.ParamModel;
 import org.jsynthlib.widgets.PatchNameWidget;
 import org.jsynthlib.widgets.ScrollBarWidget;
 import org.jsynthlib.widgets.SysexSender;
 
 class MKS50ToneSingleEditor extends PatchEditorFrame {
-	public MKS50ToneSingleEditor(Patch patch) {
+	public MKS50ToneSingleEditor(PatchDataImpl patch) {
 		super("Roland MKS-50 Tone Single Editor", patch);
 
 		JPanel leftPane = new JPanel();
@@ -187,7 +187,7 @@ class MKSToneSender extends SysexSender {
 // shift sender & model are for parms whose value must be shifted left
 // 3 bits (multiplied by 8) to arrive at the sysex parm value
 class MKSShiftModel extends ParamModel {
-	public MKSShiftModel(Patch p, int o) {
+	public MKSShiftModel(PatchDataImpl p, int o) {
 		super(p, o);
 	}
 

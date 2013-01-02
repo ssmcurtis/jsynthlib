@@ -24,8 +24,8 @@
 
 package org.jsynthlib.synthdrivers.midibox.fm;
 
-import org.jsynthlib.menu.patch.Patch;
-import org.jsynthlib.menu.ui.JSLFrame;
+import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.patch.PatchDataImpl;
 
 public class MIDIboxFMEnsDriver extends MIDIboxFMSingleDriver {
 
@@ -33,14 +33,14 @@ public class MIDIboxFMEnsDriver extends MIDIboxFMSingleDriver {
 		super("Ensemble", 32, (byte) 0x70);
 	}
 
-	public void setPatchName(Patch p, String name) {
+	public void setPatchName(PatchDataImpl p, String name) {
 	};
 
-	public String getPatchName(Patch ip) {
+	public String getPatchName(PatchDataImpl ip) {
 		return "-";
 	}
 
-	public Patch createNewPatch() {
+	public PatchDataImpl createNewPatch() {
 		byte[] sysex = new byte[268];
 
 		sysex[0] = (byte) 0xf0;
@@ -106,13 +106,13 @@ public class MIDIboxFMEnsDriver extends MIDIboxFMSingleDriver {
 		sysex[10 + 0x3a] = 0x0f; // I4 audio channels OP34
 
 		sysex[267] = (byte) 0xf7;
-		Patch p = new Patch(sysex, this);
+		PatchDataImpl p = new PatchDataImpl(sysex, this);
 		setPatchName(p, "New Ensemble");
 		calculateChecksum(p);
 		return p;
 	}
 
-	public JSLFrame editPatch(Patch p) {
-		return new MIDIboxFMEnsEditor((Patch) p);
+	public JSLFrame editPatch(PatchDataImpl p) {
+		return new MIDIboxFMEnsEditor((PatchDataImpl) p);
 	}
 }

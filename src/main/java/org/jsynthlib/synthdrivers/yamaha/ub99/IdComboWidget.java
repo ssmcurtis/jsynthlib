@@ -30,7 +30,7 @@ import java.util.Vector;
 
 import javax.swing.JComboBox;
 
-import org.jsynthlib.menu.patch.IPatch;
+import org.jsynthlib.model.patch.Patch;
 import org.jsynthlib.widgets.SysexWidget;
 
 public class IdComboWidget extends SysexWidget {
@@ -38,7 +38,7 @@ public class IdComboWidget extends SysexWidget {
 	/** A vector of the list of the options in the ComboBox. */
 	protected Vector options;
 
-	public IdComboWidget(String label, IPatch patch, IParamModel pmodel, ISender sender, Vector options) {
+	public IdComboWidget(String label, Patch patch, IParamModel pmodel, ISender sender, Vector options) {
 		super(label, patch, 0, Integer.MAX_VALUE, pmodel, sender);
 		this.options = options;
 		createWidgets();
