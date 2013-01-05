@@ -111,6 +111,10 @@ public class SynthConfigPanel extends ConfigPanel {
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
+		JComboBox<String> configs = new JComboBox<String>(AppConfig.getAvailableStudioSetups());
+		configs.setToolTipText("Other studio setups available by parameter -S <name>");
+		buttonPanel.add(configs);
+		
 		JLabel studioConfigTitle = new JLabel("Current studio setup: " + JSynthLib.getStudio());
 		buttonPanel.add(studioConfigTitle);
 

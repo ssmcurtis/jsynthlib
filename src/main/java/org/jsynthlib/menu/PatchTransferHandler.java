@@ -47,8 +47,9 @@ public abstract class PatchTransferHandler extends TransferHandler {
 
 	protected Transferable createTransferable(JComponent c) {
 		PatchesAndScenes patchesAndScenes = new PatchesAndScenes();
+		
 		if (c instanceof JTable) {
-			System.out.println("Create trasnferable ...");
+			System.out.println("Create transferable ...");
 
 			JTable table = (JTable) c;
 			PatchTableModel pm = (PatchTableModel) table.getModel();
@@ -91,24 +92,31 @@ public abstract class PatchTransferHandler extends TransferHandler {
 					if (isMoveInside) {
 						if (patches.size() == 1) {
 							for (Map.Entry<Integer, Patch> entry : patches.entrySet()) {
-
-								libraryFrame.getMyModel().removeAt(libraryFrame.getTable().convertRowIndexToModel(entry.getKey()));
-
+								
 								Patch newPatch = (Patch) entry.getValue().clone();
 								newPatch.findDriver();
-
-								int targetRow = libraryFrame.getTable().convertRowIndexToModel(libraryFrame.getTable().getSelectedRow());
-								libraryFrame.getMyModel().addPatch(targetRow, newPatch);
-
-								libraryFrame.getMyModel().fireTableDataChanged();
-
-								Patch px = libraryFrame.getPatchCollection().get(targetRow);
-
-								System.out.println(px.getDevice().getModelName() + " " + px.getFileName());
 								
-								libraryFrame.getTable().getSelectionModel().setSelectionInterval(targetRow, targetRow);
+								// INFO ssmCurtis - Q&D
+								try {
+									int row = libraryFrame.getTable().convertRowIndexToModel(entry.getKey());
+									
+									System.out.println("Remove now ...");
+									libraryFrame.getMyModel().removeAt(row);
+									int targetRow = libraryFrame.getTable().convertRowIndexToModel(libraryFrame.getTable().getSelectedRow());
+									libraryFrame.getMyModel().addPatch(targetRow, newPatch);
+									libraryFrame.getMyModel().fireTableDataChanged();
+
+									Patch px = libraryFrame.getPatchCollection().get(targetRow);
+
+									System.out.println(px.getDevice().getModelName() + " " + px.getFileName());
+
+									libraryFrame.getTable().getSelectionModel().setSelectionInterval(targetRow, targetRow);
+								} catch (IndexOutOfBoundsException iobe) {
+									// cut ... row already removed... 
+									libraryFrame.getMyModel().addPatch(newPatch);
+								}
+
 							}
-							
 
 						}
 					} else {
@@ -131,10 +139,9 @@ public abstract class PatchTransferHandler extends TransferHandler {
 							}
 						}
 					}
-					
-//					libraryFrame.getTable().clearSelection();
-					
-					
+
+					// libraryFrame.getTable().clearSelection();
+
 					return true;
 				} else if (transferable.isDataFlavorSupported(TEXT_FLAVOR)) {
 					// String s = (String) t.getTransferData(TEXT_FLAVOR);

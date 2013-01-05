@@ -142,7 +142,7 @@ public class MicroKorgBankDriver extends SynthDriverBank {
 		return null;
 	}
 
-	public int getPatchStart(int patchNum) {
+	private int getPatchStart(int patchNum) {
 		// System.out.println(">>>> Get patch start " + (HSIZE + (MicroKorg.PROGRAM_SIZE * patchNum)));
 		return MicroKorg.HEADER_SIZE + (MicroKorg.PROGRAM_SIZE_COMPRESSED * patchNum);
 	}

@@ -304,15 +304,15 @@ final public class Actions {
 		JMenuItem mi;
 		JMenu menuPatch = new JMenu("Edit");
 		mnemonics.put(menuPatch, new Integer(KeyEvent.VK_L));
-		mi = menuPatch.add(copyAction);
-		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_COPY, 0));
-		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, mask));
-		mi = menuPatch.add(cutAction);
-		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_CUT, 0));
-		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, mask));
-		mi = menuPatch.add(pasteAction);
-		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_PASTE, 0));
-		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, mask));
+//		mi = menuPatch.add(copyAction);
+//		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_COPY, 0));
+//		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, mask));
+//		mi = menuPatch.add(cutAction);
+//		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_CUT, 0));
+//		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, mask));
+//		mi = menuPatch.add(pasteAction);
+//		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_PASTE, 0));
+//		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, mask));
 		mi = menuPatch.add(deleteAction);
 		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
 		menuPatch.addSeparator();
@@ -333,7 +333,7 @@ final public class Actions {
 		mnemonics.put(menuPatch, new Integer(KeyEvent.VK_P));
 
 		mi = menuPatch.add(sendAction);
-		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, mask));
+		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD0, 0));
 		// menuPatch.add(updateSelectedAction);
 		menuPatch.add(sendToAction);
 		menuPatch.add(storeAction);
@@ -535,9 +535,9 @@ final public class Actions {
 
 		toolBar.addSeparator();
 
-		toolBar.add(createToolBarButton(copyAction, "Copy", "Copy Patch"));
-		toolBar.add(createToolBarButton(cutAction, "Cut", "Cut Patch"));
-		toolBar.add(createToolBarButton(pasteAction, "Paste", "Paste Patch"));
+//		toolBar.add(createToolBarButton(copyAction, "Copy", "Copy Patch"));
+//		toolBar.add(createToolBarButton(cutAction, "Cut", "Cut Patch"));
+//		toolBar.add(createToolBarButton(pasteAction, "Paste", "Paste Patch"));
 		toolBar.add(createToolBarButton(importAction, "Import", "Import Patch"));
 		toolBar.add(createToolBarButton(exportAction, "Export", "Export Patch"));
 

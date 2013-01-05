@@ -43,37 +43,27 @@ public class YamahaTX802SysexHelpers {
 																										// about "OnOff"
 
 	// switch off internal/cartridge memory protection
-	protected static void swOffMemProt(SynthDriverPatchImpl d, byte ch) // port, channel
-	{
-		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("switch", SYSTEM_SETUP),
-				new SysexHandler.NameValue("OnOff", DEPRESS)));
-		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("switch", TG8), new SysexHandler.NameValue("OnOff",
-				DEPRESS)));
-		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("switch", OFF), new SysexHandler.NameValue("OnOff",
-				DEPRESS)));
+	protected static void swOffMemProt(SynthDriverPatchImpl d, byte ch) {// port, channel
+		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("switch", SYSTEM_SETUP), new SysexHandler.NameValue("OnOff", DEPRESS)));
+		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("switch", TG8), new SysexHandler.NameValue("OnOff", DEPRESS)));
+		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("switch", OFF), new SysexHandler.NameValue("OnOff", DEPRESS)));
 	}
 
-	protected static void swOnMemProt(SynthDriverPatchImpl d, byte ch) // port, channel
-	{
-		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("switch", SYSTEM_SETUP),
-				new SysexHandler.NameValue("OnOff", DEPRESS)));
-		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("switch", TG8), new SysexHandler.NameValue("OnOff",
-				DEPRESS)));
-		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("switch", ON), new SysexHandler.NameValue("OnOff",
-				DEPRESS)));
+	protected static void swOnMemProt(SynthDriverPatchImpl d, byte ch) {
+		// port, channel
+		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("switch", SYSTEM_SETUP), new SysexHandler.NameValue("OnOff", DEPRESS)));
+		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("switch", TG8), new SysexHandler.NameValue("OnOff", DEPRESS)));
+		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("switch", ON), new SysexHandler.NameValue("OnOff", DEPRESS)));
 	}
 
 	// choose the desired MIDI receive/transmit block
-	protected static void chBlock(SynthDriverPatchImpl d, byte ch, byte bn) // port, channel,
-	{
-		d.send(System.toSysexMessage(ch, new SysexHandler.NameValue("param", 0x4d), new SysexHandler.NameValue(
-				"action", bn)));
+	protected static void chBlock(SynthDriverPatchImpl d, byte ch, byte bn) {
+		// port, channel,
+		d.send(System.toSysexMessage(ch, new SysexHandler.NameValue("param", 0x4d), new SysexHandler.NameValue("action", bn)));
 	} // bn: 0 = 1-32, 1 = 33-64
 
 	// choose voice mode
-	protected static void chVoiceMode(SynthDriverPatchImpl d, byte ch) // port, channel
-	{
-		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("switch", 0x52), new SysexHandler.NameValue(
-				"OnOff", 0x00)));
+	protected static void chVoiceMode(SynthDriverPatchImpl d, byte ch) {// port, channel
+		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("switch", 0x52), new SysexHandler.NameValue("OnOff", 0x00)));
 	} // parameter 82, OnOff = don't care
 }

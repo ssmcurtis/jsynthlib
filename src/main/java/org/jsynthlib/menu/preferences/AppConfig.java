@@ -58,6 +58,16 @@ public class AppConfig {
 		try {
 			String[] devs;
 
+			// clear studio configurations
+			// for(String pd : prefs.childrenNames()) {
+			// if(pd.equals("devices") || pd.equals("microkorg")) {
+			// System.out.println(">>>> " + pd);
+			// } else {
+			// System.out.println("delete " + pd);
+			// prefs.node(pd).removeNode();
+			// }
+			// }
+
 			// debug prefs
 			// devs = prefsDev.childrenNames();
 			// for (int i = 0; i < devs.length; i++) {
@@ -335,7 +345,6 @@ public class AppConfig {
 		prefs.putBoolean("toolBar", b);
 	}
 
-
 	/** Getter for tool bar */
 	public static boolean getMakeTableSortable() {
 		return prefs.getBoolean("makeTableSortable", false);
@@ -345,7 +354,6 @@ public class AppConfig {
 	public static void setMakeTableSortable(boolean b) {
 		prefs.putBoolean("makeTableSortable", b);
 	}
-
 
 	/**
 	 * Getter for midiEnable. Returns false if either MIDI input nor output is not available.
@@ -588,6 +596,16 @@ public class AppConfig {
 	 */
 	public static SynthDriverPatch getNullDriver() {
 		return (SynthDriverPatch) getDevice(0).getDriver(0);
+	}
+
+	public static String[] getAvailableStudioSetups() {
+		try {
+			return prefs.childrenNames();
+		} catch (BackingStoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return new String[] {};
 	}
 
 }
