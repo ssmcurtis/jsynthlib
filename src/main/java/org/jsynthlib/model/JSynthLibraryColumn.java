@@ -117,10 +117,14 @@ public enum JSynthLibraryColumn {
 		case INFO:
 			return patch.getInfo();
 		case SCORE:
-			if (patch.getScore() == 0) {
-				return "";
+			if (patch.getSelected()) {
+				return "x";
 			} else {
-				return patch.getScore().toString();
+				if (patch.getScore() == 0) {
+					return "";
+				} else {
+					return patch.getScore().toString();
+				}
 			}
 		default:
 			return null;

@@ -45,7 +45,14 @@ public class LibraryFrame extends AbstractLibraryFrame {
 		return new LibraryModel();
 	}
 
-	public void deleteDuplicates() {
+	public void selectClear() {
+		for(Patch p : myModel.getList()){
+			p.setSelected(false);
+		}
+		setChanged();
+	}
+	
+	public void selectDuplicates() {
 		Collections.sort(myModel.getList(), new SysexSort());
 		int numDeleted = 0;
 		
@@ -55,20 +62,24 @@ public class LibraryFrame extends AbstractLibraryFrame {
 		byte[] stay = stayPatch.getByteArray();
 		
 		while (it.hasNext()) {
-			Patch deletePatch = it.next();
-			byte[] delete = deletePatch.getByteArray();
+			Patch selectedPatch = it.next();
+			byte[] delete = selectedPatch.getByteArray();
 			if (Arrays.equals(stay, delete)) {
-				// TODO ssmCurtis - enable delete
+				// TODO ssmCurtis - changed from delte to selected
 				// deletePatch.setComment(deletePatch.getComment() + " #same as " + stayPatch.getComment()) ;
-				it.remove();
+				// it.remove();
+				
+				selectedPatch.setSelected(true);
 				
 				numDeleted++;
 			} else {
 				stay = delete;
-				stayPatch = deletePatch;
+				stayPatch = selectedPatch;
 			}
 		}
-		JOptionPane.showMessageDialog(null, numDeleted + " PatchesAndScenes were Deleted", "Delete Duplicates",
+		
+		
+		JOptionPane.showMessageDialog(null, numDeleted + " PatchesAndScenes were selected", "Delete Duplicates",
 				JOptionPane.INFORMATION_MESSAGE);
 		setChanged();
 	}
@@ -79,7 +90,7 @@ public class LibraryFrame extends AbstractLibraryFrame {
 		Actions.setEnabled(table.getRowCount() > 0, Actions.EN_PLAY_ALL | Actions.EN_SAVE | Actions.EN_SAVE_AS | Actions.EN_SEARCH);
 
 		// // more than one patches are included.
-		Actions.setEnabled(table.getRowCount() > 1, Actions.EN_DELETE_DUPLICATES);
+		Actions.setEnabled(table.getRowCount() > 1, Actions.EN_SELECT_DUPLICATE | Actions.EN_SELECT_BYFILTER);
 
 		// one or more patches are selected
 		Actions.setEnabled(table.getSelectedRowCount() > 0, Actions.EN_DELETE);
@@ -118,7 +129,7 @@ public class LibraryFrame extends AbstractLibraryFrame {
 	void frameActivated() {
 		Actions.setEnabled(false, Actions.EN_ALL);
 		// always enabled
-		Actions.setEnabled(true, Actions.EN_GET | Actions.EN_IMPORT | Actions.EN_IMPORT_ALL);
+		Actions.setEnabled(true, Actions.EN_GET | Actions.EN_IMPORT | Actions.EN_IMPORT_ALL | Actions.EN_SELECT_CLEAR);
 		enableActions();
 	}
 

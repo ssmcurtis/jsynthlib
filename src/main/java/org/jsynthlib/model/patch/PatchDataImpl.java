@@ -68,6 +68,8 @@ public class PatchDataImpl implements PatchSingle, PatchBank {
 
 	private int score = 0;
 
+	private boolean selected = false;
+
 	// 'String' is better. But 'StringBuffer' is used to keep
 	// the compatibility for serialized files
 	/** "Field 1" comment. */
@@ -95,9 +97,9 @@ public class PatchDataImpl implements PatchSingle, PatchBank {
 	}
 
 	public PatchDataImpl(byte[] gsysex, SynthDriverPatchImpl driver, String fileName) {
-		
+
 		// INFO CREATE NEW PATCH OBJECT FOR DRIVER
-		
+
 		date = new StringBuffer(df.format(Calendar.getInstance().getTime()));
 		author = new StringBuffer(AppConfig.getRepositoryUser());
 		comment = new StringBuffer("");
@@ -119,9 +121,9 @@ public class PatchDataImpl implements PatchSingle, PatchBank {
 	 *            a <code>Device</code> instance.
 	 */
 	public PatchDataImpl(byte[] gsysex, Device device) {
-		
+
 		// INFO CREATE NEW PATCH OBJECT FOR DEVICE
-		
+
 		date = new StringBuffer(df.format(Calendar.getInstance().getTime()));
 		author = new StringBuffer(AppConfig.getRepositoryUser());
 		comment = new StringBuffer("");
@@ -143,7 +145,7 @@ public class PatchDataImpl implements PatchSingle, PatchBank {
 	 *            The MIDI SysEx message.
 	 */
 	public PatchDataImpl(byte[] gsysex) {
-		
+
 		// INFO CREATE NEW PATCH AND ASSIGN DRIVER
 
 		date = new StringBuffer(df.format(Calendar.getInstance().getTime()));
@@ -440,5 +442,15 @@ public class PatchDataImpl implements PatchSingle, PatchBank {
 	@Override
 	public void setScore(int score) {
 		this.score = score;
+	}
+
+	@Override
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
+
+	@Override
+	public boolean getSelected() {
+		return this.selected;
 	}
 }

@@ -40,7 +40,8 @@ import org.jsynthlib.menu.action.ComparePatchAction;
 import org.jsynthlib.menu.action.CopyAction;
 import org.jsynthlib.menu.action.CutAction;
 import org.jsynthlib.menu.action.DeleteAction;
-import org.jsynthlib.menu.action.DeleteDuplicateAction;
+import org.jsynthlib.menu.action.SelectByFilterAction;
+import org.jsynthlib.menu.action.SelectDuplicateAction;
 import org.jsynthlib.menu.action.DocsAction;
 import org.jsynthlib.menu.action.EditAction;
 import org.jsynthlib.menu.action.ExitAction;
@@ -63,6 +64,7 @@ import org.jsynthlib.menu.action.ReassignAction;
 import org.jsynthlib.menu.action.SaveAction;
 import org.jsynthlib.menu.action.SaveAsAction;
 import org.jsynthlib.menu.action.SearchAction;
+import org.jsynthlib.menu.action.SelectClearAction;
 import org.jsynthlib.menu.action.SendAction;
 import org.jsynthlib.menu.action.SendToAction;
 import org.jsynthlib.menu.action.ShowDevicesAction;
@@ -79,6 +81,7 @@ import org.jsynthlib.menu.window.MenuFrame;
 import org.jsynthlib.menu.window.MidiMonitorDialog;
 import org.jsynthlib.menu.window.PatchEditorFrame;
 import org.jsynthlib.menu.window.SearchDialog;
+import org.jsynthlib.menu.window.SelectByFilterDialog;
 import org.jsynthlib.model.JSynthBpm;
 import org.jsynthlib.model.JSynthOctave;
 import org.jsynthlib.model.JSynthSequence;
@@ -123,7 +126,7 @@ final public class Actions {
 	public static final long EN_SEARCH = 0x0000000010000000L;
 	public static final long EN_SEND = 0x0000000020000000L;
 	public static final long EN_SEND_TO = 0x0000000040000000L;
-	public static final long EN_DELETE_DUPLICATES = 0x0000000080000000L;
+	public static final long EN_SELECT_DUPLICATE = 0x0000000080000000L;
 	public static final long EN_STORE = 0x0000000100000000L;
 	public static final long EN_TRANSFER_SCENE = 0x0000000200000000L;
 	public static final long EN_UPLOAD = 0x0000000400000000L;
@@ -134,6 +137,8 @@ final public class Actions {
 	public static final long EN_SHOW_DEVICE = 0x0000008000000000L;
 	public static final long EN_PLAY_ALL = 0x0000010000000000L;
 	public static final long EN_COMPARE_PATCH = 0x0000020000000000L;
+	public static final long EN_SELECT_BYFILTER  = 0x0000040000000000L;
+	public static final long EN_SELECT_CLEAR  = 0x0000080000000000L;
 
 	/** All actions excluding ones which are always enabled. */
 	public static final long EN_ALL = (// EN_ABOUT
@@ -160,7 +165,7 @@ final public class Actions {
 			// | EN_PREV_FADER
 			// | EN_OPEN
 			// | EN_PASTE : 'paste' needs special handling
-			| EN_PLAY | EN_PLAY_ALL
+			| EN_PLAY | EN_PLAY_ALL | EN_SELECT_DUPLICATE | EN_SELECT_BYFILTER | EN_SELECT_CLEAR
 			// | EN_PREFS
 			| EN_REASSIGN | EN_SAVE | EN_SAVE_AS | EN_SEARCH | EN_SEND | EN_SEND_TO | EN_STORE | EN_TRANSFER_SCENE | EN_UPDATE_SCENE
 			| EN_UPDATE_SELECTED | EN_UPLOAD);
@@ -168,6 +173,7 @@ final public class Actions {
 	private static JPopupMenu menuPatchPopup;
 	private static MidiMonitorDialog midiMonitor;
 	private static SearchDialog searchDialog;
+	private static SelectByFilterDialog selectByFilterDialog;
 	private static DocumentationWindow docWin;
 	private static DocumentationWindow licWin;
 	private static DocumentationWindow hpWin;
@@ -194,11 +200,13 @@ final public class Actions {
 	private static Action importAllAction = new ImportAllAction(mnemonics);
 	private static Action sendAction = new SendAction(mnemonics);
 	private static Action sendToAction = new SendToAction(mnemonics);
-	private static Action deleteDuplicatedAction = new DeleteDuplicateAction(mnemonics);
+	private static Action selectDuplicatedAction = new SelectDuplicateAction(mnemonics);
 	// private static Action updateSelectedAction = new UpdateSelectedAction(mnemonics);// R. Wirski
 	private static Action printAction = new PrintAction(mnemonics);
 	private static Action storeAction = new StoreAction(mnemonics);
 	private static Action getAction = new GetAction(mnemonics);
+	private static Action selectByFilterAction = new SelectByFilterAction(mnemonics);
+	private static Action selectClearAction = new SelectClearAction(mnemonics);
 
 	private static Action playAction = new PlayAction(mnemonics);
 	private static Action playAllAction = new PlayCompleteAction(mnemonics);
@@ -344,8 +352,12 @@ final public class Actions {
 
 		menuPatch.add(reassignAction);
 		menuPatch.add(extractAction);
-		menuPatch.add(deleteDuplicatedAction);
 		menuPatch.add(comparePatch);
+		
+		menuPatch.addSeparator();
+		menuPatch.add(selectDuplicatedAction);
+		menuPatch.add(selectByFilterAction);
+		menuPatch.add(selectClearAction);
 
 		// menuPatch.addSeparator();
 		// menuPatch.add(uploadAction);
@@ -644,6 +656,10 @@ final public class Actions {
 			exportAction.setEnabled(b);
 		if ((v & EN_EXTRACT) != 0)
 			extractAction.setEnabled(b);
+		if ((v & EN_SELECT_BYFILTER) != 0)
+			selectByFilterAction.setEnabled(b);
+		if ((v & EN_SELECT_CLEAR) != 0)
+			selectClearAction.setEnabled(b);
 		if ((v & EN_GET) != 0)
 			getAction.setEnabled(b);
 		if ((v & EN_HOME_PAGE) != 0)
@@ -690,8 +706,8 @@ final public class Actions {
 			sendAction.setEnabled(b);
 		if ((v & EN_SEND_TO) != 0)
 			sendToAction.setEnabled(b);
-		if ((v & EN_DELETE_DUPLICATES) != 0)
-			deleteDuplicatedAction.setEnabled(b);
+		if ((v & EN_SELECT_DUPLICATE) != 0)
+			selectDuplicatedAction.setEnabled(b);
 		if ((v & EN_STORE) != 0)
 			storeAction.setEnabled(b);
 		// if ((v & EN_TRANSFER_SCENE) != 0)
@@ -912,5 +928,13 @@ final public class Actions {
 
 	public static void setDocWin(DocumentationWindow docWin) {
 		Actions.docWin = docWin;
+	}
+
+	public static SelectByFilterDialog getSelectByFilterDialog() {
+		return selectByFilterDialog;
+	}
+
+	public static void setSelectByFilterDialog(SelectByFilterDialog selectByFilterDialog) {
+		Actions.selectByFilterDialog = selectByFilterDialog;
 	}
 }
