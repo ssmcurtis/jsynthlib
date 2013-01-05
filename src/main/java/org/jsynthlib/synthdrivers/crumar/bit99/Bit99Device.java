@@ -16,6 +16,5 @@ public class Bit99Device extends Device {
 		this.prefs = prefs;
 
 		addDriver(new Bit99SingleDriver());
-		// addDriver(new EvolverBankDriver());
 	}
 }

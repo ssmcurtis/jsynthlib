@@ -249,11 +249,11 @@ public class FCB1010Editor extends PatchEditorFrame implements ActionListener {
 		if (e.getActionCommand().equals(SELECT_PRESET_ACTION_CMD)) {
 			SelectedPresetModel.setPreset(bankSelect.getSelectedIndex(), presetSelect.getSelectedIndex());
 		} else if (e.getActionCommand().equals(COPY_PRESET_ACTION_CMD)) {
-			doCopyPreset(p);
+			doCopyPreset(patchByParameter);
 		} else if (e.getActionCommand().equals(COPY_BANK_ACTION_CMD)) {
-			doCopyBank(p);
+			doCopyBank(patchByParameter);
 		} else if (e.getActionCommand().equals(PASTE_ACTION_CMD)) {
-			doPaste(p);
+			doPaste(patchByParameter);
 		}
 	}
 

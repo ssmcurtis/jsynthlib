@@ -92,7 +92,7 @@ public class NoteCollection extends Note {
 	 * @see org.jfugue.Note#getVerifyString()
 	 */
 	public String getVerifyString() {
-		// TODO Auto-generated method stub
+		
 		return super.getVerifyString();
 	}
 	

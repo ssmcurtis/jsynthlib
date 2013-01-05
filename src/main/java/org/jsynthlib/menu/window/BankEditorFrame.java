@@ -307,7 +307,7 @@ public class BankEditorFrame extends MenuFrame implements PatchBasket {
 	}
 
 	public void revalidateDriver() {
-		bankData.setDriver();
+		bankData.findDriver();
 		if (bankData.hasNullDriver()) {
 			try {
 				setClosed(true);
@@ -351,7 +351,7 @@ public class BankEditorFrame extends MenuFrame implements PatchBasket {
 
 	@Override
 	public Patch[] getSelectedPatches() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 }

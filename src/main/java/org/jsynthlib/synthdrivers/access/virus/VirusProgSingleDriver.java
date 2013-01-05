@@ -4,8 +4,8 @@ package org.jsynthlib.synthdrivers.access.virus;
 import javax.swing.JOptionPane;
 
 import org.jsynthlib.PatchBayApplication;
-import org.jsynthlib.menu.helper.SysexHandler;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
 
 /**

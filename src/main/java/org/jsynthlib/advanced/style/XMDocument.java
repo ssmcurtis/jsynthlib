@@ -1,6 +1,6 @@
 
 
-package org.jsynthlib.example.style;
+package org.jsynthlib.advanced.style;
 
 import javax.swing.text.DefaultStyledDocument;
 

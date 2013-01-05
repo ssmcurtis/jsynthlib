@@ -4,8 +4,8 @@
 package org.jsynthlib.synthdrivers.sci.prophet600;
 
 import org.jsynthlib.menu.JSLFrame;
-import org.jsynthlib.menu.helper.SysexHandler;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.ErrorMsgUtil;
 

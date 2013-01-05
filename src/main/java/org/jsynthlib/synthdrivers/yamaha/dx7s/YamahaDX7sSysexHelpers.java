@@ -23,8 +23,8 @@
  */
 package org.jsynthlib.synthdrivers.yamaha.dx7s;
 
-import org.jsynthlib.menu.helper.SysexHandler;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.driver.SysexHandler;
 
 public class YamahaDX7sSysexHelpers {
 	// ############################################### DX7s ############################################

@@ -103,32 +103,32 @@ public class VisitorToListenerAdaptor implements ElementVisitor {
 	}
 
 	public void visitParallelNote(Note n) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
 	public void visitSequentialNote(Note note) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
 	public void visit(Chord chord) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
 	public void visit(NoteCollection collection) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
 	public void visit(Parallel parallel) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
 	public void visit(Sequential sequential) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 	

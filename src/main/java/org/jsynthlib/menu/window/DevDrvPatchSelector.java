@@ -41,7 +41,7 @@ public class DevDrvPatchSelector extends JDialog {
 	private int driverNum;
 	private int patchNum;
 	private int bankNum;
-	protected Patch patchGlobal;
+	protected Patch p;
 	private byte[] sysexByteArray;
 	private String patchHeaderString;
 
@@ -65,7 +65,7 @@ public class DevDrvPatchSelector extends JDialog {
 	public DevDrvPatchSelector(Patch patch, String wintitle) {
 		super(PatchBayApplication.getInstance(), wintitle, true);
 
-		patchGlobal = patch;
+		p = patch;
 		sysexByteArray = patch.getByteArray();
 		patchHeaderString = patch.getPatchHeader();
 	}
@@ -92,7 +92,7 @@ public class DevDrvPatchSelector extends JDialog {
 	public DevDrvPatchSelector(Patch patch, int banknum, int patchnum, String wintitle) {
 		super(PatchBayApplication.getInstance(), wintitle, true);
 
-		patchGlobal = patch;
+		this.p = patch;
 		sysexByteArray = patch.getByteArray();
 		patchHeaderString = patch.getPatchHeader();
 		this.patchNum = patchnum;
@@ -121,7 +121,9 @@ public class DevDrvPatchSelector extends JDialog {
 		int nDriver = 0;
 		for (int i = 0; i < AppConfig.deviceCount(); i++) {
 			Device device = AppConfig.getDevice(i);
+			
 			boolean newDevice = true;
+			
 			for (int j = 0, m = 0; j < device.driverCount(); j++) {
 				SynthDriver driver = device.getDriver(j);
 				
@@ -130,7 +132,7 @@ public class DevDrvPatchSelector extends JDialog {
 						deviceComboBox.addItem(device);
 						newDevice = false;
 					}
-					if (patchGlobal != null && patchGlobal.getDriver() == driver) { // default is the driver associated with patch
+					if (p != null && p.getDriver() == driver) { // default is the driver associated with patch
 						driverNum = m;
 						deviceComboBox.setSelectedIndex(deviceComboBox.getItemCount() - 1); // invoke
 																							// DeviceActionListener

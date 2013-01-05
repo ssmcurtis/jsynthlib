@@ -3,6 +3,8 @@ package org.jsynthlib.model;
 public enum JSynthImportFileType {
 	MIDI(".mid", "MIDI Files (*.mid)", false),
 	TXTHEX(".txt", "TexHex Files (*.txt)", false),
+	MICROKORG_PRG(".prg", "microKorg Files (*.prg)", false),
+	MICROKORG_SET(".set", "microKorg Files (*.set)", false),
 	SYX(".syx", "Sysex Files (*.syx)", true);
 
 	private final String extension;
@@ -23,6 +25,7 @@ public enum JSynthImportFileType {
 		return description;
 	}
 
+	@Deprecated
 	public boolean isDefaultFilter() {
 		return defaultFilter;
 	}

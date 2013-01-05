@@ -25,6 +25,7 @@ import org.jsynthlib.model.driver.SynthDriver;
 import org.jsynthlib.model.driver.SynthDriverBank;
 import org.jsynthlib.model.driver.SynthDriverPatch;
 import org.jsynthlib.model.patch.Patch;
+import org.jsynthlib.tools.DriverUtil;
 import org.jsynthlib.tools.ErrorMsgUtil;
 import org.jsynthlib.tools.MidiUtil;
 import org.jsynthlib.tools.TableUtil;
@@ -65,20 +66,21 @@ public class SysexGetDialog extends JDialog {
 	private JComboBox<String> bankNumComboBox;
 	private JComboBox<String> patchNumComboBox;
 
-	private JButton getBankAsSingles = new JButton("Get bank as singles");
+	private JButton getBankAsSingles = new JButton("Get bank as singles*");
 	private JButton get = new JButton("Get");
 	private JButton paste = new JButton("Paste current patch");
 	private JButton done = new JButton("Done");
 	private JButton cancel = new JButton("Cancel");
 
-	private int currentPatchNumber = 1;
-	private int currentBankNumber = 1;
-	private int patchCountInBank = 2;
+	private int currentPatchNumber = 0;
+	private int currentBankNumber = 0;
+	private int patchCountInBank = 1;
 
 	private SynthDriverPatch driver = null;
 
 	public SysexGetDialog(JFrame parent) {
 		super(parent, "Get Sysex Data", true);
+		// INFO GET SYSEX ACTION
 
 		JPanel dialogPanel = new JPanel(new BorderLayout(5, 5));
 
@@ -169,8 +171,11 @@ public class SysexGetDialog extends JDialog {
 	protected void pasteIntoSelectedFrame() {
 		SynthDriverPatch driver = (SynthDriverPatch) driverComboBox.getSelectedItem();
 
-		if (queue != null && currentPatchNumber < patchCountInBank) {
+		if (sysexSize > 0 && queue != null && currentPatchNumber < patchCountInBank) {
+
 			SysexMessage[] msgs = (SysexMessage[]) queue.toArray(new SysexMessage[0]);
+
+			// INFO CREATE PATCHES
 			Patch[] patarray = driver.createPatches(msgs);
 
 			if (patarray.length > 0) {
@@ -214,7 +219,7 @@ public class SysexGetDialog extends JDialog {
 			patchNumComboBox.removeAllItems();
 
 			String bankNumbers[] = driver.getBankNumbers();
-			if (bankNumbers != null && bankNumbers.length > 1) {
+			if (bankNumbers != null) {
 				for (int i = 0; i < bankNumbers.length; i++) {
 					bankNumComboBox.addItem(bankNumbers[i]);
 				}
@@ -301,14 +306,15 @@ public class SysexGetDialog extends JDialog {
 
 			inPort = driver.getDevice().getInPort();
 
-			ErrorMsgUtil.reportStatus("SysexGetDialog | port: " + inPort + " | bankNum: " + currentBankNumber + " | patchNum: " + currentPatchNumber);
+			ErrorMsgUtil.reportStatus("SysexGetDialog | port: " + inPort + " | bankNum: " + currentBankNumber + " | patchNum: "
+					+ currentPatchNumber);
 
 			statusLabel.setText("Getting sysex dump...");
 
 			if (driver instanceof SynthDriverBank) {
 
 				// INFO long time added during driver development for microKorg
-				timeout = driver.getPatchSize() * ((SynthDriverBank) driver).getNumPatches();
+				timeout = driver.getPatchSize() * 5;// ((SynthDriverBank) driver).getNumPatches();
 			} else {
 				timeout = driver.getPatchSize();
 			}
@@ -401,7 +407,7 @@ public class SysexGetDialog extends JDialog {
 	public class SimpleSysexActionListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent evt) {
-//			ErrorMsgUtil.reportStatus("_ RECEIVE TIMER SIMPLE.. ");
+			// ErrorMsgUtil.reportStatus("_ RECEIVE TIMER SIMPLE.. ");
 
 			try {
 				while (!MidiUtil.isSysexInputQueueEmpty(inPort)) {

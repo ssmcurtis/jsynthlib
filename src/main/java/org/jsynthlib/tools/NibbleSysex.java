@@ -4,17 +4,16 @@
 // Notes: Originally developed for PeaveyPC1600 drivers to simplify sysex processing
 //======================================================================================================================
 
-package org.jsynthlib.menu.helper;
+package org.jsynthlib.tools;
 
 import java.io.UnsupportedEncodingException;
 
-import org.jsynthlib.tools.ErrorMsgUtil;
 
 //======================================================================================================================
 // Class: NibbleSysex
 //======================================================================================================================
 
-public class NibbleSysex extends Object {
+public class NibbleSysex {
 
 	// ===== Instance variables
 	public int offset;

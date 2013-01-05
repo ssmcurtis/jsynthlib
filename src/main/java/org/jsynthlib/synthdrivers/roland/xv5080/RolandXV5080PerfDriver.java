@@ -8,8 +8,8 @@
 
 package org.jsynthlib.synthdrivers.roland.xv5080;
 
-import org.jsynthlib.menu.helper.SysexHandler;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
 
 //======================================================================================================================

@@ -3,11 +3,10 @@ package org.jsynthlib.synthdrivers.crumar.bit99;
 import javax.sound.midi.MidiMessage;
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.helper.SysexHandler;
-import org.jsynthlib.menu.helper.SysexHandler.NameValue;
 import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.driver.SysexHandler;
+import org.jsynthlib.model.driver.SysexHandler.NameValue;
 import org.jsynthlib.model.patch.PatchDataImpl;
-import org.jsynthlib.synthdrivers.korg.microkorg.MicroKorg;
 
 /**
  * Bank driver for KAWAI K4/K4r voice patch.
@@ -26,11 +25,11 @@ public class Bit99BankDriver extends SynthDriverBank {
 
 	public Bit99BankDriver() {
 		super("Bank", "ssmCurtis", NS, 4);
-		sysexID = MicroKorg.DEVICE_SYSEX_ID;
+		sysexID = Bit99.DEVICE_SYSEX_ID;
 
 		deviceIDoffset = 2;
-		bankNumbers = MicroKorg.BANK_NAMES;
-		patchNumbers = MicroKorg.createPatchNumbers();
+		bankNumbers = Bit99.BANK_NAMES;
+		patchNumbers = Bit99.createPatchNumbers();
 
 		singleSysexID = sysexID;
 		singleSize = 0;// HSIZE + SSIZE + 1;

@@ -1,5 +1,7 @@
 package org.jsynthlib.model.driver;
 
+import java.nio.ByteBuffer;
+
 import org.jsynthlib.model.device.Device;
 import org.jsynthlib.model.patch.Patch;
 
@@ -58,4 +60,6 @@ public interface SynthDriver {
 	 * @see Converter
 	 */
 	boolean isConverter();
+	
+	public ByteBuffer processDumpDataConversion(byte[] sysexBuffer);
 }

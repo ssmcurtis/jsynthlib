@@ -136,8 +136,14 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 		return pth.canImport(table, flavors);
 	}
 
-	private void chooseDriver(Patch patch) {
-		patch.setDriver();
+	private void setDriverForPatch(Patch patch) {
+
+		// INFO CHOOSE DRIVER
+		
+		if (patch.getDriver() == null) {
+			patch.findDriver();
+		}
+
 		if (patch.hasNullDriver()) {
 			// INFO Unknown patch, try to guess at least the manufacturer
 			patch.setInfo(nf.format(patch.getSize()) + " " + patch.lookupManufacturer() + " [?] ");
@@ -336,9 +342,8 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 	}
 
 	public Patch getSelectedPatch() {
-		System.out.println(">> Get - Selected row: " + table.getSelectedRow());
-		System.out.println(">> Get - Converted row: " + table.convertRowIndexToModel(table.getSelectedRow()));
-		System.out.println(">> ColumnCount: " + myModel.getRowCount());
+		System.out.println(">> Get - Selected row: " + table.getSelectedRow() + "Converted row: "
+				+ table.convertRowIndexToModel(table.getSelectedRow()) + " ColumnCount: " + myModel.getRowCount());
 
 		// TODO ssmCurtis - Q&D
 		int selectedRowRaw = table.getSelectedRow();
@@ -372,21 +377,33 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 		return table;
 	}
 
-	// INFO import patch
 	public void importPatch(File file, JSynthImportFileType type) throws IOException, FileNotFoundException {
+		// INFO IMPORT ACTION
 
 		Patch[] patarray = null;
 		if (JSynthImportFileType.MIDI.equals(type)) {
+
 			patarray = ImportUtil.getPatchesFromMidi(file);
+
+		} else if (JSynthImportFileType.MICROKORG_PRG.equals(type)) {
+
+			patarray = ImportUtil.getPatchesFromPrg(file, type);
+
+		} else if (JSynthImportFileType.MICROKORG_SET.equals(type)) {
+
+			patarray = ImportUtil.getPatchesFromPrg(file, type);
+
 		} else if (JSynthImportFileType.TXTHEX.equals(type)) {
-			System.out.println("IMPORT TEXT");
+
 			patarray = ImportUtil.getPatchesFromTexhex(file);
+
 		}
 
-		// Default is sysex
+		// sill null
 		if (patarray == null) {
-			System.out.println("READ SYSEX");
+
 			patarray = ImportUtil.getPatchesFromSysex(file);
+
 		}
 
 		TableUtil.addPatchToTable(patarray);
@@ -466,8 +483,11 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 	 * Re-assigns drivers to all patches in libraryframe. Called after new drivers are added or or removed
 	 */
 	public void revalidateDrivers() {
+
+		// INFO UPDATE TABLE - ASSIGN DRIVER TO PATCH
+
 		for (int i = 0; i < myModel.getRowCount(); i++) {
-			chooseDriver(myModel.getPatchAt(i));
+			setDriverForPatch(myModel.getPatchAt(i));
 		}
 		myModel.fireTableDataChanged();
 	}

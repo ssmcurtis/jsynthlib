@@ -21,8 +21,8 @@
 
 package org.jsynthlib.synthdrivers.yamaha.a01v;
 
-import org.jsynthlib.menu.helper.SysexHandler;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.DriverUtil;
 

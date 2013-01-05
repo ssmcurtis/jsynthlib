@@ -34,7 +34,6 @@ public class ImportAction extends AbstractAction {
 		for (JSynthImportFileType importFileType : JSynthImportFileType.values()) {
 			FileFilter type = new ExtensionFilter(importFileType.getDescription(), importFileType.getExtension());
 			fileDialog.addChoosableFileFilter(type);
-			fileDialog.addChoosableFileFilter(type);
 		}
 		fileDialog.setCurrentDirectory(new File(AppConfig.getSysexPath()));
 
@@ -51,7 +50,9 @@ public class ImportAction extends AbstractAction {
 				final int lastPeriodPos = name.lastIndexOf('.');
 				String extension = name.substring(lastPeriodPos);
 				JSynthImportFileType fileType = JSynthImportFileType.getImportFileTypeForExtension(extension);
+				
 				Actions.getSelectedFrame().importPatch(file, fileType);
+				
 			}
 		} catch (IOException ex) {
 			ErrorMsgUtil.reportError("Error", "Unable to Load Sysex Data", ex);

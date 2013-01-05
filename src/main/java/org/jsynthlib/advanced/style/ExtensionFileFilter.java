@@ -61,7 +61,7 @@
  * @(#)ExtensionFileFilter.java	1.14 03/01/23
  */
 
-package org.jsynthlib.example.style;
+package org.jsynthlib.advanced.style;
 
 import java.io.File;
 import java.util.Enumeration;

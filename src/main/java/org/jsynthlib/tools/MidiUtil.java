@@ -49,6 +49,10 @@ import org.jsynthlib.midi.TrackTest;
 import org.jsynthlib.model.JSynthBpm;
 import org.jsynthlib.model.JSynthOctave;
 import org.jsynthlib.model.JSynthSequence;
+import org.jsynthlib.model.device.Device;
+import org.jsynthlib.model.driver.SynthDriver;
+import org.jsynthlib.model.driver.SynthDriverPatch;
+import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 
 /**
  * MIDI Utility Routines. This class contains methods and inner classes for Java Sound API.
@@ -1147,4 +1151,22 @@ public final class MidiUtil {
 		}
 		sequencer.start();
 	}
+
+	public static void changeProgram(SynthDriverPatchImpl driver, int programmNumber) {
+		ShortMessage message = new ShortMessage();
+		try {
+			System.out.println("> Channel: " + driver.getChannel() + " patch: " + programmNumber);
+			message.setMessage(ShortMessage.PROGRAM_CHANGE, driver.getChannel() - 1, programmNumber , 0);
+			driver.getDevice().send(message);
+			Thread.sleep(100);
+		} catch (InvalidMidiDataException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+
+	}
+	
 }

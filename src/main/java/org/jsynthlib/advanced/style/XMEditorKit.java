@@ -1,4 +1,4 @@
-package org.jsynthlib.example.style;
+package org.jsynthlib.advanced.style;
 
 import java.awt.Color;
 import java.awt.Container;

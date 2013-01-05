@@ -26,7 +26,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
 
 import org.jsynthlib.JSynthLib;
-import org.jsynthlib.example.midi.MidiActionPlayNote;
+import org.jsynthlib.advanced.midi.MidiActionPlayNote;
 import org.jsynthlib.model.device.Device;
 import org.jsynthlib.tools.MidiUtil;
 import org.jsynthlib.tools.UiUtil;

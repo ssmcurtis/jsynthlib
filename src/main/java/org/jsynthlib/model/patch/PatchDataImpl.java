@@ -95,6 +95,9 @@ public class PatchDataImpl implements PatchSingle, PatchBank {
 	}
 
 	public PatchDataImpl(byte[] gsysex, SynthDriverPatchImpl driver, String fileName) {
+		
+		// INFO CREATE NEW PATCH OBJECT FOR DRIVER
+		
 		date = new StringBuffer(df.format(Calendar.getInstance().getTime()));
 		author = new StringBuffer(AppConfig.getRepositoryUser());
 		comment = new StringBuffer("");
@@ -116,6 +119,9 @@ public class PatchDataImpl implements PatchSingle, PatchBank {
 	 *            a <code>Device</code> instance.
 	 */
 	public PatchDataImpl(byte[] gsysex, Device device) {
+		
+		// INFO CREATE NEW PATCH OBJECT FOR DEVICE
+		
 		date = new StringBuffer(df.format(Calendar.getInstance().getTime()));
 		author = new StringBuffer(AppConfig.getRepositoryUser());
 		comment = new StringBuffer("");
@@ -137,6 +143,9 @@ public class PatchDataImpl implements PatchSingle, PatchBank {
 	 *            The MIDI SysEx message.
 	 */
 	public PatchDataImpl(byte[] gsysex) {
+		
+		// INFO CREATE NEW PATCH AND ASSIGN DRIVER
+
 		date = new StringBuffer(df.format(Calendar.getInstance().getTime()));
 		author = new StringBuffer(AppConfig.getRepositoryUser());
 		comment = new StringBuffer("");
@@ -184,7 +193,7 @@ public class PatchDataImpl implements PatchSingle, PatchBank {
 		this.driver = (driver == null) ? (SynthDriverPatchImpl) AppConfig.getNullDriver() : (SynthDriverPatchImpl) driver;
 	}
 
-	public final void setDriver() {
+	public final void findDriver() {
 		setDriver((SynthDriverPatch) DriverUtil.chooseDriver(getSysex()));
 	}
 
@@ -334,7 +343,7 @@ public class PatchDataImpl implements PatchSingle, PatchBank {
 	// end of Transferable interface methods
 
 	// Clone interface method
-	public final Object clone() {
+	public final PatchDataImpl clone() {
 		try {
 			PatchDataImpl p = (PatchDataImpl) super.clone();
 			p.setSysex((byte[]) getSysex().clone());

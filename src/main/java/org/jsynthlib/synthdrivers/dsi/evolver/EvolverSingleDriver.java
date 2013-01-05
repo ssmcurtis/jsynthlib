@@ -2,10 +2,11 @@ package org.jsynthlib.synthdrivers.dsi.evolver;
 
 import javax.sound.midi.MidiMessage;
 
-import org.jsynthlib.menu.helper.SysexHandler;
-import org.jsynthlib.menu.helper.SysexHandler.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.driver.SysexHandler;
+import org.jsynthlib.model.driver.SysexHandler.NameValue;
 import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.synthdrivers.korg.microkorg.MicroKorg;
 import org.jsynthlib.tools.HexaUtil;
 
 /**
@@ -85,4 +86,9 @@ public class EvolverSingleDriver extends SynthDriverPatchImpl {
 		System.out.println(">>>" + HexaUtil.hexDumpOneLine(msg.getMessage(), 0, -1, 100));
 		send(msg);
 	}
+	
+	public int getHeaderSize() {
+		return Evolver.HEADER_SIZE;
+	}
+
 }

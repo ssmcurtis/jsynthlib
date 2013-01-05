@@ -362,31 +362,31 @@ class MIDIboxSIDSingleEditor extends PatchEditorFrame {
 
 		ComboBoxWidget WT1CCBox = new ComboBoxWidget("Parameter #1", patch, new SIDModel(patch, 0x5a), new SIDSender(
 				patch, 0x5a), ccName);
-		dataModel.setColumnCC(0, (byte) ((PatchDataImpl) p).getSysex()[8 + 0x5a]);
+		dataModel.setColumnCC(0, (byte) ((PatchDataImpl) patchByParameter).getSysex()[8 + 0x5a]);
 		ComboBoxWidget WT2CCBox = new ComboBoxWidget("Parameter #2", patch, new SIDModel(patch, 0x5b), new SIDSender(
 				patch, 0x5b), ccName);
-		dataModel.setColumnCC(1, (byte) ((PatchDataImpl) p).getSysex()[8 + 0x5b]);
+		dataModel.setColumnCC(1, (byte) ((PatchDataImpl) patchByParameter).getSysex()[8 + 0x5b]);
 		ComboBoxWidget WT3CCBox = new ComboBoxWidget("Parameter #3", patch, new SIDModel(patch, 0x5c), new SIDSender(
 				patch, 0x5c), ccName);
-		dataModel.setColumnCC(2, (byte) ((PatchDataImpl) p).getSysex()[8 + 0x5c]);
+		dataModel.setColumnCC(2, (byte) ((PatchDataImpl) patchByParameter).getSysex()[8 + 0x5c]);
 
 		table.repaint();
 
 		WT1CCBox.addEventListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dataModel.setColumnCC(0, (byte) ((PatchDataImpl) p).getSysex()[8 + 0x5a]);
+				dataModel.setColumnCC(0, (byte) ((PatchDataImpl) patchByParameter).getSysex()[8 + 0x5a]);
 				table.repaint();
 			}
 		});
 		WT2CCBox.addEventListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dataModel.setColumnCC(1, (byte) ((PatchDataImpl) p).getSysex()[8 + 0x5b]);
+				dataModel.setColumnCC(1, (byte) ((PatchDataImpl) patchByParameter).getSysex()[8 + 0x5b]);
 				table.repaint();
 			}
 		});
 		WT3CCBox.addEventListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dataModel.setColumnCC(2, (byte) ((PatchDataImpl) p).getSysex()[8 + 0x5c]);
+				dataModel.setColumnCC(2, (byte) ((PatchDataImpl) patchByParameter).getSysex()[8 + 0x5c]);
 				table.repaint();
 			}
 		});
@@ -422,7 +422,7 @@ class MIDIboxSIDSingleEditor extends PatchEditorFrame {
 
 		byte[] cooked_dump = dataModel.getCookedDump();
 		for (int i = 0; i < cooked_dump.length; ++i)
-			cooked_dump[i] = ((PatchDataImpl) p).getSysex()[8 + 0x80 + i];
+			cooked_dump[i] = ((PatchDataImpl) patchByParameter).getSysex()[8 + 0x80 + i];
 		dataModel.setCookedDump(cooked_dump);
 
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -694,11 +694,11 @@ class MIDIboxSIDSingleEditor extends PatchEditorFrame {
 		byte[] cooked_dump = dataModel.getCookedDump();
 
 		for (int i = 0; i < 4 * 32; ++i) {
-			byte stored_value = ((PatchDataImpl) p).getSysex()[8 + 0x80 + i];
+			byte stored_value = ((PatchDataImpl) patchByParameter).getSysex()[8 + 0x80 + i];
 			if (stored_value != cooked_dump[i]) {
 				System.out.println("Wavetable Field changed: " + i);
-				((PatchDataImpl) p).getSysex()[8 + 0x80 + i] = cooked_dump[i];
-				SlowSender.sendParameter((SynthDriverPatchImpl) ((PatchDataImpl) p).getDriver(), 0x80 + i, cooked_dump[i], 10);
+				((PatchDataImpl) patchByParameter).getSysex()[8 + 0x80 + i] = cooked_dump[i];
+				SlowSender.sendParameter((SynthDriverPatchImpl) ((PatchDataImpl) patchByParameter).getDriver(), 0x80 + i, cooked_dump[i], 10);
 			}
 		}
 	}

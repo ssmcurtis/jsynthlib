@@ -1,4 +1,4 @@
-package org.jsynthlib.menu.helper;
+package org.jsynthlib.model.driver;
 
 import java.util.Enumeration;
 import java.util.StringTokenizer;
@@ -7,8 +7,6 @@ import java.util.Vector;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.SysexMessage;
 
-import org.jsynthlib.model.driver.SynthDriverPatch;
-import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.tools.ErrorMsgUtil;
 
 /**

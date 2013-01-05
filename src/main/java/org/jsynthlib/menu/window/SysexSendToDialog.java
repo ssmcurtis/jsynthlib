@@ -31,8 +31,8 @@ public class SysexSendToDialog extends DevDrvPatchSelector {
 	 * Makes the actual work after pressing the 'Send to...' button
 	 */
 	protected void doit() {
-		patchGlobal.setDriver((SynthDriverPatch) driverComboBox.getSelectedItem());
-		((PatchSingle) patchGlobal).send();
+		p.setDriver((SynthDriverPatch) driverComboBox.getSelectedItem());
+		((PatchSingle) p).send();
 
 		setVisible(false);
 		dispose();

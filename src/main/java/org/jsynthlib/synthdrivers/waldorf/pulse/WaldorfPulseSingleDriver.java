@@ -25,8 +25,8 @@ import java.io.FileInputStream;
 import java.text.NumberFormat;
 
 import org.jsynthlib.menu.JSLFrame;
-import org.jsynthlib.menu.helper.SysexHandler;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
 
 public class WaldorfPulseSingleDriver extends SynthDriverPatchImpl {

@@ -117,7 +117,7 @@ public class CompatibleFileDialog extends JFileChooser {
 			return APPROVE_OPTION;
 		} catch (Throwable th) { // return ERROR_OPTION; }
 			th.printStackTrace();
-			// TODO ssmCurtis
+			// TODO ssmCurtis - system exit
 			System.exit(274);
 			return ERROR_OPTION;
 		}

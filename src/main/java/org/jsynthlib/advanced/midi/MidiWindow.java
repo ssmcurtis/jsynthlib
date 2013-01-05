@@ -1,4 +1,4 @@
-package org.jsynthlib.example.midi;
+package org.jsynthlib.advanced.midi;
 
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -22,6 +22,7 @@ public class MidiWindow implements WriteOutput {
 
 	private Thread midiThread;
 	private MidiActionReset resetAll;
+	private MidiActionProgramChange changeLexicon;
 	private MidiActionPlayNote playNote;
 
 	public MidiWindow() { // Constructor
@@ -72,9 +73,23 @@ public class MidiWindow implements WriteOutput {
 			}
 		});
 
-		JButton button3 = new JButton("Stop ... ");
+		JButton button3 = new JButton("Change Programm Lexcion ");
 		buttons.add(button3);
 		button3.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				int countBefore = Thread.activeCount();
+				ta.setText("");
+				changeLexicon = new MidiActionProgramChange(MidiWindow.this, false);
+
+				int countAfter = Thread.activeCount();
+				System.out.println("Thread before: " + countBefore + " Thread after: " + countAfter);
+			}
+		});
+
+		JButton button4 = new JButton("Stop ... ");
+		buttons.add(button4);
+		button4.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				if (resetAll != null) {

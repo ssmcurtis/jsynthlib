@@ -20,7 +20,7 @@ public class ElementPattern extends Pattern {
 	 * 
 	 */
 	public ElementPattern() {
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	/**
@@ -28,7 +28,7 @@ public class ElementPattern extends Pattern {
 	 */
 	public ElementPattern(String musicString) {
 		super(musicString);
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	/**
@@ -36,7 +36,7 @@ public class ElementPattern extends Pattern {
 	 */
 	public ElementPattern(String... strings) {
 		super(strings);
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	/**
@@ -44,7 +44,7 @@ public class ElementPattern extends Pattern {
 	 */
 	public ElementPattern(Pattern pattern) {
 		super(pattern);
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class ElementPattern extends Pattern {
 	 */
 	public ElementPattern(JFugueElement... elements) {
 		super(elements);
-		// TODO Auto-generated constructor stub
+		
 	}
 
 }

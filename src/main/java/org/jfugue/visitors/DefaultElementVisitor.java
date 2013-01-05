@@ -70,22 +70,22 @@ public class DefaultElementVisitor implements ElementVisitor {
 	}
 
 	public void visit(Chord chord) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
 	public void visit(NoteCollection collection) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
 	public void visit(Parallel parallel) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
 	public void visit(Sequential sequential) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 

@@ -4,7 +4,7 @@
  * To change this generated comment go to 
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-package org.jsynthlib.menu.helper;
+package org.jsynthlib.tools;
 
 /**
  * @author emenaker - 2003.03.18
@@ -19,10 +19,10 @@ package org.jsynthlib.menu.helper;
  *         interact with the user about it. - emenaker 2003.03.18
  * 
  */
-public class NotifyingException extends Exception {
+public class _NotifyingException extends Exception {
 	private boolean userNotified = false;
 
-	public NotifyingException(String message) {
+	public _NotifyingException(String message) {
 		super(message);
 	}
 

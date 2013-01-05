@@ -88,8 +88,8 @@ public class AlesisDMProParser {
 	}
 
 	/**
-	 * Sets value in raw bytes, and updates sysex Arguments are sent according to docs (compressed, "raw") TODO:
-	 * Variable names could be more clear
+	 * Sets value in raw bytes, and updates sysex Arguments are sent according to docs (compressed, "raw") 
+	 * 
 	 */
 	public void setValue(int nByte, int nBit, int nBits, int nValue) {
 

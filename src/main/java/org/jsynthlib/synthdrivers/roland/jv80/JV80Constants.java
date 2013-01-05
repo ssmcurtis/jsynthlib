@@ -24,8 +24,8 @@ package org.jsynthlib.synthdrivers.roland.jv80;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.SysexMessage;
 
-import org.jsynthlib.menu.helper.SysexHandler;
 import org.jsynthlib.model.device.Device;
+import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.tools.DriverUtil;
 import org.jsynthlib.tools.ErrorMsgUtil;
 

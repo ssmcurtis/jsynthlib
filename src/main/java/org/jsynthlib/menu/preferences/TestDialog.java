@@ -11,7 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import org.jsynthlib.example.style.TextComponentDemo;
+import org.jsynthlib.advanced.style.TextComponentDemo;
 import org.jsynthlib.menu.JSLDialog;
 import org.jsynthlib.tools.UiUtil;
 

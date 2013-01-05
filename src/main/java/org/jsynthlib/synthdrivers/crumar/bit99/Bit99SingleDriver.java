@@ -2,9 +2,9 @@ package org.jsynthlib.synthdrivers.crumar.bit99;
 
 import javax.sound.midi.MidiMessage;
 
-import org.jsynthlib.menu.helper.SysexHandler;
-import org.jsynthlib.menu.helper.SysexHandler.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.driver.SysexHandler;
+import org.jsynthlib.model.driver.SysexHandler.NameValue;
 import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.HexaUtil;
 

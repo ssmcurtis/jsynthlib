@@ -21,7 +21,7 @@
 
 package org.jsynthlib.synthdrivers.alesis.dm5;
 
-import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SysexHandler;
 
 /**
  * Alesis DM5 Edit Buffer Driver. This driver subclasses AlesisDM5SgSetDriver because the edit buffer patch is the same

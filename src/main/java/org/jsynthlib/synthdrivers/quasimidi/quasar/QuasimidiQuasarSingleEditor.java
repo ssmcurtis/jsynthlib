@@ -108,16 +108,16 @@ public class QuasimidiQuasarSingleEditor extends PatchEditorFrame {
 		// Name
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		commonPanel.add(new PatchNameWidget("Name", p), gbc);
+		commonPanel.add(new PatchNameWidget("Name", patchByParameter), gbc);
 		// Performance level
 		gbc.gridx = 1;
 		gbc.gridy = 0;
-		commonPanel.add(new KnobWidget("Performance level", p, 0, 127, 0, new ParamModel(patch, 8), new QuasarSender(
+		commonPanel.add(new KnobWidget("Performance level", patchByParameter, 0, 127, 0, new ParamModel(patch, 8), new QuasarSender(
 				0x00, 0x00)), gbc);
 		// Performance mode
 		gbc.gridx = 2;
 		gbc.gridy = 0;
-		ComboBoxWidget perfModeWidget = new ComboBoxWidget("Performance mode", p, new ParamModel(patch, 9),
+		ComboBoxWidget perfModeWidget = new ComboBoxWidget("Performance mode", patchByParameter, new ParamModel(patch, 9),
 				new QuasarSender(0x00, 0x01), QuasarConstants.PERFORMANCE_MODES);
 		perfModeWidget.addEventListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -139,12 +139,12 @@ public class QuasimidiQuasarSingleEditor extends PatchEditorFrame {
 		// Performance value (Splitkey, detune)
 		gbc.gridx = 1;
 		gbc.gridy = 0;
-		perfValueWidget = new KnobWidget(" ", p, 0, 127, 0, new ParamModel(patch, 10), new QuasarSender(0x00, 0x02));
+		perfValueWidget = new KnobWidget(" ", patchByParameter, 0, 127, 0, new ParamModel(patch, 10), new QuasarSender(0x00, 0x02));
 		commonPanel.add(perfValueWidget, gbc);
 		// Free controller number (0 - 97)
 		gbc.gridx = 2;
 		gbc.gridy = 0;
-		commonPanel.add(new KnobWidget("Free ctrl. no.", p, 0, 97, 0, new ParamModel(patch, 12), new QuasarSender(0x00,
+		commonPanel.add(new KnobWidget("Free ctrl. no.", patchByParameter, 0, 97, 0, new ParamModel(patch, 12), new QuasarSender(0x00,
 				0x04)), gbc);
 		commonPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.RAISED), "Diverse", TitledBorder.CENTER,
 				TitledBorder.CENTER));
@@ -152,16 +152,16 @@ public class QuasimidiQuasarSingleEditor extends PatchEditorFrame {
 
 		JPanel footCtrlPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		// Foot controller number
-		footCtrlPanel.add(new KnobWidget("Controller no.", p, 0, 127, 0, new ParamModel(patch, 13), new QuasarSender(
+		footCtrlPanel.add(new KnobWidget("Controller no.", patchByParameter, 0, 127, 0, new ParamModel(patch, 13), new QuasarSender(
 				0x00, 0x05)));
 		// Foot control on value
-		footCtrlPanel.add(new KnobWidget("On value", p, 0, 127, 0, new ParamModel(patch, 14), new QuasarSender(0x00,
+		footCtrlPanel.add(new KnobWidget("On value", patchByParameter, 0, 127, 0, new ParamModel(patch, 14), new QuasarSender(0x00,
 				0x06)));
 		// Foot control off value
-		footCtrlPanel.add(new KnobWidget("Off value", p, 0, 127, 0, new ParamModel(patch, 15), new QuasarSender(0x00,
+		footCtrlPanel.add(new KnobWidget("Off value", patchByParameter, 0, 127, 0, new ParamModel(patch, 15), new QuasarSender(0x00,
 				0x07)));
 		// Foot control toggle mode (00h = off, 01h = on)
-		footCtrlPanel.add(new ComboBoxWidget("Toggle mode", p, new ParamModel(patch, 16), new QuasarSender(0x00, 0x08),
+		footCtrlPanel.add(new ComboBoxWidget("Toggle mode", patchByParameter, new ParamModel(patch, 16), new QuasarSender(0x00, 0x08),
 				QuasarConstants.SWITCH));
 		footCtrlPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.RAISED), "Foot controller",
 				TitledBorder.CENTER, TitledBorder.CENTER));
@@ -232,42 +232,42 @@ public class QuasimidiQuasarSingleEditor extends PatchEditorFrame {
 			// mod.depth[SOURCEx][DEST1]
 			gbc.gridx = 2;
 			gbc.gridy = count;
-			modPanel.add(new SpinnerWidget("", p, 0, 127, 0, new ParamModel(patch, 17 + offset), new QuasarSender(0x00,
+			modPanel.add(new SpinnerWidget("", patchByParameter, 0, 127, 0, new ParamModel(patch, 17 + offset), new QuasarSender(0x00,
 					0x09 + offset)), gbc);
 			// mod.depth[SOURCEx][DEST2]
 			gbc.gridx = 3;
 			gbc.gridy = count;
-			modPanel.add(new SpinnerWidget("", p, 0, 127, 0, new ParamModel(patch, 18 + offset), new QuasarSender(0x00,
+			modPanel.add(new SpinnerWidget("", patchByParameter, 0, 127, 0, new ParamModel(patch, 18 + offset), new QuasarSender(0x00,
 					0x0A + offset)), gbc);
 			// mod.depth[SOURCEx][DEST3]
 			gbc.gridx = 4;
 			gbc.gridy = count;
-			modPanel.add(new SpinnerWidget("", p, 0, 127, 0, new ParamModel(patch, 19 + offset), new QuasarSender(0x00,
+			modPanel.add(new SpinnerWidget("", patchByParameter, 0, 127, 0, new ParamModel(patch, 19 + offset), new QuasarSender(0x00,
 					0x0B + offset)), gbc);
 			// mod.depth[SOURCEx][DEST4]
 			gbc.gridx = 5;
 			gbc.gridy = count;
-			modPanel.add(new SpinnerWidget("", p, 0, 127, 0, new ParamModel(patch, 20 + offset), new QuasarSender(0x00,
+			modPanel.add(new SpinnerWidget("", patchByParameter, 0, 127, 0, new ParamModel(patch, 20 + offset), new QuasarSender(0x00,
 					0x0C + offset)), gbc);
 			// mod.depth[SOURCEx][DEST5]
 			gbc.gridx = 6;
 			gbc.gridy = count;
-			modPanel.add(new SpinnerWidget("", p, 0, 127, 0, new ParamModel(patch, 21 + offset), new QuasarSender(0x00,
+			modPanel.add(new SpinnerWidget("", patchByParameter, 0, 127, 0, new ParamModel(patch, 21 + offset), new QuasarSender(0x00,
 					0x0D + offset)), gbc);
 			// mod.depth[SOURCEx][DEST6]
 			gbc.gridx = 7;
 			gbc.gridy = count;
-			modPanel.add(new SpinnerWidget("", p, 0, 127, 0, new ParamModel(patch, 22 + offset), new QuasarSender(0x00,
+			modPanel.add(new SpinnerWidget("", patchByParameter, 0, 127, 0, new ParamModel(patch, 22 + offset), new QuasarSender(0x00,
 					0x0E + offset)), gbc);
 			// mod.depth[SOURCEx][DEST7]
 			gbc.gridx = 8;
 			gbc.gridy = count;
-			modPanel.add(new SpinnerWidget("", p, 0, 127, 0, new ParamModel(patch, 23 + offset), new QuasarSender(0x00,
+			modPanel.add(new SpinnerWidget("", patchByParameter, 0, 127, 0, new ParamModel(patch, 23 + offset), new QuasarSender(0x00,
 					0x0F + offset)), gbc);
 			// mod.depth[SOURCEx][DEST8]
 			gbc.gridx = 9;
 			gbc.gridy = count;
-			modPanel.add(new SpinnerWidget("", p, 0, 127, 0, new ParamModel(patch, 24 + offset), new QuasarSender(0x00,
+			modPanel.add(new SpinnerWidget("", patchByParameter, 0, 127, 0, new ParamModel(patch, 24 + offset), new QuasarSender(0x00,
 					0x10 + offset)), gbc);
 
 			offset += 8;
@@ -288,18 +288,18 @@ public class QuasimidiQuasarSingleEditor extends PatchEditorFrame {
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 2, 5, 2); // padding
 
-		fx1ParWidgets[0] = new KnobWidget(" ", p, 0, 127, 0, new ParamModel(patch, 51), new QuasarSender(0x00, 0x2B));
-		fx1ParWidgets[1] = new KnobWidget(" ", p, 0, 63, 0, new ParamModel(patch, 52), new QuasarSender(0x00, 0x2C));
-		fx1ParWidgets[2] = new KnobWidget(" ", p, 0, 127, 0, new ParamModel(patch, 53), new QuasarSender(0x00, 0x2D));
-		fx1ParWidgets[3] = new KnobWidget(" ", p, 0, 127, 0, new ParamModel(patch, 54), new QuasarSender(0x00, 0x2E));
-		fx1ParWidgets[4] = new KnobWidget(" ", p, 0, 127, 0, new ParamModel(patch, 55), new QuasarSender(0x00, 0x2F));
-		fx1ParWidgets[5] = new KnobWidget(" ", p, 0, 127, 0, new ParamModel(patch, 56), new QuasarSender(0x00, 0x30));
+		fx1ParWidgets[0] = new KnobWidget(" ", patchByParameter, 0, 127, 0, new ParamModel(patch, 51), new QuasarSender(0x00, 0x2B));
+		fx1ParWidgets[1] = new KnobWidget(" ", patchByParameter, 0, 63, 0, new ParamModel(patch, 52), new QuasarSender(0x00, 0x2C));
+		fx1ParWidgets[2] = new KnobWidget(" ", patchByParameter, 0, 127, 0, new ParamModel(patch, 53), new QuasarSender(0x00, 0x2D));
+		fx1ParWidgets[3] = new KnobWidget(" ", patchByParameter, 0, 127, 0, new ParamModel(patch, 54), new QuasarSender(0x00, 0x2E));
+		fx1ParWidgets[4] = new KnobWidget(" ", patchByParameter, 0, 127, 0, new ParamModel(patch, 55), new QuasarSender(0x00, 0x2F));
+		fx1ParWidgets[5] = new KnobWidget(" ", patchByParameter, 0, 127, 0, new ParamModel(patch, 56), new QuasarSender(0x00, 0x30));
 
 		JPanel tempPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		// FX1 Activity
-		tempPanel.add(new CheckBoxWidget("FX 1 activity", p, new ParamModel(patch, 49), new QuasarSender(0x00, 0x29)));
+		tempPanel.add(new CheckBoxWidget("FX 1 activity", patchByParameter, new ParamModel(patch, 49), new QuasarSender(0x00, 0x29)));
 		// FX1 effect typ
-		ComboBoxWidget fx1TypWidget = new ComboBoxWidget("FX 1 typ", p, new ParamModel(patch, 50), new QuasarSender(
+		ComboBoxWidget fx1TypWidget = new ComboBoxWidget("FX 1 typ", patchByParameter, new ParamModel(patch, 50), new QuasarSender(
 				0x00, 0x2A), QuasarConstants.FX1_EFFECTS);
 		fx1TypWidget.addEventListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -345,21 +345,21 @@ public class QuasimidiQuasarSingleEditor extends PatchEditorFrame {
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.insets = new Insets(5, 2, 5, 2); // padding
 
-		fx2ParWidgets[0] = new KnobWidget(" ", p, 0, 127, 0, new ParamModel(patch, 59), new QuasarSender(0x00, 0x33));
-		fx2ParWidgets[1] = new KnobWidget(" ", p, 0, 127, 0, new ParamModel(patch, 60), new QuasarSender(0x00, 0x34));
-		fx2ParWidgets[2] = new KnobWidget(" ", p, 0, 127, 0, new ParamModel(patch, 61), new QuasarSender(0x00, 0x35));
-		fx2ParWidgets[3] = new KnobWidget(" ", p, 0, 127, 0, new ParamModel(patch, 62), new QuasarSender(0x00, 0x36));
-		fx2ParWidgets[4] = new KnobWidget(" ", p, 0, 127, 0, new ParamModel(patch, 63), new QuasarSender(0x00, 0x37));
-		fx2ParWidgets[5] = new KnobWidget(" ", p, 0, 127, 0, new ParamModel(patch, 64), new QuasarSender(0x00, 0x38));
-		fx2ParWidgets[6] = new KnobWidget(" ", p, 0, 127, 0, new ParamModel(patch, 65), new QuasarSender(0x00, 0x39));
-		fx2ParWidgets[7] = new KnobWidget(" ", p, 0, 127, 0, new ParamModel(patch, 66), new QuasarSender(0x00, 0x3A));
-		fx2ParWidgets[8] = new KnobWidget(" ", p, 0, 127, 0, new ParamModel(patch, 67), new QuasarSender(0x00, 0x3B));
+		fx2ParWidgets[0] = new KnobWidget(" ", patchByParameter, 0, 127, 0, new ParamModel(patch, 59), new QuasarSender(0x00, 0x33));
+		fx2ParWidgets[1] = new KnobWidget(" ", patchByParameter, 0, 127, 0, new ParamModel(patch, 60), new QuasarSender(0x00, 0x34));
+		fx2ParWidgets[2] = new KnobWidget(" ", patchByParameter, 0, 127, 0, new ParamModel(patch, 61), new QuasarSender(0x00, 0x35));
+		fx2ParWidgets[3] = new KnobWidget(" ", patchByParameter, 0, 127, 0, new ParamModel(patch, 62), new QuasarSender(0x00, 0x36));
+		fx2ParWidgets[4] = new KnobWidget(" ", patchByParameter, 0, 127, 0, new ParamModel(patch, 63), new QuasarSender(0x00, 0x37));
+		fx2ParWidgets[5] = new KnobWidget(" ", patchByParameter, 0, 127, 0, new ParamModel(patch, 64), new QuasarSender(0x00, 0x38));
+		fx2ParWidgets[6] = new KnobWidget(" ", patchByParameter, 0, 127, 0, new ParamModel(patch, 65), new QuasarSender(0x00, 0x39));
+		fx2ParWidgets[7] = new KnobWidget(" ", patchByParameter, 0, 127, 0, new ParamModel(patch, 66), new QuasarSender(0x00, 0x3A));
+		fx2ParWidgets[8] = new KnobWidget(" ", patchByParameter, 0, 127, 0, new ParamModel(patch, 67), new QuasarSender(0x00, 0x3B));
 
 		JPanel tempPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		// FX2 Activity
-		tempPanel.add(new CheckBoxWidget("FX 2 activity", p, new ParamModel(patch, 57), new QuasarSender(0x00, 0x31)));
+		tempPanel.add(new CheckBoxWidget("FX 2 activity", patchByParameter, new ParamModel(patch, 57), new QuasarSender(0x00, 0x31)));
 		// FX2 effect typ
-		ComboBoxWidget fx2TypWidget = new ComboBoxWidget("FX 2 typ", p, new ParamModel(patch, 58), new QuasarSender(
+		ComboBoxWidget fx2TypWidget = new ComboBoxWidget("FX 2 typ", patchByParameter, new ParamModel(patch, 58), new QuasarSender(
 				0x00, 0x32), QuasarConstants.FX2_EFFECTS);
 		fx2TypWidget.addEventListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -418,7 +418,7 @@ public class QuasimidiQuasarSingleEditor extends PatchEditorFrame {
 		MultiWidgetParams[] arpPak1Params = new MultiWidgetParams[2];
 		arpPak1Params[0] = new MultiWidgetParams("On/Off", 2);
 		arpPak1Params[1] = new MultiWidgetParams("Resolution", 0, 1, QuasarConstants.ARP_RESOLUTIONS);
-		tempPanel.add(new MultiWidget(arpPak1Params, p, new ParamModel(patch, 68), new QuasarSender(0x00, 0x3C)));
+		tempPanel.add(new MultiWidget(arpPak1Params, patchByParameter, new ParamModel(patch, 68), new QuasarSender(0x00, 0x3C)));
 
 		// Arpeggiator speed
 
@@ -428,9 +428,9 @@ public class QuasimidiQuasarSingleEditor extends PatchEditorFrame {
 			tempArray[count] = new Integer(QuasarConstants.ARP_SPEED[count]);
 		}
 		tempPanel
-				.add(new ComboBoxWidget("Speed", p, new ParamModel(patch, 69), new QuasarSender(0x00, 0x3D), tempArray));
+				.add(new ComboBoxWidget("Speed", patchByParameter, new ParamModel(patch, 69), new QuasarSender(0x00, 0x3D), tempArray));
 		// Arpeggiator gate
-		tempPanel.add(new KnobWidget("Gate", p, 0, 127, 0, new ParamModel(patch, 70), new QuasarSender(0x00, 0x3E)));
+		tempPanel.add(new KnobWidget("Gate", patchByParameter, 0, 127, 0, new ParamModel(patch, 70), new QuasarSender(0x00, 0x3E)));
 		verticalBox.add(tempPanel);
 
 		tempPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -440,7 +440,7 @@ public class QuasimidiQuasarSingleEditor extends PatchEditorFrame {
 		arpPak2Params[2] = new MultiWidgetParams("Sort", 2);
 		arpPak2Params[3] = new MultiWidgetParams("Hold", 1);
 		arpPak2Params[4] = new MultiWidgetParams("Dyn", 0);
-		tempPanel.add(new MultiWidget(arpPak2Params, p, new ParamModel(patch, 71), new QuasarSender(0x00, 0x3F)));
+		tempPanel.add(new MultiWidget(arpPak2Params, patchByParameter, new ParamModel(patch, 71), new QuasarSender(0x00, 0x3F)));
 		verticalBox.add(tempPanel);
 
 		tempPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -449,7 +449,7 @@ public class QuasimidiQuasarSingleEditor extends PatchEditorFrame {
 		arpPak3Params[1] = new MultiWidgetParams("Thru", 2);
 		arpPak3Params[2] = new MultiWidgetParams("Out", 1);
 		arpPak3Params[3] = new MultiWidgetParams("Freeze", 0);
-		tempPanel.add(new MultiWidget(arpPak3Params, p, new ParamModel(patch, 72), new QuasarSender(0x00, 0x40)));
+		tempPanel.add(new MultiWidget(arpPak3Params, patchByParameter, new ParamModel(patch, 72), new QuasarSender(0x00, 0x40)));
 		verticalBox.add(tempPanel);
 
 		return verticalBox;
@@ -469,8 +469,8 @@ public class QuasimidiQuasarSingleEditor extends PatchEditorFrame {
 
 		JPanel partPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
-		int cardInFirstSlot = ((QuasimidiQuasarDevice) p.getDevice()).getCardInFirstSlot();
-		int cardInSecondSlot = ((QuasimidiQuasarDevice) p.getDevice()).getCardInSecondSlot();
+		int cardInFirstSlot = ((QuasimidiQuasarDevice) patchByParameter.getDevice()).getCardInFirstSlot();
+		int cardInSecondSlot = ((QuasimidiQuasarDevice) patchByParameter.getDevice()).getCardInSecondSlot();
 		int banks = QuasarConstants.BANK_NAMES.length;
 
 		// If a card is in the second slot it is not relevant
@@ -508,85 +508,85 @@ public class QuasimidiQuasarSingleEditor extends PatchEditorFrame {
 		}
 
 		// Bank number (up to 7 w/o cards, up to 11 with cards)
-		partPanel.add(new ComboBoxWidget("Bank No.", p, new ParamModel(patch, 82 + offset), new QuasarSender(partNo,
+		partPanel.add(new ComboBoxWidget("Bank No.", patchByParameter, new ParamModel(patch, 82 + offset), new QuasarSender(partNo,
 				0x00), bankNames));
 		// Patch number
-		partPanel.add(new SpinnerWidget("Patch No.", p, 0, 127, 0, new ParamModel(patch, 83 + offset),
+		partPanel.add(new SpinnerWidget("Patch No.", patchByParameter, 0, 127, 0, new ParamModel(patch, 83 + offset),
 				new QuasarSender(partNo, 0x01)));
 		// Trackmode (00h = muted, 01h = poly, 02h = mono)
-		partPanel.add(new ComboBoxWidget("Trackmode", p, new ParamModel(patch, 84 + offset), new QuasarSender(partNo,
+		partPanel.add(new ComboBoxWidget("Trackmode", patchByParameter, new ParamModel(patch, 84 + offset), new QuasarSender(partNo,
 				0x02), QuasarConstants.TRACKMODE));
 		// Level
-		partPanel.add(new KnobWidget("Level", p, 0, 127, 0, new ParamModel(patch, 85 + offset), new QuasarSender(
+		partPanel.add(new KnobWidget("Level", patchByParameter, 0, 127, 0, new ParamModel(patch, 85 + offset), new QuasarSender(
 				partNo, 0x03)));
 		// Panorama
-		partPanel.add(new ComboBoxWidget("Pan", p, new ParamModel(patch, 86 + offset), new QuasarSender(partNo, 0x04),
+		partPanel.add(new ComboBoxWidget("Pan", patchByParameter, new ParamModel(patch, 86 + offset), new QuasarSender(partNo, 0x04),
 				QuasarConstants.PANORAMA));
 		verticalBox.add(partPanel);
 
 		partPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		// FX1 Send
-		partPanel.add(new KnobWidget("FX1 Send", p, 0, 63, 0, new ParamModel(patch, 87 + offset), new QuasarSender(
+		partPanel.add(new KnobWidget("FX1 Send", patchByParameter, 0, 63, 0, new ParamModel(patch, 87 + offset), new QuasarSender(
 				partNo, 0x05)));
 		// FX2 Send
-		partPanel.add(new KnobWidget("FX2 Send", p, 0, 63, 0, new ParamModel(patch, 88 + offset), new QuasarSender(
+		partPanel.add(new KnobWidget("FX2 Send", patchByParameter, 0, 63, 0, new ParamModel(patch, 88 + offset), new QuasarSender(
 				partNo, 0x06)));
 		// Transpose (18h = no transpose, 00h = -24, 30h = +24)
-		partPanel.add(new KnobWidget("Transpose", p, 0, 48, -24, new ParamModel(patch, 89 + offset), new QuasarSender(
+		partPanel.add(new KnobWidget("Transpose", patchByParameter, 0, 48, -24, new ParamModel(patch, 89 + offset), new QuasarSender(
 				partNo, 0x07)));
 		// Tune (Offset value, -64 ... +63, 40h = 0)
-		partPanel.add(new KnobWidget("Tune", p, 0, 127, -64, new ParamModel(patch, 90 + offset), new QuasarSender(
+		partPanel.add(new KnobWidget("Tune", patchByParameter, 0, 127, -64, new ParamModel(patch, 90 + offset), new QuasarSender(
 				partNo, 0x08)));
 		// Cutoff frequency (Offset value, -64 ... +63, 40h = 0)
-		partPanel.add(new KnobWidget("Cutoff", p, 0, 127, -64, new ParamModel(patch, 91 + offset), new QuasarSender(
+		partPanel.add(new KnobWidget("Cutoff", patchByParameter, 0, 127, -64, new ParamModel(patch, 91 + offset), new QuasarSender(
 				partNo, 0x09)));
 		// Resonance (Offset value, -64 ... +63, 40h = 0)
-		partPanel.add(new KnobWidget("Resonance", p, 0, 127, -64, new ParamModel(patch, 92 + offset), new QuasarSender(
+		partPanel.add(new KnobWidget("Resonance", patchByParameter, 0, 127, -64, new ParamModel(patch, 92 + offset), new QuasarSender(
 				partNo, 0x0A)));
 		verticalBox.add(partPanel);
 
 		partPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		// EG Attack (Offset value, -64 ... +63, 40h = 0)
-		partPanel.add(new KnobWidget("EG Attack", p, 0, 127, -64, new ParamModel(patch, 93 + offset), new QuasarSender(
+		partPanel.add(new KnobWidget("EG Attack", patchByParameter, 0, 127, -64, new ParamModel(patch, 93 + offset), new QuasarSender(
 				partNo, 0x0B)));
 		// EG Decay (Offset value, -64 ... +63, 40h = 0)
-		partPanel.add(new KnobWidget("EG Decay", p, 0, 127, -64, new ParamModel(patch, 94 + offset), new QuasarSender(
+		partPanel.add(new KnobWidget("EG Decay", patchByParameter, 0, 127, -64, new ParamModel(patch, 94 + offset), new QuasarSender(
 				partNo, 0x0C)));
 		// EG Release (Offset value, -64 ... +63, 40h = 0)
-		partPanel.add(new KnobWidget("EG Release", p, 0, 127, -64, new ParamModel(patch, 95 + offset),
+		partPanel.add(new KnobWidget("EG Release", patchByParameter, 0, 127, -64, new ParamModel(patch, 95 + offset),
 				new QuasarSender(partNo, 0x0D)));
 		// Vibrato rate (Offset value, -64 ... +63, 40h = 0)
-		partPanel.add(new KnobWidget("Vibrato rate", p, 0, 127, -64, new ParamModel(patch, 96 + offset),
+		partPanel.add(new KnobWidget("Vibrato rate", patchByParameter, 0, 127, -64, new ParamModel(patch, 96 + offset),
 				new QuasarSender(partNo, 0x0E)));
 		// Vibrato depth (Offset value, -64 ... +63, 40h = 0)
-		partPanel.add(new KnobWidget("Vibrato depth", p, 0, 127, -64, new ParamModel(patch, 97 + offset),
+		partPanel.add(new KnobWidget("Vibrato depth", patchByParameter, 0, 127, -64, new ParamModel(patch, 97 + offset),
 				new QuasarSender(partNo, 0x0F)));
 		// Vibrato delay (Offset value, -64 ... +63, 40h = 0)
-		partPanel.add(new KnobWidget("Vibrato delay", p, 0, 127, -64, new ParamModel(patch, 98 + offset),
+		partPanel.add(new KnobWidget("Vibrato delay", patchByParameter, 0, 127, -64, new ParamModel(patch, 98 + offset),
 				new QuasarSender(partNo, 0x10)));
 		verticalBox.add(partPanel);
 
 		partPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		// Velocity curve
-		partPanel.add(new ComboBoxWidget("Velocity curve", p, new ParamModel(patch, 99 + offset), new QuasarSender(
+		partPanel.add(new ComboBoxWidget("Velocity curve", patchByParameter, new ParamModel(patch, 99 + offset), new QuasarSender(
 				partNo, 0x11), QuasarConstants.VELOCITY_CURVES));
 		// Holdpedal (00h = off, 01h = on)
-		partPanel.add(new ComboBoxWidget("Holdpedal", p, new ParamModel(patch, 100 + offset), new QuasarSender(partNo,
+		partPanel.add(new ComboBoxWidget("Holdpedal", patchByParameter, new ParamModel(patch, 100 + offset), new QuasarSender(partNo,
 				0x12), QuasarConstants.SWITCH));
 		// Modulation depth
-		partPanel.add(new KnobWidget("Mod. depth", p, 0, 127, 0, new ParamModel(patch, 101 + offset), new QuasarSender(
+		partPanel.add(new KnobWidget("Mod. depth", patchByParameter, 0, 127, 0, new ParamModel(patch, 101 + offset), new QuasarSender(
 				partNo, 0x13)));
 		// Pitch sensivity (00h = -12, 0Ch = 0, 18h = +12)
-		partPanel.add(new KnobWidget("Pitch sensivity", p, 0, 24, -12, new ParamModel(patch, 102 + offset),
+		partPanel.add(new KnobWidget("Pitch sensivity", patchByParameter, 0, 24, -12, new ParamModel(patch, 102 + offset),
 				new QuasarSender(partNo, 0x14)));
 		// Volume mod. sens.(Offset value, -64 ... +63, 40h = 0)
-		partPanel.add(new KnobWidget("Vol. mod. sens.", p, 0, 127, -64, new ParamModel(patch, 103 + offset),
+		partPanel.add(new KnobWidget("Vol. mod. sens.", patchByParameter, 0, 127, -64, new ParamModel(patch, 103 + offset),
 				new QuasarSender(partNo, 0x15)));
 		// Tone mod. sens.(Offset value, -64 ... +63, 40h = 0)
-		partPanel.add(new KnobWidget("Vol. mod. sens.", p, 0, 127, -64, new ParamModel(patch, 104 + offset),
+		partPanel.add(new KnobWidget("Vol. mod. sens.", patchByParameter, 0, 127, -64, new ParamModel(patch, 104 + offset),
 				new QuasarSender(partNo, 0x16)));
 		// Portamento time
-		partPanel.add(new KnobWidget("Portamento time", p, 0, 127, 0, new ParamModel(patch, 105 + offset),
+		partPanel.add(new KnobWidget("Portamento time", patchByParameter, 0, 127, 0, new ParamModel(patch, 105 + offset),
 				new QuasarSender(partNo, 0x17)));
 		verticalBox.add(partPanel);
 

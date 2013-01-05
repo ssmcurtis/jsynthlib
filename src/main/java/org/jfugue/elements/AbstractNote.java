@@ -17,17 +17,17 @@ public class AbstractNote implements JFugueElement {
 	protected NoteTypes type = NoteTypes.FIRST;
 
 	public String getMusicString() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	public String getVerifyString() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	public void acceptVisitor(ElementVisitor visitor) {
-		// TODO Auto-generated method stub
+		
 
 	}
 	

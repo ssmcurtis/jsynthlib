@@ -50,7 +50,11 @@ public class DriverUtil {
 	 * This is used for a byte array read from a Sysex file, for which a Driver is not known.
 	 */
 	public static Patch[] createPatches(byte[] sysex, String filename) {
-		return createPatches(sysex, chooseDriver(sysex), filename);
+		// INFO FIND DRIVER AND CREATE PATCHES
+		System.out.println("Size: " + sysex.length + "-" + HexaUtil.hexDumpOneLine(sysex, 0, -1, 100));
+		SynthDriver driver = chooseDriver(sysex);
+
+		return createPatches(sysex, driver, filename);
 	}
 
 	/**
@@ -61,31 +65,40 @@ public class DriverUtil {
 	 *            Device whose driver is looked up.
 	 */
 	public static Patch[] createPatches(byte[] sysex, Device device, String filename) {
-		return createPatches(sysex, chooseDriver(sysex, device), filename);
+		SynthDriver driver = chooseDriver(sysex, device);
+		return createPatches(sysex, driver, filename);
 	}
 
 	public static Patch[] createPatches(byte[] sysex, Device device) {
-		return createPatches(sysex, chooseDriver(sysex, device), "");
+		SynthDriver driver = chooseDriver(sysex, device);
+		return createPatches(sysex, driver, "");
 	}
 
-	// TODO ssmCurtis ... split always F0..F7
+	// TODO ssmCurtis ... split always F0..F7 ?
 	private static Patch[] createPatches(byte[] sysex, SynthDriver driver, String filename) {
+		
+		// INFO CREATE PATCH FOR SYSEX
+		
 		if (driver == null) {
 			return null;
 		} else if (driver.isConverter()) {
+			// TODO ssmCurtis - support removed
 			// ErrorMsg.reportStatus(">>> IS Converter in " + DriverUtil.class.getName());
 			return ((Converter) driver).createPatches(sysex);
 		} else {
 
-			ByteBuffer byteBuffer = ByteBuffer.allocate(sysex.length);
-			byteBuffer.put(sysex);
+			// introduces by microKorg
+			ByteBuffer byteBuffer = driver.processDumpDataConversion(sysex);
+
 			// TODO ssmCurtis - split always patches ...
-			List<Patch> li = new ArrayList<Patch>();
-			for (byte[] sysexSplit : splitSysexBytearray(byteBuffer)) {
-				li.add(((SynthDriverPatch) driver).createPatch(sysexSplit, filename));
-			}
-			// return li.toArray(new IPatch[] {});
-			Patch p = ((SynthDriverPatch) driver).createPatch(sysex, filename);
+			// List<Patch> li = new ArrayList<Patch>();
+			// for (byte[] sysexSplit : splitSysexBytearray(byteBuffer)) {
+			// li.add(((SynthDriverPatch) driver).createPatch(sysexSplit, filename));
+			// }
+			// return li.toArray(new Patch[] {});
+
+			// TODO ssmCurtis ... or only one patch
+			Patch p = ((SynthDriverPatch) driver).createPatch(byteBuffer.array(), filename);
 			return new Patch[] { p };
 		}
 	}
@@ -125,7 +138,6 @@ public class DriverUtil {
 		}
 		return li;
 	}
-	
 
 	/**
 	 * choose proper driver for sysex byte array.
@@ -136,20 +148,8 @@ public class DriverUtil {
 	 * @see SynthDriver#supportsPatch
 	 */
 	public static SynthDriver chooseDriver(byte[] sysex) {
-		String patchString = getPatchHeader(sysex);
-
-		for (int idev = 0; idev < AppConfig.deviceCount(); idev++) {
-			// Outer Loop, iterating over all installed devices
-			Device dev = AppConfig.getDevice(idev);
-			for (int idrv = 0; idrv < dev.driverCount(); idrv++) {
-				SynthDriverPatch drv = (SynthDriverPatch) dev.getDriver(idrv);
-				// Inner Loop, iterating over all Drivers of a device
-				if (drv.supportsPatch(patchString, sysex))
-					return drv;
-			}
-		}
-		// Changed from "return null" - Emenaker 2006-02-03
-		return AppConfig.getNullDriver();
+		// INFO FIND DRIVER BY SYSEX HEADER
+		return chooseDriver(sysex, null);
 	}
 
 	/**
@@ -158,19 +158,38 @@ public class DriverUtil {
 	 * @param sysex
 	 *            System Exclusive data byte array.
 	 * @param dev
-	 *            Device
+	 *            Device - can be null
 	 * @return Driver object chosen
 	 * @see SynthDriver#supportsPatch
 	 */
 	public static SynthDriver chooseDriver(byte[] sysex, Device dev) {
+		// INFO FIND DRIVER BY DEVICE
+
+		System.out.println("Find driver by device");
+
 		String patchString = getPatchHeader(sysex);
-		for (int idrv = 0; idrv < dev.driverCount(); idrv++) {
-			SynthDriverPatch drv = (SynthDriverPatch) dev.getDriver(idrv);
-			// Inner Loop, iterating over all Drivers of a device
-			if (drv.supportsPatch(patchString, sysex))
-				return drv;
+		if (dev == null) {
+			for (int idev = 0; idev < AppConfig.deviceCount(); idev++) {
+				// Outer Loop, iterating over all installed devices
+				dev = AppConfig.getDevice(idev);
+				for (int idrv = 0; idrv < dev.driverCount(); idrv++) {
+					SynthDriverPatch drv = (SynthDriverPatch) dev.getDriver(idrv);
+					// Inner Loop, iterating over all Drivers of a device
+					if (drv.supportsPatch(patchString, sysex)) {
+						return drv;
+					}
+				}
+			}
+		} else {
+			for (int idrv = 0; idrv < dev.driverCount(); idrv++) {
+				SynthDriverPatch drv = (SynthDriverPatch) dev.getDriver(idrv);
+				// Inner Loop, iterating over all Drivers of a device
+				if (drv.supportsPatch(patchString, sysex)) {
+					return drv;
+				}
+			}
 		}
-		return null;
+		return AppConfig.getNullDriver();
 	}
 
 	/**
@@ -182,12 +201,10 @@ public class DriverUtil {
 	public static String getPatchHeader(byte[] sysex) {
 		StringBuffer patchstring = new StringBuffer("F0");
 
-		// Some Sysex Messages are shorter than 16 Bytes!
-		// for (int i = 1; (sysex.length < 16) ? i < sysex.length : i < 16; i++)
-		// {
 		for (int i = 1; i < Math.min(16, sysex.length); i++) {
-			if ((sysex[i] & 0xff) < 0x10)
+			if ((sysex[i] & 0xff) < 0x10) {
 				patchstring.append("0");
+			}
 			patchstring.append(Integer.toHexString((sysex[i] & 0xff)));
 		}
 		return patchstring.toString();

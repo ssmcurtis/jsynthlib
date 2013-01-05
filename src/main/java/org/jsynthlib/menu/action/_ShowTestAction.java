@@ -6,7 +6,7 @@ import java.util.Map;
 
 import javax.swing.AbstractAction;
 
-import org.jsynthlib.example.midi.MidiWindow;
+import org.jsynthlib.advanced.midi.MidiWindow;
 
 
 public class _ShowTestAction extends AbstractAction {

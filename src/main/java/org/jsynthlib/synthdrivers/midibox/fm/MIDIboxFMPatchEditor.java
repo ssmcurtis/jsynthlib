@@ -228,7 +228,7 @@ class MIDIboxFMPatchEditor extends PatchEditorFrame {
 
 			byte[] cooked_dump = dataModel.getCookedDump();
 			for (int j = 0; j < cooked_dump.length; ++j)
-				cooked_dump[j] = ((PatchDataImpl) p).getSysex()[10 + 0x80 + j];
+				cooked_dump[j] = ((PatchDataImpl) patchByParameter).getSysex()[10 + 0x80 + j];
 			dataModel.setCookedDump(cooked_dump);
 
 			table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -849,11 +849,11 @@ class MIDIboxFMPatchEditor extends PatchEditorFrame {
 		byte[] cooked_dump = dataModel.getCookedDump();
 
 		for (int i = 0; i < 4 * 32; ++i) {
-			byte stored_value = ((PatchDataImpl) p).getSysex()[10 + 0x80 + i];
+			byte stored_value = ((PatchDataImpl) patchByParameter).getSysex()[10 + 0x80 + i];
 			if (stored_value != cooked_dump[i]) {
 				System.out.println("Wavetable Field changed: " + i);
-				((PatchDataImpl) p).getSysex()[10 + 0x80 + i] = cooked_dump[i];
-				SlowSender.sendParameter((SynthDriverPatchImpl) ((PatchDataImpl) p).getDriver(), 0x80 + i, cooked_dump[i], 50);
+				((PatchDataImpl) patchByParameter).getSysex()[10 + 0x80 + i] = cooked_dump[i];
+				SlowSender.sendParameter((SynthDriverPatchImpl) ((PatchDataImpl) patchByParameter).getDriver(), 0x80 + i, cooked_dump[i], 50);
 			}
 		}
 	}

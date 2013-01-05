@@ -1,4 +1,4 @@
-package org.jsynthlib.example.midi;
+package org.jsynthlib.advanced.midi;
 
 public interface WriteOutput {
 

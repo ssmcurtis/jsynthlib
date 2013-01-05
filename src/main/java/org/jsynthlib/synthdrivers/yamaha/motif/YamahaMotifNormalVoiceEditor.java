@@ -65,7 +65,7 @@ public class YamahaMotifNormalVoiceEditor extends PatchEditorFrame {
 		int sendaddress = address;
 		if ((byte) (address >> 8) == (byte) -1)
 			sendaddress = (address & 0x7f007f) | (mid << 8);
-		ComboBoxWidget combo = new ComboBoxWidget(name, p, new MotifParamModel((PatchDataImpl) p, address, mid, _short),
+		ComboBoxWidget combo = new ComboBoxWidget(name, patchByParameter, new MotifParamModel((PatchDataImpl) patchByParameter, address, mid, _short),
 				new ParamSender(sendaddress, _short), options);
 		addWidget(panel, combo, slidercount++);
 		return combo;
@@ -91,7 +91,7 @@ public class YamahaMotifNormalVoiceEditor extends PatchEditorFrame {
 		int sendaddress = address;
 		if ((byte) (address >> 8) == (byte) -1)
 			sendaddress = (address & 0x7f007f) | (mid << 8);
-		ScrollBarWidget bar = new ScrollBarWidget(name, p, min, max, offset, new MotifParamModel((PatchDataImpl) p,
+		ScrollBarWidget bar = new ScrollBarWidget(name, patchByParameter, min, max, offset, new MotifParamModel((PatchDataImpl) patchByParameter,
 				address, mid, _short), new ParamSender(sendaddress, _short));
 		addWidget(panel, bar, slidercount++);
 		return bar;
@@ -128,8 +128,8 @@ public class YamahaMotifNormalVoiceEditor extends PatchEditorFrame {
 		int sendaddress = address;
 		if ((byte) (address >> 8) == (byte) -1)
 			sendaddress = (address & 0x7f007f) | (mid << 8);
-		MyScrollBarWidget bar = new MyScrollBarWidget(name, (PatchDataImpl) p, min, max, offset, new MotifParamModel(
-				(PatchDataImpl) p, address, mid, _short), new ParamSender(sendaddress, _short));
+		MyScrollBarWidget bar = new MyScrollBarWidget(name, (PatchDataImpl) patchByParameter, min, max, offset, new MotifParamModel(
+				(PatchDataImpl) patchByParameter, address, mid, _short), new ParamSender(sendaddress, _short));
 		addWidget(panel, bar, slidercount++, false);
 		return bar;
 	}
@@ -213,7 +213,7 @@ public class YamahaMotifNormalVoiceEditor extends PatchEditorFrame {
 			// Add an action listener to update the name, or do one ourselves.
 			// panel = Box.createHorizontalBox();
 			// c.add(panel);
-			addWidget(panel, new PatchNameWidget("Name", p), slidercount++);
+			addWidget(panel, new PatchNameWidget("Name", patchByParameter), slidercount++);
 			// addHGlue();
 			// panel = Box.createHorizontalBox();
 			// c.add(panel);
@@ -461,14 +461,14 @@ public class YamahaMotifNormalVoiceEditor extends PatchEditorFrame {
 			arp = new ControlPanel("LFO");
 			arp.setAlignmentX(Component.LEFT_ALIGNMENT);
 			add(arp);
-			EnvelopeWidget w = new EnvelopeWidget("Envelope", p, new EnvelopeWidget.Node[] {
-					new EnvelopeWidget.Node(0, 127, new MotifParamModel((PatchDataImpl) p, 0x400605), 5, 5, null, 0,
+			EnvelopeWidget w = new EnvelopeWidget("Envelope", patchByParameter, new EnvelopeWidget.Node[] {
+					new EnvelopeWidget.Node(0, 127, new MotifParamModel((PatchDataImpl) patchByParameter, 0x400605), 5, 5, null, 0,
 							false, new ParamSender(0x400605), null, "Delay", null),
-					new EnvelopeWidget.Node(0, 127, new MotifParamModel((PatchDataImpl) p, 0x400606), 30, 30, null, 0,
+					new EnvelopeWidget.Node(0, 127, new MotifParamModel((PatchDataImpl) patchByParameter, 0x400606), 30, 30, null, 0,
 							false, new ParamSender(0x400606), null, "Fade In", null),
-					new EnvelopeWidget.Node(0, 127, new MotifParamModel((PatchDataImpl) p, 0x400607), 30, 30, null, 0,
+					new EnvelopeWidget.Node(0, 127, new MotifParamModel((PatchDataImpl) patchByParameter, 0x400607), 30, 30, null, 0,
 							false, new ParamSender(0x400607), null, "Hold", null),
-					new EnvelopeWidget.Node(0, 127, new MotifParamModel((PatchDataImpl) p, 0x400608), 5, 5, null, 0,
+					new EnvelopeWidget.Node(0, 127, new MotifParamModel((PatchDataImpl) patchByParameter, 0x400608), 5, 5, null, 0,
 							false, new ParamSender(0x400608), null, "Fade Out", null), });
 			addWidget(arp, w, 500);
 		}
@@ -524,23 +524,23 @@ public class YamahaMotifNormalVoiceEditor extends PatchEditorFrame {
 			addLabeledSlider("Level Sensitivity Curve", 0x41ff22, element, false, 0, 4, 0);
 			panel = Box.createHorizontalBox();
 			c.add(panel);
-			addWidget(panel, new EnvelopeWidget("Amp Envelope", p, new EnvelopeWidget.Node[] {
-					new EnvelopeWidget.Node(0, 127, new MotifParamModel((PatchDataImpl) p, 0x41ff11, element), 0, 0,
+			addWidget(panel, new EnvelopeWidget("Amp Envelope", patchByParameter, new EnvelopeWidget.Node[] {
+					new EnvelopeWidget.Node(0, 127, new MotifParamModel((PatchDataImpl) patchByParameter, 0x41ff11, element), 0, 0,
 							null, 0, false, new ParamSender(0x41ff11, element), null, "Delay", null),
-					new EnvelopeWidget.Node(10, 10, null, 0, 127, new MotifParamModel((PatchDataImpl) p, 0x41ff28,
+					new EnvelopeWidget.Node(10, 10, null, 0, 127, new MotifParamModel((PatchDataImpl) patchByParameter, 0x41ff28,
 							element), 0, false, null, new ParamSender(0x41ff28, element), null, "Init"),
-					new EnvelopeWidget.Node(0, 127, new MotifParamModel((PatchDataImpl) p, 0x41ff24, element), 127, 127,
+					new EnvelopeWidget.Node(0, 127, new MotifParamModel((PatchDataImpl) patchByParameter, 0x41ff24, element), 127, 127,
 							null, 0, false, new ParamSender(0x41ff24, element), null, "Attack", null),
-					new EnvelopeWidget.Node(0, 127, new MotifParamModel((PatchDataImpl) p, 0x41ff25, element), 0, 127,
-							new MotifParamModel((PatchDataImpl) p, 0x41ff2a, element), 0, false, new ParamSender(
+					new EnvelopeWidget.Node(0, 127, new MotifParamModel((PatchDataImpl) patchByParameter, 0x41ff25, element), 0, 127,
+							new MotifParamModel((PatchDataImpl) patchByParameter, 0x41ff2a, element), 0, false, new ParamSender(
 									0x41ff25, element), new ParamSender(0x41ff25, element), "Decay 1 Time",
 							"Decay 1 Level"),
-					new EnvelopeWidget.Node(0, 127, new MotifParamModel((PatchDataImpl) p, 0x41ff26, element), 0, 127,
-							new MotifParamModel((PatchDataImpl) p, 0x41ff2b, element), 0, false, new ParamSender(
+					new EnvelopeWidget.Node(0, 127, new MotifParamModel((PatchDataImpl) patchByParameter, 0x41ff26, element), 0, 127,
+							new MotifParamModel((PatchDataImpl) patchByParameter, 0x41ff2b, element), 0, false, new ParamSender(
 									0x410025, element), new ParamSender(0x41ff25, element), "Decay 2", "Sustain"),
 					new EnvelopeWidget.Node(100, 100, null, EnvelopeWidget.Node.SAME, EnvelopeWidget.Node.SAME, null,
 							0, false, null, null, null, null),
-					new EnvelopeWidget.Node(0, 127, new MotifParamModel((PatchDataImpl) p, 0x41ff27, element), 0, 0,
+					new EnvelopeWidget.Node(0, 127, new MotifParamModel((PatchDataImpl) patchByParameter, 0x41ff27, element), 0, 0,
 							null, 0, false, new ParamSender(0x41ff27, element), null, "Release", null)
 
 			}), 600 + 10 * element);

@@ -48,7 +48,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  */
 public class PatchEditorFrame extends MenuFrame implements PatchBasket {
 	/** This is the patch we are working on. */
-	public PatchSingle p;
+	public PatchSingle patchByParameter;
 	/** Scroll Pane for the editor frame. */
 	protected JPanel scrollPane;
 	/** Note that calling addWidget() method may change the value of this. */
@@ -74,10 +74,6 @@ public class PatchEditorFrame extends MenuFrame implements PatchBasket {
 	/** send a patch when patch editor frame is activated. */
 	private static boolean sendPatchOnActivated = true;
 
-	/**
-	 * This is a copy of the patch when we started editing (in case user wants to revert).
-	 */
-	private final Patch originalPatch;
 	/** which patch in bank we're editing */
 	private int patchRow;
 	private int patchCol;
@@ -102,9 +98,7 @@ public class PatchEditorFrame extends MenuFrame implements PatchBasket {
 		super(PatchBayApplication.getDesktop(), name);
 
 		nFrame++;
-		p = patch;
-		// make a backup copy
-		originalPatch = (Patch) p.clone();
+		patchByParameter = patch;
 
 		scrollPane = panel;
 		scroller = new JScrollPane(scrollPane);
@@ -238,9 +232,9 @@ public class PatchEditorFrame extends MenuFrame implements PatchBasket {
 		// for one synth may be opened and it is not easy or worth to know for
 		// which synth every frame is.
 		ErrorMsgUtil.reportStatus("###PE.FrameActivated: nFrame = " + nFrame);
-		if (sendPatchOnActivated || nFrame > 1) {
+		if (patchByParameter != null && (sendPatchOnActivated || nFrame > 1)) {
 			sendPatchOnActivated = false;
-			p.send();
+			patchByParameter.send();
 		}
 
 		// enable/disable menu entries
@@ -280,28 +274,28 @@ public class PatchEditorFrame extends MenuFrame implements PatchBasket {
 	}
 
 	public void copySelectedPatch() {
-		ClipboardUtil.storePatch(p);
+		ClipboardUtil.storePatch(patchByParameter);
 	}
 
 	public Patch getSelectedPatch() {
-		return p;
+		return patchByParameter;
 	}
 
 	public void sendSelectedPatch() {
-		p.send();
+		patchByParameter.send();
 	}
 
 	public void sendToSelectedPatch() {
-		new SysexSendToDialog(p);
+		new SysexSendToDialog(patchByParameter);
 	}
 
 	public void reassignSelectedPatch() {
-		new ReassignPatchDialog(p);
+		new ReassignPatchDialog(patchByParameter);
 	}
 
 	public void playSelectedPatch() {
-		p.send();
-		p.play();
+		patchByParameter.send();
+		patchByParameter.play();
 	}
 
 	public void storeSelectedPatch() {
@@ -590,8 +584,8 @@ public class PatchEditorFrame extends MenuFrame implements PatchBasket {
 	}
 
 	public void revalidateDriver() {
-		p.setDriver();
-		if (p.hasNullDriver()) {
+		patchByParameter.findDriver();
+		if (patchByParameter.hasNullDriver()) {
 			try {
 				setClosed(true);
 			} catch (PropertyVetoException e) {
@@ -605,7 +599,7 @@ public class PatchEditorFrame extends MenuFrame implements PatchBasket {
 	 * return the Patch which is edited.
 	 */
 	public Patch getPatch() {
-		return p;
+		return patchByParameter;
 	}
 	@Override
 	public void playAllPatches() {
@@ -614,7 +608,7 @@ public class PatchEditorFrame extends MenuFrame implements PatchBasket {
 
 	@Override
 	public Patch[] getSelectedPatches() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 }

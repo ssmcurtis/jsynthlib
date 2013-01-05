@@ -23,6 +23,8 @@ public interface SynthDriverPatch extends SynthDriver {
 	 */
 	int getPatchSize();
 
+	public int getHeaderSize();
+	
 	/**
 	 * Returns String[] returns full list of patchNumbers.
 	 * 

@@ -35,7 +35,7 @@ public abstract class PatchTransferHandler extends TransferHandler {
 	// private DataFlavor[] flavorsAccepted = new DataFlavor[] { PATCHES_FLAVOR, PATCH_FLAVOR, SCENE_FLAVOR,
 	// TEXT_FLAVOR, };
 
-	// TODO ssmCurtis
+	// TODO ssmCurtis - drag and drop
 	private DataFlavor[] flavorsAccepted = new DataFlavor[] { PATCHES_FLAVOR, PATCH_FLAVOR, TEXT_FLAVOR, };
 
 	protected abstract boolean storePatch(Patch p, JComponent c);
@@ -95,7 +95,7 @@ public abstract class PatchTransferHandler extends TransferHandler {
 								libraryFrame.getMyModel().removeAt(libraryFrame.getTable().convertRowIndexToModel(entry.getKey()));
 
 								Patch newPatch = (Patch) entry.getValue().clone();
-								newPatch.setDriver();
+								newPatch.findDriver();
 
 								int targetRow = libraryFrame.getTable().convertRowIndexToModel(libraryFrame.getTable().getSelectedRow());
 								libraryFrame.getMyModel().addPatch(targetRow, newPatch);
@@ -124,7 +124,7 @@ public abstract class PatchTransferHandler extends TransferHandler {
 							ErrorMsgUtil.reportStatus("Cloning: " + patch);
 							Patch newPatch = (Patch) patch.clone();
 							// Serialization loses a transient field, driver.
-							newPatch.setDriver();
+							newPatch.findDriver();
 
 							if (!storePatch(newPatch, targetComponent)) {
 								return (false);

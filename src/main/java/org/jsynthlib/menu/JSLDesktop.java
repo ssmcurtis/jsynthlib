@@ -198,7 +198,7 @@ public class JSLDesktop implements JSLFrameListener {
 	public void JSLFrameClosed(JSLFrameEvent e) {
 		if (iter != null) {
 			try {
-				// TODO ssmcuris
+				// TODO ssmCurtis - window management 
 				// iter.remove();
 			} catch (java.lang.IllegalStateException ex) {
 				ex.printStackTrace();

@@ -54,12 +54,6 @@ public final class PatchBayApplication {
 		// Load SynthDriver database (synthdrivers.properties)
 		deviceConfig = new DevicesConfig();
 
-		// INFO for later use - read all SynthDriver
-		// List<Class<?>> classes = DeviceList.getClasses("org.jsynthlib.synthdrivers", Device.class);
-		// for (Class<?> c : classes) {
-		// ErrorMsg.reportStatus(c.getSimpleName());
-		// }
-
 		// Load config file (JSynthLib.properties).
 		boolean loadPrefsSuccessfull = AppConfig.loadPrefs();
 

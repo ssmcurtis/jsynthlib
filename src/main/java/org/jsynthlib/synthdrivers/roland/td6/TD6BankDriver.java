@@ -23,8 +23,8 @@ package org.jsynthlib.synthdrivers.roland.td6;
 
 import java.io.UnsupportedEncodingException;
 
-import org.jsynthlib.menu.helper.SysexHandler;
 import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
 
 /**

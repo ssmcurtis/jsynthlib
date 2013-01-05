@@ -25,17 +25,17 @@ public class LibraryModel extends PatchTableModel {
 	// begin PatchTableModel interface methods
 	// It is caller's responsibility to update Table.
 	public void addPatch(Patch p) {
-		ErrorMsgUtil.reportStatus("LibraryFrame.addPatch: Patch=" + p);
+//		ErrorMsgUtil.reportStatus("LibraryFrame.addPatch: Patch=" + p);
 		list.add(p);
 	}
 	
 	public void addPatch(int position, Patch p) {
-		ErrorMsgUtil.reportStatus("LibraryFrame pos: " + position+" patch: " + p);
+//		ErrorMsgUtil.reportStatus("LibraryFrame pos: " + position+" patch: " + p);
 		list.add(position, p);
 	}
 	
 	public void addPatch(Patch p, int bankNum, int patchNum) {
-		ErrorMsgUtil.reportStatus("LibraryFrame.addPatch: Patch=" + p);
+//		ErrorMsgUtil.reportStatus("LibraryFrame.addPatch: Patch=" + p);
 		list.add(p);
 	}
 

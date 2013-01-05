@@ -8,7 +8,7 @@ import java.util.List;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 
-import org.jsynthlib.example.style.FormatedString;
+import org.jsynthlib.advanced.style.FormatedString;
 import org.jsynthlib.model.patch.Patch;
 import org.jsynthlib.tools.ErrorMsgUtil;
 
@@ -66,6 +66,7 @@ public class HexDumpContent {
 
 		return (hexDump(mainSysex, compareSysex, offset, len, bytesPerLine, addresslen, characters));
 	}
+
 	private List<FormatedString> hexDump(byte[] mainSysex, byte[] compareSysex, int offset, int len, int bytesPerLine, int addressLength,
 			boolean characters) {
 		List<FormatedString> outputList = new ArrayList<FormatedString>();
@@ -77,10 +78,9 @@ public class HexDumpContent {
 			rowMax++;
 		}
 		StringBuilder sb;
-		int headerLength = 0;
-		if (patch.getDriver().getSysexID() != null) {
-			headerLength = patch.getDriver().getSysexID().length() / 2;
-		}
+
+		int headerLength = patch.getDriver().getHeaderSize();
+		
 		int checksumPosition = patch.getDriver().getChecksumBytePos();
 		Integer notSameBytes = 0;
 		for (int rowCount = 0; rowCount < rowMax; rowCount++) {
@@ -132,7 +132,9 @@ public class HexDumpContent {
 						StyleConstants.setBackground(attribute, Color.YELLOW);
 						item.setAttributeSet(attribute);
 					} else {
+
 						SimpleAttributeSet attribute = new SimpleAttributeSet();
+
 						if (position < headerLength) {
 							StyleConstants.setBackground(attribute, Color.LIGHT_GRAY);
 							// } else if (position == headerLength) {

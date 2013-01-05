@@ -40,10 +40,10 @@ public class SysexStoreDialog extends DevDrvPatchSelector {
 	 * Makes the actual work after pressing the 'Store' button
 	 */
 	protected void doit() {
-		patchGlobal.setDriver((SynthDriverPatch) driverComboBox.getSelectedItem());
+		p.setDriver((SynthDriverPatch) driverComboBox.getSelectedItem());
 		int bankNum = bankComboBox.getSelectedIndex();
 		int patchNum = patchNumComboBox.getSelectedIndex();
-		patchGlobal.send(bankNum, patchNum);
+		p.send(bankNum, patchNum);
 
 		setVisible(false);
 		dispose();

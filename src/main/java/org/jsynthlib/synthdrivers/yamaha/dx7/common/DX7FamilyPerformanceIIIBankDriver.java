@@ -26,8 +26,8 @@ package org.jsynthlib.synthdrivers.yamaha.dx7.common;
 
 import java.io.UnsupportedEncodingException;
 
-import org.jsynthlib.menu.helper.SysexHandler;
 import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.ErrorMsgUtil;
 

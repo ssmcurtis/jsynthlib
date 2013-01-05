@@ -1,6 +1,7 @@
 package org.jsynthlib.model.driver;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiMessage;
@@ -10,7 +11,6 @@ import javax.swing.JOptionPane;
 
 import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.JSLFrame;
-import org.jsynthlib.menu.helper.SysexHandler;
 import org.jsynthlib.menu.preferences.AppConfig;
 import org.jsynthlib.menu.window.HexDumpEditorHighlighted;
 import org.jsynthlib.model.JSynthOctave;
@@ -213,7 +213,7 @@ abstract public class SynthDriverPatchImpl implements SynthDriverPatch {
 		if (sysexID == null || patchHeaderString.length() < sysexID.length()) {
 			return false;
 		}
-	
+
 		StringBuffer compareString = new StringBuffer();
 		for (int i = 0; i < sysexID.length(); i++) {
 			switch (sysexID.charAt(i)) {
@@ -343,6 +343,7 @@ abstract public class SynthDriverPatchImpl implements SynthDriverPatch {
 		byte[] sysex = MidiUtil.sysexMessagesToByteArray(msgs);
 
 		Patch[] patarray = DriverUtil.createPatches(sysex, getDevice(), "");
+
 		if (patarray != null) {
 			for (int k = 0; k < patarray.length; k++) {
 				Patch pk = patarray[k];
@@ -745,4 +746,16 @@ abstract public class SynthDriverPatchImpl implements SynthDriverPatch {
 	public int getChecksumBytePos() {
 		return checksumOffset;
 	}
+
+	public ByteBuffer processDumpDataConversion(byte[] sysexBuffer) {
+		ByteBuffer byteBuffer = ByteBuffer.allocate(sysexBuffer.length);
+		byteBuffer.put(sysexBuffer);
+		return byteBuffer;
+	}
+
+	public int getHeaderSize(){
+		return -1;
+	}
+
+	
 }

@@ -21,7 +21,7 @@
 
 package org.jsynthlib.synthdrivers.line6.pod20;
 
-import org.jsynthlib.menu.helper.SysexHandler;
+import org.jsynthlib.model.driver.SysexHandler;
 
 /**
  * Line6 Edit Buffer Driver. Used for Line6 Edit Buffer patch. Note that on the Pod, the edit buffer patch has an 8 byte

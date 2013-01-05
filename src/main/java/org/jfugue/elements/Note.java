@@ -445,7 +445,7 @@ public class Note extends AbstractNote {
     }
 
     public void setChord(String chordName, byte[] copyOf) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 

@@ -31,7 +31,7 @@ public class ReassignPatchDialog extends DevDrvPatchSelector {
 	 * Makes the actual work after pressing the 'Reassign' button
 	 */
 	protected void doit() {
-		patchGlobal.setDriver((SynthDriverPatch) driverComboBox.getSelectedItem());
+		p.setDriver((SynthDriverPatch) driverComboBox.getSelectedItem());
 
 		setVisible(false);
 		dispose();

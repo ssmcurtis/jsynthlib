@@ -57,7 +57,7 @@ class LibraryFrameListener implements JSLFrameListener {
 			}
 			if (jList[j] instanceof PatchEditorFrame) {
 				for (int i = 0; i < this.abstractLibraryFrame.myModel.getRowCount(); i++)
-					if (((PatchEditorFrame) (jList[j])).p == this.abstractLibraryFrame.myModel.getPatchAt(i)) {
+					if (((PatchEditorFrame) (jList[j])).patchByParameter == this.abstractLibraryFrame.myModel.getPatchAt(i)) {
 						jList[j].moveToFront();
 						try {
 							jList[j].setSelected(true);

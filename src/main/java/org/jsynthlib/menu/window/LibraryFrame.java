@@ -51,15 +51,21 @@ public class LibraryFrame extends AbstractLibraryFrame {
 		
 		Iterator<Patch> it = myModel.getList().iterator();
 		
-		byte[] p = ((Patch) it.next()).getByteArray();
+		Patch stayPatch = it.next(); 
+		byte[] stay = stayPatch.getByteArray();
 		
 		while (it.hasNext()) {
-			byte[] q = ((Patch) it.next()).getByteArray();
-			if (Arrays.equals(p, q)) {
+			Patch deletePatch = it.next();
+			byte[] delete = deletePatch.getByteArray();
+			if (Arrays.equals(stay, delete)) {
+				// TODO ssmCurtis - enable delete
+				// deletePatch.setComment(deletePatch.getComment() + " #same as " + stayPatch.getComment()) ;
 				it.remove();
+				
 				numDeleted++;
 			} else {
-				p = q;
+				stay = delete;
+				stayPatch = deletePatch;
 			}
 		}
 		JOptionPane.showMessageDialog(null, numDeleted + " PatchesAndScenes were Deleted", "Delete Duplicates",

@@ -1,12 +1,15 @@
 package org.jsynthlib.synthdrivers.korg.microkorg;
 
+import java.nio.ByteBuffer;
+
 import javax.sound.midi.MidiMessage;
 import javax.swing.JOptionPane;
 
-import org.jsynthlib.menu.helper.SysexHandler;
 import org.jsynthlib.model.driver.SynthDriverBank;
+import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.ErrorMsgUtil;
+import org.jsynthlib.tools.HexaUtil;
 
 /**
  * Bank driver for KAWAI K4/K4r voice patch.
@@ -14,19 +17,13 @@ import org.jsynthlib.tools.ErrorMsgUtil;
  * @version $Id$
  */
 public class MicroKorgBankDriver extends SynthDriverBank {
-	/** Header Size */
-	private static final int HSIZE = 6;
-	/** Single Patch size */
-	private static final int SSIZE = MicroKorg.PROGRAM_SIZE;
-	/** the number of single patches in a bank patch. */
-	private static final int NS = 128;
 
 	private static final SysexHandler sysexHandler = new SysexHandler(MicroKorg.REQUEST_BANK);
 
 	public MicroKorgBankDriver() {
 		super("Bank", "ssmCurtis", MicroKorg.PATCH_COUNT_IN_BANK, 1);
 		sysexID = MicroKorg.DEVICE_SYSEX_ID;
-		patchSize = MicroKorg.BANK_DUMP_SIZE;
+		patchSize = MicroKorg.BANK_SIZE_MIDI_SYSEX;
 		patchNameStart = MicroKorg.PATCH_NAME_START_AT.position();
 		patchNameSize = MicroKorg.PATCH_NAME_LENGTH.position();
 		deviceIDoffset = MicroKorg.DEVICE_ID_OFFSET;
@@ -81,59 +78,73 @@ public class MicroKorgBankDriver extends SynthDriverBank {
 	@Override
 	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) {
 		System.out.println(">>>> put patch");
-		if (!canHoldPatch(p)) {
-			JOptionPane.showMessageDialog(null, "This type of patch does not fit in to this type of bank.", "Error",
-					JOptionPane.ERROR_MESSAGE);
-			return;
-		}
+		// if (!canHoldPatch(p)) {
+		// JOptionPane.showMessageDialog(null, "This type of patch does not fit in to this type of bank.", "Error",
+		// JOptionPane.ERROR_MESSAGE);
+		// return;
+		// }
+		//
+		// System.arraycopy(p.getSysex(), MicroKorg.HEADER_SIZE, bank.getSysex(), getPatchStart(patchNum),
+		// MicroKorg.PROGRAM_SIZE_MIDI);
+		// calculateChecksum(bank);
+	}
 
-		System.arraycopy(p.getSysex(), HSIZE, bank.getSysex(), getPatchStart(patchNum), SSIZE);
-		calculateChecksum(bank);
+	@Override
+	public ByteBuffer processDumpDataConversion(byte[] sysexBuffer) {
+		return MicroKorg.processDumpDataDecrypt(sysexBuffer, 4, MicroKorg.BANK_SIZE_MIDI);
 	}
 
 	@Override
 	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
 		System.out.println(">>>> Get patch " + getClass().getSimpleName());
 
-		byte[] sysex = new byte[HSIZE + SSIZE + 1];
+		byte[] sysex = new byte[MicroKorg.HEADER_SIZE + MicroKorg.PROGRAM_SIZE_COMPRESSED + 1];
 		// F0 42 3* 58
 		sysex[0] = (byte) 0xF0;
 		sysex[1] = (byte) 0x42;
-		sysex[2] = (byte) 0x30; // TODO sssmCurtis
+		// TODO sssmCurtis - korg program number
+		sysex[2] = (byte) 0x30;
 		sysex[3] = (byte) 0x58;
 		sysex[4] = (byte) 0x40;
-		sysex[5] = (byte) 0x00;
-		sysex[HSIZE + SSIZE] = (byte) 0xF7;
-		System.out.println(bank.getSysex().length + " -> "+ getPatchStart(128)); 
-		System.arraycopy(bank.getSysex(), getPatchStart(patchNum), sysex, HSIZE, SSIZE);
+		sysex[MicroKorg.HEADER_SIZE + MicroKorg.PROGRAM_SIZE_COMPRESSED] = (byte) 0xF7;
 
-		// ssmCurtis - fix something ... mystic
-		int counter = 0;
-		for (byte b : sysex) {
-			if (counter + HSIZE < sysex.length) {
-				if (counter > HSIZE && (counter) % 8 == 0) {
-					sysex[counter - 3 + HSIZE] = sysex[counter - 2 + HSIZE];
-					sysex[counter - 2 + HSIZE] = sysex[counter - 1 + HSIZE];
-					sysex[counter - 1 + HSIZE] = (byte) 0x00;
-				}
+		System.out.println("Patch : " + patchNum + " " + (bank.getSysex().length - getPatchStart(patchNum)));
+		// System.out.println(bank.getSysex().length + " -> " + getPatchStart(128));
+
+		if ((bank.getSysex().length - MicroKorg.PROGRAM_SIZE_COMPRESSED) >= getPatchStart(patchNum)) {
+
+			System.arraycopy(bank.getSysex(), getPatchStart(patchNum), sysex, MicroKorg.HEADER_SIZE, MicroKorg.PROGRAM_SIZE_COMPRESSED);
+			// System.out.println(patchNum + ": "
+			// + HexaUtil.hexDumpOneLine(bank.getSysex(), getPatchStart(patchNum), -1, MicroKorg.PROGRAM_SIZE));
+			// System.out.println(patchNum + ": " + HexaUtil.hexDumpOneLine(sysex, MicroKorg.HEADER_SIZE, -1,
+			// sysex.length));
+			// ssmCurtis - fix something ... mystic
+			// int counter = 0;
+			// for (byte b : sysex) {
+			// if (counter + HSIZE < sysex.length) {
+			// if (counter > HSIZE && (counter) % 8 == 0) {
+			// sysex[counter - 3 + HSIZE] = sysex[counter - 2 + HSIZE];
+			// sysex[counter - 2 + HSIZE] = sysex[counter - 1 + HSIZE];
+			// sysex[counter - 1 + HSIZE] = (byte) 0x00;
+			// }
+			// }
+			// counter++;
+			// }
+			try {
+				// pass Single Driver !!!FIXIT!!!
+				PatchDataImpl p = new PatchDataImpl(sysex, getDevice());
+				// p.calculateChecksum();
+				return p;
+			} catch (Exception e) {
+				ErrorMsgUtil.reportError("Error", "Error in " + getClass().getSimpleName(), e);
 			}
-			counter++;
-		}
-
-		try {
-			// pass Single Driver !!!FIXIT!!!
-			PatchDataImpl p = new PatchDataImpl(sysex, getDevice());
-			p.calculateChecksum();
-			return p;
-		} catch (Exception e) {
-			ErrorMsgUtil.reportError("Error", "Error in " + getClass().getSimpleName(), e);
 		}
 		return null;
 	}
 
 	public int getPatchStart(int patchNum) {
-		System.out.println(">>>> Get patch start" + (HSIZE + (SSIZE * patchNum)));
-		return HSIZE + (SSIZE * patchNum);
+		// System.out.println(">>>> Get patch start " + (HSIZE + (MicroKorg.PROGRAM_SIZE * patchNum)));
+		return MicroKorg.HEADER_SIZE + (MicroKorg.PROGRAM_SIZE_COMPRESSED * patchNum);
 	}
 
 	@Override
@@ -162,4 +173,32 @@ public class MicroKorgBankDriver extends SynthDriverBank {
 		// } catch (Exception e) {
 		// }
 	}
+
+	@Override
+	public boolean supportsPatch(String patchString, byte[] sysex) {
+		if ((patchSize != 0) && !MicroKorg.bankPatchSizeIsSupported(sysex.length)) {
+			return false;
+		}
+
+		if (patchString.length() < sysexID.length()) {
+			return false;
+		}
+
+		StringBuffer compareString = new StringBuffer();
+		for (int i = 0; i < sysexID.length(); i++) {
+			switch (sysexID.charAt(i)) {
+			case '*':
+				compareString.append(patchString.charAt(i));
+				break;
+			default:
+				compareString.append(sysexID.charAt(i));
+			}
+		}
+		return (compareString.toString().equalsIgnoreCase(patchString.substring(0, sysexID.length())));
+	}
+	
+	public int getHeaderSize(){
+		return MicroKorg.HEADER_SIZE;
+	}
+
 }

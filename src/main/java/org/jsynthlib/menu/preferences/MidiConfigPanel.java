@@ -15,7 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
-import org.jsynthlib.example.midi.MidiActionPlayNote;
+import org.jsynthlib.advanced.midi.MidiActionPlayNote;
 import org.jsynthlib.tools.ErrorMsgUtil;
 import org.jsynthlib.tools.MidiTestUtil;
 import org.jsynthlib.tools.MidiUtil;

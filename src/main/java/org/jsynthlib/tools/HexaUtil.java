@@ -2,7 +2,7 @@ package org.jsynthlib.tools;
 
 import java.io.ByteArrayOutputStream;
 
-import org.jsynthlib.example.style.FormatedString;
+import org.jsynthlib.advanced.style.FormatedString;
 
 public class HexaUtil {
 
@@ -38,7 +38,27 @@ public class HexaUtil {
 	}
 
 	public static String byteToBinString(byte b) {
-		return Integer.toBinaryString(byteToInt(b));
+		String result = Integer.toBinaryString(byteToInt(b));
+		switch (result.length()) {
+		case 1:
+			return "0000000" + result;
+		case 2:
+			return "000000" + result;
+		case 3:
+			return "00000" + result;
+		case 4:
+			return "0000" + result;
+		case 5:
+			return "000" + result;
+		case 6:
+			return "00" + result;
+		case 7:
+			return "0" + result;
+		case 8:
+			return result;
+		default:
+			return "00000000";
+		}
 	}
 
 	public static boolean isChannelMessage(byte b) {

@@ -18,8 +18,8 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 
-import org.jsynthlib.example.style.FormatedString;
-import org.jsynthlib.example.style.XMEditor;
+import org.jsynthlib.advanced.style.FormatedString;
+import org.jsynthlib.advanced.style.XMEditor;
 import org.jsynthlib.menu.helper.HexDumpContent;
 import org.jsynthlib.model.patch.Patch;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -52,9 +52,8 @@ public class HexDumpEditorHighlighted extends PatchEditorFrame {
 
 	public HexDumpEditorHighlighted(Patch mainPatch, Patch comparePatch) {
 		super(comparePatch == null ? "Hex dump of sysex message patch " + mainPatch.getFileName() : "Compare patch "
-				+ mainPatch.getFileName() + " and " + comparePatch.getFileName(),
-				new PatchDataImpl(new byte[] { (byte) 0xF0, (byte) 0xF7 }));
-
+				+ mainPatch.getFileName() + " and " + comparePatch.getFileName(), null);
+		// new PatchDataImpl(new byte[] { (byte) 0xF0, (byte) 0xF7 })
 		editor = new XMEditor();
 		editor.setEditable(false);
 		editor.setFont(monospaced);

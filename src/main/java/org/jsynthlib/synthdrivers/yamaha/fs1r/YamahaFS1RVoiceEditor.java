@@ -129,7 +129,7 @@ class YamahaFS1RVoiceEditor extends PatchEditorFrame {
 	// It's not good idea to override PatchBasket method.
 	public void sendSelectedPatch() {
 		// p.calculateChecksum(); // done by sendPatch(Patch, int)
-		((YamahaFS1RVoiceDriver) (p.getDriver())).sendPatch((PatchDataImpl) p, getPart());
+		((YamahaFS1RVoiceDriver) (patchByParameter.getDriver())).sendPatch((PatchDataImpl) patchByParameter, getPart());
 	}
 
 	private void setupUI() {
@@ -184,7 +184,7 @@ class YamahaFS1RVoiceEditor extends PatchEditorFrame {
 		oCopyAll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// make a copy of entire patch
-				mPatchCopy = (PatchDataImpl) p.clone();
+				mPatchCopy = (PatchDataImpl) patchByParameter.clone();
 			}
 		});
 		oCopyPane.add(oCopyAll);
@@ -261,8 +261,8 @@ class YamahaFS1RVoiceEditor extends PatchEditorFrame {
 						0x2A));
 			}
 			// Fseq track number
-			SpinnerWidget oFseqTrack = new SpinnerWidget("", p, 0, 7, 1, new BitModel((PatchDataImpl) p, 0x05, i + 1, 7,
-					0), new BitSender((PatchDataImpl) p, 0x05, i + 1));
+			SpinnerWidget oFseqTrack = new SpinnerWidget("", patchByParameter, 0, 7, 1, new BitModel((PatchDataImpl) patchByParameter, 0x05, i + 1, 7,
+					0), new BitSender((PatchDataImpl) patchByParameter, 0x05, i + 1));
 			oFseqTrack.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
 			oTable1Check[i][2] = oFseqTrack;
 
@@ -399,47 +399,47 @@ class YamahaFS1RVoiceEditor extends PatchEditorFrame {
 		JPanel oPanel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		// addWidget(oFilterPane,new CheckBoxWidget("Part switch",patch,new FS1RModel((Patch)p,0x1D), new
 		// FS1RSender(0x1D)), 0, 0, 1, 1, -1);
-		oPanel1.add(new ComboBoxWidget("Type", p, new FS1RModel((PatchDataImpl) p, 0x54), new FS1RSender(0x54),
+		oPanel1.add(new ComboBoxWidget("Type", patchByParameter, new FS1RModel((PatchDataImpl) patchByParameter, 0x54), new FS1RSender(0x54),
 				new String[] { "Low pass 24db", "Low pass 18db", "Low pass 12db", "High pass", "Band pass", "Notch" }));
-		oPanel1.add(new KnobWidget("Input gain", p, 0, 0x18, -12, new FS1RModel((PatchDataImpl) p, 0x5D),
+		oPanel1.add(new KnobWidget("Input gain", patchByParameter, 0, 0x18, -12, new FS1RModel((PatchDataImpl) patchByParameter, 0x5D),
 				new FS1RSender(0x5D)));
-		oPanel1.add(new KnobWidget("Cutoff", p, 0, 116, -16, new FS1RModel((PatchDataImpl) p, 0x57),
+		oPanel1.add(new KnobWidget("Cutoff", patchByParameter, 0, 116, -16, new FS1RModel((PatchDataImpl) patchByParameter, 0x57),
 				new FS1RSender(0x57)));
-		oPanel1.add(new KnobWidget("Resonance", p, 0, 116, -16, new FS1RModel((PatchDataImpl) p, 0x55), new FS1RSender(
+		oPanel1.add(new KnobWidget("Resonance", patchByParameter, 0, 116, -16, new FS1RModel((PatchDataImpl) patchByParameter, 0x55), new FS1RSender(
 				0x55)));
 		oFilterPane.add(oPanel1);
 
 		JPanel oPanel2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		oPanel2.add(new KnobWidget("Resonance", p, 0, 14, -7, new FS1RModel((PatchDataImpl) p, 0x56), new FS1RSender(
+		oPanel2.add(new KnobWidget("Resonance", patchByParameter, 0, 14, -7, new FS1RModel((PatchDataImpl) patchByParameter, 0x56), new FS1RSender(
 				0x56)));
-		oPanel2.add(new KnobWidget("EG attack time", p, 0, 14, -7, new FS1RModel((PatchDataImpl) p, 0x6E),
+		oPanel2.add(new KnobWidget("EG attack time", patchByParameter, 0, 14, -7, new FS1RModel((PatchDataImpl) patchByParameter, 0x6E),
 				new FS1RSender(0x6E)));
-		oPanel2.add(new KnobWidget("EG depth", p, 0, 14, -7, new FS1RModel((PatchDataImpl) p, 0x58),
+		oPanel2.add(new KnobWidget("EG depth", patchByParameter, 0, 14, -7, new FS1RModel((PatchDataImpl) patchByParameter, 0x58),
 				new FS1RSender(0x58)));
 		oPanel2.setBorder(new TitledBorder(LineBorder.createGrayLineBorder(), "Velocity sensitivity",
 				TitledBorder.LEFT, TitledBorder.CENTER));
 		oFilterPane.add(oPanel2);
 
 		JPanel oPanel3 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		oPanel3.add(new KnobWidget("EG time scaling", p, 0, 7, 0, new FS1RModel((PatchDataImpl) p, 0x6E),
+		oPanel3.add(new KnobWidget("EG time scaling", patchByParameter, 0, 7, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x6E),
 				new FS1RSender(0x6E)));
-		oPanel3.add(new KnobWidget("EG depth", p, 0, 127, -64, new FS1RModel((PatchDataImpl) p, 0x64), new FS1RSender(
+		oPanel3.add(new KnobWidget("EG depth", patchByParameter, 0, 127, -64, new FS1RModel((PatchDataImpl) patchByParameter, 0x64), new FS1RSender(
 				0x64)));
-		oPanel3.add(new KnobWidget("Freq scaling", p, 0, 127, -64, new FS1RModel((PatchDataImpl) p, 0x5B),
+		oPanel3.add(new KnobWidget("Freq scaling", patchByParameter, 0, 127, -64, new FS1RModel((PatchDataImpl) patchByParameter, 0x5B),
 				new FS1RSender(0x5B)));
-		oPanel3.add(new ComboBoxWidget("Freq scale Breakpoint", p, new FS1RModel((PatchDataImpl) p, 0x5C),
+		oPanel3.add(new ComboBoxWidget("Freq scale Breakpoint", patchByParameter, new FS1RModel((PatchDataImpl) patchByParameter, 0x5C),
 				new FS1RSender(0x5C), KbdBreakPointName));
 		oFilterPane.add(oPanel3);
 
 		JPanel oPanel5 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		oPanel5.add(new KnobWidget("L1", p, 0, 0x64, -0x32, new FS1RModel((PatchDataImpl) p, 0x66), new FS1RSender(0x66)));
-		oPanel5.add(new KnobWidget("R1", p, 0, 0x63, 0, new FS1RModel((PatchDataImpl) p, 0x69), new FS1RSender(0x69)));
-		oPanel5.add(new KnobWidget("L2", p, 0, 0x64, -0x32, new FS1RModel((PatchDataImpl) p, 0x67), new FS1RSender(0x67)));
-		oPanel5.add(new KnobWidget("R2", p, 0, 0x63, 0, new FS1RModel((PatchDataImpl) p, 0x6A), new FS1RSender(0x6A)));
-		oPanel5.add(new KnobWidget("L3", p, 0, 0x64, -0x32, new FS1RModel((PatchDataImpl) p, 0x68), new FS1RSender(0x68)));
-		oPanel5.add(new KnobWidget("R3", p, 0, 0x63, 0, new FS1RModel((PatchDataImpl) p, 0x6B), new FS1RSender(0x6B)));
-		oPanel5.add(new KnobWidget("L4", p, 0, 0x64, -0x32, new FS1RModel((PatchDataImpl) p, 0x65), new FS1RSender(0x65)));
-		oPanel5.add(new KnobWidget("R4", p, 0, 0x63, 0, new FS1RModel((PatchDataImpl) p, 0x6C), new FS1RSender(0x6C)));
+		oPanel5.add(new KnobWidget("L1", patchByParameter, 0, 0x64, -0x32, new FS1RModel((PatchDataImpl) patchByParameter, 0x66), new FS1RSender(0x66)));
+		oPanel5.add(new KnobWidget("R1", patchByParameter, 0, 0x63, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x69), new FS1RSender(0x69)));
+		oPanel5.add(new KnobWidget("L2", patchByParameter, 0, 0x64, -0x32, new FS1RModel((PatchDataImpl) patchByParameter, 0x67), new FS1RSender(0x67)));
+		oPanel5.add(new KnobWidget("R2", patchByParameter, 0, 0x63, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x6A), new FS1RSender(0x6A)));
+		oPanel5.add(new KnobWidget("L3", patchByParameter, 0, 0x64, -0x32, new FS1RModel((PatchDataImpl) patchByParameter, 0x68), new FS1RSender(0x68)));
+		oPanel5.add(new KnobWidget("R3", patchByParameter, 0, 0x63, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x6B), new FS1RSender(0x6B)));
+		oPanel5.add(new KnobWidget("L4", patchByParameter, 0, 0x64, -0x32, new FS1RModel((PatchDataImpl) patchByParameter, 0x65), new FS1RSender(0x65)));
+		oPanel5.add(new KnobWidget("R4", patchByParameter, 0, 0x63, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x6C), new FS1RSender(0x6C)));
 		oPanel5.setBorder(new TitledBorder(LineBorder.createGrayLineBorder(), "Filter Envelope Generator",
 				TitledBorder.LEFT, TitledBorder.CENTER));
 		oFilterPane.add(oPanel5);
@@ -455,22 +455,22 @@ class YamahaFS1RVoiceEditor extends PatchEditorFrame {
 
 		JPanel oP1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-		oP1.add(new KnobWidget("Time scaling", p, 0, 7, 0, new FS1RModel((PatchDataImpl) p, 0x3C), new FS1RSender(0x3C)));
-		oP1.add(new ComboBoxWidget("Range", p, new FS1RModel((PatchDataImpl) p, 0x3B), new FS1RSender(0x3B),
+		oP1.add(new KnobWidget("Time scaling", patchByParameter, 0, 7, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x3C), new FS1RSender(0x3C)));
+		oP1.add(new ComboBoxWidget("Range", patchByParameter, new FS1RModel((PatchDataImpl) patchByParameter, 0x3B), new FS1RSender(0x3B),
 				new String[] { "8 octaves", "2 octaves", "1 octave", "1/2 octave" }));
-		oP1.add(new KnobWidget("Vel sens", p, 0, 7, 0, new FS1RModel((PatchDataImpl) p, 0x27), new FS1RSender(0x27)));
-		oP1.add(new SpinnerWidget("Note shift", p, 0, 48, -24, new FS1RModel((PatchDataImpl) p, 0x1E), new FS1RSender(
+		oP1.add(new KnobWidget("Vel sens", patchByParameter, 0, 7, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x27), new FS1RSender(0x27)));
+		oP1.add(new SpinnerWidget("Note shift", patchByParameter, 0, 48, -24, new FS1RModel((PatchDataImpl) patchByParameter, 0x1E), new FS1RSender(
 				0x1E)));
 
 		JPanel oPanel5 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		oPanel5.add(new KnobWidget("L1", p, 0, 0x64, -0x32, new FS1RModel((PatchDataImpl) p, 0x1F), new FS1RSender(0x1F)));
-		oPanel5.add(new KnobWidget("R1", p, 0, 0x63, 0, new FS1RModel((PatchDataImpl) p, 0x23), new FS1RSender(0x23)));
-		oPanel5.add(new KnobWidget("L2", p, 0, 0x64, -0x32, new FS1RModel((PatchDataImpl) p, 0x20), new FS1RSender(0x20)));
-		oPanel5.add(new KnobWidget("R2", p, 0, 0x63, 0, new FS1RModel((PatchDataImpl) p, 0x24), new FS1RSender(0x24)));
-		oPanel5.add(new KnobWidget("L3", p, 0, 0x64, -0x32, new FS1RModel((PatchDataImpl) p, 0x21), new FS1RSender(0x21)));
-		oPanel5.add(new KnobWidget("R3", p, 0, 0x63, 0, new FS1RModel((PatchDataImpl) p, 0x25), new FS1RSender(0x25)));
-		oPanel5.add(new KnobWidget("L4", p, 0, 0x64, -0x32, new FS1RModel((PatchDataImpl) p, 0x22), new FS1RSender(0x22)));
-		oPanel5.add(new KnobWidget("R4", p, 0, 0x63, 0, new FS1RModel((PatchDataImpl) p, 0x26), new FS1RSender(0x26)));
+		oPanel5.add(new KnobWidget("L1", patchByParameter, 0, 0x64, -0x32, new FS1RModel((PatchDataImpl) patchByParameter, 0x1F), new FS1RSender(0x1F)));
+		oPanel5.add(new KnobWidget("R1", patchByParameter, 0, 0x63, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x23), new FS1RSender(0x23)));
+		oPanel5.add(new KnobWidget("L2", patchByParameter, 0, 0x64, -0x32, new FS1RModel((PatchDataImpl) patchByParameter, 0x20), new FS1RSender(0x20)));
+		oPanel5.add(new KnobWidget("R2", patchByParameter, 0, 0x63, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x24), new FS1RSender(0x24)));
+		oPanel5.add(new KnobWidget("L3", patchByParameter, 0, 0x64, -0x32, new FS1RModel((PatchDataImpl) patchByParameter, 0x21), new FS1RSender(0x21)));
+		oPanel5.add(new KnobWidget("R3", patchByParameter, 0, 0x63, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x25), new FS1RSender(0x25)));
+		oPanel5.add(new KnobWidget("L4", patchByParameter, 0, 0x64, -0x32, new FS1RModel((PatchDataImpl) patchByParameter, 0x22), new FS1RSender(0x22)));
+		oPanel5.add(new KnobWidget("R4", patchByParameter, 0, 0x63, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x26), new FS1RSender(0x26)));
 		oPanel5.setBorder(new TitledBorder(LineBorder.createGrayLineBorder(), "Envelope Generator", TitledBorder.LEFT,
 				TitledBorder.CENTER));
 
@@ -493,55 +493,55 @@ class YamahaFS1RVoiceEditor extends PatchEditorFrame {
 		Box oPane = Box.createVerticalBox();
 		// selon la forme d'onde les reglages sont differents
 		JPanel oSinePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		FS1RModel oFreqModeM = new BitModel((PatchDataImpl) p, 0x05, aOp, 0x40, 6);
-		BitModel oKeySyncM = new BitModel((PatchDataImpl) p, 0, aOp, 0x40, 6);
-		oWidget = new ComboBoxWidget("Freq mode", p, oFreqModeM, new BitSender((PatchDataImpl) p, 0x05, aOp),
+		FS1RModel oFreqModeM = new BitModel((PatchDataImpl) patchByParameter, 0x05, aOp, 0x40, 6);
+		BitModel oKeySyncM = new BitModel((PatchDataImpl) patchByParameter, 0, aOp, 0x40, 6);
+		oWidget = new ComboBoxWidget("Freq mode", patchByParameter, oFreqModeM, new BitSender((PatchDataImpl) patchByParameter, 0x05, aOp),
 				new String[] { "Ratio", "Fixed" });
 		addOperatorWidget(aOp, oWidget);
 		oSinePanel.add(oWidget);
-		oWidget = new CheckBoxWidget("Key sync", p, oKeySyncM, new BitSender((PatchDataImpl) p, 0, aOp));
+		oWidget = new CheckBoxWidget("Key sync", patchByParameter, oKeySyncM, new BitSender((PatchDataImpl) patchByParameter, 0, aOp));
 		addOperatorWidget(aOp, oWidget);
 		oSinePanel.add(oWidget);
 
 		JPanel oAllPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		FS1RModel oSkirtM = new BitModel((PatchDataImpl) p, 0x05, aOp, 0x38, 3);
-		oWidget = new ComboBoxWidget("Freq mode", p, oFreqModeM, new BitSender((PatchDataImpl) p, 0x05, aOp),
+		FS1RModel oSkirtM = new BitModel((PatchDataImpl) patchByParameter, 0x05, aOp, 0x38, 3);
+		oWidget = new ComboBoxWidget("Freq mode", patchByParameter, oFreqModeM, new BitSender((PatchDataImpl) patchByParameter, 0x05, aOp),
 				new String[] { "Ratio", "Fixed" });
 		addOperatorWidget(aOp, oWidget);
 		oAllPanel.add(oWidget);
-		oWidget = new SpinnerWidget("Skirt", p, 0, 7, 0, oSkirtM, new BitSender((PatchDataImpl) p, 0x05, aOp));
+		oWidget = new SpinnerWidget("Skirt", patchByParameter, 0, 7, 0, oSkirtM, new BitSender((PatchDataImpl) patchByParameter, 0x05, aOp));
 		addOperatorWidget(aOp, oWidget);
 		oAllPanel.add(oWidget);
-		oWidget = new CheckBoxWidget("Key sync", p, oKeySyncM, new BitSender((PatchDataImpl) p, 0, aOp));
+		oWidget = new CheckBoxWidget("Key sync", patchByParameter, oKeySyncM, new BitSender((PatchDataImpl) patchByParameter, 0, aOp));
 		addOperatorWidget(aOp, oWidget);
 		oAllPanel.add(oWidget);
 
 		JPanel oResPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		oWidget = new ComboBoxWidget("Freq mode", p, oFreqModeM, new BitSender((PatchDataImpl) p, 0x05, aOp),
+		oWidget = new ComboBoxWidget("Freq mode", patchByParameter, oFreqModeM, new BitSender((PatchDataImpl) patchByParameter, 0x05, aOp),
 				new String[] { "Ratio", "Fixed" });
 		addOperatorWidget(aOp, oWidget);
 		oResPanel.add(oWidget);
-		oWidget = new SpinnerWidget("Skirt", p, 0, 7, 0, oSkirtM, new BitSender((PatchDataImpl) p, 0x05, aOp));
+		oWidget = new SpinnerWidget("Skirt", patchByParameter, 0, 7, 0, oSkirtM, new BitSender((PatchDataImpl) patchByParameter, 0x05, aOp));
 		addOperatorWidget(aOp, oWidget);
 		oResPanel.add(oWidget);
-		oWidget = new KnobWidget("Resonance", p, 0, 99, 0, new FS1RModel((PatchDataImpl) p, 0x06, aOp), new FS1RSender(
+		oWidget = new KnobWidget("Resonance", patchByParameter, 0, 99, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x06, aOp), new FS1RSender(
 				0x06, aOp));
 		addOperatorWidget(aOp, oWidget);
 		oResPanel.add(oWidget);
-		oWidget = new CheckBoxWidget("Key sync", p, oKeySyncM, new BitSender((PatchDataImpl) p, 0, aOp));
+		oWidget = new CheckBoxWidget("Key sync", patchByParameter, oKeySyncM, new BitSender((PatchDataImpl) patchByParameter, 0, aOp));
 		addOperatorWidget(aOp, oWidget);
 		oResPanel.add(oWidget);
 
 		JPanel oFormantPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		oWidget = new SpinnerWidget("Transpose", p, 0, 48, -24, new BitModel((PatchDataImpl) p, 0, aOp, 0x3F, 0),
-				new BitSender((PatchDataImpl) p, 0, aOp));
+		oWidget = new SpinnerWidget("Transpose", patchByParameter, 0, 48, -24, new BitModel((PatchDataImpl) patchByParameter, 0, aOp, 0x3F, 0),
+				new BitSender((PatchDataImpl) patchByParameter, 0, aOp));
 		addOperatorWidget(aOp, oWidget);
 		oFormantPanel.add(oWidget);
-		oWidget = new KnobWidget("Band width", p, 0, 99, 0, new FS1RModel((PatchDataImpl) p, 0x06, aOp), new FS1RSender(
+		oWidget = new KnobWidget("Band width", patchByParameter, 0, 99, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x06, aOp), new FS1RSender(
 				0x06, aOp));
 		addOperatorWidget(aOp, oWidget);
 		oFormantPanel.add(oWidget);
-		oWidget = new SpinnerWidget("Skirt", p, 0, 7, 0, oSkirtM, new BitSender((PatchDataImpl) p, 0x05, aOp));
+		oWidget = new SpinnerWidget("Skirt", patchByParameter, 0, 7, 0, oSkirtM, new BitSender((PatchDataImpl) patchByParameter, 0x05, aOp));
 		addOperatorWidget(aOp, oWidget);
 		oFormantPanel.add(oWidget);
 
@@ -554,26 +554,26 @@ class YamahaFS1RVoiceEditor extends PatchEditorFrame {
 		oCardPane.add("Formant", oFormantPanel);
 
 		WaveComboListener oComboListener = new WaveComboListener(oCardPane, oWaves);
-		oComboListener.notifyChange(new BitModel((PatchDataImpl) p, 0x04, aOp, 7, 0).get());
+		oComboListener.notifyChange(new BitModel((PatchDataImpl) patchByParameter, 0x04, aOp, 7, 0).get());
 
 		JPanel oPanel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		oWidget = new ComboActionWidget("Wave", (PatchDataImpl) p, new BitModel((PatchDataImpl) p, 0x04, aOp, 7, 0),
-				new BitSender((PatchDataImpl) p, 0x04, aOp), oWaves, oComboListener);
+		oWidget = new ComboActionWidget("Wave", (PatchDataImpl) patchByParameter, new BitModel((PatchDataImpl) patchByParameter, 0x04, aOp, 7, 0),
+				new BitSender((PatchDataImpl) patchByParameter, 0x04, aOp), oWaves, oComboListener);
 		addOperatorWidget(aOp, oWidget);
 		oPanel1.add(oWidget);
-		oWidget = new KnobLookupWidget("Freq coarse", p, new FS1RModel((PatchDataImpl) p, 0x01, aOp), new FS1RSender(
+		oWidget = new KnobLookupWidget("Freq coarse", patchByParameter, new FS1RModel((PatchDataImpl) patchByParameter, 0x01, aOp), new FS1RSender(
 				0x01, aOp), FreqCoarseName);
 		addOperatorWidget(aOp, oWidget);
 		oPanel1.add(oWidget);
-		oWidget = new KnobWidget("Freq fine", p, 0, 0x7F, 0, new FS1RModel((PatchDataImpl) p, 0x02, aOp),
+		oWidget = new KnobWidget("Freq fine", patchByParameter, 0, 0x7F, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x02, aOp),
 				new FS1RSender(0x02, aOp));
 		addOperatorWidget(aOp, oWidget);
 		oPanel1.add(oWidget);
-		oWidget = new KnobWidget("Freq scaling", p, 0, 99, 0, new FS1RModel((PatchDataImpl) p, 0x03, aOp),
+		oWidget = new KnobWidget("Freq scaling", patchByParameter, 0, 99, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x03, aOp),
 				new FS1RSender(0x03, aOp));
 		addOperatorWidget(aOp, oWidget);
 		oPanel1.add(oWidget);
-		oWidget = new KnobWidget("Detune", p, 0, 30, -15, new FS1RModel((PatchDataImpl) p, 0x07, aOp), new FS1RSender(
+		oWidget = new KnobWidget("Detune", patchByParameter, 0, 30, -15, new FS1RModel((PatchDataImpl) patchByParameter, 0x07, aOp), new FS1RSender(
 				0x07, aOp));
 		addOperatorWidget(aOp, oWidget);
 		oPanel1.add(oWidget);
@@ -581,23 +581,23 @@ class YamahaFS1RVoiceEditor extends PatchEditorFrame {
 		oPane.add(oPanel1);
 
 		JPanel oPanel3 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		oWidget = new ComboBoxWidget("Left curve", p, new FS1RModel((PatchDataImpl) p, 0x1A, aOp), new FS1RSender(0x1A,
+		oWidget = new ComboBoxWidget("Left curve", patchByParameter, new FS1RModel((PatchDataImpl) patchByParameter, 0x1A, aOp), new FS1RSender(0x1A,
 				aOp), new String[] { "-lin", "-exp", "+lin", "+exp" });
 		addOperatorWidget(aOp, oWidget);
 		oPanel3.add(oWidget);
-		oWidget = new ComboBoxWidget("Breakpoint", p, new FS1RModel((PatchDataImpl) p, 0x17, aOp), new FS1RSender(0x17),
+		oWidget = new ComboBoxWidget("Breakpoint", patchByParameter, new FS1RModel((PatchDataImpl) patchByParameter, 0x17, aOp), new FS1RSender(0x17),
 				LSBreakPointName);
 		addOperatorWidget(aOp, oWidget);
 		oPanel3.add(oWidget);
-		oWidget = new ComboBoxWidget("Right curve", p, new FS1RModel((PatchDataImpl) p, 0x1B, aOp), new FS1RSender(0x1B,
+		oWidget = new ComboBoxWidget("Right curve", patchByParameter, new FS1RModel((PatchDataImpl) patchByParameter, 0x1B, aOp), new FS1RSender(0x1B,
 				aOp), new String[] { "-lin", "-exp", "+lin", "+exp" });
 		addOperatorWidget(aOp, oWidget);
 		oPanel3.add(oWidget);
-		oWidget = new KnobWidget("Left depth", p, 0, 99, 0, new FS1RModel((PatchDataImpl) p, 0x18, aOp), new FS1RSender(
+		oWidget = new KnobWidget("Left depth", patchByParameter, 0, 99, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x18, aOp), new FS1RSender(
 				0x18, aOp));
 		addOperatorWidget(aOp, oWidget);
 		oPanel3.add(oWidget);
-		oWidget = new KnobWidget("Right depth", p, 0, 99, 0, new FS1RModel((PatchDataImpl) p, 0x19, aOp),
+		oWidget = new KnobWidget("Right depth", patchByParameter, 0, 99, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x19, aOp),
 				new FS1RSender(0x19, aOp));
 		addOperatorWidget(aOp, oWidget);
 		oPanel3.add(oWidget);
@@ -606,50 +606,50 @@ class YamahaFS1RVoiceEditor extends PatchEditorFrame {
 		oPane.add(oPanel3);
 
 		JPanel oPanel4 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		oWidget = new KnobLookupWidget("Attenuation", p, new FS1RModel((PatchDataImpl) p, 0x2D + aOp - 1),
+		oWidget = new KnobLookupWidget("Attenuation", patchByParameter, new FS1RModel((PatchDataImpl) patchByParameter, 0x2D + aOp - 1),
 				new FS1RSender(0x2D + aOp - 1), mAttenuations);
 		addOperatorWidget(aOp, oWidget);
 		oPanel4.add(oWidget);
-		oWidget = new KnobWidget("Output level", p, 0, 99, 0, new FS1RModel((PatchDataImpl) p, 0x16, aOp),
+		oWidget = new KnobWidget("Output level", patchByParameter, 0, 99, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x16, aOp),
 				new FS1RSender(0x16, aOp));
 		addOperatorWidget(aOp, oWidget);
 		oPanel4.add(oWidget);
 		oPane.add(oPanel4);
 
 		JPanel oPanel5 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		oWidget = new KnobWidget("Hold", p, 0, 0x63, 0, new FS1RModel((PatchDataImpl) p, 0x14, aOp), new FS1RSender(
+		oWidget = new KnobWidget("Hold", patchByParameter, 0, 0x63, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x14, aOp), new FS1RSender(
 				0x14, aOp));
 		addOperatorWidget(aOp, oWidget);
 		oPanel5.add(oWidget);
-		oWidget = new KnobWidget("L1", p, 0, 0x63, 0, new FS1RModel((PatchDataImpl) p, 0xC, aOp), new FS1RSender(0xC,
+		oWidget = new KnobWidget("L1", patchByParameter, 0, 0x63, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0xC, aOp), new FS1RSender(0xC,
 				aOp));
 		addOperatorWidget(aOp, oWidget);
 		oPanel5.add(oWidget);
-		oWidget = new KnobWidget("R1", p, 0, 0x63, 0, new FS1RModel((PatchDataImpl) p, 0x10, aOp), new FS1RSender(0x10,
+		oWidget = new KnobWidget("R1", patchByParameter, 0, 0x63, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x10, aOp), new FS1RSender(0x10,
 				aOp));
 		addOperatorWidget(aOp, oWidget);
 		oPanel5.add(oWidget);
-		oWidget = new KnobWidget("L2", p, 0, 0x63, 0, new FS1RModel((PatchDataImpl) p, 0xD, aOp), new FS1RSender(0xD,
+		oWidget = new KnobWidget("L2", patchByParameter, 0, 0x63, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0xD, aOp), new FS1RSender(0xD,
 				aOp));
 		addOperatorWidget(aOp, oWidget);
 		oPanel5.add(oWidget);
-		oWidget = new KnobWidget("R2", p, 0, 0x63, 0, new FS1RModel((PatchDataImpl) p, 0x11, aOp), new FS1RSender(0x11,
+		oWidget = new KnobWidget("R2", patchByParameter, 0, 0x63, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x11, aOp), new FS1RSender(0x11,
 				aOp));
 		addOperatorWidget(aOp, oWidget);
 		oPanel5.add(oWidget);
-		oWidget = new KnobWidget("L3", p, 0, 0x63, 0, new FS1RModel((PatchDataImpl) p, 0xE, aOp), new FS1RSender(0xE,
+		oWidget = new KnobWidget("L3", patchByParameter, 0, 0x63, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0xE, aOp), new FS1RSender(0xE,
 				aOp));
 		addOperatorWidget(aOp, oWidget);
 		oPanel5.add(oWidget);
-		oWidget = new KnobWidget("R3", p, 0, 0x63, 0, new FS1RModel((PatchDataImpl) p, 0x12, aOp), new FS1RSender(0x12,
+		oWidget = new KnobWidget("R3", patchByParameter, 0, 0x63, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x12, aOp), new FS1RSender(0x12,
 				aOp));
 		addOperatorWidget(aOp, oWidget);
 		oPanel5.add(oWidget);
-		oWidget = new KnobWidget("L4", p, 0, 0x63, 0, new FS1RModel((PatchDataImpl) p, 0xF, aOp), new FS1RSender(0xF,
+		oWidget = new KnobWidget("L4", patchByParameter, 0, 0x63, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0xF, aOp), new FS1RSender(0xF,
 				aOp));
 		addOperatorWidget(aOp, oWidget);
 		oPanel5.add(oWidget);
-		oWidget = new KnobWidget("R4", p, 0, 0x63, 0, new FS1RModel((PatchDataImpl) p, 0x13, aOp), new FS1RSender(0x13,
+		oWidget = new KnobWidget("R4", patchByParameter, 0, 0x63, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x13, aOp), new FS1RSender(0x13,
 				aOp));
 		addOperatorWidget(aOp, oWidget);
 		oPanel5.add(oWidget);
@@ -658,19 +658,19 @@ class YamahaFS1RVoiceEditor extends PatchEditorFrame {
 		oPane.add(oPanel5);
 
 		JPanel oPitchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
-		oWidget = new KnobWidget("Initial level", p, 0, 0x64, -0x32, new FS1RModel((PatchDataImpl) p, 8, aOp),
+		oWidget = new KnobWidget("Initial level", patchByParameter, 0, 0x64, -0x32, new FS1RModel((PatchDataImpl) patchByParameter, 8, aOp),
 				new FS1RSender(8, aOp));
 		addOperatorWidget(aOp, oWidget);
 		oPitchPanel.add(oWidget);
-		oWidget = new KnobWidget("Attack level", p, 0, 0x64, -0x32, new FS1RModel((PatchDataImpl) p, 9, aOp),
+		oWidget = new KnobWidget("Attack level", patchByParameter, 0, 0x64, -0x32, new FS1RModel((PatchDataImpl) patchByParameter, 9, aOp),
 				new FS1RSender(9, aOp));
 		addOperatorWidget(aOp, oWidget);
 		oPitchPanel.add(oWidget);
-		oWidget = new KnobWidget("Attack time", p, 0, 0x63, 0, new FS1RModel((PatchDataImpl) p, 10, aOp),
+		oWidget = new KnobWidget("Attack time", patchByParameter, 0, 0x63, 0, new FS1RModel((PatchDataImpl) patchByParameter, 10, aOp),
 				new FS1RSender(10, aOp));
 		addOperatorWidget(aOp, oWidget);
 		oPitchPanel.add(oWidget);
-		oWidget = new KnobWidget("Decay time", p, 0, 0x63, 0, new FS1RModel((PatchDataImpl) p, 11, aOp), new FS1RSender(
+		oWidget = new KnobWidget("Decay time", patchByParameter, 0, 0x63, 0, new FS1RModel((PatchDataImpl) patchByParameter, 11, aOp), new FS1RSender(
 				11, aOp));
 		addOperatorWidget(aOp, oWidget);
 		oPitchPanel.add(oWidget);
@@ -679,36 +679,36 @@ class YamahaFS1RVoiceEditor extends PatchEditorFrame {
 		oPane.add(oPitchPanel);
 
 		JPanel oSensPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
-		oWidget = new KnobWidget("Amp velocity", p, 0, 14, -7, new BitModel((PatchDataImpl) p, 0x21, aOp, 0x0F, 0),
-				new BitSender((PatchDataImpl) p, 0x21, aOp));
+		oWidget = new KnobWidget("Amp velocity", patchByParameter, 0, 14, -7, new BitModel((PatchDataImpl) patchByParameter, 0x21, aOp, 0x0F, 0),
+				new BitSender((PatchDataImpl) patchByParameter, 0x21, aOp));
 		addOperatorWidget(aOp, oWidget);
 		oSensPanel.add(oWidget);
-		oWidget = new KnobWidget("Freq velocity", p, 0, 14, -7, new BitModel((PatchDataImpl) p, 0x20, aOp, 0x0F, 0),
-				new BitSender((PatchDataImpl) p, 0x20, aOp));
+		oWidget = new KnobWidget("Freq velocity", patchByParameter, 0, 14, -7, new BitModel((PatchDataImpl) patchByParameter, 0x20, aOp, 0x0F, 0),
+				new BitSender((PatchDataImpl) patchByParameter, 0x20, aOp));
 		addOperatorWidget(aOp, oWidget);
 		oSensPanel.add(oWidget);
-		oWidget = new KnobWidget("Amp EG bias", p, 0, 14, -7, new FS1RModel((PatchDataImpl) p, 0x22, aOp),
+		oWidget = new KnobWidget("Amp EG bias", patchByParameter, 0, 14, -7, new FS1RModel((PatchDataImpl) patchByParameter, 0x22, aOp),
 				new FS1RSender(0x22, aOp));
 		addOperatorWidget(aOp, oWidget);
 		oSensPanel.add(oWidget);
-		oWidget = new KnobWidget("Freq bias", p, 0, 14, -7, new BitModel((PatchDataImpl) p, 0x1F, aOp, 0x78, 3),
-				new BitSender((PatchDataImpl) p, 0x1F, aOp));
+		oWidget = new KnobWidget("Freq bias", patchByParameter, 0, 14, -7, new BitModel((PatchDataImpl) patchByParameter, 0x1F, aOp, 0x78, 3),
+				new BitSender((PatchDataImpl) patchByParameter, 0x1F, aOp));
 		addOperatorWidget(aOp, oWidget);
 		oSensPanel.add(oWidget);
-		oWidget = new KnobWidget("Width bias", p, 0, 14, -7, new BitModel((PatchDataImpl) p, 0x04, aOp, 0x78, 3),
-				new BitSender((PatchDataImpl) p, 0x04, aOp));
+		oWidget = new KnobWidget("Width bias", patchByParameter, 0, 14, -7, new BitModel((PatchDataImpl) patchByParameter, 0x04, aOp, 0x78, 3),
+				new BitSender((PatchDataImpl) patchByParameter, 0x04, aOp));
 		addOperatorWidget(aOp, oWidget);
 		oSensPanel.add(oWidget);
-		oWidget = new KnobWidget("Pitch mod", p, 0, 7, 0, new BitModel((PatchDataImpl) p, 0x1F, aOp, 0x07, 0),
-				new BitSender((PatchDataImpl) p, 0x1F, aOp));
+		oWidget = new KnobWidget("Pitch mod", patchByParameter, 0, 7, 0, new BitModel((PatchDataImpl) patchByParameter, 0x1F, aOp, 0x07, 0),
+				new BitSender((PatchDataImpl) patchByParameter, 0x1F, aOp));
 		addOperatorWidget(aOp, oWidget);
 		oSensPanel.add(oWidget);
-		oWidget = new KnobWidget("Amp mod", p, 0, 7, 0, new BitModel((PatchDataImpl) p, 0x21, aOp, 0x70, 4),
-				new BitSender((PatchDataImpl) p, 0x21, aOp));
+		oWidget = new KnobWidget("Amp mod", patchByParameter, 0, 7, 0, new BitModel((PatchDataImpl) patchByParameter, 0x21, aOp, 0x70, 4),
+				new BitSender((PatchDataImpl) patchByParameter, 0x21, aOp));
 		addOperatorWidget(aOp, oWidget);
 		oSensPanel.add(oWidget);
-		oWidget = new KnobWidget("Freq mod", p, 0, 7, 0, new BitModel((PatchDataImpl) p, 0x20, aOp, 0x70, 4),
-				new BitSender((PatchDataImpl) p, 0x20, aOp));
+		oWidget = new KnobWidget("Freq mod", patchByParameter, 0, 7, 0, new BitModel((PatchDataImpl) patchByParameter, 0x20, aOp, 0x70, 4),
+				new BitSender((PatchDataImpl) patchByParameter, 0x20, aOp));
 		addOperatorWidget(aOp, oWidget);
 		oSensPanel.add(oWidget);
 		oPane.add(oSensPanel);
@@ -758,82 +758,82 @@ class YamahaFS1RVoiceEditor extends PatchEditorFrame {
 	private Container buildUnvoicedWindow(int aOp) {
 		Box oPane = Box.createVerticalBox();
 		JPanel oPanel1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		oPanel1.add(new ComboBoxWidget("Freq mode", p, new BitModel((PatchDataImpl) p, 0x24, aOp, 0x60, 5),
-				new BitSender((PatchDataImpl) p, 0x24, aOp), new String[] { "Normal", "LinkF0", "LinkFF" }));
-		oPanel1.add(new SpinnerWidget("Transpose", p, 0, 48, -24, new BitModel((PatchDataImpl) p, 0, aOp, 0x3F, 0),
-				new BitSender((PatchDataImpl) p, 0, aOp)));
-		oPanel1.add(new KnobLookupWidget("Freq coarse", p, new BitModel((PatchDataImpl) p, 0x24, aOp, 0x1F, 0),
-				new BitSender((PatchDataImpl) p, 0x24, aOp), mUnvoicedFreCoarseNames));
-		oPanel1.add(new KnobWidget("Freq fine", p, 0, 0x7F, 0, new FS1RModel((PatchDataImpl) p, 0x25, aOp),
+		oPanel1.add(new ComboBoxWidget("Freq mode", patchByParameter, new BitModel((PatchDataImpl) patchByParameter, 0x24, aOp, 0x60, 5),
+				new BitSender((PatchDataImpl) patchByParameter, 0x24, aOp), new String[] { "Normal", "LinkF0", "LinkFF" }));
+		oPanel1.add(new SpinnerWidget("Transpose", patchByParameter, 0, 48, -24, new BitModel((PatchDataImpl) patchByParameter, 0, aOp, 0x3F, 0),
+				new BitSender((PatchDataImpl) patchByParameter, 0, aOp)));
+		oPanel1.add(new KnobLookupWidget("Freq coarse", patchByParameter, new BitModel((PatchDataImpl) patchByParameter, 0x24, aOp, 0x1F, 0),
+				new BitSender((PatchDataImpl) patchByParameter, 0x24, aOp), mUnvoicedFreCoarseNames));
+		oPanel1.add(new KnobWidget("Freq fine", patchByParameter, 0, 0x7F, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x25, aOp),
 				new FS1RSender(0x25, aOp)));
-		oPanel1.add(new KnobWidget("Freq scaling", p, 0, 99, 0, new FS1RModel((PatchDataImpl) p, 0x26, aOp),
+		oPanel1.add(new KnobWidget("Freq scaling", patchByParameter, 0, 99, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x26, aOp),
 				new FS1RSender(0x26, aOp)));
 		oPane.add(oPanel1);
 
 		JPanel oPanel2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		oPanel2.add(new KnobWidget("Band width", p, 0, 0x63, 0, new FS1RModel((PatchDataImpl) p, 0x27, aOp),
+		oPanel2.add(new KnobWidget("Band width", patchByParameter, 0, 0x63, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x27, aOp),
 				new FS1RSender(0x27, aOp)));
-		oPanel2.add(new KnobWidget("Resonance", p, 0, 7, 0, new BitModel((PatchDataImpl) p, 0x29, aOp, 0x38, 3),
-				new BitSender((PatchDataImpl) p, 0x29, aOp)));
-		oPanel2.add(new SpinnerWidget("Skirt", p, 0, 7, 0, new BitModel((PatchDataImpl) p, 0x29, aOp, 7, 0),
-				new BitSender((PatchDataImpl) p, 0x29, aOp)));
-		oPanel2.add(new KnobWidget("Output level", p, 0, 99, 0, new FS1RModel((PatchDataImpl) p, 0x2E, aOp),
+		oPanel2.add(new KnobWidget("Resonance", patchByParameter, 0, 7, 0, new BitModel((PatchDataImpl) patchByParameter, 0x29, aOp, 0x38, 3),
+				new BitSender((PatchDataImpl) patchByParameter, 0x29, aOp)));
+		oPanel2.add(new SpinnerWidget("Skirt", patchByParameter, 0, 7, 0, new BitModel((PatchDataImpl) patchByParameter, 0x29, aOp, 7, 0),
+				new BitSender((PatchDataImpl) patchByParameter, 0x29, aOp)));
+		oPanel2.add(new KnobWidget("Output level", patchByParameter, 0, 99, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x2E, aOp),
 				new FS1RSender(0x2E, aOp)));
-		oPanel2.add(new KnobWidget("Level scaling", p, 0, 14, -7, new FS1RModel((PatchDataImpl) p, 0x2F, aOp),
+		oPanel2.add(new KnobWidget("Level scaling", patchByParameter, 0, 14, -7, new FS1RModel((PatchDataImpl) patchByParameter, 0x2F, aOp),
 				new FS1RSender(0x2F, aOp)));
 		oPane.add(oPanel2);
 
 		JPanel oPanel5 = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		oPanel5.add(new KnobWidget("Hold", p, 0, 0x63, 0, new FS1RModel((PatchDataImpl) p, 0x38, aOp), new FS1RSender(
+		oPanel5.add(new KnobWidget("Hold", patchByParameter, 0, 0x63, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x38, aOp), new FS1RSender(
 				0x38, aOp)));
-		oPanel5.add(new KnobWidget("L1", p, 0, 0x63, 0, new FS1RModel((PatchDataImpl) p, 0x30, aOp), new FS1RSender(
+		oPanel5.add(new KnobWidget("L1", patchByParameter, 0, 0x63, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x30, aOp), new FS1RSender(
 				0x30, aOp)));
-		oPanel5.add(new KnobWidget("R1", p, 0, 0x63, 0, new FS1RModel((PatchDataImpl) p, 0x34, aOp), new FS1RSender(
+		oPanel5.add(new KnobWidget("R1", patchByParameter, 0, 0x63, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x34, aOp), new FS1RSender(
 				0x34, aOp)));
-		oPanel5.add(new KnobWidget("L2", p, 0, 0x63, 0, new FS1RModel((PatchDataImpl) p, 0x31, aOp), new FS1RSender(
+		oPanel5.add(new KnobWidget("L2", patchByParameter, 0, 0x63, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x31, aOp), new FS1RSender(
 				0x31, aOp)));
-		oPanel5.add(new KnobWidget("R2", p, 0, 0x63, 0, new FS1RModel((PatchDataImpl) p, 0x35, aOp), new FS1RSender(
+		oPanel5.add(new KnobWidget("R2", patchByParameter, 0, 0x63, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x35, aOp), new FS1RSender(
 				0x35, aOp)));
-		oPanel5.add(new KnobWidget("L3", p, 0, 0x63, 0, new FS1RModel((PatchDataImpl) p, 0x32, aOp), new FS1RSender(
+		oPanel5.add(new KnobWidget("L3", patchByParameter, 0, 0x63, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x32, aOp), new FS1RSender(
 				0x32, aOp)));
-		oPanel5.add(new KnobWidget("R3", p, 0, 0x63, 0, new FS1RModel((PatchDataImpl) p, 0x36, aOp), new FS1RSender(
+		oPanel5.add(new KnobWidget("R3", patchByParameter, 0, 0x63, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x36, aOp), new FS1RSender(
 				0x36, aOp)));
-		oPanel5.add(new KnobWidget("L4", p, 0, 0x63, 0, new FS1RModel((PatchDataImpl) p, 0x33, aOp), new FS1RSender(
+		oPanel5.add(new KnobWidget("L4", patchByParameter, 0, 0x63, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x33, aOp), new FS1RSender(
 				0x33, aOp)));
-		oPanel5.add(new KnobWidget("R4", p, 0, 0x63, 0, new FS1RModel((PatchDataImpl) p, 0x37, aOp), new FS1RSender(
+		oPanel5.add(new KnobWidget("R4", patchByParameter, 0, 0x63, 0, new FS1RModel((PatchDataImpl) patchByParameter, 0x37, aOp), new FS1RSender(
 				0x37, aOp)));
 		oPanel5.setBorder(new TitledBorder(LineBorder.createGrayLineBorder(), "Amplitude Envelope Generator",
 				TitledBorder.LEFT, TitledBorder.CENTER));
 		oPane.add(oPanel5);
 
 		JPanel oFreqEnv = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
-		oFreqEnv.add(new KnobWidget("Initial level", p, 0, 0x64, -0x32, new FS1RModel((PatchDataImpl) p, 0x2A, aOp),
+		oFreqEnv.add(new KnobWidget("Initial level", patchByParameter, 0, 0x64, -0x32, new FS1RModel((PatchDataImpl) patchByParameter, 0x2A, aOp),
 				new FS1RSender(0x2A, aOp)));
-		oFreqEnv.add(new KnobWidget("Attack level", p, 0, 0x64, -0x32, new FS1RModel((PatchDataImpl) p, 0x2B, aOp),
+		oFreqEnv.add(new KnobWidget("Attack level", patchByParameter, 0, 0x64, -0x32, new FS1RModel((PatchDataImpl) patchByParameter, 0x2B, aOp),
 				new FS1RSender(0x2B, aOp)));
-		oFreqEnv.add(new KnobWidget("Attack time", p, 0, 0x64, -0x32, new FS1RModel((PatchDataImpl) p, 0x2C, aOp),
+		oFreqEnv.add(new KnobWidget("Attack time", patchByParameter, 0, 0x64, -0x32, new FS1RModel((PatchDataImpl) patchByParameter, 0x2C, aOp),
 				new FS1RSender(0x2C, aOp)));
-		oFreqEnv.add(new KnobWidget("Decay time", p, 0, 0x64, -0x32, new FS1RModel((PatchDataImpl) p, 0x2D, aOp),
+		oFreqEnv.add(new KnobWidget("Decay time", patchByParameter, 0, 0x64, -0x32, new FS1RModel((PatchDataImpl) patchByParameter, 0x2D, aOp),
 				new FS1RSender(0x2D, aOp)));
 		oFreqEnv.setBorder(new TitledBorder(LineBorder.createGrayLineBorder(), "Frequency Envelope Generator",
 				TitledBorder.LEFT, TitledBorder.CENTER));
 		oPane.add(oFreqEnv);
 
 		JPanel oSensPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
-		oSensPanel.add(new KnobWidget("Amp velocity", p, 0, 14, -7, new BitModel((PatchDataImpl) p, 0x3C, aOp, 0x0F, 0),
-				new BitSender((PatchDataImpl) p, 0x3C, aOp)));
-		oSensPanel.add(new KnobWidget("Freq velocity", p, 0, 14, -7,
-				new BitModel((PatchDataImpl) p, 0x3B, aOp, 0x0F, 0), new BitSender((PatchDataImpl) p, 0x3B, aOp)));
-		oSensPanel.add(new KnobWidget("Amp EG bias", p, 0, 14, -7, new FS1RModel((PatchDataImpl) p, 0x3D, aOp),
+		oSensPanel.add(new KnobWidget("Amp velocity", patchByParameter, 0, 14, -7, new BitModel((PatchDataImpl) patchByParameter, 0x3C, aOp, 0x0F, 0),
+				new BitSender((PatchDataImpl) patchByParameter, 0x3C, aOp)));
+		oSensPanel.add(new KnobWidget("Freq velocity", patchByParameter, 0, 14, -7,
+				new BitModel((PatchDataImpl) patchByParameter, 0x3B, aOp, 0x0F, 0), new BitSender((PatchDataImpl) patchByParameter, 0x3B, aOp)));
+		oSensPanel.add(new KnobWidget("Amp EG bias", patchByParameter, 0, 14, -7, new FS1RModel((PatchDataImpl) patchByParameter, 0x3D, aOp),
 				new FS1RSender(0x3D, aOp)));
-		oSensPanel.add(new KnobWidget("Freq bias", p, 0, 14, -7, new FS1RModel((PatchDataImpl) p, 0x3A, aOp),
+		oSensPanel.add(new KnobWidget("Freq bias", patchByParameter, 0, 14, -7, new FS1RModel((PatchDataImpl) patchByParameter, 0x3A, aOp),
 				new FS1RSender(0x3A, aOp)));
-		oSensPanel.add(new KnobWidget("Width bias", p, 0, 14, -7, new FS1RModel((PatchDataImpl) p, 0x28, aOp),
+		oSensPanel.add(new KnobWidget("Width bias", patchByParameter, 0, 14, -7, new FS1RModel((PatchDataImpl) patchByParameter, 0x28, aOp),
 				new FS1RSender(0x28, aOp)));
-		oSensPanel.add(new KnobWidget("Amp mod", p, 0, 7, 0, new BitModel((PatchDataImpl) p, 0x3C, aOp, 0x70, 4),
-				new BitSender((PatchDataImpl) p, 0x3C, aOp)));
-		oSensPanel.add(new KnobWidget("Freq mod", p, 0, 7, 0, new BitModel((PatchDataImpl) p, 0x3B, aOp, 0x70, 4),
-				new BitSender((PatchDataImpl) p, 0x3B, aOp)));
+		oSensPanel.add(new KnobWidget("Amp mod", patchByParameter, 0, 7, 0, new BitModel((PatchDataImpl) patchByParameter, 0x3C, aOp, 0x70, 4),
+				new BitSender((PatchDataImpl) patchByParameter, 0x3C, aOp)));
+		oSensPanel.add(new KnobWidget("Freq mod", patchByParameter, 0, 7, 0, new BitModel((PatchDataImpl) patchByParameter, 0x3B, aOp, 0x70, 4),
+				new BitSender((PatchDataImpl) patchByParameter, 0x3B, aOp)));
 		oPane.add(oSensPanel);
 
 		return oPane;

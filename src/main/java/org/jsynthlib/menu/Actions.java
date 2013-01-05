@@ -476,6 +476,7 @@ final public class Actions {
 		menuPatchPopup = new JPopupMenu();
 		
 		menuPatchPopup.add(extractAction);
+		menuPatchPopup.add(getAction);
 
 //		menuPatchPopup.add(playAction);
 //		menuPatchPopup.add(playAllAction);

@@ -1,4 +1,4 @@
-package org.jsynthlib.example.midi;
+package org.jsynthlib.advanced.midi;
 
 public enum MidiNote {
 	C_2(0),

@@ -29,7 +29,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */ 
 
-package org.jsynthlib.example.style;
+package org.jsynthlib.advanced.style;
 
 /* A 1.4 class used by TextComponentDemo.java. */
 

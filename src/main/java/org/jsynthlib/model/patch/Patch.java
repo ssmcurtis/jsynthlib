@@ -50,7 +50,7 @@ public interface Patch extends Cloneable, Transferable, Serializable {
 	 * 
 	 * @see DriverUtil#chooseDriver(byte[])
 	 */
-	void setDriver();
+	void findDriver();
 
 	/**
 	 * Check if the Patch's driver is null driver (Generic driver).

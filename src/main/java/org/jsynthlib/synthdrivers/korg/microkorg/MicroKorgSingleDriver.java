@@ -1,11 +1,21 @@
 package org.jsynthlib.synthdrivers.korg.microkorg;
 
-import javax.sound.midi.MidiMessage;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.jsynthlib.menu.helper.SysexHandler;
+import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MidiMessage;
+import javax.sound.midi.Receiver;
+import javax.sound.midi.ShortMessage;
+
+import org.jsynthlib.advanced.midi.MidiNote;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.driver.SysexHandler;
+import org.jsynthlib.model.patch.Patch;
 import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.HexaUtil;
+import org.jsynthlib.tools.MidiUtil;
 
 /**
  * Single Voice Patch Driver for Kawai K4.
@@ -16,13 +26,11 @@ public class MicroKorgSingleDriver extends SynthDriverPatchImpl {
 
 	private static final SysexHandler sysexHandler = new SysexHandler(MicroKorg.REQUEST_SINGLE);
 
-	private int bankNum = 0;
-	private int patchNum = 0;
-
 	public MicroKorgSingleDriver() {
 		super("Single", "ssmCurtis");
 		sysexID = MicroKorg.DEVICE_SYSEX_ID;
-		patchSize = MicroKorg.PATCH_DUMP_SIZE;
+		patchSize = MicroKorg.PROGRAM_SIZE_MIDI_SYSEX;
+
 		patchNameStart = MicroKorg.PATCH_NAME_START_AT.position();
 		patchNameSize = MicroKorg.PATCH_NAME_LENGTH.position();
 		deviceIDoffset = MicroKorg.DEVICE_ID_OFFSET;
@@ -38,44 +46,71 @@ public class MicroKorgSingleDriver extends SynthDriverPatchImpl {
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		System.out.println(">>>> store patch");
 
-		setPatchNum(patchNum);
-		try {
-			Thread.sleep(100);
-		} catch (Exception e) {
-			// nothing
-		}
-		p.getSysex()[MicroKorg.PATCH_AT.position()] = (byte) (patchNum);
-
-		sendPatchWorker(p);
-
+		// setPatchNum(patchNum);
+		// try {
+		// Thread.sleep(100);
+		// } catch (Exception e) {
+		// // nothing
+		// }
+		// p.getSysex()[MicroKorg.PATCH_AT.position()] = (byte) (patchNum);
+		//
+		// sendPatchWorker(p);
 		// try {
 		// Thread.sleep(100);
 		// } catch (Exception e) {
 		// }
 		// setPatchNum(patchNum);
 	}
-
 	public void sendPatch(PatchDataImpl p) {
 		System.out.println(">>>> send patch");
-		p.getSysex()[2] = (byte) (0x30 + (getChannel()-1));
-		System.out.println(">>>" + HexaUtil.hexDumpOneLine(p.getSysex(), 0, -1, 100));
+		
+		PatchDataImpl toSend = p.clone();
+		ByteBuffer midi = MicroKorg.processDumpDataEncrypt(p.getSysex(), getChannel(), 3);
+		toSend.setSysex(midi.array());
 
-		super.sendPatch(p);
+		super.sendPatch(toSend);
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {
-		System.out.println(">>>> request (current) patch");
-
-		this.bankNum = bankNum;
-		this.patchNum = patchNum;
-
-		// NameValue bank = new SysexHandler.NameValue("bankNum", bankNum << 1);
-		// NameValue patch = new SysexHandler.NameValue("patchNum", patchNum);
-
+		
+		MidiUtil.changeProgram(this, patchNum);
+		
 		MidiMessage msg = sysexHandler.toSysexMessage(getChannel());
-
-		System.out.println(">>>" + HexaUtil.hexDumpOneLine(msg.getMessage(), 0, -1, 100));
 		send(msg);
+	}
+
+	@Override
+	public ByteBuffer processDumpDataConversion(byte[] sysexBuffer) {
+		return MicroKorg.processDumpDataDecrypt(sysexBuffer, 2, MicroKorg.PROGRAM_SIZE_MIDI);
+	}
+
+	@Override
+	public boolean supportsPatch(String patchString, byte[] sysex) {
+		if ((patchSize != 0) && !MicroKorg.singlePatchSizeIsSupported(sysex.length)) {
+			return false;
+		}
+
+		if (patchString.length() < sysexID.length()) {
+			return false;
+		}
+
+		StringBuffer compareString = new StringBuffer();
+		for (int i = 0; i < sysexID.length(); i++) {
+			switch (sysexID.charAt(i)) {
+			case '*':
+				compareString.append(patchString.charAt(i));
+				break;
+			default:
+				compareString.append(sysexID.charAt(i));
+			}
+		}
+		return (compareString.toString().equalsIgnoreCase(patchString.substring(0, sysexID.length())));
+	}
+
+	
+	
+	public int getHeaderSize() {
+		return MicroKorg.HEADER_SIZE;
 	}
 
 }

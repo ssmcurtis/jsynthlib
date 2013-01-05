@@ -3,8 +3,8 @@ package org.jsynthlib.synthdrivers.yamaha.motif;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
-import org.jsynthlib.menu.helper.SysexHandler;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.ErrorMsgUtil;
 

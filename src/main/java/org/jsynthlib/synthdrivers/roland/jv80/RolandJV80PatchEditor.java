@@ -141,7 +141,7 @@ public class RolandJV80PatchEditor extends PatchEditorFrame {
 
 		((RolandJV80Device) patch.getDevice()).getPatchDriver().setPatchNum(patch.getSysex(), -1, -1);
 
-		isJV80 = ((RolandJV80PatchDriver) p.getDriver()).isJV80;
+		isJV80 = ((RolandJV80PatchDriver) patchByParameter.getDriver()).isJV80;
 
 		// set to patch mode
 		RolandJV80SystemSetupEditor.JVSender js = new RolandJV80SystemSetupEditor.JVSender(0);

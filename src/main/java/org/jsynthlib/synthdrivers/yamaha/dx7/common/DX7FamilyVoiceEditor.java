@@ -42,9 +42,9 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.jsynthlib.menu.helper.SysexHandler;
 import org.jsynthlib.menu.window.PatchEditorFrame;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.widgets.ComboBoxWidget;
 import org.jsynthlib.widgets.EnvelopeWidget;
@@ -597,14 +597,14 @@ public class DX7FamilyVoiceEditor extends PatchEditorFrame implements ItemListen
 
 	// transmit OperatorState to Synth
 	private void SendOpState() {
-		xmitVoiceOperatorState((SynthDriverPatchImpl) p.getDriver(), OperatorState & 0x3f);
+		xmitVoiceOperatorState((SynthDriverPatchImpl) patchByParameter.getDriver(), OperatorState & 0x3f);
 	}
 
 	// It's not good idea to override PatchPasket method.
 	public void playSelectedPatch() {
 		sendSelectedPatch(); // send Patch to Synth
 		SendOpState(); // transmit OperatorState to Synth
-		p.play(); // and now play the patch, Sam! (only NoteOn-NoteOff!)
+		patchByParameter.play(); // and now play the patch, Sam! (only NoteOn-NoteOff!)
 	};
 
 	protected void frameActivated() {

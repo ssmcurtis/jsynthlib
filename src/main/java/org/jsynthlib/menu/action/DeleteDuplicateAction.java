@@ -24,7 +24,7 @@ public class DeleteDuplicateAction extends AbstractAction {
 		try {
 			((LibraryFrame)Actions.getSelectedFrame()).deleteDuplicates();
 		} catch (Exception ex) {
-			ErrorMsgUtil.reportError("Error", "Library to Sort must be Focused"+ getClass().getSimpleName(), ex);
+			ErrorMsgUtil.reportError("Error", "Library must be focused "+ getClass().getSimpleName(), ex);
 		}
 	}
 }

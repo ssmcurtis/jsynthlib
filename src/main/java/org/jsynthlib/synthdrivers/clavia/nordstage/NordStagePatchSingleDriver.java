@@ -1,7 +1,7 @@
 package org.jsynthlib.synthdrivers.clavia.nordstage;
 
-import org.jsynthlib.menu.helper.SysexHandler;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
+import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
 
 /**
@@ -39,7 +39,7 @@ public class NordStagePatchSingleDriver extends SynthDriverPatchImpl {
 		try {
 			Thread.sleep(100);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 		p.getSysex()[3] = (byte) 0x20;
@@ -49,7 +49,7 @@ public class NordStagePatchSingleDriver extends SynthDriverPatchImpl {
 		try {
 			Thread.sleep(100);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 		setPatchNum(patchNum);
