@@ -70,7 +70,7 @@ public class NovationNova1SingleDriver extends SynthDriverPatchImpl {
 		} catch (Exception e) {
 		}
 		setBankNum(bankNum);
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 	}
 
 	public void sendPatch(PatchDataImpl p) {

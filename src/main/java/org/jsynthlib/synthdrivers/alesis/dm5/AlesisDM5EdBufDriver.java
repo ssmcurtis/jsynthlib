@@ -21,6 +21,7 @@
 
 package org.jsynthlib.synthdrivers.alesis.dm5;
 
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SysexHandler;
 
 /**
@@ -67,6 +68,6 @@ public class AlesisDM5EdBufDriver extends AlesisDM5SgSetDriver {
 	 * Requests a dump of the system info message. This patch does not utilize bank select or program changes.
 	 */
 	public void requestPatchDump(int bankNum, int patchNum) {
-		send(SYS_REQ.toSysexMessage(getChannel(), new SysexHandler.NameValue("channel", getChannel())));
+		send(SYS_REQ.toSysexMessage(getChannel(), new NameValue("channel", getChannel())));
 	}
 }

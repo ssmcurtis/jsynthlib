@@ -17,5 +17,6 @@ public class BlofeldDevice extends Device {
 
 		addDriver(new BlofeldSingleDriver());
 		addDriver(new BlofeldCompleteDriver());
+		addDriver(new BlofeldMultitimbralDriver());
 	}
 }

@@ -5,6 +5,7 @@ package org.jsynthlib.synthdrivers.clavia.nordlead;
 import javax.swing.JOptionPane;
 
 import org.jsynthlib.PatchBayApplication;
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverBank;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -47,7 +48,7 @@ public class NLPerfBankDriver extends SynthDriverBank {
 					JOptionPane.WARNING_MESSAGE);
 		} else {
 			setBankNum(bankNum); // must set bank - sysex patch dump always stored in current bank
-			setPatchNum(patchNum); // must send program change to make bank change take effect
+			sendProgramChange(patchNum); // must send program change to make bank change take effect
 			sendPatchWorker((PatchDataImpl) p, bankNum);
 		}
 	}
@@ -62,7 +63,7 @@ public class NLPerfBankDriver extends SynthDriverBank {
 		((PatchDataImpl) bank).getSysex()[patchNum * singleSize + PATCH_NUM_OFFSET] = (byte) patchNum; // set program #
 	}
 
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		byte sysex[] = new byte[singleSize];
 		System.arraycopy(((PatchDataImpl) bank).getSysex(), patchNum * singleSize, sysex, 0, singleSize);
 		return new PatchDataImpl(sysex);
@@ -112,8 +113,8 @@ public class NLPerfBankDriver extends SynthDriverBank {
 	public void requestPatchDump(int bankNum, int patchNum) {
 		int devID = ((NordLeadDevice) getDevice()).getGlobalChannel();
 		for (int i = 0; i < NUM_IN_BANK; i++) {
-			send(sysexRequestDump.toSysexMessage(devID, new SysexHandler.NameValue("bankNum", 41),
-					new SysexHandler.NameValue("patchNum", i)));
+			send(sysexRequestDump.toSysexMessage(devID, new NameValue("bankNum", 41),
+					new NameValue("patchNum", i)));
 			try {
 				Thread.sleep(250); // it takes some time for each performance to be sent
 			} catch (Exception e) {

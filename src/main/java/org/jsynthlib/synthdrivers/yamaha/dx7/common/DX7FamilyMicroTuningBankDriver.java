@@ -100,7 +100,7 @@ public class DX7FamilyMicroTuningBankDriver extends SynthDriverBank {
 				getPatchStart(patchNum) + 12 + 256);
 	}
 
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) // Gets a patch from the bank, converting it as needed
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) // Gets a patch from the bank, converting it as needed
 	{
 		try {
 			byte[] sysex = new byte[singleSize];

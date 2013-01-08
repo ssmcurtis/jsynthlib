@@ -94,7 +94,7 @@ public class MKS50PatchBankDriver extends SynthDriverBank {
 		System.arraycopy(bankSysexNibbles, 0, ((PatchDataImpl) bank).getSysex(), patchOffset, 64);
 	}
 
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		byte bankSysexNibbles[] = new byte[64];
 		byte bankSysex[] = new byte[32];
 		byte sysex[] = new byte[31];

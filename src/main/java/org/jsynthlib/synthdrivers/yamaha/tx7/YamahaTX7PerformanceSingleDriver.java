@@ -52,7 +52,7 @@ public class YamahaTX7PerformanceSingleDriver extends DX7FamilyPerformanceSingle
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 
 		send(sysexRequestDump.toSysexMessage(getChannel() + 0x20));
 	}

@@ -32,7 +32,7 @@ public class KorgWavestationWaveSequenceDriver extends SynthDriverPatchImpl {
 
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		setBankNum(bankNum);
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 
 		try {
 			Thread.sleep(100);

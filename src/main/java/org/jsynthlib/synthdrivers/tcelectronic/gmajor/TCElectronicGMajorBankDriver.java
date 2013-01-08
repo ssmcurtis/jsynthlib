@@ -84,7 +84,7 @@ public class TCElectronicGMajorBankDriver extends SynthDriverBank {
 						+ TCElectronicGMajorConst.CHECKSUMOFFSET);
 	}
 
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		byte[] sysex = new byte[singleSize];
 		System.arraycopy(((PatchDataImpl) bank).getSysex(), singleSize * patchNum, sysex, 0, singleSize);
 

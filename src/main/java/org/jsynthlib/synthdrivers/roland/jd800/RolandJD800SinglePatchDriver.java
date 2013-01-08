@@ -23,6 +23,7 @@ package org.jsynthlib.synthdrivers.roland.jd800;
 
 import java.io.InputStream;
 
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.Patch;
@@ -195,7 +196,7 @@ public class RolandJD800SinglePatchDriver extends SynthDriverPatchImpl {
 	};
 
 	public void requestPatchDump(int bankNum, int patchNum) {
-		send(SYS_REQ.toSysexMessage(getDeviceID(), new SysexHandler.NameValue("AddrMSB", AddrMSB[patchNum]),
-				new SysexHandler.NameValue("Addr", Addr[patchNum])));
+		send(SYS_REQ.toSysexMessage(getDeviceID(), new NameValue("AddrMSB", AddrMSB[patchNum]),
+				new NameValue("Addr", Addr[patchNum])));
 	}
 }

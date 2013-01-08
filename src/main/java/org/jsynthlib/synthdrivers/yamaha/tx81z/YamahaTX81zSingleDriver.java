@@ -30,7 +30,7 @@ public class YamahaTX81zSingleDriver extends SynthDriverPatchImpl {
 
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		setBankNum(bankNum);
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 		sendPatch(p);
 		try {
 			Thread.sleep(100);

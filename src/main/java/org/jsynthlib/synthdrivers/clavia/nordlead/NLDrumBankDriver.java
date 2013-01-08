@@ -5,6 +5,7 @@ package org.jsynthlib.synthdrivers.clavia.nordlead;
 import javax.swing.JOptionPane;
 
 import org.jsynthlib.PatchBayApplication;
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverBank;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -43,7 +44,7 @@ public class NLDrumBankDriver extends SynthDriverBank {
 					JOptionPane.WARNING_MESSAGE);
 		} else {
 			setBankNum(bankNum); // must set bank - sysex patch dump always stored in current bank
-			setPatchNum(patchNum); // must send program change to make bank change take effect
+			sendProgramChange(patchNum); // must send program change to make bank change take effect
 			sendPatchWorker((PatchDataImpl) p, bankNum);
 		}
 	}
@@ -58,7 +59,7 @@ public class NLDrumBankDriver extends SynthDriverBank {
 		((PatchDataImpl) bank).getSysex()[patchNum * singleSize + PATCH_NUM_OFFSET] = (byte) (patchNum + 99); // set program #
 	}
 
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		byte sysex[] = new byte[singleSize];
 		System.arraycopy(((PatchDataImpl) bank).getSysex(), patchNum * singleSize, sysex, 0, singleSize);
 		return new PatchDataImpl(sysex);
@@ -109,9 +110,9 @@ public class NLDrumBankDriver extends SynthDriverBank {
 		int devID = ((NordLeadDevice) getDevice()).getGlobalChannel();
 		for (int i = 0; i < NUM_IN_BANK; i++) {
 			setBankNum(bankNum); // kludge: drum dump request sends 1063 bytes of garbage -
-			setPatchNum(i + 99); // select drum sound, then get data from edit buffer
-			send(sysexRequestDump.toSysexMessage(devID, new SysexHandler.NameValue("bankNum", 10),
-					new SysexHandler.NameValue("patchNum", 0)));
+			sendProgramChange(i + 99); // select drum sound, then get data from edit buffer
+			send(sysexRequestDump.toSysexMessage(devID, new NameValue("bankNum", 10),
+					new NameValue("patchNum", 0)));
 			try {
 				Thread.sleep(400); // it takes some time for each drum patch to be sent
 			} catch (Exception e) {

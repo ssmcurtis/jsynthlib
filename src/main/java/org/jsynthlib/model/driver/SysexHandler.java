@@ -53,11 +53,11 @@ public class SysexHandler /* implements Serializable */{
 	/** Sysex byte array. */
 	private byte[] sysex = null;
 	/** Vector for "<code>*patchNum*</code>" form value. */
-	private Vector vNameValueIndex = new Vector();
+	private Vector<NameValue> vNameValueIndex = new Vector<NameValue>();
 	/** Index for "<code>@@</code>". */
-	private int channelIndex = -1;
+	private int deviceIdIndex = -1;
 	/** Index for "<code>##</code>". */
-	private int channel16Index = -1;
+	private int deviceId16Index = -1;
 
 	private int addToBankByte = 0x1;
 
@@ -79,8 +79,8 @@ public class SysexHandler /* implements Serializable */{
 	 */
 	private void setSysex(String src) {
 		// ----- Reset instance variables
-		channelIndex = -1;
-		channel16Index = -1;
+		deviceIdIndex = -1;
+		deviceId16Index = -1;
 		vNameValueIndex.removeAllElements();
 
 		if (src.length() < 3 || src.charAt(2) != ' ') { // src is a dense hex
@@ -102,12 +102,12 @@ public class SysexHandler /* implements Serializable */{
 				break;
 
 			case '@':
-				channelIndex = iByte;
+				deviceIdIndex = iByte;
 				sysex[iByte] = (byte) 0;
 				break;
 
 			case '#':
-				channel16Index = iByte;
+				deviceId16Index = iByte;
 				sysex[iByte] = (byte) 0;
 				break;
 
@@ -147,11 +147,11 @@ public class SysexHandler /* implements Serializable */{
 				break;
 
 			case '@':
-				channelIndex = iSrc;
+				deviceIdIndex = iSrc;
 				break;
 
 			case '#':
-				channel16Index = iSrc;
+				deviceId16Index = iSrc;
 				break;
 
 			default:
@@ -256,14 +256,14 @@ public class SysexHandler /* implements Serializable */{
 	 *            a array of <code>NameValue</code> value
 	 * @return a <code>byte[]</code> value
 	 * @see NameValue
-	 * @see #toSysexMessage(int deviceID, SysexHandler.NameValue[] nameValues)
+	 * @see #toSysexMessage(int deviceID, NameValue[] nameValues)
 	 */
 	public byte[] toByteArray(int deviceID, NameValue[] nameValues) {
 		// Replace the deviceID number
-		if (channelIndex != -1)
-			sysex[channelIndex] = (byte) (deviceID - 1);
-		if (channel16Index != -1)
-			sysex[channel16Index] = (byte) (deviceID - 1 + addToBankByte);
+		if (deviceIdIndex != -1)
+			sysex[deviceIdIndex] = (byte) (deviceID - 1);
+		if (deviceId16Index != -1)
+			sysex[deviceId16Index] = (byte) (deviceID - 1 + addToBankByte);
 
 		// Replace values
 		for (Enumeration en = vNameValueIndex.elements(); en.hasMoreElements();) {
@@ -293,10 +293,10 @@ public class SysexHandler /* implements Serializable */{
 	 */
 	public byte[] toByteArray(int deviceID, int value) {
 		// Replace the channel number
-		if (channelIndex != -1)
-			sysex[channelIndex] = (byte) (deviceID - 1);
-		if (channel16Index != -1)
-			sysex[channel16Index] = (byte) (deviceID - 1 + addToBankByte);
+		if (deviceIdIndex != -1)
+			sysex[deviceIdIndex] = (byte) (deviceID - 1);
+		if (deviceId16Index != -1)
+			sysex[deviceId16Index] = (byte) (deviceID - 1 + addToBankByte);
 
 		// Replace values
 		for (Enumeration en = vNameValueIndex.elements(); en.hasMoreElements();)
@@ -323,50 +323,8 @@ public class SysexHandler /* implements Serializable */{
 		this.addToBankByte = addToBankByte;
 	}
 
-	/**
-	 * A class which provides access to an <code>int</code> value by name.
-	 * 
-	 * @author phil@muqus.com - 07/2001
-	 */
-	public static class NameValue /* implements Serializable */{
-		/** name of the value. */
-		private String sName;
-
-		/** Value. */
-		private int value;
-
-		/**
-		 * Creates a new <code>NameValue</code> instance.
-		 * 
-		 * @param sName
-		 *            a <code>String</code> value
-		 * @param value
-		 *            an <code>int</code> value
-		 */
-		public NameValue(String sName, int value) {
-			this.setName(sName);
-			this.setValue(value);
-		}
-
-		/** A getter of sName. */
-		public String getName() {
-			return this.sName;
-		}
-
-		/** A setter of sName. */
-		public void setName(String sName) {
-			this.sName = sName;
-		}
-
-		/** A getter of value. */
-		public int getValue() {
-			return this.value;
-		}
-
-		/** A setter of value. */
-		public void setValue(int value) {
-			this.value = value;
-		}
-	} // End Class: NameValue
+	public byte[] getSysex() {
+		return sysex;
+	}
 
 } // End Class: SysexHandler

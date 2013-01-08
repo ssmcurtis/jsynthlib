@@ -21,6 +21,7 @@
 
 package org.jsynthlib.synthdrivers.yamaha.a01v;
 
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -70,6 +71,6 @@ public class Yamaha01vSetupDriver extends SynthDriverPatchImpl {
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {
-		send(SYS_REQ.toSysexMessage(getChannel(), new SysexHandler.NameValue("ID", getDeviceID() + 0x1F)));
+		send(SYS_REQ.toSysexMessage(getChannel(), new NameValue("ID", getDeviceID() + 0x1F)));
 	}
 }

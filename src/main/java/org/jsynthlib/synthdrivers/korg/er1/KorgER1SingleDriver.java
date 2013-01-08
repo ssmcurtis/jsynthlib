@@ -46,7 +46,7 @@ public class KorgER1SingleDriver extends SynthDriverPatchImpl {
 		}
 
 		setBankNum(bankValue);
-		setPatchNum(patchValue);
+		sendProgramChange(patchValue);
 
 		try {
 			Thread.sleep(100);
@@ -112,7 +112,7 @@ public class KorgER1SingleDriver extends SynthDriverPatchImpl {
 		// no checksum
 	}
 
-	public void setPatchNum(int patchNum) {
+	public void sendProgramChange(int patchNum) {
 
 		try {
 			send(0xC0 + (getChannel() - 1), patchNum);

@@ -25,6 +25,7 @@ import java.io.UnsupportedEncodingException;
 
 import javax.swing.JOptionPane;
 
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverBank;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -229,16 +230,16 @@ public class WaldorfMW2BankDriver extends SynthDriverBank {
 	/**
 	 * Gets a patch from the bank, converting it as needed.
 	 */
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		return getPatch(bank, 0, patchNum);
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {
 		// Request dumps for all 128 single programs of a bank (that are 128 requests!!!)
 		for (int patchNo = 0; patchNo < patchNumbers.length; patchNo++) {
-			SysexHandler.NameValue[] nameValues = { new SysexHandler.NameValue("BB", bankNum),
-					new SysexHandler.NameValue("NN", patchNo),
-					new SysexHandler.NameValue("XSUM", ((byte) (bankNum + patchNo)) & 0x7F) };
+			NameValue[] nameValues = { new NameValue("BB", bankNum),
+					new NameValue("NN", patchNo),
+					new NameValue("XSUM", ((byte) (bankNum + patchNo)) & 0x7F) };
 
 			send(sysexRequestDump.toSysexMessage(getDeviceID(), nameValues));
 

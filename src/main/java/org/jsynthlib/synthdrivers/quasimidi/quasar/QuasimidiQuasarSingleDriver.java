@@ -27,6 +27,7 @@ import javax.swing.JOptionPane;
 
 import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -137,7 +138,7 @@ public class QuasimidiQuasarSingleDriver extends SynthDriverPatchImpl {
 		} catch (Exception e) {
 		}
 
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 	}
 
 	/**
@@ -190,7 +191,7 @@ public class QuasimidiQuasarSingleDriver extends SynthDriverPatchImpl {
 			for (int count = 0; count < QuasarConstants.SYSEX_PERFORMANCE_REQUEST.length; count++) {
 				this.sysexRequestDump = new SysexHandler(QuasarConstants.SYSEX_PERFORMANCE_REQUEST[count]);
 
-				send(sysexRequestDump.toSysexMessage(getDeviceID(), new SysexHandler.NameValue("perfNumber", patchNum
+				send(sysexRequestDump.toSysexMessage(getDeviceID(), new NameValue("perfNumber", patchNum
 						+ QuasarConstants.SYSEX_PERFORMANCE_OFFSET)));
 
 				try {

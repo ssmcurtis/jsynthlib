@@ -84,7 +84,7 @@ public class NovationXioSynthBankDriver extends SynthDriverBank {
 		}
 	}
 
-	protected void setPatchNum(int patchNum) {
+	protected void sendProgramChange(int patchNum) {
 	}
 
 	public void setPatchName(PatchDataImpl p, int patchNum, String name) {
@@ -107,7 +107,7 @@ public class NovationXioSynthBankDriver extends SynthDriverBank {
 		System.arraycopy(((PatchDataImpl) p).getSysex(), 0, ((PatchDataImpl) bank).getSysex(), getPatchStart(patchNum), 270);
 	}
 
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		this.bank = bank;
 
 		try {

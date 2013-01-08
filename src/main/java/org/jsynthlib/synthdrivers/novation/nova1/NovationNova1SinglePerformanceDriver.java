@@ -100,7 +100,7 @@ public class NovationNova1SinglePerformanceDriver extends SynthDriverBank {
 		calculateChecksum(bank);
 	}
 
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		// this method is call when you have a single perf opened and want to send or play individual patches
 		// OR when you do a Cut/Copy
 		// The method is call to retreive a single patch

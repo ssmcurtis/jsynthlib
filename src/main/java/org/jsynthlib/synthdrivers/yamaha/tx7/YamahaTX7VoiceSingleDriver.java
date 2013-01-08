@@ -51,7 +51,7 @@ public class YamahaTX7VoiceSingleDriver extends DX7FamilyVoiceSingleDriver {
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 
 		send(sysexRequestDump.toSysexMessage(getChannel() + 0x20));
 	}

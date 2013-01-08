@@ -112,7 +112,7 @@ public class TD6BankDriver extends SynthDriverBank {
 		singleDriver.calculateChecksum(bank, SINGLE_SIZE * patchNum);
 	}
 
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		byte[] sysex = new byte[SINGLE_SIZE];
 		System.arraycopy(bank.getSysex(), getPktOfst(patchNum, 0), sysex, 0, SINGLE_SIZE);
 		return new PatchDataImpl(sysex, singleDriver);

@@ -43,6 +43,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.jsynthlib.menu.window.PatchEditorFrame;
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -619,7 +620,7 @@ public class DX7FamilyVoiceEditor extends PatchEditorFrame implements ItemListen
 	// send voice operator state
 	private static void xmitVoiceOperatorState(SynthDriverPatchImpl drv, int st) // channel, OperatorState
 	{
-		drv.send(VoiceOPstate.toSysexMessage(0x10 + drv.getChannel(), new SysexHandler.NameValue("value", st)));
+		drv.send(VoiceOPstate.toSysexMessage(0x10 + drv.getChannel(), new NameValue("value", st)));
 	}
 
 	/*

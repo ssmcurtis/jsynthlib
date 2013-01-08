@@ -103,7 +103,7 @@ public class KawaiK5000CombiBankDriver extends SynthDriverBank {
 	// ----------------------------------------------------------------------------------------------------------------------
 
 	public void setPatchName(PatchDataImpl bank, int patchNum, String name) {
-		PatchDataImpl p = getPatch(bank, patchNum);
+		PatchDataImpl p = extractPatch(bank, patchNum);
 		p.setName(name);
 		p.calculateChecksum();
 		putPatch(bank, p, patchNum);
@@ -113,7 +113,7 @@ public class KawaiK5000CombiBankDriver extends SynthDriverBank {
 	// KawaiK5000CombiBankDriver->getPatch
 	// ----------------------------------------------------------------------------------------------------------------------
 
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		// ErrorMsg.reportStatus("KawaiK5000CombiBankDriver->getPatch: " + patchNum);
 		try {
 			return KawaiK5000CombiDriver.createPatchFromData(((PatchDataImpl) bank).getSysex(), patchIndex(patchNum),

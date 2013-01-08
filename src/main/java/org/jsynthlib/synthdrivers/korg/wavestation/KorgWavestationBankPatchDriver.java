@@ -118,7 +118,7 @@ public class KorgWavestationBankPatchDriver extends SynthDriverBank {
 		calculateChecksum(bank);
 	}
 
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		try {
 			byte[] sysex = new byte[852 + 9];
 			sysex[00] = (byte) 0xF0;

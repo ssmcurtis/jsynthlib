@@ -66,7 +66,7 @@ public class KawaiK5000CombiDriver extends SynthDriverPatchImpl {
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		ErrorMsgUtil.reportStatus("KawaiK5000CombiDriver->storePatch: " + bankNum + " | " + patchNum);
 		setBankNum(bankNum);
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 		try {
 			Thread.sleep(300);
 		} catch (Exception e) {
@@ -79,7 +79,7 @@ public class KawaiK5000CombiDriver extends SynthDriverPatchImpl {
 			Thread.sleep(300);
 		} catch (Exception e) {
 		}
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 	}
 
 	// ----------------------------------------------------------------------------------------------------------------------

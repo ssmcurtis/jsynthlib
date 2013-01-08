@@ -1,15 +1,19 @@
 package org.jsynthlib.synthdrivers.korg.microkorg;
 
 import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.sound.midi.MidiMessage;
 import javax.swing.JOptionPane;
 
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverBank;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.ErrorMsgUtil;
 import org.jsynthlib.tools.HexaUtil;
+import org.jsynthlib.tools.MidiUtil;
 
 /**
  * Bank driver for KAWAI K4/K4r voice patch.
@@ -19,6 +23,8 @@ import org.jsynthlib.tools.HexaUtil;
 public class MicroKorgBankDriver extends SynthDriverBank {
 
 	private static final SysexHandler sysexHandler = new SysexHandler(MicroKorg.REQUEST_BANK);
+
+	private ByteBuffer banksysex = null;
 
 	public MicroKorgBankDriver() {
 		super("Bank", "ssmCurtis", MicroKorg.PATCH_COUNT_IN_BANK, 1);
@@ -32,13 +38,7 @@ public class MicroKorgBankDriver extends SynthDriverBank {
 		bankNumbers = MicroKorg.BANK_NAMES;
 		patchNumbers = MicroKorg.createPatchNumbers();
 
-		sysexHandler.setAddToBankByte(MicroKorg.TEMPLATE_ADD_TO_BANK_BYTE);
 	}
-
-	// @Override
-	// public int getPatchSize(){
-	// return MicroKorg.PATCH_SIZE;
-	// }
 
 	@Override
 	public String getPatchName(PatchDataImpl p, int patchNum) {
@@ -77,7 +77,30 @@ public class MicroKorgBankDriver extends SynthDriverBank {
 
 	@Override
 	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) {
-		System.out.println(">>>> put patch");
+		System.out.println(">>>> put patch " + banksysex);
+
+		if (banksysex == null) {
+			banksysex = ByteBuffer.allocate(MicroKorg.BANK_ALL_SIZE_COMPRESSED_SYSEX);
+
+			byte[] header = MicroKorg.PROGRAM_DATA_DUMP_HEADER;
+			header[2] = MicroKorg.getMidiChannelByte(getChannel());
+			banksysex.put(header);
+
+			System.out.println(">>> Header " + HexaUtil.hexDumpOneLine(header));
+
+		}
+
+		byte[] program = new byte[MicroKorg.PROGRAM_SIZE_COMPRESSED];
+		System.arraycopy(p.getByteArray(), MicroKorg.HEADER_SIZE, program, 0, MicroKorg.PROGRAM_SIZE_COMPRESSED);
+
+		for (byte b : program) {
+			System.out.print(HexaUtil.byteToHexString(b) + " ");
+		}
+
+		banksysex.put(program);
+
+		System.out.println("> Position " + banksysex.position());
+
 		// if (!canHoldPatch(p)) {
 		// JOptionPane.showMessageDialog(null, "This type of patch does not fit in to this type of bank.", "Error",
 		// JOptionPane.ERROR_MESSAGE);
@@ -90,19 +113,69 @@ public class MicroKorgBankDriver extends SynthDriverBank {
 	}
 
 	@Override
+	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
+		System.out.println(">>>> store patch");
+
+		if (banksysex != null) {
+			// fill dummies
+			int start = banksysex.position() / MicroKorg.PROGRAM_COMPRESSED_SYSEX;
+			System.out.println(">>> start " + start);
+
+			byte[] defaultpatch = HexaUtil.convertStringToSyex(MicroKorg.defaultPatch);
+			System.out.println("Size " + defaultpatch.length);
+
+			for (int i = start + 1; i < MicroKorg.PATCH_COUNT_IN_BANK; i++) {
+				banksysex.put(defaultpatch);
+			}
+
+			banksysex.put((byte) 0xF7);
+
+			System.out.println(banksysex);
+
+			int counter = 0;
+			for (byte b : banksysex.array()) {
+				System.out.print(HexaUtil.byteToHexString(b) + " ");
+				counter++;
+				if (counter % 1000 == 0) {
+					System.out.println();
+				}
+			}
+
+			// send
+			ByteBuffer midi = MicroKorg.processDumpDataEncrypt(banksysex.array(), getChannel(), 3);
+
+			send(midi.array());
+
+			// reset
+			banksysex = null;
+
+		}
+		// try {
+		// Thread.sleep(100);
+		// } catch (Exception e) {
+		// }
+		// p.getSysex()[5] = (byte) (bankNum << 1);
+		// p.getSysex()[6] = (byte) (patchNum);
+		// sendPatchWorker(p);
+		// try {
+		// Thread.sleep(100);
+		// } catch (Exception e) {
+		// }
+	}
+
+	@Override
 	public ByteBuffer processDumpDataConversion(byte[] sysexBuffer) {
 		return MicroKorg.processDumpDataDecrypt(sysexBuffer, 4, MicroKorg.BANK_SIZE_MIDI);
 	}
 
 	@Override
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		System.out.println(">>>> Get patch " + getClass().getSimpleName());
 
 		byte[] sysex = new byte[MicroKorg.HEADER_SIZE + MicroKorg.PROGRAM_SIZE_COMPRESSED + 1];
-		// F0 42 3* 58
 		sysex[0] = (byte) 0xF0;
 		sysex[1] = (byte) 0x42;
-		// TODO sssmCurtis - korg program number
+		// INFO sssmCurtis - midi channel is set to 1
 		sysex[2] = (byte) 0x30;
 		sysex[3] = (byte) 0x58;
 		sysex[4] = (byte) 0x40;
@@ -114,26 +187,9 @@ public class MicroKorgBankDriver extends SynthDriverBank {
 		if ((bank.getSysex().length - MicroKorg.PROGRAM_SIZE_COMPRESSED) >= getPatchStart(patchNum)) {
 
 			System.arraycopy(bank.getSysex(), getPatchStart(patchNum), sysex, MicroKorg.HEADER_SIZE, MicroKorg.PROGRAM_SIZE_COMPRESSED);
-			// System.out.println(patchNum + ": "
-			// + HexaUtil.hexDumpOneLine(bank.getSysex(), getPatchStart(patchNum), -1, MicroKorg.PROGRAM_SIZE));
-			// System.out.println(patchNum + ": " + HexaUtil.hexDumpOneLine(sysex, MicroKorg.HEADER_SIZE, -1,
-			// sysex.length));
-			// ssmCurtis - fix something ... mystic
-			// int counter = 0;
-			// for (byte b : sysex) {
-			// if (counter + HSIZE < sysex.length) {
-			// if (counter > HSIZE && (counter) % 8 == 0) {
-			// sysex[counter - 3 + HSIZE] = sysex[counter - 2 + HSIZE];
-			// sysex[counter - 2 + HSIZE] = sysex[counter - 1 + HSIZE];
-			// sysex[counter - 1 + HSIZE] = (byte) 0x00;
-			// }
-			// }
-			// counter++;
-			// }
 			try {
 				// pass Single Driver !!!FIXIT!!!
 				PatchDataImpl p = new PatchDataImpl(sysex, getDevice());
-				// p.calculateChecksum();
 				return p;
 			} catch (Exception e) {
 				ErrorMsgUtil.reportError("Error", "Error in " + getClass().getSimpleName(), e);
@@ -151,27 +207,9 @@ public class MicroKorgBankDriver extends SynthDriverBank {
 	public void requestPatchDump(int bankNum, int patchNum) {
 		System.out.println(">>>> Send sysex");
 
-		// NameValue bank = new SysexHandler.NameValue("bankNum", bankNum << 1);
-		// NameValue patch = new SysexHandler.NameValue("patchNum", 1);
-		MidiMessage msg = sysexHandler.toSysexMessage(getChannel());
+		NameValue kv = new NameValue("midiChannel", MicroKorg.getMidiChannelByte(getChannel()));
+		MidiMessage msg = sysexHandler.toSysexMessage(getChannel(), kv);
 		send(msg);
-	}
-
-	@Override
-	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
-		System.out.println(">>>> store patch");
-
-		// try {
-		// Thread.sleep(100);
-		// } catch (Exception e) {
-		// }
-		// p.getSysex()[5] = (byte) (bankNum << 1);
-		// p.getSysex()[6] = (byte) (patchNum);
-		// sendPatchWorker(p);
-		// try {
-		// Thread.sleep(100);
-		// } catch (Exception e) {
-		// }
 	}
 
 	@Override
@@ -196,9 +234,14 @@ public class MicroKorgBankDriver extends SynthDriverBank {
 		}
 		return (compareString.toString().equalsIgnoreCase(patchString.substring(0, sysexID.length())));
 	}
-	
-	public int getHeaderSize(){
+
+	public int getHeaderSize() {
 		return MicroKorg.HEADER_SIZE;
+	}
+
+	@Override
+	public boolean isUseableForLibrary() {
+		return false;
 	}
 
 }

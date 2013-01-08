@@ -23,8 +23,10 @@ package org.jsynthlib.tools;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiDevice;
@@ -50,6 +52,7 @@ import org.jsynthlib.model.JSynthBpm;
 import org.jsynthlib.model.JSynthOctave;
 import org.jsynthlib.model.JSynthSequence;
 import org.jsynthlib.model.device.Device;
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriver;
 import org.jsynthlib.model.driver.SynthDriverPatch;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
@@ -1156,7 +1159,7 @@ public final class MidiUtil {
 		ShortMessage message = new ShortMessage();
 		try {
 			System.out.println("> Channel: " + driver.getChannel() + " patch: " + programmNumber);
-			message.setMessage(ShortMessage.PROGRAM_CHANGE, driver.getChannel() - 1, programmNumber , 0);
+			message.setMessage(ShortMessage.PROGRAM_CHANGE, driver.getChannel() - 1, programmNumber, 0);
 			driver.getDevice().send(message);
 			Thread.sleep(100);
 		} catch (InvalidMidiDataException e) {
@@ -1166,7 +1169,32 @@ public final class MidiUtil {
 			e.printStackTrace();
 		}
 
+	}
 
+	public static void waitForSevenBitTechnology() {
+		try {
+			Thread.sleep(200);
+		} catch (Exception e) {
+			// nothing
+		}
 	}
 	
+	public static void waitForSevenBitTechnology(int msec) {
+		try {
+			Thread.sleep(msec);
+		} catch (Exception e) {
+			// nothing
+		}
+	}
+
+
+	@Deprecated
+	public static byte[] toByteArrayAndReplace(String header, Map<String, Integer> kv) {
+		for (Map.Entry<String, Integer> entry : kv.entrySet()) {
+			header.replace("*" + entry.getKey() + "*", Integer.toHexString(entry.getValue()));
+		}
+		System.out.println(header);
+		return HexaUtil.convertStringToSyex(header);
+	}
+
 }

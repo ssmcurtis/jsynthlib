@@ -142,7 +142,7 @@ public class PeaveyPC1600BankDriver extends SynthDriverBank {
 	// PeaveyPC1600BankDriver->getPatch
 	// ----------------------------------------------------------------------------------------------------------------------
 
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		try {
 			generateIndex((PatchDataImpl) bank);
 			return createPatchFromData(((PatchDataImpl) bank).getSysex(), FIRST_PRESET_START + patchIndex[patchNum],

@@ -71,7 +71,7 @@ public class RolandD10PatchBankDriver extends SynthDriverBank {
 		send(requestMessage.getBytes());
 	}
 
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		PatchDataImpl patch = patchDriver.createNewPatch();
 		RolandD10Support.copyPatchFromBank(patchNum, bank.getSysex(), patch.getSysex());
 		return patch;
@@ -82,12 +82,12 @@ public class RolandD10PatchBankDriver extends SynthDriverBank {
 	}
 
 	public String getPatchName(PatchDataImpl bank, int patchNum) {
-		PatchDataImpl patch = getPatch(bank, patchNum);
+		PatchDataImpl patch = extractPatch(bank, patchNum);
 		return patch.getName();
 	}
 
 	public void setPatchName(PatchDataImpl bank, int patchNum, String name) {
-		PatchDataImpl patch = getPatch(bank, patchNum);
+		PatchDataImpl patch = extractPatch(bank, patchNum);
 		patch.setName(name);
 		putPatch(bank, patch, patchNum);
 	}

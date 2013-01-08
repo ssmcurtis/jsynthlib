@@ -25,6 +25,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -67,7 +68,7 @@ public class VAmp2SingleDriver extends SynthDriverPatchImpl {
 	 * 
 	 * @see core.Driver#setPatchNum(int)
 	 */
-	protected void setPatchNum(int patchNum) {
+	protected void sendProgramChange(int patchNum) {
 	}
 
 	/*
@@ -153,9 +154,9 @@ public class VAmp2SingleDriver extends SynthDriverPatchImpl {
 	public void requestPatchDump(int bankNum, int patchNum) {
 		int channel = getChannel();
 		int progNum = bankNum * 5 + patchNum;
-		SysexHandler.NameValue nVs[] = new SysexHandler.NameValue[2];
-		nVs[0] = new SysexHandler.NameValue("channel", channel);
-		nVs[1] = new SysexHandler.NameValue("progNum", progNum);
+		NameValue nVs[] = new NameValue[2];
+		nVs[0] = new NameValue("channel", channel);
+		nVs[1] = new NameValue("progNum", progNum);
 		send(SYS_REQ.toSysexMessage(channel, nVs));
 	}
 

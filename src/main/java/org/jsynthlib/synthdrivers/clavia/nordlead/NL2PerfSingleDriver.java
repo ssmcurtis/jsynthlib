@@ -2,6 +2,7 @@
 // $Id$
 package org.jsynthlib.synthdrivers.clavia.nordlead;
 
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -150,7 +151,7 @@ public class NL2PerfSingleDriver extends SynthDriverPatchImpl {
 	// Sends a patch to a set location in the user bank
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		sendPatch((PatchDataImpl) p, 31, patchNum);
-		setPatchNum(patchNum); // send program change to get new sound in edit buffer
+		sendProgramChange(patchNum); // send program change to get new sound in edit buffer
 	}
 
 	public void playPatch(PatchDataImpl p) {
@@ -177,6 +178,6 @@ public class NL2PerfSingleDriver extends SynthDriverPatchImpl {
 
 	public void requestPatchDump(int bankNum, int patchNum) {
 		send(sysexRequestDump.toSysexMessage(((NordLeadDevice) getDevice()).getGlobalChannel(),
-				new SysexHandler.NameValue("bankNum", 41), new SysexHandler.NameValue("patchNum", patchNum)));
+				new NameValue("bankNum", 41), new NameValue("patchNum", patchNum)));
 	}
 }

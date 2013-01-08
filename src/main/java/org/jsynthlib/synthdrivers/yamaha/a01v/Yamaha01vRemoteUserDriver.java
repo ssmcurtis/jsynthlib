@@ -21,6 +21,7 @@
 
 package org.jsynthlib.synthdrivers.yamaha.a01v;
 
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -56,7 +57,7 @@ public class Yamaha01vRemoteUserDriver extends SynthDriverPatchImpl {
 	 * @see PatchDataImpl#send(int, int)
 	 */
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 		p.getSysex()[15] = (byte) patchNum; // Location
 		calculateChecksum(p);
 
@@ -85,7 +86,7 @@ public class Yamaha01vRemoteUserDriver extends SynthDriverPatchImpl {
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {
-		send(SYS_REQ.toSysexMessage(getChannel(), new SysexHandler.NameValue("ID", getDeviceID() + 0x1F),
-				new SysexHandler.NameValue("patchNum", patchNum)));
+		send(SYS_REQ.toSysexMessage(getChannel(), new NameValue("ID", getDeviceID() + 0x1F),
+				new NameValue("patchNum", patchNum)));
 	}
 }

@@ -15,6 +15,10 @@ public class HexaUtil {
 		return b & BYTE_INTEGER_FILTER;
 	}
 
+	public static byte intToByte(int i) {
+		return (byte) i;
+	}
+
 	public static char byteToChar(byte b) {
 		return (char) (b & BYTE_INTEGER_FILTER);
 	}
@@ -361,4 +365,7 @@ public class HexaUtil {
 		return data;
 	}
 
+	public static String hexDumpOneLine(byte[] d) {
+		return hexDump(d, 0, d.length, d.length);
+	}
 }

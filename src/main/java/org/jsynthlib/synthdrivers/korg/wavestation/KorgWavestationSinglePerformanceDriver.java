@@ -1,5 +1,6 @@
 package org.jsynthlib.synthdrivers.korg.wavestation;
 
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -37,7 +38,7 @@ public class KorgWavestationSinglePerformanceDriver extends SynthDriverPatchImpl
 
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		setBankNum(bankNum);
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 
 		try {
 			Thread.sleep(100);
@@ -114,7 +115,7 @@ public class KorgWavestationSinglePerformanceDriver extends SynthDriverPatchImpl
 
 	}
 
-	public void setPatchNum(int patchNum) {
+	public void sendProgramChange(int patchNum) {
 		try {
 			send(0xC0 + (getChannel() - 1), patchNum);
 		} catch (Exception e) {
@@ -123,9 +124,9 @@ public class KorgWavestationSinglePerformanceDriver extends SynthDriverPatchImpl
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {
-		SysexHandler.NameValue nv[] = new SysexHandler.NameValue[2];
-		nv[0] = new SysexHandler.NameValue("bankNum", bankNum);
-		nv[1] = new SysexHandler.NameValue("patchNum", patchNum);
+		NameValue nv[] = new NameValue[2];
+		nv[0] = new NameValue("bankNum", bankNum);
+		nv[1] = new NameValue("patchNum", patchNum);
 		send(sysexRequestDump.toSysexMessage(getChannel(), nv));
 	}
 }

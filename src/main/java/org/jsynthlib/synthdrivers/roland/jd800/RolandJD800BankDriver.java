@@ -163,7 +163,7 @@ public class RolandJD800BankDriver extends SynthDriverBank {
 	/**
 	 * Returns a single patch from <code>bank</code> at the given number <code>patchNum</code>.
 	 */
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		byte[] sysex = new byte[JD800.SizeOfSyxHeader + JD800.SizeOfSinglePatch];
 		sysex[0] = (byte) 0xF0;
 		sysex[1] = (byte) 0x41;

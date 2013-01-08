@@ -60,8 +60,8 @@ public class WaldorfPulseSingleDriver extends SynthDriverPatchImpl {
 	protected void setBankNum(int bankNum) {
 	}
 
-	protected void setPatchNum(int patchNum) {
-		super.setPatchNum(patchNum);
+	protected void sendProgramChange(int patchNum) {
+		super.sendProgramChange(patchNum);
 	}
 
 	public PatchDataImpl createNewPatch() {
@@ -81,7 +81,7 @@ public class WaldorfPulseSingleDriver extends SynthDriverPatchImpl {
 	}
 
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 		((PatchDataImpl) p).getSysex()[4] = (byte) 1;
 		((PatchDataImpl) p).getSysex()[5] = (byte) patchNum;
 		super.sendPatch(p);

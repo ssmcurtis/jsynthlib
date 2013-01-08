@@ -21,6 +21,7 @@
 
 package org.jsynthlib.synthdrivers.roland.vg88;
 
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -173,8 +174,8 @@ public final class RolandVG88SingleDriver extends SynthDriverPatchImpl {
 	 */
 	public void requestPatchDump(int bankNum, int patchNum) {
 		int checkSum = -(0x0c + patchNum + 0x05 + 0x40) & 0x7f;
-		send(SYS_REQ.toSysexMessage(getDeviceID(), new SysexHandler.NameValue("patchNum", patchNum),
-				new SysexHandler.NameValue("checkSum", checkSum)));
+		send(SYS_REQ.toSysexMessage(getDeviceID(), new NameValue("patchNum", patchNum),
+				new NameValue("checkSum", checkSum)));
 	}
 
 	/**

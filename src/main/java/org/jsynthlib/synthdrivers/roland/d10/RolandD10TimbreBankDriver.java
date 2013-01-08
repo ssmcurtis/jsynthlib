@@ -75,14 +75,14 @@ public class RolandD10TimbreBankDriver extends SynthDriverBank {
 		send(requestMessage.getBytes());
 	}
 
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		PatchDataImpl patch = timbreDriver.createNewPatch();
 		RolandD10Support.copyPatchFromBank(patchNum, bank.getSysex(), patch.getSysex());
 		return patch;
 	}
 
 	public String getPatchName(PatchDataImpl bank, int patchNum) {
-		return timbreDriver.getPatchName(getPatch(bank, patchNum));
+		return timbreDriver.getPatchName(extractPatch(bank, patchNum));
 	}
 
 	public void setPatchName(PatchDataImpl bank, int patchNum, String name) {

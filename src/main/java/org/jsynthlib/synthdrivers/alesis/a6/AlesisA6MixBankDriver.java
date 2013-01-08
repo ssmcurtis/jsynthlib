@@ -7,6 +7,7 @@ package org.jsynthlib.synthdrivers.alesis.a6;
 import javax.swing.JOptionPane;
 
 import org.jsynthlib.PatchBayApplication;
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverBank;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -56,14 +57,14 @@ public class AlesisA6MixBankDriver extends SynthDriverBank {
 		((PatchDataImpl) bank).getSysex()[patchNum * 1180 + 7] = (byte) patchNum; // set mix #
 	}
 
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		byte sysex[] = new byte[1180];
 		System.arraycopy(((PatchDataImpl) bank).getSysex(), patchNum * 1180, sysex, 0, 1180);
 		return new PatchDataImpl(sysex, getDevice());
 	}
 
 	public String getPatchName(PatchDataImpl p, int patchNum) {
-		PatchDataImpl Mix = (PatchDataImpl) getPatch(p, patchNum);
+		PatchDataImpl Mix = (PatchDataImpl) extractPatch(p, patchNum);
 		try {
 			char c[] = new char[patchNameSize];
 			for (int i = 0; i < patchNameSize; i++)
@@ -75,7 +76,7 @@ public class AlesisA6MixBankDriver extends SynthDriverBank {
 	}
 
 	public void setPatchName(PatchDataImpl p, int patchNum, String name) {
-		PatchDataImpl Mix = (PatchDataImpl) getPatch(p, patchNum);
+		PatchDataImpl Mix = (PatchDataImpl) extractPatch(p, patchNum);
 		if (name.length() < patchNameSize + 4)
 			name = name + "                ";
 		byte nameByte[] = name.getBytes();
@@ -109,7 +110,7 @@ public class AlesisA6MixBankDriver extends SynthDriverBank {
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {
-		send(sysexRequestDump.toSysexMessage(((byte) getChannel()), new SysexHandler.NameValue[] {
-				new SysexHandler.NameValue("bankNum", bankNum), new SysexHandler.NameValue("patchNum", patchNum) }));
+		send(sysexRequestDump.toSysexMessage(((byte) getChannel()), new NameValue[] {
+				new NameValue("bankNum", bankNum), new NameValue("patchNum", patchNum) }));
 	}
 }

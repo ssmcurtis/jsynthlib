@@ -23,6 +23,7 @@
  */
 package org.jsynthlib.synthdrivers.yamaha.dx7s;
 
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 
@@ -35,28 +36,28 @@ public class YamahaDX7sSysexHelpers {
 	// switch off internal/cartridge memory protection
 	protected static void swOffMemProt(SynthDriverPatchImpl d, byte ch, byte bn) // port, channel,
 	{
-		d.send(System.toSysexMessage(ch, new SysexHandler.NameValue("param", 0x53), new SysexHandler.NameValue(
+		d.send(System.toSysexMessage(ch, new NameValue("param", 0x53), new NameValue(
 				"action", bn)));
 	} // bn: bit0 = internal, bit1 = cartridge
 
 	// choose the desired MIDI transmit block
 	protected static void chXmitBlock(SynthDriverPatchImpl d, byte ch, byte bn) // port, channel,
 	{
-		d.send(System.toSysexMessage(ch, new SysexHandler.NameValue("param", 0x4c), new SysexHandler.NameValue(
+		d.send(System.toSysexMessage(ch, new NameValue("param", 0x4c), new NameValue(
 				"action", bn)));
 	} // bn: 0 = 1-32, 1 = 33-64
 
 	// choose the desired MIDI receive block
 	protected static void chRcvBlock(SynthDriverPatchImpl d, byte ch, byte bn) // port, channel,
 	{
-		d.send(System.toSysexMessage(ch, new SysexHandler.NameValue("param", 0x4d), new SysexHandler.NameValue(
+		d.send(System.toSysexMessage(ch, new NameValue("param", 0x4d), new NameValue(
 				"action", bn)));
 	} // bn: 0 = 1-32, 1 = 33-64
 
 	// choose voice mode (voice button)
 	protected static void chVoiceMode(SynthDriverPatchImpl d, byte ch) // port, channel
 	{
-		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("switch", 0x20), new SysexHandler.NameValue(
+		d.send(Button.toSysexMessage(ch, new NameValue("switch", 0x20), new NameValue(
 				"OnOff", 0x7f)));
 	} // switch 32
 }

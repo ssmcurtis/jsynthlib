@@ -2,6 +2,7 @@
 
 package org.jsynthlib.synthdrivers.access.virus;
 
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -84,7 +85,7 @@ public class VirusMultiSingleDriver extends SynthDriverPatchImpl {
 
 	@Override
 	public void requestPatchDump(int bankNum, int patchNum) {
-		send(sysexRequestDump.toSysexMessage(getDeviceID(), new SysexHandler.NameValue("bankNum", bankNum), new SysexHandler.NameValue(
+		send(sysexRequestDump.toSysexMessage(getDeviceID(), new NameValue("bankNum", bankNum), new NameValue(
 				"patchNum", patchNum)));
 	}
 }

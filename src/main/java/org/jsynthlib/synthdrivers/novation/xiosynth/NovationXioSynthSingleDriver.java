@@ -73,7 +73,7 @@ public class NovationXioSynthSingleDriver extends SynthDriverPatchImpl {
 		/* I think there's no checksum on xio.. */
 	}
 
-	protected void setPatchNum(int patchNum) {
+	protected void sendProgramChange(int patchNum) {
 	}
 
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {

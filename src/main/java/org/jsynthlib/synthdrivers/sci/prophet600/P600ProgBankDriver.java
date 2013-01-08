@@ -4,6 +4,7 @@
 package org.jsynthlib.synthdrivers.sci.prophet600;
 
 import org.jsynthlib.PatchBayApplication;
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverBank;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -49,7 +50,7 @@ public class P600ProgBankDriver extends SynthDriverBank {
 		((PatchDataImpl) bank).getSysex()[patchNum * singleSize + PATCH_NUM_OFFSET] = (byte) patchNum; // set program #
 	}
 
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		byte sysex[] = new byte[singleSize];
 		System.arraycopy(((PatchDataImpl) bank).getSysex(), patchNum * singleSize, sysex, 0, singleSize);
 		return new PatchDataImpl(sysex);
@@ -96,8 +97,8 @@ public class P600ProgBankDriver extends SynthDriverBank {
 
 	public void requestPatchDump(int bankNum, int patchNum) {
 		for (int i = 0; i < NUM_IN_BANK; i++) {
-			send(sysexRequestDump.toSysexMessage(((byte) getChannel()), new SysexHandler.NameValue[] {
-					new SysexHandler.NameValue("bankNum", bankNum), new SysexHandler.NameValue("patchNum", i) }));
+			send(sysexRequestDump.toSysexMessage(((byte) getChannel()), new NameValue[] {
+					new NameValue("bankNum", bankNum), new NameValue("patchNum", i) }));
 			try {
 				Thread.sleep(50);
 			} catch (Exception e) {

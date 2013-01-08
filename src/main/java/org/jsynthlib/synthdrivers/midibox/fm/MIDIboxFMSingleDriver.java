@@ -27,6 +27,7 @@ package org.jsynthlib.synthdrivers.midibox.fm;
 import javax.swing.JOptionPane;
 
 import org.jsynthlib.PatchBayApplication;
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -74,8 +75,8 @@ public class MIDIboxFMSingleDriver extends SynthDriverPatchImpl {
 					+ " driver does not support patch getting.\n\n" + "Please start the patch dump manually...",
 					"Get Patch", JOptionPane.WARNING_MESSAGE);
 		} else
-			send(sysexRequestDump.toSysexMessage(getDeviceID(), new SysexHandler.NameValue("bankNum", bankNum),
-					new SysexHandler.NameValue("patchNum", patchNum)));
+			send(sysexRequestDump.toSysexMessage(getDeviceID(), new NameValue("bankNum", bankNum),
+					new NameValue("patchNum", patchNum)));
 	}
 
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {

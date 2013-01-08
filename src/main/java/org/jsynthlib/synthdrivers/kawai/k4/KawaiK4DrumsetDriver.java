@@ -1,6 +1,7 @@
 package org.jsynthlib.synthdrivers.kawai.k4;
 
 import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -94,6 +95,6 @@ public class KawaiK4DrumsetDriver extends SynthDriverPatchImpl {
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {
-		send(SYS_REQ.toSysexMessage(getChannel(), new SysexHandler.NameValue("bankNum", (bankNum << 1) + 1)));
+		send(SYS_REQ.toSysexMessage(getChannel(), new NameValue("bankNum", (bankNum << 1) + 1)));
 	}
 }

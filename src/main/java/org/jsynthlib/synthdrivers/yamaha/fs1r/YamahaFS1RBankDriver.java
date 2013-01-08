@@ -107,7 +107,7 @@ public class YamahaFS1RBankDriver extends SynthDriverBank {
 	}
 
 	/** Gets a patch from the bank, converting it as needed */
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		int oStart = getPatchStart(patchNum);
 		int oSize = (patchNum > 127 ? YamahaFS1RVoiceDriver.PATCH_AND_HEADER_SIZE
 				: YamahaFS1RPerformanceDriver.PATCH_AND_HEADER_SIZE);

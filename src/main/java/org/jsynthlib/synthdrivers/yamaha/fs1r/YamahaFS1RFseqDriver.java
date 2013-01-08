@@ -62,7 +62,7 @@ public class YamahaFS1RFseqDriver extends SynthDriverPatchImpl {
 		sysexRequestDump = new SysexHandler("F0 43 20 5E 6" + bankNum + " 00 *patchNum* F7");
 	}
 
-	public void setPatchNum(int patchNum) {
+	public void sendProgramChange(int patchNum) {
 		// il ne faut pas envoyer de prog change
 	}
 

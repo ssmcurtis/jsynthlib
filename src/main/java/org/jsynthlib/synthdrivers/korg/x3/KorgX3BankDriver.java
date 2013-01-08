@@ -157,7 +157,7 @@ public class KorgX3BankDriver extends SynthDriverBank {
 	 *            Patch number
 	 * @return Single patch
 	 */
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		try {
 			byte[] sysex = new byte[187];
 			sysex[00] = (byte) 0xF0;

@@ -2,9 +2,9 @@ package org.jsynthlib.synthdrivers.crumar.bit99;
 
 import javax.sound.midi.MidiMessage;
 
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
-import org.jsynthlib.model.driver.SysexHandler.NameValue;
 import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.HexaUtil;
 
@@ -41,7 +41,7 @@ public class Bit99SingleDriver extends SynthDriverPatchImpl {
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		System.out.println(">>>> store patch");
 
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 		try {
 			Thread.sleep(100);
 		} catch (Exception e) {
@@ -55,7 +55,7 @@ public class Bit99SingleDriver extends SynthDriverPatchImpl {
 			Thread.sleep(100);
 		} catch (Exception e) {
 		}
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 	}
 
 	public void sendPatch(PatchDataImpl p) {
@@ -70,8 +70,8 @@ public class Bit99SingleDriver extends SynthDriverPatchImpl {
 		this.bankNum = bankNum;
 		this.patchNum = patchNum;
 
-		NameValue bank = new SysexHandler.NameValue("bankNum", bankNum << 1);
-		NameValue patch = new SysexHandler.NameValue("patchNum", patchNum);
+		NameValue bank = new NameValue("bankNum", bankNum << 1);
+		NameValue patch = new NameValue("patchNum", patchNum);
 
 		MidiMessage msg = SYS_REQ.toSysexMessage(getChannel(), bank, patch);
 

@@ -423,13 +423,13 @@ abstract public class SynthDriverPatchImpl implements SynthDriverPatch {
 	public void requestPatchDump(int bankNum, int patchNum) {
 		// clearMidiInBuffer(); now done by SysexGetDialog.GetActionListener.
 		setBankNum(bankNum);
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 		if (sysexRequestDump == null) {
 			JOptionPane.showMessageDialog(PatchBayApplication.getInstance(), "The " + toString()
 					+ " driver does not support patch getting.\n\n" + "Please start the patch dump manually...", "Get Patch",
 					JOptionPane.WARNING_MESSAGE);
 		} else
-			send(sysexRequestDump.toSysexMessage(getDeviceID(), new SysexHandler.NameValue("bankNum", bankNum), new SysexHandler.NameValue(
+			send(sysexRequestDump.toSysexMessage(getDeviceID(), new NameValue("bankNum", bankNum), new NameValue(
 					"patchNum", patchNum)));
 	}
 
@@ -497,7 +497,7 @@ abstract public class SynthDriverPatchImpl implements SynthDriverPatch {
 	 */
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		setBankNum(bankNum);
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 		sendPatch(p);
 	}
 
@@ -506,7 +506,7 @@ abstract public class SynthDriverPatchImpl implements SynthDriverPatch {
 	 * 
 	 * @see #storePatch(PatchDataImpl, int, int)
 	 */
-	protected void setPatchNum(int patchNum) {
+	protected void sendProgramChange(int patchNum) {
 		try {
 			ShortMessage msg = new ShortMessage();
 			msg.setMessage(ShortMessage.PROGRAM_CHANGE, getChannel() - 1, patchNum, 0); // Program
@@ -756,6 +756,10 @@ abstract public class SynthDriverPatchImpl implements SynthDriverPatch {
 	public int getHeaderSize(){
 		return -1;
 	}
-
+	
+	@Override
+	public boolean isUseableForLibrary(){
+		return false;
+	}
 	
 }

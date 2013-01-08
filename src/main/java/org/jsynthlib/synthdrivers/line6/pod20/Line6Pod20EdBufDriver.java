@@ -21,6 +21,7 @@
 
 package org.jsynthlib.synthdrivers.line6.pod20;
 
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SysexHandler;
 
 /**
@@ -61,6 +62,6 @@ public class Line6Pod20EdBufDriver extends Line6Pod20SingleDriver {
 	 */
 	public void requestPatchDump(int bankNum, int patchNum) {
 		int progNum = 0;
-		send(SYS_REQ.toSysexMessage(getChannel(), new SysexHandler.NameValue("progNum", progNum)));
+		send(SYS_REQ.toSysexMessage(getChannel(), new NameValue("progNum", progNum)));
 	}
 }

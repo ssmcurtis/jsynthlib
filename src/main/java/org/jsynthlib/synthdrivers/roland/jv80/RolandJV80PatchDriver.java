@@ -105,13 +105,13 @@ public class RolandJV80PatchDriver extends SynthDriverPatchImpl {
 	// Sends a patch to a set location on a synth.
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		setBankNum(bankNum);
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 
 		setPatchNum(p.getSysex(), bankNum, patchNum);
 		calculateChecksum(p);
 		sendPatchWorker(p);
 
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 	}
 
 	// Sends a patch to the synth's edit buffer.

@@ -44,6 +44,7 @@ public enum Blofeld {
 	public static final int TEMPLATE_ADD_TO_BANK_BYTE = 0x00;
 
 	public static final String[] BANK_NAMES = new String[] { "A", "B", "C", "D", "E", "F", "G", "H" };
+	public static final String[] BANK_MULTI = new String[] { "MULTI-TIMBRAL"  };
 	public static final String[] BANK_NAMES_COMPLETE = new String[] { "COMPLETE" };
 
 	Blofeld(int position) {
@@ -61,11 +62,19 @@ public enum Blofeld {
 
 		return retarr;
 	}
-	
+
 	public static String[] createPatchNumbersCompleteSynth() {
 		String[] retarr = new String[PATCH_COUNT_IN_SYNTH];
 		String[] names = DriverUtil.generateNumbers(1, PATCH_COUNT_IN_SYNTH, "Patch #0000");
 		System.arraycopy(names, 0, retarr, 0, PATCH_COUNT_IN_SYNTH);
+
+		return retarr;
+	}
+
+	public static String[] createPatchNumbersMultitimbral() {
+		String[] retarr = new String[16];
+		String[] names = DriverUtil.generateNumbers(1, 16, "Channel #00");
+		System.arraycopy(names, 0, retarr, 0, 16);
 
 		return retarr;
 	}

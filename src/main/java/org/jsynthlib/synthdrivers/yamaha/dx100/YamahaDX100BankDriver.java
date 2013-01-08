@@ -156,7 +156,7 @@ public class YamahaDX100BankDriver extends SynthDriverBank {
 		calculateChecksum(bank);
 	}
 
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		try {
 			byte[] sysex = new byte[101];
 			// Then create VCED Data

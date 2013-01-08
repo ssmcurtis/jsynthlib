@@ -181,7 +181,7 @@ abstract public class SynthDriverBank extends SynthDriverPatchImpl {
 	 * 
 	 * @see PatchDataImpl#get(int)
 	 */
-	public abstract PatchDataImpl getPatch(PatchDataImpl bank, int patchNum);
+	public abstract PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum);
 
 	/**
 	 * Get the name of the patch at the given number <code>patchNum</code>.

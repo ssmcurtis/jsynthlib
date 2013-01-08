@@ -23,6 +23,7 @@
  */
 package org.jsynthlib.synthdrivers.yamaha.dx7;
 
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 
@@ -50,29 +51,29 @@ class YamahaDX7SysexHelper {
 	// make system informations available
 	protected static void mkSysInfoAvail(SynthDriverPatchImpl d, byte ch) // driver, channel
 	{
-		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("button", FUNCTION), new SysexHandler.NameValue(
+		d.send(Button.toSysexMessage(ch, new NameValue("button", FUNCTION), new NameValue(
 				"action", DEPRESS)));
-		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("button", FUNCTION), new SysexHandler.NameValue(
+		d.send(Button.toSysexMessage(ch, new NameValue("button", FUNCTION), new NameValue(
 				"action", RELEASE)));
 
-		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("button", BATTERY), new SysexHandler.NameValue(
+		d.send(Button.toSysexMessage(ch, new NameValue("button", BATTERY), new NameValue(
 				"action", DEPRESS)));
-		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("button", BATTERY), new SysexHandler.NameValue(
+		d.send(Button.toSysexMessage(ch, new NameValue("button", BATTERY), new NameValue(
 				"action", RELEASE)));
 
-		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("button", MIDI_CH), new SysexHandler.NameValue(
+		d.send(Button.toSysexMessage(ch, new NameValue("button", MIDI_CH), new NameValue(
 				"action", DEPRESS)));
-		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("button", MIDI_CH), new SysexHandler.NameValue(
+		d.send(Button.toSysexMessage(ch, new NameValue("button", MIDI_CH), new NameValue(
 				"action", RELEASE)));
 
-		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("button", SYSINFO), new SysexHandler.NameValue(
+		d.send(Button.toSysexMessage(ch, new NameValue("button", SYSINFO), new NameValue(
 				"action", DEPRESS)));
-		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("button", SYSINFO), new SysexHandler.NameValue(
+		d.send(Button.toSysexMessage(ch, new NameValue("button", SYSINFO), new NameValue(
 				"action", RELEASE)));
 
-		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("button", YES), new SysexHandler.NameValue(
+		d.send(Button.toSysexMessage(ch, new NameValue("button", YES), new NameValue(
 				"action", DEPRESS)));
-		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("button", YES), new SysexHandler.NameValue(
+		d.send(Button.toSysexMessage(ch, new NameValue("button", YES), new NameValue(
 				"action", RELEASE)));
 	}
 
@@ -80,55 +81,55 @@ class YamahaDX7SysexHelper {
 	protected static void swOffMemProt(SynthDriverPatchImpl d, byte ch, byte mp, byte bn) // driver, channel, memory protection of
 																			// internal/cartridge, internal/cartridge
 	{
-		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("button", mp), new SysexHandler.NameValue("action",
+		d.send(Button.toSysexMessage(ch, new NameValue("button", mp), new NameValue("action",
 				DEPRESS)));
-		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("button", mp), new SysexHandler.NameValue("action",
+		d.send(Button.toSysexMessage(ch, new NameValue("button", mp), new NameValue("action",
 				RELEASE)));
-		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("button", NO), new SysexHandler.NameValue("action",
+		d.send(Button.toSysexMessage(ch, new NameValue("button", NO), new NameValue("action",
 				DEPRESS)));
-		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("button", NO), new SysexHandler.NameValue("action",
+		d.send(Button.toSysexMessage(ch, new NameValue("button", NO), new NameValue("action",
 				RELEASE)));
 
-		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("button", bn), new SysexHandler.NameValue("action",
+		d.send(Button.toSysexMessage(ch, new NameValue("button", bn), new NameValue("action",
 				DEPRESS)));
-		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("button", bn), new SysexHandler.NameValue("action",
+		d.send(Button.toSysexMessage(ch, new NameValue("button", bn), new NameValue("action",
 				RELEASE)));
 	}
 
 	// transmit bank dump
 	protected static void xmitBankDump(SynthDriverPatchImpl d, byte ch) // driver, channel
 	{
-		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("button", MIDI_XMIT), new SysexHandler.NameValue(
+		d.send(Button.toSysexMessage(ch, new NameValue("button", MIDI_XMIT), new NameValue(
 				"action", DEPRESS)));
-		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("button", MIDI_XMIT), new SysexHandler.NameValue(
+		d.send(Button.toSysexMessage(ch, new NameValue("button", MIDI_XMIT), new NameValue(
 				"action", RELEASE)));
 
-		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("button", YES), new SysexHandler.NameValue(
+		d.send(Button.toSysexMessage(ch, new NameValue("button", YES), new NameValue(
 				"action", DEPRESS)));
-		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("button", YES), new SysexHandler.NameValue(
+		d.send(Button.toSysexMessage(ch, new NameValue("button", YES), new NameValue(
 				"action", RELEASE)));
 
-		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("button", MEMSELINT), new SysexHandler.NameValue(
+		d.send(Button.toSysexMessage(ch, new NameValue("button", MEMSELINT), new NameValue(
 				"action", DEPRESS)));
-		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("button", MEMSELINT), new SysexHandler.NameValue(
+		d.send(Button.toSysexMessage(ch, new NameValue("button", MEMSELINT), new NameValue(
 				"action", RELEASE)));
 	}
 
 	// switch to desired bank
 	protected static void chBank(SynthDriverPatchImpl d, byte ch, byte bn) // driver, channel, internal/cartridge
 	{
-		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("button", bn), new SysexHandler.NameValue("action",
+		d.send(Button.toSysexMessage(ch, new NameValue("button", bn), new NameValue("action",
 				DEPRESS)));
-		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("button", bn), new SysexHandler.NameValue("action",
+		d.send(Button.toSysexMessage(ch, new NameValue("button", bn), new NameValue("action",
 				RELEASE)));
 	}
 
 	// switch to desired patch number
 	protected static void chPatch(SynthDriverPatchImpl d, byte ch, byte pn) // driver, channel, patch number
 	{
-		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("button", pn), new SysexHandler.NameValue("action",
+		d.send(Button.toSysexMessage(ch, new NameValue("button", pn), new NameValue("action",
 				DEPRESS)));
-		d.send(Button.toSysexMessage(ch, new SysexHandler.NameValue("button", pn), new SysexHandler.NameValue("action",
+		d.send(Button.toSysexMessage(ch, new NameValue("button", pn), new NameValue("action",
 				RELEASE)));
 	}
 }

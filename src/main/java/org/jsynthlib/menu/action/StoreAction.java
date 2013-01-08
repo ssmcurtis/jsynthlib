@@ -11,7 +11,7 @@ import org.jsynthlib.tools.ErrorMsgUtil;
 
 public class StoreAction extends AbstractAction {
 	public StoreAction(Map<Serializable, Integer> mnemonics) {
-		super("Store...", null);
+		super("Store patch", null);
 		mnemonics.put(this, new Integer('R'));
 		this.setEnabled(false);
 	}

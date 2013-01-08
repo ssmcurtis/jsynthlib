@@ -41,7 +41,7 @@ public class KawaiK5000ADDSingleDriver extends SynthDriverPatchImpl {
 
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		setBankNum(bankNum);
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 		try {
 			Thread.sleep(100);
 		} catch (Exception e) {
@@ -58,7 +58,7 @@ public class KawaiK5000ADDSingleDriver extends SynthDriverPatchImpl {
 			Thread.sleep(100);
 		} catch (Exception e) {
 		}
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 	}
 
 	public void sendPatch(PatchDataImpl p) {

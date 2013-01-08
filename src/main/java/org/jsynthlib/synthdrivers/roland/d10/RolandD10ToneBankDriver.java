@@ -82,7 +82,7 @@ public class RolandD10ToneBankDriver extends SynthDriverBank {
 		send(requestMessage.getBytes());
 	}
 
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		PatchDataImpl patch = toneDriver.createNewPatch();
 		System.arraycopy(bank.getSysex(), patchNum * TONE_RECORD_SYSEX_SIZE, patch.getSysex(), 0, TONE_RECORD_SYSEX_SIZE);
 		return patch;
@@ -93,12 +93,12 @@ public class RolandD10ToneBankDriver extends SynthDriverBank {
 	}
 
 	public String getPatchName(PatchDataImpl bank, int patchNum) {
-		PatchDataImpl patch = getPatch(bank, patchNum);
+		PatchDataImpl patch = extractPatch(bank, patchNum);
 		return patch.getName();
 	}
 
 	public void setPatchName(PatchDataImpl bank, int patchNum, String name) {
-		PatchDataImpl patch = getPatch(bank, patchNum);
+		PatchDataImpl patch = extractPatch(bank, patchNum);
 		patch.setName(name);
 		putPatch(bank, patch, patchNum);
 	}

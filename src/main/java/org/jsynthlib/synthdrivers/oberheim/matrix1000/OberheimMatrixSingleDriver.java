@@ -57,7 +57,7 @@ public class OberheimMatrixSingleDriver extends SynthDriverPatchImpl {
 
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		setBankNum(bankNum);
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 		((PatchDataImpl) p).getSysex()[3] = 1;
 		((PatchDataImpl) p).getSysex()[4] = (byte) patchNum;
 		sendPatchWorker(p);

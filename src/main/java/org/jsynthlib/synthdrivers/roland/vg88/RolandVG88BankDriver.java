@@ -83,14 +83,14 @@ public class RolandVG88BankDriver extends SynthDriverBank {
 	 * Get a patch name
 	 */
 	public String getPatchName(PatchDataImpl p, int patchNum) {
-		return singleDriver.getPatchName(getPatch(p, patchNum));
+		return singleDriver.getPatchName(extractPatch(p, patchNum));
 	}
 
 	/**
 	 * Set a patch name
 	 */
 	public void setPatchName(PatchDataImpl p, int patchNum, String name) {
-		PatchDataImpl pAux = getPatch(p, patchNum);
+		PatchDataImpl pAux = extractPatch(p, patchNum);
 		singleDriver.setPatchName(pAux, name);
 		putPatch(p, pAux, patchNum);
 	}
@@ -114,7 +114,7 @@ public class RolandVG88BankDriver extends SynthDriverBank {
 	/**
 	 * Get a patch into a bank
 	 */
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		byte[] sysex = new byte[singleSize];
 		System.arraycopy(bank.getSysex(), singleSize * patchNum, sysex, 0, singleSize);
 		return new PatchDataImpl(sysex, singleDriver);
@@ -157,7 +157,7 @@ public class RolandVG88BankDriver extends SynthDriverBank {
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		int ofst = 0;
 		for (int i = 0; i < RolandVG88SingleDriver.NUM_PATCH; i++, ofst += singleSize) {
-			singleDriver.storePatch(getPatch(p, i), 0, i);
+			singleDriver.storePatch(extractPatch(p, i), 0, i);
 		}
 	}
 }

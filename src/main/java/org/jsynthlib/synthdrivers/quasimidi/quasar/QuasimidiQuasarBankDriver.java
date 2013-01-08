@@ -26,6 +26,7 @@ import java.io.UnsupportedEncodingException;
 import javax.swing.JOptionPane;
 
 import org.jsynthlib.PatchBayApplication;
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverBank;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -129,7 +130,7 @@ public class QuasimidiQuasarBankDriver extends SynthDriverBank {
 	/**
 	 * Gets a patch from the bank, converting it as needed
 	 */
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		try {
 			byte[] sysex = new byte[this.singleSize];
 
@@ -190,7 +191,7 @@ public class QuasimidiQuasarBankDriver extends SynthDriverBank {
 
 					this.sysexRequestDump = new SysexHandler(QuasarConstants.SYSEX_PERFORMANCE_REQUEST[count]);
 
-					send(sysexRequestDump.toSysexMessage(getDeviceID(), new SysexHandler.NameValue("perfNumber",
+					send(sysexRequestDump.toSysexMessage(getDeviceID(), new NameValue("perfNumber",
 							patchNo + QuasarConstants.SYSEX_PERFORMANCE_OFFSET)));
 
 					try {

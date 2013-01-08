@@ -17,7 +17,7 @@ public class MidiWindow implements WriteOutput {
 	private JFrame f; // Main frame
 	private JTextArea ta; // Text area
 	private JScrollPane sbrText; // Scroll pane for text area
-	private JButton btnQuit; // Quit Program
+//	private JButton btnQuit; // Quit Program
 	private JPanel buttons = new JPanel(new GridLayout(3, 1));
 
 	private Thread midiThread;
@@ -27,7 +27,7 @@ public class MidiWindow implements WriteOutput {
 
 	public MidiWindow() { // Constructor
 		// Create Frame
-		f = new JFrame("Swing Demo");
+		f = new JFrame("Test UI");
 		f.getContentPane().setLayout(new FlowLayout());
 
 		// Create Scrolling Text Area in Swing
@@ -37,12 +37,12 @@ public class MidiWindow implements WriteOutput {
 		sbrText.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
 		// Create Quit Button
-		btnQuit = new JButton("Quit");
-		btnQuit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
-			}
-		});
+//		btnQuit = new JButton("Quit");
+//		btnQuit.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				System.exit(0);
+//			}
+//		});
 
 		JButton button = new JButton("Sound.. ");
 		buttons.add(button);

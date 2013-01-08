@@ -12,6 +12,7 @@
 package org.jsynthlib.synthdrivers.alesis.qs;
 
 import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -145,8 +146,8 @@ public class AlesisQSProgramDriver extends SynthDriverPatchImpl {
 			opcode = QSConstants.OPCODE_MIDI_EDIT_PROG_DUMP_REQ;
 		}
 
-		send(sysexRequestDump.toSysexMessage(getChannel(), new SysexHandler.NameValue("opcode", opcode),
-				new SysexHandler.NameValue("patchNum", location)));
+		send(sysexRequestDump.toSysexMessage(getChannel(), new NameValue("opcode", opcode),
+				new NameValue("patchNum", location)));
 	}
 
 	/**

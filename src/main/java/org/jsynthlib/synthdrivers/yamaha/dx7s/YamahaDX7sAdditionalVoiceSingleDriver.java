@@ -55,7 +55,7 @@ public class YamahaDX7sAdditionalVoiceSingleDriver extends DX7FamilyAdditionalVo
 		// keyswitch to voice mode
 		YamahaDX7sSysexHelpers.chVoiceMode(this, (byte) (getChannel() + 0x10));
 		// 0-63 int voices, 64-127 cartridge voices
-		setPatchNum(patchNum + 32 * bankNum);
+		sendProgramChange(patchNum + 32 * bankNum);
 
 		send(sysexRequestDump.toSysexMessage(getChannel() + 0x20));
 	}

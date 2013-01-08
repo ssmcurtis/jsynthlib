@@ -66,6 +66,7 @@ import org.jsynthlib.menu.action.SaveAsAction;
 import org.jsynthlib.menu.action.SearchAction;
 import org.jsynthlib.menu.action.SelectClearAction;
 import org.jsynthlib.menu.action.SendAction;
+import org.jsynthlib.menu.action.StoreLibraryAction;
 import org.jsynthlib.menu.action.SendToAction;
 import org.jsynthlib.menu.action.ShowDevicesAction;
 import org.jsynthlib.menu.action.StoreAction;
@@ -137,15 +138,15 @@ final public class Actions {
 	public static final long EN_SHOW_DEVICE = 0x0000008000000000L;
 	public static final long EN_PLAY_ALL = 0x0000010000000000L;
 	public static final long EN_COMPARE_PATCH = 0x0000020000000000L;
-	public static final long EN_SELECT_BYFILTER  = 0x0000040000000000L;
-	public static final long EN_SELECT_CLEAR  = 0x0000080000000000L;
+	public static final long EN_SELECT_BYFILTER = 0x0000040000000000L;
+	public static final long EN_SELECT_CLEAR = 0x0000080000000000L;
+	public static final long EN_STORE_LIBRARY = 0x0000100000000000L;
 
 	/** All actions excluding ones which are always enabled. */
 	public static final long EN_ALL = (// EN_ABOUT
-	EN_COPY
-			| EN_CUT
+	EN_COPY | EN_CUT
 			| EN_DELETE
-
+			| EN_STORE_LIBRARY
 			// | EN_DOCS
 			| EN_EDIT
 			// | EN_EXIT
@@ -200,6 +201,7 @@ final public class Actions {
 	private static Action importAllAction = new ImportAllAction(mnemonics);
 	private static Action sendAction = new SendAction(mnemonics);
 	private static Action sendToAction = new SendToAction(mnemonics);
+	private static Action storeLibraryAction = new StoreLibraryAction(mnemonics);
 	private static Action selectDuplicatedAction = new SelectDuplicateAction(mnemonics);
 	// private static Action updateSelectedAction = new UpdateSelectedAction(mnemonics);// R. Wirski
 	private static Action printAction = new PrintAction(mnemonics);
@@ -304,15 +306,15 @@ final public class Actions {
 		JMenuItem mi;
 		JMenu menuPatch = new JMenu("Edit");
 		mnemonics.put(menuPatch, new Integer(KeyEvent.VK_L));
-//		mi = menuPatch.add(copyAction);
-//		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_COPY, 0));
-//		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, mask));
-//		mi = menuPatch.add(cutAction);
-//		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_CUT, 0));
-//		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, mask));
-//		mi = menuPatch.add(pasteAction);
-//		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_PASTE, 0));
-//		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, mask));
+		// mi = menuPatch.add(copyAction);
+		// mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_COPY, 0));
+		// mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, mask));
+		// mi = menuPatch.add(cutAction);
+		// mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_CUT, 0));
+		// mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, mask));
+		// mi = menuPatch.add(pasteAction);
+		// mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_PASTE, 0));
+		// mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, mask));
 		mi = menuPatch.add(deleteAction);
 		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
 		menuPatch.addSeparator();
@@ -336,6 +338,7 @@ final public class Actions {
 		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_NUMPAD0, 0));
 		// menuPatch.add(updateSelectedAction);
 		menuPatch.add(sendToAction);
+		menuPatch.add(storeLibraryAction);
 		menuPatch.add(storeAction);
 		mi = menuPatch.add(getAction); // phil@muqus.com
 		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, mask));
@@ -353,7 +356,7 @@ final public class Actions {
 		menuPatch.add(reassignAction);
 		menuPatch.add(extractAction);
 		menuPatch.add(comparePatch);
-		
+
 		menuPatch.addSeparator();
 		menuPatch.add(selectDuplicatedAction);
 		menuPatch.add(selectByFilterAction);
@@ -486,19 +489,19 @@ final public class Actions {
 	public static void createPopupMenu() {
 		// create popup menu
 		menuPatchPopup = new JPopupMenu();
-		
+
 		menuPatchPopup.add(extractAction);
 		menuPatchPopup.add(getAction);
 
-//		menuPatchPopup.add(playAction);
-//		menuPatchPopup.add(playAllAction);
-//		menuPatchPopup.add(editAction);
+		// menuPatchPopup.add(playAction);
+		// menuPatchPopup.add(playAllAction);
+		// menuPatchPopup.add(editAction);
 		// menuPatchPopup.add(updateSelectedAction);
 		menuPatchPopup.addSeparator();
 
 		menuPatchPopup.add(playAction);
 		menuPatchPopup.add(sendAction);
-		menuPatchPopup.add(sendToAction);
+		menuPatchPopup.add(storeLibraryAction);
 		menuPatchPopup.add(storeAction);
 		menuPatchPopup.add(reassignAction);
 		menuPatchPopup.addSeparator();
@@ -508,10 +511,10 @@ final public class Actions {
 		menuPatchPopup.add(pasteAction);
 		menuPatchPopup.add(deleteAction);
 		menuPatchPopup.addSeparator();
-	
+
 		menuPatchPopup.add(searchAction);
 
-//		menuPatchPopup.add(uploadAction);
+		// menuPatchPopup.add(uploadAction);
 	}
 
 	/** show popup menu for patch. */
@@ -535,9 +538,9 @@ final public class Actions {
 
 		toolBar.addSeparator();
 
-//		toolBar.add(createToolBarButton(copyAction, "Copy", "Copy Patch"));
-//		toolBar.add(createToolBarButton(cutAction, "Cut", "Cut Patch"));
-//		toolBar.add(createToolBarButton(pasteAction, "Paste", "Paste Patch"));
+		// toolBar.add(createToolBarButton(copyAction, "Copy", "Copy Patch"));
+		// toolBar.add(createToolBarButton(cutAction, "Cut", "Cut Patch"));
+		// toolBar.add(createToolBarButton(pasteAction, "Paste", "Paste Patch"));
 		toolBar.add(createToolBarButton(importAction, "Import", "Import Patch"));
 		toolBar.add(createToolBarButton(exportAction, "Export", "Export Patch"));
 
@@ -706,6 +709,8 @@ final public class Actions {
 			sendAction.setEnabled(b);
 		if ((v & EN_SEND_TO) != 0)
 			sendToAction.setEnabled(b);
+		if ((v & EN_STORE_LIBRARY) != 0)
+			storeLibraryAction.setEnabled(b);
 		if ((v & EN_SELECT_DUPLICATE) != 0)
 			selectDuplicatedAction.setEnabled(b);
 		if ((v & EN_STORE) != 0)

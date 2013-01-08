@@ -26,6 +26,7 @@ import javax.sound.midi.ShortMessage;
 import javax.swing.JOptionPane;
 
 import org.jsynthlib.PatchBayApplication;
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -111,7 +112,7 @@ public class WaldorfMW2SingleDriver extends SynthDriverPatchImpl {
 	 */
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		setBankNum(bankNum);
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 
 		p.getSysex()[5] = (byte) bankNum; // Location
 		p.getSysex()[6] = (byte) patchNum; // Location
@@ -196,9 +197,9 @@ public class WaldorfMW2SingleDriver extends SynthDriverPatchImpl {
 					+ " driver does not support patch getting.\n\n" + "Please start the patch dump manually...",
 					"Get Patch", JOptionPane.WARNING_MESSAGE);
 		} else {
-			SysexHandler.NameValue[] nameValues = { new SysexHandler.NameValue("BB", bankNum),
-					new SysexHandler.NameValue("NN", patchNum),
-					new SysexHandler.NameValue("XSUM", ((byte) (bankNum + patchNum)) & 0x7F) };
+			NameValue[] nameValues = { new NameValue("BB", bankNum),
+					new NameValue("NN", patchNum),
+					new NameValue("XSUM", ((byte) (bankNum + patchNum)) & 0x7F) };
 
 			send(sysexRequestDump.toSysexMessage(getDeviceID(), nameValues));
 		}

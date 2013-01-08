@@ -69,7 +69,7 @@ public class MIDIboxSIDBankDriver extends SynthDriverBank {
 		// MIDIboxSIDSlowSender SlowSender = new MIDIboxSIDSlowSender();
 
 		for (int i = 0; i < 128; ++i) {
-			PatchDataImpl ps = getPatch(p, i);
+			PatchDataImpl ps = extractPatch(p, i);
 			System.out.println("Sending Patch #" + i);
 			// SlowSender.sendSysEx(p.getDriver().getPort(), ps.sysex, 500);
 			send(ps.getSysex());
@@ -129,7 +129,7 @@ public class MIDIboxSIDBankDriver extends SynthDriverBank {
 		calculateChecksum(bank);
 	}
 
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		try {
 			byte[] sysex = new byte[266];
 			sysex[0] = (byte) 0xF0;

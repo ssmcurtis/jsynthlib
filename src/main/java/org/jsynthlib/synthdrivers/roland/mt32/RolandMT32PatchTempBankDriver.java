@@ -28,6 +28,7 @@ import java.io.UnsupportedEncodingException;
 
 import javax.swing.JOptionPane;
 
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverBank;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -122,7 +123,7 @@ public class RolandMT32PatchTempBankDriver extends SynthDriverBank {
 		calculateChecksum(bank);
 	}
 
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		int addressISB = 0x00;
 		int addressLSB = 0x00;
 		byte[] sysex = new byte[HSIZE + SSIZE + 1];
@@ -175,7 +176,7 @@ public class RolandMT32PatchTempBankDriver extends SynthDriverBank {
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {
-		send(SYS_REQ.toSysexMessage(getChannel(), new SysexHandler.NameValue("bankNum", bankNum << 1)));
+		send(SYS_REQ.toSysexMessage(getChannel(), new NameValue("bankNum", bankNum << 1)));
 	}
 
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {

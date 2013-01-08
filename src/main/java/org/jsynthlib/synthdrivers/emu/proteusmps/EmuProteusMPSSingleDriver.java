@@ -8,6 +8,7 @@ import java.io.UnsupportedEncodingException;
 import javax.swing.JOptionPane;
 
 import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -70,7 +71,7 @@ public class EmuProteusMPSSingleDriver extends SynthDriverPatchImpl {
 		((PatchDataImpl) p).getSysex()[5] = (byte) ((bankNum * 100 + patchNum) % 128);
 		((PatchDataImpl) p).getSysex()[6] = (byte) ((bankNum * 100 + patchNum) / 128);
 		setBankNum(bankNum);
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 		sendPatchWorker(p);
 	}
 
@@ -90,7 +91,7 @@ public class EmuProteusMPSSingleDriver extends SynthDriverPatchImpl {
 		((PatchDataImpl) p).getSysex()[5] = (byte) (patchNum.intValue() % 128);
 		((PatchDataImpl) p).getSysex()[6] = (byte) (patchNum.intValue() / 128);
 		setBankNum(patchNum.intValue() / 100);
-		setPatchNum(patchNum.intValue() % 100);
+		sendProgramChange(patchNum.intValue() % 100);
 		sendPatchWorker(p);
 	}
 
@@ -124,8 +125,8 @@ public class EmuProteusMPSSingleDriver extends SynthDriverPatchImpl {
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {
-		send(SysexRequestDump.toSysexMessage(getChannel(), new SysexHandler.NameValue("bankNum",
-				(bankNum * 100 + patchNum) % 128), new SysexHandler.NameValue("patchNum",
+		send(SysexRequestDump.toSysexMessage(getChannel(), new NameValue("bankNum",
+				(bankNum * 100 + patchNum) % 128), new NameValue("patchNum",
 				(bankNum * 100 + patchNum) / 128)));
 
 	}

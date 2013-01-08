@@ -22,6 +22,7 @@
 package org.jsynthlib.synthdrivers.roland.td6;
 
 import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -220,8 +221,8 @@ public final class TD6SingleDriver extends SynthDriverPatchImpl {
 	public void requestPatchDump(int bankNum, int patchNum) {
 		// checksum depends on drum kit number (patchNum).
 		int checkSum = -(0x41 + patchNum) & 0x7f;
-		send(SYS_REQ.toSysexMessage(getDeviceID(), new SysexHandler.NameValue("patchNum", patchNum),
-				new SysexHandler.NameValue("checkSum", checkSum)));
+		send(SYS_REQ.toSysexMessage(getDeviceID(), new NameValue("patchNum", patchNum),
+				new NameValue("checkSum", checkSum)));
 	}
 
 	/**

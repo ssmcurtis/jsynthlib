@@ -3,9 +3,9 @@ package org.jsynthlib.synthdrivers.crumar.bit99;
 import javax.sound.midi.MidiMessage;
 import javax.swing.JOptionPane;
 
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverBank;
 import org.jsynthlib.model.driver.SysexHandler;
-import org.jsynthlib.model.driver.SysexHandler.NameValue;
 import org.jsynthlib.model.patch.PatchDataImpl;
 
 /**
@@ -87,7 +87,7 @@ public class Bit99BankDriver extends SynthDriverBank {
 		calculateChecksum(bank);
 	}
 
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		System.out.println(">>>> Get patch");
 		// byte[] sysex = new byte[HSIZE + SSIZE + 1];
 		// sysex[0] = (byte) 0xF0;
@@ -115,8 +115,8 @@ public class Bit99BankDriver extends SynthDriverBank {
 
 	public void requestPatchDump(int bankNum, int patchNum) {
 		System.out.println(">>>> Send sysex");
-		NameValue bank = new SysexHandler.NameValue("bankNum", bankNum << 1);
-		NameValue patch = new SysexHandler.NameValue("patchNum", 1);
+		NameValue bank = new NameValue("bankNum", bankNum << 1);
+		NameValue patch = new NameValue("patchNum", 1);
 		MidiMessage msg = SYS_REQ.toSysexMessage(getChannel(), bank, patch);
 		send(msg);
 	}

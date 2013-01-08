@@ -24,6 +24,7 @@ package org.jsynthlib.synthdrivers.roland.vg88;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -159,14 +160,14 @@ public final class RolandVG88SysDatDriver extends SynthDriverPatchImpl {
 		int len1 = (int) (pack[4] / 0x80);
 		int len2 = (int) (pack[4] % 0x80);
 		int checkSum = -(dir1 + dir2 + dir3 + dir4 + len1 + len2) & 0x7f;
-		SysexHandler.NameValue nv[] = new SysexHandler.NameValue[7];
-		nv[0] = new SysexHandler.NameValue("dir1", dir1);
-		nv[1] = new SysexHandler.NameValue("dir2", dir2);
-		nv[2] = new SysexHandler.NameValue("dir3", dir3);
-		nv[3] = new SysexHandler.NameValue("dir4", dir4);
-		nv[4] = new SysexHandler.NameValue("len1", len1);
-		nv[5] = new SysexHandler.NameValue("len2", len2);
-		nv[6] = new SysexHandler.NameValue("checkSum", checkSum);
+		NameValue nv[] = new NameValue[7];
+		nv[0] = new NameValue("dir1", dir1);
+		nv[1] = new NameValue("dir2", dir2);
+		nv[2] = new NameValue("dir3", dir3);
+		nv[3] = new NameValue("dir4", dir4);
+		nv[4] = new NameValue("len1", len1);
+		nv[5] = new NameValue("len2", len2);
+		nv[6] = new NameValue("checkSum", checkSum);
 		send(SYS_REQ.toSysexMessage(getDeviceID(), nv));
 		try {
 			Thread.sleep(300); // wait .

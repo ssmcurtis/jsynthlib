@@ -73,7 +73,7 @@ public class AlesisA6MixSingleDriver extends SynthDriverPatchImpl {
 					JOptionPane.WARNING_MESSAGE);
 		else {
 			setBankNum(bankNum);
-			setPatchNum(patchNum);
+			sendProgramChange(patchNum);
 			sendPatch((PatchDataImpl) p, bankNum, patchNum);
 		}
 	}

@@ -82,7 +82,7 @@ public class RolandJV80BankDriver extends SynthDriverBank {
 		return bankPatch;
 	}
 
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		byte[] sysex = new byte[singleSize];
 		System.arraycopy(bank.getSysex(), getStartOffset(patchNum), sysex, 0, sysex.length);
 		return new PatchDataImpl(sysex, patchDriver);

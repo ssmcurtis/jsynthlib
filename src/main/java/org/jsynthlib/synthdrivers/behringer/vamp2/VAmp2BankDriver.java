@@ -25,6 +25,7 @@ import java.io.UnsupportedEncodingException;
 
 import javax.swing.JOptionPane;
 
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverBank;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -111,7 +112,7 @@ public class VAmp2BankDriver extends SynthDriverBank {
 	 *            The location of the requested patch within the bank.
 	 * @return A reference to the requested patch.
 	 */
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		byte[] sysex = new byte[singleSize];
 		System.arraycopy(Constants.VAMP2_DUMP_HDR_BYTES, 0, sysex, 0, Constants.HDR_SIZE);
 		sysex[4] = (byte) getChannel();
@@ -207,7 +208,7 @@ public class VAmp2BankDriver extends SynthDriverBank {
 	 */
 	public void requestPatchDump(int bankNum, int patchNum) {
 		int channel = getChannel();
-		send(SYS_REQ.toSysexMessage(channel, new SysexHandler.NameValue("channel", channel)));
+		send(SYS_REQ.toSysexMessage(channel, new NameValue("channel", channel)));
 	}
 
 	/**
@@ -225,7 +226,7 @@ public class VAmp2BankDriver extends SynthDriverBank {
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		PatchDataImpl[] thisPatch = new PatchDataImpl[Constants.PATCHES_PER_BANK];
 		for (int progNbr = 0; progNbr < Constants.PATCHES_PER_BANK; progNbr++) {
-			thisPatch[progNbr] = getPatch(p, progNbr);
+			thisPatch[progNbr] = extractPatch(p, progNbr);
 		}
 		for (int progNbr = 0; progNbr < Constants.PATCHES_PER_BANK; progNbr++) {
 			int bankNbr = progNbr / 5;

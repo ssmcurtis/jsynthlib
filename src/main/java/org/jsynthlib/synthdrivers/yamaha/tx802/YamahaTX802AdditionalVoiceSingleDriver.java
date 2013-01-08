@@ -55,7 +55,7 @@ public class YamahaTX802AdditionalVoiceSingleDriver extends DX7FamilyAdditionalV
 		// keyswitch to voice mode
 		YamahaTX802SysexHelpers.chVoiceMode(this, (byte) (getChannel() + 0x10));
 		// 0-63 int voices
-		setPatchNum(patchNum + 32 * bankNum);
+		sendProgramChange(patchNum + 32 * bankNum);
 
 		send(sysexRequestDump.toSysexMessage(getChannel() + 0x20));
 	}

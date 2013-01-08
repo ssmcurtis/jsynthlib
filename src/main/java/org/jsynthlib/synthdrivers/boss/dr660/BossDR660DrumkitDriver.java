@@ -27,7 +27,7 @@ public class BossDR660DrumkitDriver extends SynthDriverPatchImpl {
 				80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95 };
 	}
 
-	public void setPatchNum(int patchNum) {
+	public void sendProgramChange(int patchNum) {
 		try {
 
 			send(0xC0 + (getChannel() - 1), xvrt[patchNum]);
@@ -67,7 +67,7 @@ public class BossDR660DrumkitDriver extends SynthDriverPatchImpl {
 	}
 
 	public void sendPatch(PatchDataImpl p) {
-		setPatchNum(0);
+		sendProgramChange(0);
 		sendPatchWorker(p);
 		try {
 			Thread.sleep(25);
@@ -79,14 +79,14 @@ public class BossDR660DrumkitDriver extends SynthDriverPatchImpl {
 
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		// setBankNum(bankNum);
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 		sendPatchWorker(p);
 		try {
 			Thread.sleep(25);
 		} catch (Exception e) {
 		}
 		;
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 
 	}
 

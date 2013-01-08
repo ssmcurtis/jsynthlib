@@ -42,6 +42,7 @@ public class DevDrvPatchSelector extends JDialog {
 	private int patchNum;
 	private int bankNum;
 	protected Patch p;
+
 	private byte[] sysexByteArray;
 	private String patchHeaderString;
 
@@ -70,7 +71,6 @@ public class DevDrvPatchSelector extends JDialog {
 		patchHeaderString = patch.getPatchHeader();
 	}
 
-	
 	public DevDrvPatchSelector(String patchHeaderString, String wintitle) {
 		super(PatchBayApplication.getInstance(), wintitle, true);
 		this.patchHeaderString = patchHeaderString;
@@ -96,14 +96,14 @@ public class DevDrvPatchSelector extends JDialog {
 		sysexByteArray = patch.getByteArray();
 		patchHeaderString = patch.getPatchHeader();
 		this.patchNum = patchnum;
-		this.bankNum = banknum; 
+		this.bankNum = banknum;
 	}
 
 	public void initDialog(String action, boolean hasBPComboBox) {
 		// now the panel
 		JPanel dialogPanel = new JPanel(new BorderLayout(5, 5));
 
-		myLabel = new JLabel( action, JLabel.CENTER);
+		myLabel = new JLabel(action, JLabel.CENTER);
 		dialogPanel.add(myLabel, BorderLayout.NORTH);
 
 		// =================================== Combo Panel ==================================
@@ -121,13 +121,14 @@ public class DevDrvPatchSelector extends JDialog {
 		int nDriver = 0;
 		for (int i = 0; i < AppConfig.deviceCount(); i++) {
 			Device device = AppConfig.getDevice(i);
-			
+
 			boolean newDevice = true;
-			
+
 			for (int j = 0, m = 0; j < device.driverCount(); j++) {
 				SynthDriver driver = device.getDriver(j);
-				
+
 				if (patchIsSupported(driver)) {
+					System.out.println(">>> Supported driver ... ");
 					if (newDevice) { // only one entry for each supporting device
 						deviceComboBox.addItem(device);
 						newDevice = false;
@@ -197,9 +198,8 @@ public class DevDrvPatchSelector extends JDialog {
 		if (nDriver > 0) {
 			setVisible(true);
 		} else {
-			JOptionPane.showMessageDialog(null,
-					"Oops, No driver was found, which support this patch! Nothing will happen", "Error during: "
-							+ action, JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Oops, No driver was found, which support this patch! Nothing will happen",
+					"Error during: " + action, JOptionPane.WARNING_MESSAGE);
 			dispose();
 		}
 	}
@@ -227,7 +227,7 @@ public class DevDrvPatchSelector extends JDialog {
 			int nDriver = 0;
 			for (int i = 0; i < device.driverCount(); i++) {
 				SynthDriver driver = device.getDriver(i);
-				
+
 				// TODO ssymCurtis - only single
 				if (patchIsSupported(driver)) {
 					driverComboBox.addItem(driver);
@@ -258,8 +258,7 @@ public class DevDrvPatchSelector extends JDialog {
 					for (int i = 0; i < bankNumbers.length; i++) {
 						bankComboBox.addItem(bankNumbers[i]);
 					}
-					bankComboBox.setSelectedIndex(Math.min(bankNum, 
-							bankComboBox.getItemCount() - 1));
+					bankComboBox.setSelectedIndex(Math.min(bankNum, bankComboBox.getItemCount() - 1));
 				}
 				if (driver.isSingleDriver()) {
 					// populate patch number combo box
@@ -285,14 +284,14 @@ public class DevDrvPatchSelector extends JDialog {
 	protected String[] getPatchNumbers(SynthDriverPatch driver) {
 		return driver.getPatchNumbers();
 	}
-	
-	protected boolean patchIsSupported(SynthDriver driver){
+
+	protected boolean patchIsSupported(SynthDriver driver) {
 		return (driver.isSingleDriver() || driver.isBankDriver()) && driver.supportsPatch(patchHeaderString, sysexByteArray);
 	}
+
 	public String getPatchHeaderString() {
 		return patchHeaderString;
 	}
-
 
 	public byte[] getSysexByteArray() {
 		return sysexByteArray;

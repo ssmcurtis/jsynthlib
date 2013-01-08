@@ -1,30 +1,26 @@
 package org.jsynthlib.synthdrivers.korg.microkorg;
 
+import java.lang.annotation.Annotation;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
 
-import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiMessage;
-import javax.sound.midi.Receiver;
-import javax.sound.midi.ShortMessage;
 
-import org.jsynthlib.advanced.midi.MidiNote;
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
-import org.jsynthlib.model.patch.Patch;
 import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.synthdrivers.waldorf.blofeld.Blofeld;
 import org.jsynthlib.tools.HexaUtil;
 import org.jsynthlib.tools.MidiUtil;
 
 /**
- * Single Voice Patch Driver for Kawai K4.
  * 
  * @version $Id$
  */
 public class MicroKorgSingleDriver extends SynthDriverPatchImpl {
 
 	private static final SysexHandler sysexHandler = new SysexHandler(MicroKorg.REQUEST_SINGLE);
+	private static final SysexHandler writeHandler = new SysexHandler(MicroKorg.WRITE_SINGLE);
 
 	public MicroKorgSingleDriver() {
 		super("Single", "ssmCurtis");
@@ -44,26 +40,35 @@ public class MicroKorgSingleDriver extends SynthDriverPatchImpl {
 	}
 
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
-		System.out.println(">>>> store patch");
+		System.out.println(">>>> store patch ... micor produces Bluescreen on Windows");
+		
+		// System.out.println(HexaUtil.hexDumpOneLine(p.getByteArray()));
 
-		// setPatchNum(patchNum);
-		// try {
-		// Thread.sleep(100);
-		// } catch (Exception e) {
-		// // nothing
-		// }
-		// p.getSysex()[MicroKorg.PATCH_AT.position()] = (byte) (patchNum);
-		//
-		// sendPatchWorker(p);
-		// try {
-		// Thread.sleep(100);
-		// } catch (Exception e) {
-		// }
-		// setPatchNum(patchNum);
+		sendPatch(p);
+		
+//		PatchDataImpl toSend = p.clone();
+//		ByteBuffer midi = MicroKorg.processDumpDataEncrypt(p.getSysex(), getChannel(), 3);
+
+		NameValue channel = new NameValue("midiChannel", MicroKorg.getMidiChannelByte(getChannel()));
+		NameValue patchNumber = new NameValue("patchNum", patchNum);
+		MidiMessage msg = writeHandler.toSysexMessage(getDeviceID(), channel, patchNumber);
+
+//		ByteBuffer patchAndStore = ByteBuffer.allocate(midi.limit() + msg.getMessage().length);
+//		patchAndStore.put(midi.array());
+//		patchAndStore.put(msg.getMessage());
+//
+		System.out.println(HexaUtil.hexDumpOneLine(msg.getMessage()));
+
+//		toSend.setSysex(patchAndStore.array());
+		MidiUtil.waitForSevenBitTechnology(2000);
+
+		send(msg);
+		
 	}
+
 	public void sendPatch(PatchDataImpl p) {
 		System.out.println(">>>> send patch");
-		
+
 		PatchDataImpl toSend = p.clone();
 		ByteBuffer midi = MicroKorg.processDumpDataEncrypt(p.getSysex(), getChannel(), 3);
 		toSend.setSysex(midi.array());
@@ -72,9 +77,9 @@ public class MicroKorgSingleDriver extends SynthDriverPatchImpl {
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {
-		
+
 		MidiUtil.changeProgram(this, patchNum);
-		
+
 		MidiMessage msg = sysexHandler.toSysexMessage(getChannel());
 		send(msg);
 	}
@@ -107,10 +112,14 @@ public class MicroKorgSingleDriver extends SynthDriverPatchImpl {
 		return (compareString.toString().equalsIgnoreCase(patchString.substring(0, sysexID.length())));
 	}
 
-	
-	
+	@Override
 	public int getHeaderSize() {
 		return MicroKorg.HEADER_SIZE;
+	}
+
+	@Override
+	public boolean isUseableForLibrary() {
+		return true;
 	}
 
 }

@@ -9,6 +9,7 @@ import javax.sound.midi.MidiMessage;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Receiver;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import org.jsynthlib.menu.preferences.AppConfig;
@@ -290,7 +291,15 @@ public abstract class Device /* implements Serializable, Storable */{
 			try {
 				rcvr = MidiUtil.getReceiver(port);
 			} catch (MidiUnavailableException e) {
+				
 				ErrorMsgUtil.reportStatus(e);
+				int answer = JOptionPane.showConfirmDialog(null, "At last one device's MIDI port is unavailable.\n"
+						+ "You might verify your setup and restart the application.\n" + "Press CANCEL to quit or OK to continue.",
+						"Unavailable MIDI ports", JOptionPane.OK_CANCEL_OPTION);
+				if (answer == JOptionPane.CANCEL_OPTION) {
+					System.exit(0);
+				}
+				
 			}
 		}
 		prefs.putInt("port", port);
@@ -315,8 +324,9 @@ public abstract class Device /* implements Serializable, Storable */{
 	 * send MidiMessage to MIDI output. Called by Driver.send().
 	 */
 	public final void send(MidiMessage message) {
-		if (rcvr == null)
+		if (rcvr == null) {
 			return;
+		}
 		try {
 			if (midiOutBufSize == 0 && AppConfig.getMidiOutBufSize() == 0)
 				MidiUtil.send(rcvr, message);

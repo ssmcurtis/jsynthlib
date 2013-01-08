@@ -1,6 +1,7 @@
 package org.jsynthlib.synthdrivers.kawai.k4;
 
 import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -47,7 +48,7 @@ public class KawaiK4SingleDriver extends SynthDriverPatchImpl {
 
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		setBankNum(bankNum);
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 		try {
 			Thread.sleep(100);
 		} catch (Exception e) {
@@ -60,7 +61,7 @@ public class KawaiK4SingleDriver extends SynthDriverPatchImpl {
 			Thread.sleep(100);
 		} catch (Exception e) {
 		}
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 	}
 
 	public void sendPatch(PatchDataImpl p) {
@@ -101,7 +102,8 @@ public class KawaiK4SingleDriver extends SynthDriverPatchImpl {
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {
-		send(SYS_REQ.toSysexMessage(getChannel(), new SysexHandler.NameValue("bankNum", bankNum << 1),
-				new SysexHandler.NameValue("patchNum", patchNum)));
+		send(SYS_REQ.toSysexMessage(getChannel(), new NameValue("bankNum", bankNum << 1),
+				new NameValue("patchNum", patchNum)));
 	}
+	
 }

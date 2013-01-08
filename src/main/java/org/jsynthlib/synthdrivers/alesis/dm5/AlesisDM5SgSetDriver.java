@@ -22,6 +22,7 @@
 package org.jsynthlib.synthdrivers.alesis.dm5;
 
 import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -128,7 +129,7 @@ public class AlesisDM5SgSetDriver extends SynthDriverPatchImpl {
 	 * other devices do. Instead it embeds the program number in the patch. This is done by the overridden storePatch
 	 * method. This method is overridden by a null method.
 	 */
-	protected void setPatchNum(int patchNum) {
+	protected void sendProgramChange(int patchNum) {
 	}
 
 	/**
@@ -167,8 +168,8 @@ public class AlesisDM5SgSetDriver extends SynthDriverPatchImpl {
 	 */
 	public void requestPatchDump(int bankNum, int patchNum) {
 		patchNum += 96;
-		send(SYS_REQ.toSysexMessage(getChannel(), new SysexHandler.NameValue("channel", getChannel()),
-				new SysexHandler.NameValue("patchNum", patchNum)));
+		send(SYS_REQ.toSysexMessage(getChannel(), new NameValue("channel", getChannel()),
+				new NameValue("patchNum", patchNum)));
 	}
 
 	/**

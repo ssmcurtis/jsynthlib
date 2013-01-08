@@ -297,7 +297,7 @@ public class DX7FamilyAdditionalVoiceBankDriver extends SynthDriverBank {
 		calculateChecksum(bank);
 	}
 
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) // Gets a patch from the bank, converting it as needed
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) // Gets a patch from the bank, converting it as needed
 	{
 		try {
 			byte[] sysex = new byte[singleSize];

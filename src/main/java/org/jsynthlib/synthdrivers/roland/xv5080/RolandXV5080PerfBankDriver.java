@@ -97,7 +97,7 @@ public class RolandXV5080PerfBankDriver extends SynthDriverBank {
 	// ----------------------------------------------------------------------------------------------------------------------
 
 	public void setPatchName(PatchDataImpl bank, int patchNum, String name) {
-		PatchDataImpl p = getPatch(bank, patchNum);
+		PatchDataImpl p = extractPatch(bank, patchNum);
 		p.setName(name);
 		p.calculateChecksum();
 		putPatch(bank, p, patchNum);
@@ -107,7 +107,7 @@ public class RolandXV5080PerfBankDriver extends SynthDriverBank {
 	// RolandXV5080PerfBankDriver->getPatch
 	// ----------------------------------------------------------------------------------------------------------------------
 
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		try {
 			byte[] sysex = new byte[RolandXV5080PerfDriver.PATCH_SIZE];
 			System.arraycopy(((PatchDataImpl) bank).getSysex(), RolandXV5080PerfDriver.PATCH_SIZE * patchNum, sysex, 0,

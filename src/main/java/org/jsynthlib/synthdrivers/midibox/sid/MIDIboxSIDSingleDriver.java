@@ -30,6 +30,7 @@ import javax.swing.JOptionPane;
 
 import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -75,8 +76,8 @@ public class MIDIboxSIDSingleDriver extends SynthDriverPatchImpl {
 					+ " driver does not support patch getting.\n\n" + "Please start the patch dump manually...",
 					"Get Patch", JOptionPane.WARNING_MESSAGE);
 		} else
-			send(sysexRequestDump.toSysexMessage(getDeviceID(), new SysexHandler.NameValue("bankNum", bankNum),
-					new SysexHandler.NameValue("patchNum", patchNum)));
+			send(sysexRequestDump.toSysexMessage(getDeviceID(), new NameValue("bankNum", bankNum),
+					new NameValue("patchNum", patchNum)));
 	}
 
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
@@ -88,7 +89,7 @@ public class MIDIboxSIDSingleDriver extends SynthDriverPatchImpl {
 			Thread.sleep(100);
 		} catch (Exception e) {
 		}
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 	}
 
 	public void sendPatch(PatchDataImpl p) {

@@ -25,6 +25,7 @@ import javax.swing.JOptionPane;
 
 import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -63,7 +64,7 @@ public class TCElectronicGMajorSingleDriver extends SynthDriverPatchImpl {
 			return;
 		}
 
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 		try {
 			Thread.sleep(100);
 		} catch (Exception e) {
@@ -75,7 +76,7 @@ public class TCElectronicGMajorSingleDriver extends SynthDriverPatchImpl {
 			Thread.sleep(100);
 		} catch (Exception e) {
 		}
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 	}
 
 	public void sendPatch(PatchDataImpl p) {
@@ -104,8 +105,8 @@ public class TCElectronicGMajorSingleDriver extends SynthDriverPatchImpl {
 	public void requestPatchDump(int bankNum, int patchNum) {
 		System.out.println("BANKNUM: " + bankNum + "PATCHNUM: " + patchNum);
 		send(SYS_REQ.toSysexMessage(getChannel(),
-				new SysexHandler.NameValue("bankNum", TCElectronicGMajorUtil.calcBankNum(bankNum, patchNum)),
-				new SysexHandler.NameValue("patchNum", TCElectronicGMajorUtil.calcPatchNum(bankNum, patchNum))));
+				new NameValue("bankNum", TCElectronicGMajorUtil.calcBankNum(bankNum, patchNum)),
+				new NameValue("patchNum", TCElectronicGMajorUtil.calcPatchNum(bankNum, patchNum))));
 	}
 
 }

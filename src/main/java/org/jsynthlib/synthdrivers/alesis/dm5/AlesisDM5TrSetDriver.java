@@ -22,6 +22,7 @@
 package org.jsynthlib.synthdrivers.alesis.dm5;
 
 import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -77,7 +78,7 @@ public class AlesisDM5TrSetDriver extends SynthDriverPatchImpl {
 	 * Send Program Change MIDI message. The Alesis Trigger Setup driver does not utilize program change messages. This
 	 * method is overriden with a null method.
 	 */
-	protected void setPatchNum(int patchNum) {
+	protected void sendProgramChange(int patchNum) {
 	}
 
 	/**
@@ -104,7 +105,7 @@ public class AlesisDM5TrSetDriver extends SynthDriverPatchImpl {
 	 * Requests a dump of the system info message. This patch does not utilize bank select or program changes.
 	 */
 	public void requestPatchDump(int bankNum, int patchNum) {
-		send(SYS_REQ.toSysexMessage(getChannel(), new SysexHandler.NameValue("channel", getChannel())));
+		send(SYS_REQ.toSysexMessage(getChannel(), new NameValue("channel", getChannel())));
 	}
 
 	/**

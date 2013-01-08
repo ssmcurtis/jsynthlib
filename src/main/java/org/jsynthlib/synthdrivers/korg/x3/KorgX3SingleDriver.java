@@ -62,7 +62,7 @@ public class KorgX3SingleDriver extends SynthDriverPatchImpl {
 	 * @param patchNum
 	 *            Patch number
 	 */
-	public void setPatchNum(int patchNum) {
+	public void sendProgramChange(int patchNum) {
 		try {
 			// go to PROGRAM mode
 			programMode[2] = (byte) (0x30 + (getChannel() - 1));
@@ -128,7 +128,7 @@ public class KorgX3SingleDriver extends SynthDriverPatchImpl {
 	 */
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		setBankNum(bankNum);
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 		try {
 			Thread.sleep(100);
 		} catch (Exception e) {

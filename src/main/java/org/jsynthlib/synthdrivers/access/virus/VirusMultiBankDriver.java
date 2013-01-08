@@ -1,6 +1,7 @@
 package org.jsynthlib.synthdrivers.access.virus;
 
 import org.jsynthlib.PatchBayApplication;
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverBank;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -53,7 +54,7 @@ public class VirusMultiBankDriver extends SynthDriverBank {
 	}
 
 	@Override
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		byte sysex[] = new byte[singleSize];
 		System.arraycopy(((PatchDataImpl) bank).getSysex(), patchNum * singleSize, sysex, 0, singleSize);
 		return new PatchDataImpl(sysex, getDevice());
@@ -61,7 +62,7 @@ public class VirusMultiBankDriver extends SynthDriverBank {
 
 	@Override
 	public String getPatchName(PatchDataImpl p, int patchNum) {
-		PatchDataImpl pgm = (PatchDataImpl) getPatch(p, patchNum);
+		PatchDataImpl pgm = (PatchDataImpl) extractPatch(p, patchNum);
 		try {
 			char c[] = new char[patchNameSize];
 			for (int i = 0; i < patchNameSize; i++)
@@ -74,7 +75,7 @@ public class VirusMultiBankDriver extends SynthDriverBank {
 
 	@Override
 	public void setPatchName(PatchDataImpl p, int patchNum, String name) {
-		PatchDataImpl pgm = (PatchDataImpl) getPatch(p, patchNum);
+		PatchDataImpl pgm = (PatchDataImpl) extractPatch(p, patchNum);
 		if (name.length() < patchNameSize + 4) {
 			name = name + "                ";
 		}
@@ -99,7 +100,7 @@ public class VirusMultiBankDriver extends SynthDriverBank {
 
 	@Override
 	public void requestPatchDump(int bankNum, int patchNum) {
-		send(sysexRequestDump.toSysexMessage(getDeviceID(), new SysexHandler.NameValue("bankNum", 1)));
+		send(sysexRequestDump.toSysexMessage(getDeviceID(), new NameValue("bankNum", 1)));
 	}
 
 	private void sendPatchWorker(PatchDataImpl p, int bankNum) {

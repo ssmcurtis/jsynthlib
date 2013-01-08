@@ -2,12 +2,13 @@ package org.jsynthlib.synthdrivers.dsi.evolver;
 
 import javax.sound.midi.MidiMessage;
 
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
-import org.jsynthlib.model.driver.SysexHandler.NameValue;
 import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.synthdrivers.korg.microkorg.MicroKorg;
 import org.jsynthlib.tools.HexaUtil;
+import org.jsynthlib.tools.MidiUtil;
 
 /**
  * Single Voice Patch Driver for Kawai K4.
@@ -41,24 +42,12 @@ public class EvolverSingleDriver extends SynthDriverPatchImpl {
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		System.out.println(">>>> store patch");
 
-		setBankNum(bankNum);
-		setPatchNum(patchNum);
-		try {
-			Thread.sleep(100);
-		} catch (Exception e) {
-			// nothing
-		}
-		p.getSysex()[Evolver.BANK_AT.number()] = (byte) (bankNum << 1);
-		p.getSysex()[Evolver.PATCH_AT.number()] = (byte) (patchNum);
-
-		sendPatchWorker(p);
-
-		try {
-			Thread.sleep(100);
-		} catch (Exception e) {
-		}
+		PatchDataImpl patchClone = (PatchDataImpl) p.clone();
+		patchClone.getSysex()[Evolver.BANK_AT.number()] = HexaUtil.intToByte(bankNum); 
+		patchClone.getSysex()[Evolver.PATCH_AT.number()] = HexaUtil.intToByte(patchNum);
 		
-		setPatchNum(patchNum);
+		super.sendPatch(patchClone);
+		MidiUtil.waitForSevenBitTechnology();
 	}
 
 	public void sendPatch(PatchDataImpl p) {
@@ -80,8 +69,8 @@ public class EvolverSingleDriver extends SynthDriverPatchImpl {
 		this.bankNum = bankNum;
 		this.patchNum = patchNum;
 
-		NameValue bank = new SysexHandler.NameValue("bankNum", bankNum);
-		NameValue patch = new SysexHandler.NameValue("patchNum", patchNum);
+		NameValue bank = new NameValue("bankNum", bankNum);
+		NameValue patch = new NameValue("patchNum", patchNum);
 		MidiMessage msg = SYS_REQ.toSysexMessage(getChannel(), bank, patch);
 		System.out.println(">>>" + HexaUtil.hexDumpOneLine(msg.getMessage(), 0, -1, 100));
 		send(msg);
@@ -89,6 +78,11 @@ public class EvolverSingleDriver extends SynthDriverPatchImpl {
 	
 	public int getHeaderSize() {
 		return Evolver.HEADER_SIZE;
+	}
+
+	@Override
+	public boolean isUseableForLibrary() {
+		return true;
 	}
 
 }

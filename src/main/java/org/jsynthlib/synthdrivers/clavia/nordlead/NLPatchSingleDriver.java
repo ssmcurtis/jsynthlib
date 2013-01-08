@@ -2,6 +2,7 @@
 // $Id$
 package org.jsynthlib.synthdrivers.clavia.nordlead;
 
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -82,9 +83,9 @@ public class NLPatchSingleDriver extends SynthDriverPatchImpl {
 	// Sends a patch to a set location in the user bank
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		setBankNum(bankNum); // must set bank - sysex patch dump always stored in current bank
-		setPatchNum(patchNum); // must send program change to make bank change take effect
+		sendProgramChange(patchNum); // must send program change to make bank change take effect
 		sendPatch((PatchDataImpl) p, bankNum + 1, patchNum);
-		setPatchNum(patchNum); // send another program change to get new sound in edit buffer
+		sendProgramChange(patchNum); // send another program change to get new sound in edit buffer
 	}
 
 	public void playPatch(PatchDataImpl p) {
@@ -111,6 +112,6 @@ public class NLPatchSingleDriver extends SynthDriverPatchImpl {
 
 	public void requestPatchDump(int bankNum, int patchNum) {
 		send(sysexRequestDump.toSysexMessage(((NordLeadDevice) getDevice()).getGlobalChannel(),
-				new SysexHandler.NameValue("bankNum", bankNum + 11), new SysexHandler.NameValue("patchNum", patchNum)));
+				new NameValue("bankNum", bankNum + 11), new NameValue("patchNum", patchNum)));
 	}
 }

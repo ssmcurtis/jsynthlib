@@ -122,7 +122,7 @@ class YamahaFS1RPerformanceEditor extends PatchEditorFrame {
 					// voice currently in editing
 					oPatch = (PatchDataImpl) mVoicesInEdit[oPart].getPatch();
 				} else {
-					oPatch = YamahaFS1RBankDriver.getInstance().getPatch(
+					oPatch = YamahaFS1RBankDriver.getInstance().extractPatch(
 							((YamahaFS1RBankEditor) bankFrame).getBankPatch(), 128 + mVoiceSelector[oPart].getValue());
 				}
 				// System.out.println("SEND VOICE "+oPart+" "+mVoiceSelector[oPart].getValue());
@@ -296,7 +296,7 @@ class YamahaFS1RPerformanceEditor extends PatchEditorFrame {
 					if (mBankSelector[aPart - 1].getValue() == 1) {
 						// envoi sysex de la voice interne selectionnee
 						JComboBox oCB = (JComboBox) e.getSource();
-						PatchDataImpl oPatch = YamahaFS1RBankDriver.getInstance().getPatch(
+						PatchDataImpl oPatch = YamahaFS1RBankDriver.getInstance().extractPatch(
 								((YamahaFS1RBankEditor) bankFrame).getBankPatch(), 128 + oCB.getSelectedIndex());
 						YamahaFS1RVoiceDriver.getInstance().sendPatch(oPatch, aPart);
 					}

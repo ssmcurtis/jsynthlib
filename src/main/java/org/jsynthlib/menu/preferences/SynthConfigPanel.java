@@ -79,11 +79,13 @@ public class SynthConfigPanel extends ConfigPanel {
 
 		column = table.getColumnModel().getColumn(MIDI_IN);
 		column.setPreferredWidth(200);
+
 		JComboBox<String> comboBox = new JComboBox<String>(MidiUtil.getInputNames());
 		column.setCellEditor(new DefaultCellEditor(comboBox));
 
 		column = table.getColumnModel().getColumn(MIDI_OUT);
 		column.setPreferredWidth(300);
+
 		comboBox = new JComboBox<String>(MidiUtil.getOutputNames());
 		column.setCellEditor(new DefaultCellEditor(comboBox));
 
@@ -106,18 +108,33 @@ public class SynthConfigPanel extends ConfigPanel {
 		});
 		++c.gridy;
 		p.add(cbxMMI, c);
+		
+		JPanel infoPanel = new JPanel();
 
 		// create buttons
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+		infoPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
+		JLabel studioConfigTitle = new JLabel("Use parameter -S <name> and restart for other studio setup: ");
+		infoPanel.add(studioConfigTitle);
 		JComboBox<String> configs = new JComboBox<String>(AppConfig.getAvailableStudioSetups());
-		configs.setToolTipText("Other studio setups available by parameter -S <name>");
-		buttonPanel.add(configs);
-		
-		JLabel studioConfigTitle = new JLabel("Current studio setup: " + JSynthLib.getStudio());
-		buttonPanel.add(studioConfigTitle);
+		configs.setToolTipText("All studio setups available by parameter -S <name>");
+		int index = 0;
 
+		// INFO Q&D
+		for (String s : AppConfig.getAvailableStudioSetups()) {
+			
+			System.out.println(s + " " + JSynthLib.getStudio());
+			
+			if (s.equals(JSynthLib.getStudio())) {
+				configs.setSelectedIndex(index);
+				break;
+			}
+			index++;
+		}
+
+		infoPanel.add(configs);
+
+		JPanel buttonPanel = new JPanel();
 		JButton add = new JButton("Add Device...");
 		add.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -141,6 +158,8 @@ public class SynthConfigPanel extends ConfigPanel {
 		});
 		buttonPanel.add(playButton);
 
+		++c.gridy;
+		p.add(infoPanel, c);
 		++c.gridy;
 		p.add(buttonPanel, c);
 

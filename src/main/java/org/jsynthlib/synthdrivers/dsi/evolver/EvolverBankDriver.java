@@ -84,7 +84,7 @@ public class EvolverBankDriver extends SynthDriverBank {
 //		calculateChecksum(bank);
 	}
 
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		byte sysex[] = new byte[singleSize];
 		System.arraycopy(((PatchDataImpl) bank).getSysex(), patchNum * singleSize, sysex, 0, singleSize);
 		return new PatchDataImpl(sysex, getDevice());

@@ -125,7 +125,7 @@ public class YamahaFS1RVoiceDriver extends SynthDriverPatchImpl {
 		updateSysexRequest();
 	}
 
-	public void setPatchNum(int patchNum) {
+	public void sendProgramChange(int patchNum) {
 		mCurrentPatchNum = patchNum;
 		if (mCurrentBankNum == BANK_NUM_PERFORMANCE) {
 			if (mCurrentPatchNum > 3) {

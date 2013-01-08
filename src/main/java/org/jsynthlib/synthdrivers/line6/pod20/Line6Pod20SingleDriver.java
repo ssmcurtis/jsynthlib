@@ -27,6 +27,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -181,7 +182,7 @@ public class Line6Pod20SingleDriver extends SynthDriverPatchImpl {
 	 */
 	public void requestPatchDump(int bankNum, int patchNum) {
 		int progNum = bankNum * 4 + patchNum;
-		send(SYS_REQ.toSysexMessage(getChannel(), new SysexHandler.NameValue("progNum", progNum)));
+		send(SYS_REQ.toSysexMessage(getChannel(), new NameValue("progNum", progNum)));
 	}
 
 	/*

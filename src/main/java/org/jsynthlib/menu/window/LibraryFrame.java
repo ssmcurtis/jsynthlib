@@ -46,21 +46,21 @@ public class LibraryFrame extends AbstractLibraryFrame {
 	}
 
 	public void selectClear() {
-		for(Patch p : myModel.getList()){
+		for (Patch p : myModel.getList()) {
 			p.setSelected(false);
 		}
 		setChanged();
 	}
-	
+
 	public void selectDuplicates() {
 		Collections.sort(myModel.getList(), new SysexSort());
 		int numDeleted = 0;
-		
+
 		Iterator<Patch> it = myModel.getList().iterator();
-		
-		Patch stayPatch = it.next(); 
+
+		Patch stayPatch = it.next();
 		byte[] stay = stayPatch.getByteArray();
-		
+
 		while (it.hasNext()) {
 			Patch selectedPatch = it.next();
 			byte[] delete = selectedPatch.getByteArray();
@@ -68,17 +68,16 @@ public class LibraryFrame extends AbstractLibraryFrame {
 				// TODO ssmCurtis - changed from delte to selected
 				// deletePatch.setComment(deletePatch.getComment() + " #same as " + stayPatch.getComment()) ;
 				// it.remove();
-				
+
 				selectedPatch.setSelected(true);
-				
+
 				numDeleted++;
 			} else {
 				stay = delete;
 				stayPatch = selectedPatch;
 			}
 		}
-		
-		
+
 		JOptionPane.showMessageDialog(null, numDeleted + " PatchesAndScenes were selected", "Delete Duplicates",
 				JOptionPane.INFORMATION_MESSAGE);
 		setChanged();
@@ -87,7 +86,8 @@ public class LibraryFrame extends AbstractLibraryFrame {
 	/** change state of Actions based on the state of the table. */
 	void enableActions() {
 		// one or more patches are included.
-		Actions.setEnabled(table.getRowCount() > 0, Actions.EN_PLAY_ALL | Actions.EN_SAVE | Actions.EN_SAVE_AS | Actions.EN_SEARCH);
+		Actions.setEnabled(table.getRowCount() > 0, Actions.EN_PLAY_ALL | Actions.EN_SAVE | Actions.EN_SAVE_AS | Actions.EN_SEARCH
+				| Actions.EN_STORE_LIBRARY);
 
 		// // more than one patches are included.
 		Actions.setEnabled(table.getRowCount() > 1, Actions.EN_SELECT_DUPLICATE | Actions.EN_SELECT_BYFILTER);

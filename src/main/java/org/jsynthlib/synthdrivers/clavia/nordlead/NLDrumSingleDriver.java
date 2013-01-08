@@ -2,6 +2,7 @@
 // $Id$
 package org.jsynthlib.synthdrivers.clavia.nordlead;
 
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -194,9 +195,9 @@ public class NLDrumSingleDriver extends SynthDriverPatchImpl {
 	// Sends a patch to a set location in the user bank
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		setBankNum(bankNum); // must set bank - sysex patch dump always stored in current bank
-		setPatchNum(patchNum); // must send program change to make bank change take effect
+		sendProgramChange(patchNum); // must send program change to make bank change take effect
 		sendPatch((PatchDataImpl) p, bankNum + 1, patchNum + 99);
-		setPatchNum(patchNum); // send another program change to get new sound in edit buffer
+		sendProgramChange(patchNum); // send another program change to get new sound in edit buffer
 	}
 
 	public void playPatch(PatchDataImpl p) {
@@ -223,8 +224,8 @@ public class NLDrumSingleDriver extends SynthDriverPatchImpl {
 
 	public void requestPatchDump(int bankNum, int patchNum) {
 		setBankNum(bankNum); // kludge: drum dump request sends 1063 bytes of garbage -
-		setPatchNum(patchNum + 99); // select drum sound, then get data from edit buffer
+		sendProgramChange(patchNum + 99); // select drum sound, then get data from edit buffer
 		send(sysexRequestDump.toSysexMessage(((NordLeadDevice) getDevice()).getGlobalChannel(),
-				new SysexHandler.NameValue("bankNum", 10), new SysexHandler.NameValue("patchNum", 0)));
+				new NameValue("bankNum", 10), new NameValue("patchNum", 0)));
 	}
 }

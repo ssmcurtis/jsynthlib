@@ -28,6 +28,7 @@
 package org.jsynthlib.synthdrivers.roland.mt32;
 
 import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -67,7 +68,7 @@ public class RolandMT32TimbreMemoryDriver extends SynthDriverPatchImpl {
 	 */
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		setBankNum(bankNum); // Control change
-		setPatchNum(patchNum); // Program change
+		sendProgramChange(patchNum); // Program change
 		try {
 			Thread.sleep(100);
 		} catch (Exception e) {
@@ -90,7 +91,7 @@ public class RolandMT32TimbreMemoryDriver extends SynthDriverPatchImpl {
 		} catch (Exception e) {
 			ErrorMsgUtil.reportStatus(e);
 		}
-		setPatchNum(patchNum); // Program change
+		sendProgramChange(patchNum); // Program change
 	}
 
 	/*
@@ -147,10 +148,10 @@ public class RolandMT32TimbreMemoryDriver extends SynthDriverPatchImpl {
 		int timSizeM = 0x01;
 		int timSizeL = 0x76;
 		int checkSum = (0 - (timAddrH + timAddrM + timAddrL + timSizeH + timSizeM + timSizeL)) & 0x7F;
-		SysexHandler.NameValue nVs[] = new SysexHandler.NameValue[3];
-		nVs[0] = new SysexHandler.NameValue("partAddrM", timAddrM);
-		nVs[1] = new SysexHandler.NameValue("partAddrL", timAddrL);
-		nVs[2] = new SysexHandler.NameValue("checkSum", checkSum);
+		NameValue nVs[] = new NameValue[3];
+		nVs[0] = new NameValue("partAddrM", timAddrM);
+		nVs[1] = new NameValue("partAddrL", timAddrL);
+		nVs[2] = new NameValue("checkSum", checkSum);
 
 		send(SYS_REQ.toSysexMessage(getChannel(), nVs));
 	}

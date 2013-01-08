@@ -25,6 +25,7 @@ import java.io.UnsupportedEncodingException;
 
 import javax.swing.JOptionPane;
 
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverBank;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -136,7 +137,7 @@ public class Line6BassPodBankDriver extends SynthDriverBank {
 	 * within the bank is given by patchNum, where patchNum is in the range 0 through 35. The patch is extracted from
 	 * the bank and a valid Line6 program patch header is appended at the beginning and 0xF7 is appended at the end.
 	 */
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		byte[] sysex = new byte[Constants.SIGL_SIZE + Constants.PDMP_HDR_SIZE + 1];
 		System.arraycopy(Constants.SIGL_DUMP_HDR_BYTES, 0, sysex, 0, Constants.PDMP_HDR_SIZE);
 		sysex[7] = (byte) patchNum;
@@ -181,7 +182,7 @@ public class Line6BassPodBankDriver extends SynthDriverBank {
 	 * Requests a dump of a Line6 bank consisting of 36 patches. The bankNum and patchNum parameters are ignored.
 	 */
 	public void requestPatchDump(int bankNum, int patchNum) {
-		send(SYS_REQ.toSysexMessage(getChannel(), new SysexHandler.NameValue("bankNum", bankNum << 1)));
+		send(SYS_REQ.toSysexMessage(getChannel(), new NameValue("bankNum", bankNum << 1)));
 	}
 
 	/**
@@ -191,7 +192,7 @@ public class Line6BassPodBankDriver extends SynthDriverBank {
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		PatchDataImpl[] thisPatch = new PatchDataImpl[Constants.PATCHES_PER_BANK];
 		for (int progNbr = 0; progNbr < Constants.PATCHES_PER_BANK; progNbr++) {
-			thisPatch[progNbr] = getPatch(p, progNbr);
+			thisPatch[progNbr] = extractPatch(p, progNbr);
 		}
 		for (int progNbr = 0; progNbr < Constants.PATCHES_PER_BANK; progNbr++) {
 			int bankNbr = progNbr / 4;

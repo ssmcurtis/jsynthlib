@@ -43,12 +43,20 @@ public enum MicroKorg {
 	public static final String VENDOR = "Korg";
 	public static final String DEVICE = "microKorg";
 	public static final String DEVICE_SYSEX_ID = "F0423*58";
-	public static final String REQUEST_SINGLE = "F0 42 ## 58 10 F7";
-	public static final String REQUEST_BANK = "F0 42 ## 58 1C F7";
+
+	public static final String REQUEST_SINGLE = "F0 42 *midiChannel* 58 10 F7";
+	public static final String REQUEST_BANK = "F0 42 *midiChannel* 58 1C F7";
+
+	public static final String PROGRAM_DATA_DUMP_HEADER_STRING = "F0 42 *midiChannel* 58 4C";
+	@Deprecated
+	public static final String WRITE_SINGLE = "F0 42 *midiChannel* 58 11 00 *patchNum* F7";
+	public static final byte[] PROGRAM_DATA_DUMP_HEADER = new byte[] { (byte) 0xF0, 0x42, 0x30, 0x58, 0x4C };
 
 	public static final int TEMPLATE_ADD_TO_BANK_BYTE = 0x30;
 
 	public static final String[] BANK_NAMES = new String[] { "A" };
+
+	public static String defaultPatch = "526F79616C205061642020200206000040003C004650021E2D00144A0A470078001063030000FF6000404240400100732600004040007F7301010F0A514A4A7F40004A40466E4666235A6564221C0E02330E7547634F4736103843F1010140404040404040404040404040404040000140404040404040404040404040404040000140404040404040404040404040404040FF700A404240450000000000004040007F0000017F0A4040407F4000404000407F0000407F00020A0302460C024003404240434043F1010140404040404040404040404040404040000140404040404040404040404040404040000140404040404040404040404040404040";
 
 	MicroKorg(int position) {
 		this.position = position;
@@ -69,8 +77,9 @@ public enum MicroKorg {
 
 	// TODO ADDRESS MS2000 issues - last bytes ...
 	public static boolean bankPatchSizeIsSupported(int size) {
-		System.out.println(">>> Bank size " + size);
+		// System.out.println(">>> Bank size " + size);
 		switch (size) {
+		case PROGRAM_COMPRESSED_SYSEX:
 		case BANK_SIZE_MIDI_SYSEX:
 		case BANK_SIZE_COMPRESSED_SYSEX:
 		case BANK_ALL_SIZE_MIDI_SYSEX:
@@ -86,6 +95,10 @@ public enum MicroKorg {
 		System.arraycopy(names, 0, retarr, 0, PATCH_COUNT_IN_BANK);
 
 		return retarr;
+	}
+
+	public static byte getMidiChannelByte(int channel) {
+		return (byte) (channel - 1 + TEMPLATE_ADD_TO_BANK_BYTE);
 	}
 
 	public static ByteBuffer processDumpDataDecrypt(byte[] source, int dummyBytesToAdd, int coreProgrammSize) {

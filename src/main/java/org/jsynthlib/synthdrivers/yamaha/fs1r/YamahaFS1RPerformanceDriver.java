@@ -112,7 +112,7 @@ public class YamahaFS1RPerformanceDriver extends SynthDriverPatchImpl {
 		updateSysexRequest();
 	}
 
-	public void setPatchNum(int patchNum) {
+	public void sendProgramChange(int patchNum) {
 		// il ne faut pas envoyer de prog change
 	}
 

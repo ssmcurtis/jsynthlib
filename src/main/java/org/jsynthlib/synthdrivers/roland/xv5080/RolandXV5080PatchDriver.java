@@ -82,7 +82,7 @@ public class RolandXV5080PatchDriver extends SynthDriverPatchImpl {
 		} catch (Exception e) {
 		}
 		setBankNum(bankNum);
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 	}
 
 	// ----------------------------------------------------------------------------------------------------------------------

@@ -28,6 +28,7 @@
 package org.jsynthlib.synthdrivers.roland.mt32;
 
 import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -159,6 +160,6 @@ public class RolandMT32RhythmSetupTempDriver extends SynthDriverPatchImpl {
 		// The message format here is Request RQ1
 		// All but the checksum is already set up in SYS_REQ
 
-		send(SYS_REQ.toSysexMessage(getChannel(), new SysexHandler.NameValue("checkSum", 0x68)));
+		send(SYS_REQ.toSysexMessage(getChannel(), new NameValue("checkSum", 0x68)));
 	}
 }

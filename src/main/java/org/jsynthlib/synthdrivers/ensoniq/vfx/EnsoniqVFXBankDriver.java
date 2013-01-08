@@ -120,7 +120,7 @@ public class EnsoniqVFXBankDriver extends SynthDriverBank {
 	 *            number of patch in the bank
 	 * @return The patch
 	 */
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		try {
 			return EnsoniqVFXSingleDriver.newPatch(((PatchDataImpl) bank).getSysex(), getPatchStart(patchNum));
 		} catch (Exception e) {

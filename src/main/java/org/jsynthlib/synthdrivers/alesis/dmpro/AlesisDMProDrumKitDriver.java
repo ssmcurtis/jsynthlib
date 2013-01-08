@@ -54,10 +54,10 @@ public class AlesisDMProDrumKitDriver extends SynthDriverPatchImpl {
 
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		setBankNum(bankNum);
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 		((PatchDataImpl) p).getSysex()[6] = (byte) patchNum;
 		sendPatchWorker(p);
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 	}
 
 	public void sendPatch(PatchDataImpl p) {

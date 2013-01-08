@@ -100,7 +100,7 @@ public class DX7FamilyFractionalScalingBankDriver extends SynthDriverBank {
 				getPatchStart(patchNum) + 12 + 492);
 	}
 
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) // Gets a patch from the bank, converting it as needed
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) // Gets a patch from the bank, converting it as needed
 	{
 		try {
 			byte[] sysex = new byte[singleSize];

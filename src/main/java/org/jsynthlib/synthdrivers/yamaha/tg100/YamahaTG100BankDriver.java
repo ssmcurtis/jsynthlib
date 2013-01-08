@@ -139,7 +139,7 @@ public class YamahaTG100BankDriver extends SynthDriverBank {
 	/**
 	 * Gets a patch from the bank, converting it as needed
 	 */
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		try {
 			byte[] sysex = new byte[this.singleSize];
 

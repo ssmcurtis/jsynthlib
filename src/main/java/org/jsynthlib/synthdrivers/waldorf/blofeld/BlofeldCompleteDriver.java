@@ -86,7 +86,7 @@ public class BlofeldCompleteDriver extends SynthDriverBank {
 	}
 
 	@Override
-	public PatchDataImpl getPatch(PatchDataImpl bankPatch, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bankPatch, int patchNum) {
 		System.out.println(">>>> Get patch " + getClass().getSimpleName() + " Patch: " + patchNum);
 
 		byte[] sysex = new byte[Blofeld.PROGRAM_SIZE_MIDI_SYSEX];
@@ -139,8 +139,14 @@ public class BlofeldCompleteDriver extends SynthDriverBank {
 		// }
 	}
 
+	@Override
 	public int getHeaderSize() {
 		return Blofeld.HEADER_SIZE;
+	}
+	
+	@Override
+	public boolean isUseableForLibrary(){
+		return true;
 	}
 
 }

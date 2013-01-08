@@ -81,7 +81,7 @@ public class YamahaTG100SingleDriver extends SynthDriverPatchImpl {
 	 * Saves the Patch to Voice 1 as there is no Edit Buffer
 	 */
 	public void sendPatch(PatchDataImpl p) {
-		setPatchNum(0);
+		sendProgramChange(0);
 		storePatch(p, 0);
 	}
 
@@ -97,7 +97,7 @@ public class YamahaTG100SingleDriver extends SynthDriverPatchImpl {
 	 */
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		// setBankNum(64);
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 		storePatch(p, patchNum);
 	}
 

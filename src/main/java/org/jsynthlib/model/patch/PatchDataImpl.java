@@ -313,7 +313,7 @@ public class PatchDataImpl implements PatchSingle, PatchBank {
 	}
 
 	public final PatchSingle get(int patchNum) {
-		return ((SynthDriverBank) driver).getPatch(this, patchNum);
+		return ((SynthDriverBank) driver).extractPatch(this, patchNum);
 	}
 
 	public final String getName(int patchNum) {

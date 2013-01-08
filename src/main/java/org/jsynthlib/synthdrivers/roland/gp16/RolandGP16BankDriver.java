@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 
 import javax.swing.JOptionPane;
 
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverBank;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -104,7 +105,7 @@ public class RolandGP16BankDriver extends SynthDriverBank {
 	}
 
 	/** Extract a given patch from a given bank. */
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		byte[] sysex = new byte[singleSize];
 		System.arraycopy(((PatchDataImpl) bank).getSysex(), getPatchStart(patchNum), sysex, 0, singleSize);
 		try {
@@ -126,7 +127,7 @@ public class RolandGP16BankDriver extends SynthDriverBank {
 	/** Send the bank back as it was received. */
 	public void storePatch(PatchDataImpl bank, int bankNum, int patchNum) {
 		for (int i = 0; i < NS; i++) {
-			PatchDataImpl p = getPatch(bank, i);
+			PatchDataImpl p = extractPatch(bank, i);
 			storeSinglePatch(p, bankNum, i);
 		}
 	}
@@ -137,9 +138,9 @@ public class RolandGP16BankDriver extends SynthDriverBank {
 			Thread.sleep(sleepTime);
 		} catch (Exception e) {
 		}
-		SysexHandler.NameValue nVs[] = new SysexHandler.NameValue[2];
-		nVs[0] = new SysexHandler.NameValue("patchnumber", bankNum * 8 + patchNum);
-		nVs[1] = new SysexHandler.NameValue("checksum", 0);
+		NameValue nVs[] = new NameValue[2];
+		nVs[0] = new NameValue("patchnumber", bankNum * 8 + patchNum);
+		nVs[1] = new NameValue("checksum", 0);
 		PatchDataImpl p = new PatchDataImpl(SYS_REQ.toByteArray(getChannel(), nVs));
 		calculateChecksum(p, 5, 10, 11); // the gp-16 requires correct checksum when requesting a patch
 		send(p.getSysex());

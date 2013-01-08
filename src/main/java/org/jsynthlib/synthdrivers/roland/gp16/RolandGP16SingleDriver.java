@@ -1,6 +1,7 @@
 package org.jsynthlib.synthdrivers.roland.gp16;
 
 import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
@@ -48,9 +49,9 @@ public class RolandGP16SingleDriver extends SynthDriverPatchImpl {
 			Thread.sleep(sleepTime);
 		} catch (Exception e) {
 		}
-		SysexHandler.NameValue nVs[] = new SysexHandler.NameValue[2];
-		nVs[0] = new SysexHandler.NameValue("patchnumber", bankNum * 8 + patchNum);
-		nVs[1] = new SysexHandler.NameValue("checksum", 0);
+		NameValue nVs[] = new NameValue[2];
+		nVs[0] = new NameValue("patchnumber", bankNum * 8 + patchNum);
+		nVs[1] = new NameValue("checksum", 0);
 		PatchDataImpl p = new PatchDataImpl(SYS_REQ.toByteArray(getChannel(), nVs));
 		calculateChecksum(p, 5, 10, 11); // the gp-16 requires correct checksum when requesting a patch
 		send(p.getSysex());

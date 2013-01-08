@@ -86,7 +86,7 @@ public class CasioCZ1000SingleDriver extends SynthDriverPatchImpl {
 		} catch (Exception e) {
 		}
 		setBankNum(bankNum);
-		setPatchNum(patchNum);
+		sendProgramChange(patchNum);
 	}
 
 	public void sendPatch(PatchDataImpl p) {
@@ -155,7 +155,7 @@ public class CasioCZ1000SingleDriver extends SynthDriverPatchImpl {
 		;
 	}
 
-	public void setPatchNum(int patchNum) {
+	public void sendProgramChange(int patchNum) {
 		this.curPatch = patchNum;
 		try {
 			send(0xC0 + (getChannel() - 1), computeSlot(curBank, curPatch));

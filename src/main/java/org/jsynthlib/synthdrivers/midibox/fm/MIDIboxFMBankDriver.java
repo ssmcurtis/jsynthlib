@@ -67,7 +67,7 @@ public class MIDIboxFMBankDriver extends SynthDriverBank {
 
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		for (int i = 0; i < num_patches; ++i) {
-			PatchDataImpl ps = getPatch(p, i);
+			PatchDataImpl ps = extractPatch(p, i);
 			ps.getSysex()[8] = (byte) bankNum;
 			System.out.println("Sending Patch #" + i);
 			send(ps.getSysex());
@@ -133,7 +133,7 @@ public class MIDIboxFMBankDriver extends SynthDriverBank {
 		calculateChecksum(bank);
 	}
 
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		try {
 			byte[] sysex = new byte[268];
 			sysex[0] = (byte) 0xF0;

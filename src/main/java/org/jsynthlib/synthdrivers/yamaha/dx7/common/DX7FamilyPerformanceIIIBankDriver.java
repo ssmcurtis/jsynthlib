@@ -237,7 +237,7 @@ public class DX7FamilyPerformanceIIIBankDriver extends SynthDriverBank {
 				getPatchStart(patchNum) + 180);
 	}
 
-	public PatchDataImpl getPatch(PatchDataImpl b, int patchNum) // Gets a patch from the bank, converting it as needed
+	public PatchDataImpl extractPatch(PatchDataImpl b, int patchNum) // Gets a patch from the bank, converting it as needed
 	{
 		try {
 			PatchDataImpl bank = (PatchDataImpl) b;

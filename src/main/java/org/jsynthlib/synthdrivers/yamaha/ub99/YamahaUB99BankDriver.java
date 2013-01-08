@@ -88,7 +88,7 @@ public class YamahaUB99BankDriver extends SynthDriverBank {
 				+ singleSize * patchNum, singleSize);
 	}
 
-	public PatchDataImpl getPatch(PatchDataImpl bank, int patchNum) {
+	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		byte[] sysex = new byte[singleSize];
 		System.arraycopy(((PatchDataImpl) bank).getSysex(), YamahaUB99Const.BANK_PATCH_OFFSET + singleSize * patchNum, sysex,
 				0, singleSize);
@@ -138,7 +138,7 @@ public class YamahaUB99BankDriver extends SynthDriverBank {
 		}
 
 		for (int i = 0; i < YamahaUB99Const.NUM_PATCH; i++) {
-			single = getPatch(p, i);
+			single = extractPatch(p, i);
 			singleDriver.sendThisPatch(single, i, 0x01);
 		}
 		try {

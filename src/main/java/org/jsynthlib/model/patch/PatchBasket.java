@@ -69,5 +69,5 @@ public interface PatchBasket {
 	JSLFrame editSelectedPatch();
 
 	/** Return collection of all patches in basket. */
-	ArrayList getPatchCollection();
+	ArrayList<Patch> getPatchCollection();
 }
