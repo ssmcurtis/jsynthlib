@@ -2,7 +2,7 @@
 // 
 // @version $Id$
 
-package org.jsynthlib.synthdrivers.alesis.a6;
+package org.jsynthlib.synthdrivers.alesis.andromeda;
 
 import java.util.prefs.Preferences;
 
@@ -15,7 +15,7 @@ public class AlesisA6Device extends Device {
 
 	/** Creates new AlesisA6Device */
 	public AlesisA6Device() {
-		super("Alesis", "A6", null, DRIVER_INFO, "Kenneth L. Martinez");
+		super(Andromeda.VENDOR, Andromeda.DEVICE, null, DRIVER_INFO, "Kenneth L. Martinez, ssmcurtis");
 	}
 
 	/** Constructor for for actual work. */

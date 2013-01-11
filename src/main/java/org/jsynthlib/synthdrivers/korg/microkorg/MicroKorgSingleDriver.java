@@ -3,8 +3,11 @@ package org.jsynthlib.synthdrivers.korg.microkorg;
 import java.lang.annotation.Annotation;
 import java.nio.ByteBuffer;
 
+import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiMessage;
+import javax.sound.midi.SysexMessage;
 
+import org.jsynthlib.menu.preferences.AppConfig;
 import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
@@ -40,34 +43,51 @@ public class MicroKorgSingleDriver extends SynthDriverPatchImpl {
 	}
 
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
-		System.out.println(">>>> store patch ... micor produces Bluescreen on Windows");
-		
-		// System.out.println(HexaUtil.hexDumpOneLine(p.getByteArray()));
+		 System.out.println(patchNum + " >>>> store patch ... microkrog produces windows bluescreen using som devices (f.e. M8U)");
 
-		sendPatch(p);
+		// System.out.println(HexaUtil.hexDumpOneLine(p.getByteArray()));
+		PatchDataImpl patchToSend = p.clone();
+		patchToSend.getSysex()[2] = MicroKorg.getMidiChannelByte(getChannel());
 		
-//		PatchDataImpl toSend = p.clone();
-//		ByteBuffer midi = MicroKorg.processDumpDataEncrypt(p.getSysex(), getChannel(), 3);
+		sendPatch(patchToSend);
+		MidiUtil.waitForSevenBitTechnology(AppConfig.getMidiOutDelay()*4);
+
+		System.out.println(HexaUtil.hexDumpOneLine(patchToSend.getSysex()));
+
+		// PatchDataImpl toSend = p.clone();
+		// ByteBuffer midi = MicroKorg.processDumpDataEncrypt(p.getSysex(), getChannel(), 3);
 
 		NameValue channel = new NameValue("midiChannel", MicroKorg.getMidiChannelByte(getChannel()));
 		NameValue patchNumber = new NameValue("patchNum", patchNum);
 		MidiMessage msg = writeHandler.toSysexMessage(getDeviceID(), channel, patchNumber);
-
-//		ByteBuffer patchAndStore = ByteBuffer.allocate(midi.limit() + msg.getMessage().length);
-//		patchAndStore.put(midi.array());
-//		patchAndStore.put(msg.getMessage());
-//
 		System.out.println(HexaUtil.hexDumpOneLine(msg.getMessage()));
-
-//		toSend.setSysex(patchAndStore.array());
-		MidiUtil.waitForSevenBitTechnology(2000);
-
-		send(msg);
 		
+		send(msg);
+		MidiUtil.waitForSevenBitTechnology(AppConfig.getMidiOutDelay()*4);
+
+		// MicroKorg.WRITE_SINGLE_BYTES[2] = MicroKorg.getMidiChannelByte(getChannel());
+		// MicroKorg.WRITE_SINGLE_BYTES[6] = HexaUtil.intToByte(patchNum);
+		// SysexMessage sxm = new SysexMessage();
+		// try {
+		// sxm.setMessage(MicroKorg.WRITE_SINGLE_BYTES, MicroKorg.WRITE_SINGLE_BYTES.length);
+		// System.out.println(HexaUtil.hexDumpOneLine(sxm.getData()));
+		// send(sxm);
+		// } catch (InvalidMidiDataException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+
+		// ByteBuffer patchAndStore = ByteBuffer.allocate(midi.limit() + msg.getMessage().length);
+		// patchAndStore.put(midi.array());
+		// patchAndStore.put(msg.getMessage());
+		//
+
+		// toSend.setSysex(patchAndStore.array());
+
+
 	}
 
 	public void sendPatch(PatchDataImpl p) {
-		System.out.println(">>>> send patch");
 
 		PatchDataImpl toSend = p.clone();
 		ByteBuffer midi = MicroKorg.processDumpDataEncrypt(p.getSysex(), getChannel(), 3);

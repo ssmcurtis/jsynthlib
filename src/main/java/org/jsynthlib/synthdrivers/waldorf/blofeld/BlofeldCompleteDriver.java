@@ -144,9 +144,4 @@ public class BlofeldCompleteDriver extends SynthDriverBank {
 		return Blofeld.HEADER_SIZE;
 	}
 	
-	@Override
-	public boolean isUseableForLibrary(){
-		return true;
-	}
-
 }

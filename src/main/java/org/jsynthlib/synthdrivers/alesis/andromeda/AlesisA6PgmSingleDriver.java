@@ -2,7 +2,9 @@
 //
 // @version $Id$
 
-package org.jsynthlib.synthdrivers.alesis.a6;
+package org.jsynthlib.synthdrivers.alesis.andromeda;
+
+import java.nio.ByteBuffer;
 
 import javax.swing.JOptionPane;
 
@@ -10,115 +12,62 @@ import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.synthdrivers.korg.microkorg.MicroKorg;
 import org.jsynthlib.tools.ErrorMsgUtil;
 import org.jsynthlib.tools.MidiUtil;
 
 public class AlesisA6PgmSingleDriver extends SynthDriverPatchImpl {
-	static final String bankList[] = new String[] { "User", "Preset1", "Preset2", "Card 1", "Card 2", "Card 3", "Card 4", "Card 5",
-			"Card 6", "Card 7", "Card 8" };
-	static final String patchList[] = new String[] { "000", "001", "002", "003", "004", "005", "006", "007", "008", "009", "010", "011",
-			"012", "013", "014", "015", "016", "017", "018", "019", "020", "021", "022", "023", "024", "025", "026", "027", "028", "029",
-			"030", "031", "032", "033", "034", "035", "036", "037", "038", "039", "040", "041", "042", "043", "044", "045", "046", "047",
-			"048", "049", "050", "051", "052", "053", "054", "055", "056", "057", "058", "059", "060", "061", "062", "063", "064", "065",
-			"066", "067", "068", "069", "070", "071", "072", "073", "074", "075", "076", "077", "078", "079", "080", "081", "082", "083",
-			"084", "085", "086", "087", "088", "089", "090", "091", "092", "093", "094", "095", "096", "097", "098", "099", "100", "101",
-			"102", "103", "104", "105", "106", "107", "108", "109", "110", "111", "112", "113", "114", "115", "116", "117", "118", "119",
-			"120", "121", "122", "123", "124", "125", "126", "127" };
+	// static final String bankList[] = new String[] { "User", "Preset1", "Preset2", "Card 1", "Card 2", "Card 3",
+	// "Card 4", "Card 5",
+	// "Card 6", "Card 7", "Card 8" };
+	// static final String patchList[] = new String[] { "000", "001", "002", "003", "004", "005", "006", "007", "008",
+	// "009", "010", "011",
+	// "012", "013", "014", "015", "016", "017", "018", "019", "020", "021", "022", "023", "024", "025", "026", "027",
+	// "028", "029",
+	// "030", "031", "032", "033", "034", "035", "036", "037", "038", "039", "040", "041", "042", "043", "044", "045",
+	// "046", "047",
+	// "048", "049", "050", "051", "052", "053", "054", "055", "056", "057", "058", "059", "060", "061", "062", "063",
+	// "064", "065",
+	// "066", "067", "068", "069", "070", "071", "072", "073", "074", "075", "076", "077", "078", "079", "080", "081",
+	// "082", "083",
+	// "084", "085", "086", "087", "088", "089", "090", "091", "092", "093", "094", "095", "096", "097", "098", "099",
+	// "100", "101",
+	// "102", "103", "104", "105", "106", "107", "108", "109", "110", "111", "112", "113", "114", "115", "116", "117",
+	// "118", "119",
+	// "120", "121", "122", "123", "124", "125", "126", "127" };
 
 	public AlesisA6PgmSingleDriver() {
 		super("Prog Single", "Kenneth L. Martinez");
-		sysexID = "F000000E1D00****";
-		sysexRequestDump = new SysexHandler("F0 00 00 0E 1D 01 *bankNum* *patchNum* F7");
+		sysexID = Andromeda.DEVICE_SYSEX_ID;
+		sysexRequestDump = new SysexHandler(Andromeda.REQUEST_PRG_SINGLE);
 
-		patchSize = 2350;
-		patchNameStart = 2; // does NOT include sysex header
-		patchNameSize = 16;
-		deviceIDoffset = -1;
-		bankNumbers = bankList;
-		patchNumbers = patchList;
+		patchSize = Andromeda.PROGRAM_SIZE_7BIT_SYSEX;
+		patchNameStart = Andromeda.PATCH_NAME_START_AT.position();
+		patchNameSize = Andromeda.PATCH_NAME_LENGTH.position();
+		deviceIDoffset = Andromeda.DEVICE_ID_OFFSET;
+		bankNumbers = Andromeda.BANK_NAMES;
+		patchNumbers = Andromeda.createPatchNumbers();
 	}
 
 	public void calculateChecksum(PatchDataImpl p) {
 		// A6 doesn't use checksum
 	}
 
-	// protected static void calculateChecksum(Patch p, int start, int end, int ofs)
-	// {
-	// // A6 doesn't use checksum
+	// @Override
+	// public ByteBuffer processDumpDataConversion(byte[] sysexBuffer) {
+	// return Andromeda.processDumpDataDecrypt(sysexBuffer);
 	// }
 
-	// The program sysex dump is 2350 bytes, beginning with an 8-byte
-	// header followed by 2341 7-bit sysex bytes which correspond to 2048 bytes
-	// of program data. Here's how the first 6 program data bytes map to the
-	// first 7 sysex bytes:
-	//
-	// program data sysex
-	// MSB LSB MSB LSB
-	// 0: A7 A6 A5 A4 A3 A2 A1 A0 0: 0 A6 A5 A4 A3 A2 A1 A0
-	// 1: B7 B6 B5 B4 B3 B2 B1 B0 1: 0 B5 B4 B3 B2 B1 B0 A7
-	// 2: C7 C6 C5 C4 C3 C2 C1 C0 2: 0 C4 C3 C2 C1 C0 B7 B6
-	// 3: D7 D6 D5 D4 D3 D2 D1 D0 3: 0 D3 D2 D1 D0 C7 C6 C5
-	// 4: E7 E6 E5 E4 E3 E2 E1 E0 4: 0 E2 E1 E0 D7 D6 D5 D4
-	// 5: F7 F6 F5 F4 F3 F2 F1 F0 5: 0 F1 F0 E7 E6 E5 E4 E3
-	// 6: G7 G6 G5 G4 G3 G2 G1 G0 6: 0 G0 F7 F6 F5 F4 F3 F2
-	// 7: 0 G7 G6 G5 G4 G3 G2 G1
-	//
-	// getA6PgmByte returns the requested program data byte "i" (0 - 2047)
-	// by putting together the corresponding bits from two sysex bytes,
-	// and setA6PgmByte does the reverse to store a program data byte.
-	public static byte getA6PgmByte(byte sysex[], int i) {
-		int modulus = i % 7;
-		int mask1 = (0xFF << modulus) & 0x7F;
-		int mask2 = 0xFF >> (7 - modulus);
-		int offset = i * 8 / 7;
-		return (byte) (((sysex[8 + offset]) & mask1) >> modulus | ((sysex[9 + offset]) & mask2) << (7 - modulus));
-	}
-
-	public static void setA6PgmByte(byte b, byte sysex[], int i) {
-		int modulus = i % 7;
-		int dstMask1 = (0xFF << modulus) & 0x7F;
-		int dstMask2 = 0xFF >> (7 - modulus);
-		int srcMask1 = 0xFF >> (modulus + 1);
-		int srcMask2 = (~srcMask1) & 0xFF;
-		int offset = i * 8 / 7;
-		sysex[8 + offset] = (byte) ((sysex[8 + offset] & ~dstMask1) | ((b & srcMask1) << modulus));
-		sysex[9 + offset] = (byte) ((sysex[9 + offset] & ~dstMask2) | ((b & srcMask2) >> (7 - modulus)));
-	}
-
-	public String getPatchName(PatchDataImpl ip) {
-		PatchDataImpl p = (PatchDataImpl) ip;
-		try {
-			char c[] = new char[patchNameSize];
-			for (int i = 0; i < patchNameSize; i++)
-				c[i] = (char) (getA6PgmByte(p.getSysex(), i + patchNameStart));
-			return new String(c);
-		} catch (Exception ex) {
-			return "-";
-		}
+	public String getPatchName(PatchDataImpl p) {
+		return Andromeda.getPatchNameLegacy(p.getSysex());
 	}
 
 	public void setPatchName(PatchDataImpl p, String name) {
-		if (name.length() < patchNameSize + 4)
-			name = name + "                ";
-		byte nameByte[] = name.getBytes();
-		for (int i = 0; i < patchNameSize; i++) {
-			setA6PgmByte(nameByte[i], ((PatchDataImpl) p).getSysex(), i + patchNameStart);
-		}
+		Andromeda.setPatchNameLegacy(p.getSysex(), name);
 	}
 
 	public void sendPatch(PatchDataImpl p) {
-		sendPatch((PatchDataImpl) p, 0, 0); // using user program # 127 as edit buffer
-	}
-
-	public void sendPatch(PatchDataImpl p, int bankNum, int patchNum) {
-		PatchDataImpl p2 = p.clone();
-		
-		setBankNum(0);
-		sendProgramChange(0);
-		MidiUtil.waitForSevenBitTechnology(1000);
-		// p2.getSysex()[6] = (byte) bankNum;
-		// p2.getSysex()[7] = (byte) patchNum;
-		sendPatchWorker(p2);
+		processPatch((PatchDataImpl) p, 0, 0); // using user program # 127 as edit buffer
 	}
 
 	// Sends a patch to a set location in the user bank
@@ -127,32 +76,41 @@ public class AlesisA6PgmSingleDriver extends SynthDriverPatchImpl {
 			JOptionPane.showMessageDialog(PatchBayApplication.getInstance(), "Cannot send to a preset bank", "Store Patch",
 					JOptionPane.WARNING_MESSAGE);
 		else {
-			PatchDataImpl p2 = p.clone();
-			setBankNum(bankNum);
-			sendProgramChange(patchNum);
-			MidiUtil.waitForSevenBitTechnology();
-			sendPatchWorker(p2);
-			MidiUtil.waitForSevenBitTechnology(1000);
+			processPatch(p, bankNum, patchNum);
 		}
 	}
+	
+	private void processPatch(PatchDataImpl p, int bankNum, int patchNum) {
+		PatchDataImpl p2 = p.clone();
 
-	// // Kludge: A6 doesn't seem to receive edit buffer dump, so user program 127
-	// // is being used for that purpose.
-	// public void playPatch(PatchDataImpl p) {
-	// byte sysex[] = new byte[2352];
-	// System.arraycopy(((PatchDataImpl) p).getSysex(), 0, sysex, 0, 2350);
-	// sysex[6] = 0; // user bank
-	// sysex[7] = 127; // program # 127
-	// sysex[2350] = (byte) (0xC0 + getChannel() - 1); // program change
-	// sysex[2351] = (byte) 127; // program # 127
-	// PatchDataImpl p2 = new PatchDataImpl(sysex);
-	// try {
-	// super.playPatch(p2);
-	// } catch (Exception e) {
-	// ErrorMsgUtil.reportStatus(e);
-	// }
-	// }
+		// setBankNum(0);
+		// sendProgramChange(0);
 
+		p2.getSysex()[Andromeda.BANK_AT.position()] = (byte) bankNum;
+		p2.getSysex()[Andromeda.PATCH_AT.position()] = (byte) patchNum;
+
+		send(p2.getSysex());
+
+		MidiUtil.waitForSevenBitTechnology();
+		setBankNum(bankNum);
+
+		MidiUtil.waitForSevenBitTechnology();
+		sendProgramChange(patchNum);
+
+	}
+
+
+	@Override
+	public int getHeaderSize() {
+		return Andromeda.HEADER_SIZE;
+	}
+
+	@Override
+	public boolean isUseableForLibrary() {
+		return true;
+	}
+
+	
 	public PatchDataImpl createNewPatch() {
 		byte sysex[] = { (byte) 0xF0, (byte) 0x00, (byte) 0x00, (byte) 0x0E, (byte) 0x1D, (byte) 0x00, (byte) 0x00, (byte) 0x7F,
 				(byte) 0x26, (byte) 0x15, (byte) 0x38, (byte) 0x2A, (byte) 0x76, (byte) 0x0E, (byte) 0x54, (byte) 0x30, (byte) 0x74,

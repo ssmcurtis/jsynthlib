@@ -2,7 +2,7 @@
 //
 // @version $Id$
 
-package org.jsynthlib.synthdrivers.alesis.a6;
+package org.jsynthlib.synthdrivers.alesis.andromeda;
 
 import javax.swing.JOptionPane;
 
@@ -16,13 +16,13 @@ public class AlesisA6MixSingleDriver extends SynthDriverPatchImpl {
 	public AlesisA6MixSingleDriver() {
 		super("Mix Single", "Kenneth L. Martinez");
 		sysexID = "F000000E1D04****";
-		sysexRequestDump = new SysexHandler("F0 00 00 0E 1D 05 *bankNum* *patchNum* F7");
+		sysexRequestDump = new SysexHandler(Andromeda.REQUEST_MIX_SINGLE);
 		patchSize = 1180;
 		patchNameStart = 2; // does NOT include sysex header
 		patchNameSize = 16;
 		deviceIDoffset = -1;
-		bankNumbers = AlesisA6PgmSingleDriver.bankList;
-		patchNumbers = AlesisA6PgmSingleDriver.patchList;
+		bankNumbers = Andromeda.BANK_NAMES;
+		patchNumbers = Andromeda.createPatchNumbers();
 	}
 
 	public void calculateChecksum(PatchDataImpl p) {
@@ -34,26 +34,6 @@ public class AlesisA6MixSingleDriver extends SynthDriverPatchImpl {
 	// // A6 doesn't use checksum
 	// }
 
-	public String getPatchName(PatchDataImpl ip) {
-		PatchDataImpl p = (PatchDataImpl) ip;
-		try {
-			char c[] = new char[patchNameSize];
-			for (int i = 0; i < patchNameSize; i++)
-				c[i] = (char) (AlesisA6PgmSingleDriver.getA6PgmByte(p.getSysex(), i + patchNameStart));
-			return new String(c);
-		} catch (Exception ex) {
-			return "-";
-		}
-	}
-
-	public void setPatchName(PatchDataImpl p, String name) {
-		if (name.length() < patchNameSize + 4)
-			name = name + "                ";
-		byte nameByte[] = name.getBytes();
-		for (int i = 0; i < patchNameSize; i++) {
-			AlesisA6PgmSingleDriver.setA6PgmByte(nameByte[i], ((PatchDataImpl) p).getSysex(), i + patchNameStart);
-		}
-	}
 
 	public void sendPatch(PatchDataImpl p) {
 		sendPatch((PatchDataImpl) p, 0, 127); // using user mix # 127 as edit buffer

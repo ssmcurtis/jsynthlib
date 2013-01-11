@@ -70,7 +70,7 @@ public class HexDumpEditorHighlighted extends PatchEditorFrame {
 		this.setVisible(true);
 
 		SysexMessage[] mainPatchSysex = mainPatch.getMessages();
-
+		
 		SysexMessage[] comparePatchSysex = null;
 		if (comparePatch != null) {
 			comparePatchSysex = comparePatch.getMessages();

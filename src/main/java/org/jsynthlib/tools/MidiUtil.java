@@ -773,7 +773,7 @@ public final class MidiUtil {
 	 */
 	public static String sysexMessageToString(SysexMessage m) throws InvalidMidiDataException {
 		byte[] d = m.getMessage();
-		return HexaUtil.hexDumpOneLine(d, 0, -1, 16);
+		return HexaUtil.hexDumpOneLine(d, 0, -1, 32);
 	}
 
 	private static String hex(int c) {
@@ -895,13 +895,13 @@ public final class MidiUtil {
 	 * @return a <code>String</code> value
 	 */
 	public static String midiMessageToString(MidiMessage m) throws InvalidMidiDataException {
-		if (m instanceof ShortMessage)
+		if (m instanceof ShortMessage) {
 			return (statusString(m) + "\n  " + shortMessageToString((ShortMessage) m));
-		else if (m instanceof SysexMessage) {
+		} else if (m instanceof SysexMessage) {
 			if (CSMstate) {
-				return ("SysEX:length=" + m.getLength() + "\n  " + sysexMessageToString((SysexMessage) m, 16));
+				return ("SysEX:length=" + m.getLength() + "\n" + sysexMessageToString((SysexMessage) m, 16));
 			} else {
-				return ("SysEX:length=" + m.getLength() + "\n  " + sysexMessageToString((SysexMessage) m));
+				return ("SysEX:length=" + m.getLength() + "\n" + sysexMessageToString((SysexMessage) m));
 			}
 		} else
 			throw new InvalidMidiDataException();
@@ -1178,7 +1178,7 @@ public final class MidiUtil {
 			// nothing
 		}
 	}
-	
+
 	public static void waitForSevenBitTechnology(int msec) {
 		try {
 			Thread.sleep(msec);
@@ -1186,7 +1186,6 @@ public final class MidiUtil {
 			// nothing
 		}
 	}
-
 
 	@Deprecated
 	public static byte[] toByteArrayAndReplace(String header, Map<String, Integer> kv) {

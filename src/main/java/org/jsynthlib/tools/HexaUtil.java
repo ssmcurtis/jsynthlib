@@ -25,7 +25,7 @@ public class HexaUtil {
 
 	public static String byteToHexString(byte b) {
 		int i = b & BYTE_INTEGER_FILTER;
-		if (i < 10) {
+		if (i <= 16) {
 			return "0" + Integer.toHexString(i).toUpperCase();
 		} else {
 			return Integer.toHexString(i).toUpperCase();
@@ -39,6 +39,64 @@ public class HexaUtil {
 
 	public static boolean isEndSysex(byte b) {
 		return b == sysex_end;
+	}
+
+	public static String byteToBinStringSplit(byte b, int bitpos) {
+		String s = byteToBinString(b);
+		if (bitpos == 0) {
+			return s + "_";
+		}
+		if (bitpos == 8) {
+			return "_" + s;
+		}
+
+		if (bitpos > 0 && bitpos < 8) {
+			return s.substring(0, 8 - bitpos) + "_" + s.substring(8 - bitpos, 8);
+		} else {
+			return s;
+		}
+
+	}
+	
+	public static String byteToBinStringSplit7(byte b, int bitpos) {
+		String s = byteToBinString7(b);
+		if (bitpos == 0) {
+			return s + "_";
+		}
+		if (bitpos == 8) {
+			return "_" + s;
+		}
+
+		if (bitpos > 0 && bitpos < 8) {
+			return s.substring(0, 8 - bitpos) + "_" + s.substring(8 - bitpos, 8);
+		} else {
+			return s;
+		}
+
+	}
+
+	public static String byteToBinString7(byte b) {
+		String result = Integer.toBinaryString(byteToInt(b));
+		switch (result.length()) {
+		case 1:
+			return "#000000" + result;
+		case 2:
+			return "#00000" + result;
+		case 3:
+			return "#0000" + result;
+		case 4:
+			return "#000" + result;
+		case 5:
+			return "#00" + result;
+		case 6:
+			return "#0" + result;
+		case 7:
+			return "#" + result;
+		case 8:
+			return "#" + result.substring(1, 8);
+		default:
+			return "#0000000";
+		}
 	}
 
 	public static String byteToBinString(byte b) {

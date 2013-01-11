@@ -170,5 +170,5 @@ public interface Patch extends Cloneable, Transferable, Serializable {
 	public void setSelected(boolean selected);
 
 	public boolean getSelected();
-	
+
 }

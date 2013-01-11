@@ -2,7 +2,7 @@
 //
 // @version $Id$
 
-package org.jsynthlib.synthdrivers.alesis.a6;
+package org.jsynthlib.synthdrivers.alesis.andromeda;
 
 import javax.swing.JOptionPane;
 
@@ -13,20 +13,20 @@ import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.ErrorMsgUtil;
 
-public class AlesisA6MixBankDriver extends SynthDriverBank {
+public class AlesisA6PgmBankDriver extends SynthDriverBank {
 
-	public AlesisA6MixBankDriver() {
-		super("Mix Bank", "Kenneth L. Martinez", AlesisA6PgmSingleDriver.patchList.length, 4);
-		sysexID = "F000000E1D04**00";
-		sysexRequestDump = new SysexHandler("F0 00 00 0E 1D 0B *bankNum* F7");
-		patchSize = 151040;
+	public AlesisA6PgmBankDriver() {
+		super("Prog Bank", "Kenneth L. Martinez", Andromeda.PATCH_COUNT_IN_BANK, 4);
+		sysexID = "F000000E1D00**00";
+		sysexRequestDump = new SysexHandler(Andromeda.REQUEST_PRG_BANK);
+		patchSize = 300800;
 		patchNameStart = 2; // does NOT include sysex header
 		patchNameSize = 16;
 		deviceIDoffset = -1;
-		bankNumbers = AlesisA6PgmSingleDriver.bankList;
-		patchNumbers = AlesisA6PgmSingleDriver.patchList;
-		singleSize = 1180;
-		singleSysexID = "F000000E1D04";
+		bankNumbers = Andromeda.BANK_NAMES;
+		patchNumbers = Andromeda.createPatchNumbers();
+		singleSize = 2350;
+		singleSysexID = "F000000E1D00";
 	}
 
 	public void calculateChecksum(PatchDataImpl p) {
@@ -52,38 +52,23 @@ public class AlesisA6MixBankDriver extends SynthDriverBank {
 			return;
 		}
 
-		System.arraycopy(((PatchDataImpl) p).getSysex(), 0, ((PatchDataImpl) bank).getSysex(), patchNum * 1180, 1180);
-		((PatchDataImpl) bank).getSysex()[patchNum * 1180 + 6] = 0; // user bank
-		((PatchDataImpl) bank).getSysex()[patchNum * 1180 + 7] = (byte) patchNum; // set mix #
+		System.arraycopy(((PatchDataImpl) p).getSysex(), 0, ((PatchDataImpl) bank).getSysex(), patchNum * 2350, 2350);
+		((PatchDataImpl) bank).getSysex()[patchNum * 2350 + 6] = 0; // user bank
+		((PatchDataImpl) bank).getSysex()[patchNum * 2350 + 7] = (byte) patchNum; // set program #
 	}
 
 	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
-		byte sysex[] = new byte[1180];
-		System.arraycopy(((PatchDataImpl) bank).getSysex(), patchNum * 1180, sysex, 0, 1180);
+		byte sysex[] = new byte[2350];
+		System.arraycopy(((PatchDataImpl) bank).getSysex(), patchNum * 2350, sysex, 0, 2350);
 		return new PatchDataImpl(sysex, getDevice());
 	}
 
 	public String getPatchName(PatchDataImpl p, int patchNum) {
-		PatchDataImpl Mix = (PatchDataImpl) extractPatch(p, patchNum);
-		try {
-			char c[] = new char[patchNameSize];
-			for (int i = 0; i < patchNameSize; i++)
-				c[i] = (char) (AlesisA6PgmSingleDriver.getA6PgmByte(Mix.getSysex(), i + patchNameStart));
-			return new String(c);
-		} catch (Exception ex) {
-			return "-";
-		}
+		return Andromeda.getPatchname(p.getSysex());
 	}
 
 	public void setPatchName(PatchDataImpl p, int patchNum, String name) {
-		PatchDataImpl Mix = (PatchDataImpl) extractPatch(p, patchNum);
-		if (name.length() < patchNameSize + 4)
-			name = name + "                ";
-		byte nameByte[] = name.getBytes();
-		for (int i = 0; i < patchNameSize; i++) {
-			AlesisA6PgmSingleDriver.setA6PgmByte(nameByte[i], Mix.getSysex(), i + patchNameStart);
-		}
-		putPatch(p, Mix, patchNum);
+		Andromeda.setPatchname(p.getSysex(), name);
 	}
 
 	// protected void sendPatch (Patch p)
@@ -92,13 +77,13 @@ public class AlesisA6MixBankDriver extends SynthDriverBank {
 	// }
 
 	protected void sendPatchWorker(PatchDataImpl p, int bankNum) {
-		byte tmp[] = new byte[1180]; // send in 128 single-mix messages
+		byte tmp[] = new byte[2350]; // send in 128 single-program messages
 		try {
 			PatchBayApplication.showWaitDialog();
 			for (int i = 0; i < 128; i++) {
-				System.arraycopy(p.getSysex(), i * 1180, tmp, 0, 1180);
+				System.arraycopy(p.getSysex(), i * 2350, tmp, 0, 2350);
 				tmp[6] = (byte) bankNum;
-				tmp[7] = (byte) i; // mix #
+				tmp[7] = (byte) i; // program #
 				send(tmp);
 				Thread.sleep(15);
 			}
@@ -110,7 +95,7 @@ public class AlesisA6MixBankDriver extends SynthDriverBank {
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {
-		send(sysexRequestDump.toSysexMessage(((byte) getChannel()), new NameValue[] {
-				new NameValue("bankNum", bankNum), new NameValue("patchNum", patchNum) }));
+		send(sysexRequestDump.toSysexMessage(((byte) getChannel()), new NameValue[] { new NameValue("bankNum", bankNum),
+				new NameValue("patchNum", patchNum) }));
 	}
 }

@@ -429,8 +429,7 @@ abstract public class SynthDriverPatchImpl implements SynthDriverPatch {
 					+ " driver does not support patch getting.\n\n" + "Please start the patch dump manually...", "Get Patch",
 					JOptionPane.WARNING_MESSAGE);
 		} else
-			send(sysexRequestDump.toSysexMessage(getDeviceID(), new NameValue("bankNum", bankNum), new NameValue(
-					"patchNum", patchNum)));
+			send(sysexRequestDump.toSysexMessage(getDeviceID(), new NameValue("bankNum", bankNum), new NameValue("patchNum", patchNum)));
 	}
 
 	// MIDI in/out methods to encapsulate lower MIDI layer
@@ -525,15 +524,12 @@ abstract public class SynthDriverPatchImpl implements SynthDriverPatch {
 	protected void setBankNum(int bankNum) {
 		try {
 			ShortMessage msg = new ShortMessage();
-			msg.setMessage(ShortMessage.CONTROL_CHANGE, getChannel() - 1, 0x00, // Bank
-																				// Select
-																				// (MSB)
-					bankNum / 128); // Bank Number (MSB)
+			// Bank Select (MSB)
+			msg.setMessage(ShortMessage.CONTROL_CHANGE, getChannel() - 1, 0x00, bankNum / 128);
 			send(msg);
-			msg.setMessage(ShortMessage.CONTROL_CHANGE, getChannel() - 1, 0x20, // Bank
-																				// Select
-																				// (LSB)
-					bankNum % 128); // Bank Number (MSB)
+			
+			// Bank Select (LSB)
+			msg.setMessage(ShortMessage.CONTROL_CHANGE, getChannel() - 1, 0x20, bankNum % 128);
 			send(msg);
 		} catch (InvalidMidiDataException e) {
 			ErrorMsgUtil.reportStatus(e);
@@ -753,13 +749,13 @@ abstract public class SynthDriverPatchImpl implements SynthDriverPatch {
 		return byteBuffer;
 	}
 
-	public int getHeaderSize(){
+	public int getHeaderSize() {
 		return -1;
 	}
-	
+
 	@Override
-	public boolean isUseableForLibrary(){
+	public boolean isUseableForLibrary() {
 		return false;
 	}
-	
+
 }

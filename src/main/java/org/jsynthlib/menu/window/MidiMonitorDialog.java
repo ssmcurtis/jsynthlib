@@ -24,6 +24,8 @@ public class MidiMonitorDialog extends JSLDialog {
 
 	public MidiMonitorDialog() {
 		super(PatchBayApplication.getRootFrame(), "JSynthLib Midi Monitor", false);
+		setModal(false);
+		
 		JPanel container = new JPanel();
 		container.setLayout(new BorderLayout());
 		jt = new MyEditorPane();

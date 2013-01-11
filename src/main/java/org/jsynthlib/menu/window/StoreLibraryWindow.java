@@ -2,12 +2,16 @@ package org.jsynthlib.menu.window;
 
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Driver;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.JButton;
@@ -33,10 +37,13 @@ public class StoreLibraryWindow {
 	private JTextArea ta;
 	private JScrollPane sbrText;
 	private JButton btnQuit;
+	private JButton btnCopy;
 	private JButton btnProcess;
-	private JPanel buttons = new JPanel(new GridLayout(2, 1));
+	private JPanel buttons = new JPanel(new GridLayout(3, 1));
 
-	private Map<SynthDriverPatchImpl, Integer> supportedDevices = new HashMap<SynthDriverPatchImpl, Integer>();
+	private Map<SynthDriverPatchImpl, Integer> supportedDevices;
+
+	private List<String> devices = new ArrayList<>();
 
 	public StoreLibraryWindow() {
 		f = new JFrame("Store non-generic patches from library (max. 16 Patches for device)");
@@ -51,61 +58,114 @@ public class StoreLibraryWindow {
 		buttons.add(btnProcess);
 		btnProcess.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				for (int i = 0; i < AppConfig.deviceCount(); i++) {
-					Device device = AppConfig.getDevice(i);
 
-					for (int j = 0; j < device.driverCount(); j++) {
-						System.out.println(device.driverCount() + " " + device.getDriver(j).getClass().getSimpleName());
+				// appendText("Supported devices:");
+				supportedDevices = new HashMap<SynthDriverPatchImpl, Integer>();
+				btnQuit.setEnabled(false);
+				btnCopy.setEnabled(false);
 
-						if (device.getDriver(j) instanceof SynthDriverPatchImpl) {
-							SynthDriverPatchImpl driver = (SynthDriverPatchImpl) device.getDriver(j);
-							if (driver.isUseableForLibrary()) {
-								supportedDevices.put(driver, 0);
-							}
-						}
-					}
-				}
+				Thread worker = new Thread() {
 
-				ArrayList<Patch> patches = Actions.getSelectedFrame().getPatchCollection();
+					public void run() {
+						for (int i = 0; i < AppConfig.deviceCount(); i++) {
+							Device device = AppConfig.getDevice(i);
 
-				for (Map.Entry<SynthDriverPatchImpl, Integer> entry : supportedDevices.entrySet()) {
+							for (int j = 0; j < device.driverCount(); j++) {
+								// System.out.println(device.driverCount() + " " +
+								// device.getDriver(j).getClass().getSimpleName());
 
-					SynthDriverPatchImpl driver = entry.getKey();
+								if (device.getDriver(j) instanceof SynthDriverPatchImpl) {
+									SynthDriverPatchImpl driver = (SynthDriverPatchImpl) device.getDriver(j);
+									if (driver.isUseableForLibrary()) {
+										String keyString = driver.getDevice().getManufacturerName() + " "
+												+ driver.getDevice().getModelName() + "(" + driver.getClass().getSimpleName() + ")";
 
-					for (Patch p : patches) {
-						if (entry.getValue() < 16) {
-
-							if (p instanceof PatchDataImpl) {
-								PatchDataImpl pp = (PatchDataImpl) p;
-								if (driver.getDevice().equals(pp.getDevice()) && driver.supportsPatch(p.getPatchHeader(), p.getByteArray())) {
-									supportedDevices.put(driver, (entry.getValue()));
-									if (driver.isBankDriver()) {
-										((SynthDriverBank) driver).putPatch(null, pp, entry.getValue());
-									} else {
-										driver.storePatch(pp, 0, entry.getValue());
+										if (!devices.contains(keyString)) {
+											appendText(keyString);
+											devices.add(keyString);
+											supportedDevices.put(driver, 0);
+										}
 									}
-									entry.setValue(entry.getValue() + 1);
-									if (p.getName().isEmpty() || p.getName().equals("-")) {
-										appendText(driver.toString() + " Pos: " + entry.getValue() + ": " + p.getFileName());
-									} else {
-										appendText(driver.toString() + " Pos: " + entry.getValue() + ": " + p.getName());
-									}
-
 								}
 							}
 						}
+						appendText("");
+						ArrayList<Patch> patches = Actions.getSelectedFrame().getPatchCollection();
+						for (Map.Entry<SynthDriverPatchImpl, Integer> entry : supportedDevices.entrySet()) {
+
+							SynthDriverPatchImpl driver = entry.getKey();
+
+							for (Patch p : patches) {
+								if (entry.getValue() < 16) {
+
+									if (p instanceof PatchDataImpl) {
+										System.out.println(p.getClass().getSimpleName());
+										PatchDataImpl patchToSend = (PatchDataImpl) p;
+
+										boolean sameDevice = driver.getDevice().equals(patchToSend.getDevice());
+										boolean patchSupported = driver.supportsPatch(p.getPatchHeader(), p.getByteArray());
+
+										System.out.println(driver.getDevice() + " " + patchToSend.getDevice());
+
+										System.out.println("Device " + sameDevice + " Patch " + patchSupported);
+
+										if (sameDevice && patchSupported) {
+
+											supportedDevices.put(driver, (entry.getValue()));
+
+											String keyString = driver.getDevice().getManufacturerName() + " "
+													+ driver.getDevice().getModelName();
+											if (p.getName().trim().isEmpty() || p.getName().equals("-")) {
+												appendText(keyString + " Pos: " + (entry.getValue() + 1) + ": " + p.getFileName().trim()
+														+ p.getComment());
+											} else {
+												appendText(keyString + " Pos: " + (entry.getValue() + 1) + ": " + p.getName().trim() + " "
+														+ p.getComment());
+											}
+
+											if (driver.isBankDriver()) {
+												((SynthDriverBank) driver).putPatch(null, patchToSend, entry.getValue());
+											} else {
+												driver.storePatch(patchToSend, 0, entry.getValue());
+											}
+
+											entry.setValue(entry.getValue() + 1);
+
+										}
+
+									}
+								} else {
+									System.out.println(">> instancetype .. ");
+								}
+							}
+						}
+
+						for (Map.Entry<SynthDriverPatchImpl, Integer> entry : supportedDevices.entrySet()) {
+
+							SynthDriverPatchImpl driver = entry.getKey();
+
+							if (driver.isBankDriver()) {
+								((SynthDriverBank) driver).storePatch(null, 0, 0);
+							}
+						}
+						btnQuit.setEnabled(true);
+						btnCopy.setEnabled(true);
+
 					}
-				}
 
-				for (Map.Entry<SynthDriverPatchImpl, Integer> entry : supportedDevices.entrySet()) {
+				};
+				worker.start();
+			}
+		});
 
-					SynthDriverPatchImpl driver = entry.getKey();
-
-					if (driver.isBankDriver()) {
-						((SynthDriverBank) driver).storePatch(null, 0, 0);
-					}
-				}
-
+		btnCopy = new JButton("Copy to clippboard");
+		buttons.add(btnCopy);
+		btnCopy.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Toolkit toolkit = Toolkit.getDefaultToolkit();
+				Clipboard clipboard = toolkit.getSystemClipboard();
+				StringSelection selection = new StringSelection(ta.getText());
+				clipboard.setContents(selection, null);
 			}
 		});
 
@@ -116,7 +176,6 @@ public class StoreLibraryWindow {
 				f.setVisible(false);
 			}
 		});
-
 	}
 
 	public void launchFrame() {

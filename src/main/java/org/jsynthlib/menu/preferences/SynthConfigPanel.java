@@ -68,17 +68,17 @@ public class SynthConfigPanel extends ConfigPanel {
 		// create synth driver table
 		table = new JTable(new TableModel());
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		table.setPreferredScrollableViewportSize(new Dimension(900, 400));
+		table.setPreferredScrollableViewportSize(new Dimension(1000, 400));
 
 		TableColumn column;
 		column = table.getColumnModel().getColumn(SYNTH_NAME);
-		column.setPreferredWidth(75);
+		column.setPreferredWidth(80);
 
 		column = table.getColumnModel().getColumn(DEVICE);
-		column.setPreferredWidth(250);
+		column.setPreferredWidth(150);
 
 		column = table.getColumnModel().getColumn(MIDI_IN);
-		column.setPreferredWidth(200);
+		column.setPreferredWidth(300);
 
 		JComboBox<String> comboBox = new JComboBox<String>(MidiUtil.getInputNames());
 		column.setCellEditor(new DefaultCellEditor(comboBox));
@@ -90,7 +90,10 @@ public class SynthConfigPanel extends ConfigPanel {
 		column.setCellEditor(new DefaultCellEditor(comboBox));
 
 		column = table.getColumnModel().getColumn(MIDI_CHANNEL);
-		column.setPreferredWidth(90);
+		column.setPreferredWidth(20);
+		
+		column = table.getColumnModel().getColumn(MIDI_DEVICE_ID);
+		column.setPreferredWidth(20);
 
 		JScrollPane scrollpane = new JScrollPane(table);
 		p.add(scrollpane, c);
