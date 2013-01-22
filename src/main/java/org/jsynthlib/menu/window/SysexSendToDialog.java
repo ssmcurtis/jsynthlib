@@ -15,7 +15,7 @@ import org.jsynthlib.model.patch.PatchSingle;
  * @author Torsten Tittmann
  * @version $Id$
  */
-public class SysexSendToDialog extends DevDrvPatchSelector {
+public class SysexSendToDialog extends DeviceDriverBankPatchSelector {
 	/**
 	 * Constructor
 	 * 

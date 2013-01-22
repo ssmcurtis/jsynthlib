@@ -16,7 +16,7 @@ import org.jsynthlib.tools.ErrorMsgUtil;
 public class AlesisA6PgmBankDriver extends SynthDriverBank {
 
 	public AlesisA6PgmBankDriver() {
-		super("Prog Bank", "Kenneth L. Martinez", Andromeda.PATCH_COUNT_IN_BANK, 4);
+		super("Prog Bank", "Kenneth L. Martinez", Andromeda.PROGRAM_COUNT_IN_BANK, 4);
 		sysexID = "F000000E1D00**00";
 		sysexRequestDump = new SysexHandler(Andromeda.REQUEST_PRG_BANK);
 		patchSize = 300800;

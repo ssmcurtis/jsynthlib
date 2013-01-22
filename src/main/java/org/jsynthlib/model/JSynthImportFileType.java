@@ -2,6 +2,7 @@ package org.jsynthlib.model;
 
 public enum JSynthImportFileType {
 	MIDI(".mid", "MIDI Files (*.mid)", false),
+	NGF(".ngf", "Nord Generator (*.ngf)", false),
 	TXTHEX(".txt", "TexHex Files (*.txt)", false),
 	MICROKORG_PRG(".prg", "microKorg Files (*.prg)", false),
 	MICROKORG_SET(".set", "microKorg Files (*.set)", false),

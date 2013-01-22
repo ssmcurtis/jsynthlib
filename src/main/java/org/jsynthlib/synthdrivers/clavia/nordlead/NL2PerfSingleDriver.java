@@ -110,7 +110,7 @@ public class NL2PerfSingleDriver extends SynthDriverPatchImpl {
 			(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0xF7 };
 
 	public NL2PerfSingleDriver() {
-		super("Perf Single", "Kenneth L. Martinez");
+		super("Perf Single NL2", "Kenneth L. Martinez");
 		sysexID = "F033**04**";
 		sysexRequestDump = new SysexHandler("F0 33 @@ 04 *bankNum* *patchNum* F7");
 
@@ -177,6 +177,7 @@ public class NL2PerfSingleDriver extends SynthDriverPatchImpl {
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {
+		
 		send(sysexRequestDump.toSysexMessage(((NordLeadDevice) getDevice()).getGlobalChannel(),
 				new NameValue("bankNum", 41), new NameValue("patchNum", patchNum)));
 	}

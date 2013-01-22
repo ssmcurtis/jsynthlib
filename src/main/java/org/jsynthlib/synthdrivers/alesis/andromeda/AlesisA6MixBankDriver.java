@@ -16,7 +16,7 @@ import org.jsynthlib.tools.ErrorMsgUtil;
 public class AlesisA6MixBankDriver extends SynthDriverBank {
 
 	public AlesisA6MixBankDriver() {
-		super("Mix Bank", "Kenneth L. Martinez", Andromeda.PATCH_COUNT_IN_BANK, 4);
+		super("Mix Bank", "Kenneth L. Martinez", Andromeda.PROGRAM_COUNT_IN_BANK, 4);
 		sysexID = "F000000E1D04**00";
 		sysexRequestDump = new SysexHandler(Andromeda.REQUEST_MIX_BANK);
 		patchSize = 151040;

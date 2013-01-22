@@ -47,7 +47,7 @@ public abstract class PatchTransferHandler extends TransferHandler {
 
 	protected Transferable createTransferable(JComponent c) {
 		PatchesAndScenes patchesAndScenes = new PatchesAndScenes();
-		
+
 		if (c instanceof JTable) {
 			System.out.println("Create transferable ...");
 
@@ -92,27 +92,30 @@ public abstract class PatchTransferHandler extends TransferHandler {
 					if (isMoveInside) {
 						if (patches.size() == 1) {
 							for (Map.Entry<Integer, Patch> entry : patches.entrySet()) {
-								
+
 								Patch newPatch = (Patch) entry.getValue().clone();
 								newPatch.findDriver();
-								
+
 								// INFO ssmCurtis - Q&D
 								try {
 									int row = libraryFrame.getTable().convertRowIndexToModel(entry.getKey());
-									
-									System.out.println("Remove now ...");
-									libraryFrame.getMyModel().removeAt(row);
-									int targetRow = libraryFrame.getTable().convertRowIndexToModel(libraryFrame.getTable().getSelectedRow());
-									libraryFrame.getMyModel().addPatch(targetRow, newPatch);
-									libraryFrame.getMyModel().fireTableDataChanged();
 
+									System.out.println("Remove now original row " + row + "(" + entry.getKey() + ")");
+									libraryFrame.getMyModel().removeAt(row);
+
+									int targetRow = libraryFrame.getTable().getSelectedRow();
+									System.out.println("Add patch at row " + targetRow);
+
+									libraryFrame.getMyModel().addPatch(targetRow, newPatch);
+
+									libraryFrame.getMyModel().fireTableDataChanged();
 									Patch px = libraryFrame.getPatchCollection().get(targetRow);
 
-									System.out.println(px.getDevice().getModelName() + " " + px.getFileName());
+									// System.out.println(px.getDevice().getModelName() + " " + px.getFileName());
 
 									libraryFrame.getTable().getSelectionModel().setSelectionInterval(targetRow, targetRow);
 								} catch (IndexOutOfBoundsException iobe) {
-									// cut ... row already removed... 
+									// cut ... row already removed...
 									libraryFrame.getMyModel().addPatch(newPatch);
 								}
 

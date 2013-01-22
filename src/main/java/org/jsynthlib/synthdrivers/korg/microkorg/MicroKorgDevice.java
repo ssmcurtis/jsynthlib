@@ -6,16 +6,16 @@ import org.jsynthlib.model.device.Device;
 
 public class MicroKorgDevice extends Device {
 
-	public MicroKorgDevice() {
-		super(MicroKorg.VENDOR, MicroKorg.DEVICE, null, null, "");
-	}
-
 	/** Constructor for for actual work. */
 	public MicroKorgDevice(Preferences prefs) {
-		this();
+		super(MicroKorg.VENDOR, MicroKorg.DEVICE, null, null, "");
 		this.prefs = prefs;
 
-		addDriver(new MicroKorgSingleDriver());
+		setMaxProgramForLibraryStorage(MicroKorg.PATCH_COUNT_IN_BANK);
+
+		MicroKorgSingleDriver libraryDriver = new MicroKorgSingleDriver();
+		libraryDriver.setUseForStoreLibrary(true);
+		addDriver(libraryDriver);
 		addDriver(new MicroKorgBankDriver());
 	}
 }

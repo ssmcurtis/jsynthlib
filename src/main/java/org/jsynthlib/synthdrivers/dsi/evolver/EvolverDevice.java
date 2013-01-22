@@ -14,8 +14,13 @@ public class EvolverDevice extends Device {
 	public EvolverDevice(Preferences prefs) {
 		this();
 		this.prefs = prefs;
+		
+		setMaxProgramForLibraryStorage(Evolver.PROGRAM_COUNT_IN_BANK);
 
-		addDriver(new EvolverSingleDriver());
+		EvolverSingleDriver libraryDriver = new EvolverSingleDriver();
+		libraryDriver.setUseForStoreLibrary(true);
+		addDriver(libraryDriver);
+
 		addDriver(new EvolverBankDriver());
 	}
 }

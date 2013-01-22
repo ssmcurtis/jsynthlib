@@ -91,14 +91,14 @@ abstract public class SynthDriverPatchImpl implements SynthDriverPatch {
 	 * @see #setPatchName
 	 * @see #getPatchName
 	 */
-	protected int patchNameStart;
+	protected int patchNameStart = -1;
 	/**
 	 * Number of characters in the patch name. (0 if no name)
 	 * 
 	 * @see #setPatchName
 	 * @see #getPatchName
 	 */
-	protected int patchNameSize;
+	protected int patchNameSize = 0;
 
 	// for default calculateCheckSum(Patch) method
 	/**
@@ -108,7 +108,7 @@ abstract public class SynthDriverPatchImpl implements SynthDriverPatch {
 	 * 
 	 * @see #calculateChecksum(PatchDataImpl)
 	 */
-	protected int checksumOffset = -1;
+	protected int checksumOffset;
 	/**
 	 * Start of range that Checksum covers.
 	 * <p>
@@ -150,6 +150,8 @@ abstract public class SynthDriverPatchImpl implements SynthDriverPatch {
 	 */
 	protected String sysexID = null;
 
+	private boolean useForStoreLibrary = false;
+	
 	@Override
 	public String getSysexID() {
 		return sysexID;
@@ -161,7 +163,7 @@ abstract public class SynthDriverPatchImpl implements SynthDriverPatch {
 	 * 
 	 * @see #sendPatchWorker
 	 */
-	protected int deviceIDoffset; // array index of device ID
+	protected int deviceIDoffset = 0; // array index of device ID
 
 	/**
 	 * SysexHandler object to request dump. You don't have to use this field if you override
@@ -527,7 +529,7 @@ abstract public class SynthDriverPatchImpl implements SynthDriverPatch {
 			// Bank Select (MSB)
 			msg.setMessage(ShortMessage.CONTROL_CHANGE, getChannel() - 1, 0x00, bankNum / 128);
 			send(msg);
-			
+
 			// Bank Select (LSB)
 			msg.setMessage(ShortMessage.CONTROL_CHANGE, getChannel() - 1, 0x20, bankNum % 128);
 			send(msg);
@@ -754,8 +756,17 @@ abstract public class SynthDriverPatchImpl implements SynthDriverPatch {
 	}
 
 	@Override
-	public boolean isUseableForLibrary() {
-		return false;
+	public boolean isUseForStoreLibrary() {
+		return useForStoreLibrary;
 	}
 
+	public void setUseForStoreLibrary(boolean useForStoreLibrary) {
+		this.useForStoreLibrary = useForStoreLibrary;
+	}
+
+	public void setFirstBankFirstPatch(){
+		setBankNum(0);
+		sendProgramChange(0);
+	}
+	
 }

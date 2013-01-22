@@ -61,7 +61,7 @@ public interface SynthDriver {
 	 */
 	boolean isConverter();
 	
-	boolean isUseableForLibrary();
+	boolean isUseForStoreLibrary();
 	
 	public ByteBuffer processDumpDataConversion(byte[] sysexBuffer);
 }

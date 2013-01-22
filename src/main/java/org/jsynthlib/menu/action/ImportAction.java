@@ -1,6 +1,5 @@
 package org.jsynthlib.menu.action;
 
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +17,6 @@ import org.jsynthlib.menu.preferences.AppConfig;
 import org.jsynthlib.menu.window.CompatibleFileDialog;
 import org.jsynthlib.model.JSynthImportFileType;
 import org.jsynthlib.tools.ErrorMsgUtil;
-import org.jsynthlib.tools.UiUtil;
 
 @SuppressWarnings("serial")
 public class ImportAction extends AbstractAction {

@@ -25,7 +25,6 @@ import org.jsynthlib.model.driver.SynthDriver;
 import org.jsynthlib.model.driver.SynthDriverBank;
 import org.jsynthlib.model.driver.SynthDriverPatch;
 import org.jsynthlib.model.patch.Patch;
-import org.jsynthlib.tools.DriverUtil;
 import org.jsynthlib.tools.ErrorMsgUtil;
 import org.jsynthlib.tools.MidiUtil;
 import org.jsynthlib.tools.TableUtil;

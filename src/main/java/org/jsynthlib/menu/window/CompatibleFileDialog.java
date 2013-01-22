@@ -13,7 +13,6 @@ import javax.swing.filechooser.FileSystemView;
 
 import org.jsynthlib.JSynthConstants;
 import org.jsynthlib.tools.MacUtil;
-import org.jsynthlib.tools.UiUtil;
 
 public class CompatibleFileDialog extends JFileChooser {
 

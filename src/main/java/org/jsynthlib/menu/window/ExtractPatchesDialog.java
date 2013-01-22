@@ -20,7 +20,7 @@ import org.jsynthlib.tools.TableUtil;
  * @author Torsten Tittmann
  * @version $Id$
  */
-public class ExtractPatchesDialog extends DevDrvPatchSelector {
+public class ExtractPatchesDialog extends DeviceDriverBankPatchSelector {
 
 	private ByteBuffer byteBuffer;
 	private String filename;

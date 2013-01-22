@@ -37,7 +37,7 @@ public class DeviceSelectionTree extends JTree {
 	/**
 	 * This initializes the tree and populates it will all of the devices known to DevicesConfig
 	 */
-	public DeviceSelectionTree() {
+	public DeviceSelectionTree(boolean isReadOnly) {
 		DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("Devices");
 		switch (groupStyle) {
 		case GROUP_MANUF:
@@ -50,7 +50,6 @@ public class DeviceSelectionTree extends JTree {
 
 		// Built the tree according to the groupStyle
 		buildTree(rootNode);
-
 		// Expand the first level so that we don't just see a single folder
 		expandRow(0);
 	}
@@ -144,10 +143,13 @@ public class DeviceSelectionTree extends JTree {
 	private void buildTreeByType(Collection col, DefaultMutableTreeNode node) {
 		// Cycle through all of the types found in this colleciton
 		for (Iterator i = getTypesInCollection(col).iterator(); i.hasNext();) {
+
 			// Create a node for this type...
 			String type = i.next().toString();
+
 			DefaultMutableTreeNode subNode = new DefaultMutableTreeNode(type);
 			node.add(subNode);
+
 			// Get a sub-collection of descriptors for this type
 			Collection subCol = filterDescriptorsByType(col, type);
 			// Now, if we're grouping by Type or by Manufacturer,Type, then this is the last

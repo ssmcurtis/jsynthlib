@@ -22,7 +22,6 @@ import org.jsynthlib.advanced.style.FormatedString;
 import org.jsynthlib.advanced.style.XMEditor;
 import org.jsynthlib.menu.helper.HexDumpContent;
 import org.jsynthlib.model.patch.Patch;
-import org.jsynthlib.model.patch.PatchDataImpl;
 
 /**
  * This class serves as a initial substitute for a patch editor. It is to be used for verifying that your driver is

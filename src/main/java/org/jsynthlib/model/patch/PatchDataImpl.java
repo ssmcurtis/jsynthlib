@@ -2,10 +2,8 @@ package org.jsynthlib.model.patch;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
 import java.util.UUID;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -453,4 +451,5 @@ public class PatchDataImpl implements PatchSingle, PatchBank {
 	public boolean getSelected() {
 		return this.selected;
 	}
+
 }

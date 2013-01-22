@@ -9,29 +9,27 @@
  * @see DeviceListWriter_SE
  */
 
-package org.jsynthlib.model.descriptor;
+package org.jsynthlib.synthdrivers;
 
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.prefs.Preferences;
 
 import org.apache.commons.lang3.text.WordUtils;
-import org.clapper.util.classutil.AbstractClassFilter;
-import org.clapper.util.classutil.AndClassFilter;
-import org.clapper.util.classutil.ClassFilter;
-import org.clapper.util.classutil.ClassFinder;
-import org.clapper.util.classutil.ClassInfo;
-import org.clapper.util.classutil.InterfaceOnlyClassFilter;
-import org.clapper.util.classutil.NotClassFilter;
-import org.clapper.util.classutil.SubclassClassFilter;
 import org.jsynthlib.JSynthConstants;
+import org.jsynthlib.model.descriptor.DeviceDescriptor;
 import org.jsynthlib.model.device.Device;
 import org.jsynthlib.tools.ErrorMsgUtil;
+import org.reflections.Reflections;
+import org.reflections.scanners.ResourcesScanner;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
 
 public class DevicesConfig {
 	/* enable XML Device which are still under development. */
@@ -66,23 +64,25 @@ public class DevicesConfig {
 	}
 
 	private void readDevicesFromClasspath() {
-		// find all classes extends class Device.class
-		ClassFinder finder = new ClassFinder();
-		finder.addClassPath();
+		// Reflections reflections = new Reflections("org.jsynthlib.synthdrivers");
 
-		ClassFilter filter = new AndClassFilter(new NotClassFilter(new InterfaceOnlyClassFilter()), new SubclassClassFilter(Device.class),
-				new NotClassFilter(new AbstractClassFilter()));
+		ConfigurationBuilder cfgBuilder = new ConfigurationBuilder().setUrls(ClasspathHelper.forPackage("org.jsynthlib.synthdrivers"))
+				.setScanners(new SubTypesScanner(), new ResourcesScanner());
+		Reflections reflections = new Reflections(cfgBuilder);
 
-		Collection<ClassInfo> foundClasses = new ArrayList<ClassInfo>();
-		finder.findClasses(foundClasses, filter);
+		Set<Class<? extends Device>> subTypes = reflections.getSubTypesOf(Device.class);
+		ErrorMsgUtil.reportError("Size: ", " = " + subTypes.size());
 
 		String classPrefix = JSynthConstants.SYNTLIB_CLASS_PACKAGE_PREFIX;
-		for (ClassInfo classInfo : foundClasses) {
+		for (Object o : subTypes) {
+			@SuppressWarnings("unchecked")
+			String className = ((Class<Device>) o).getName();
 			String IDString = "NONE";
-
-			if (classInfo.getClassName().startsWith(classPrefix)) {
-				String deviceString = classInfo.getClassName().substring(classPrefix.length());
-				// System.out.println("deviceClass " + deviceString);
+			System.out.println("> 2 " + className);
+			// System.out.println(">> add " + classInfo);
+			if (className.startsWith(classPrefix)) {
+				String deviceString = className.substring(classPrefix.length());
+				System.out.println("deviceClass " + deviceString);
 				String[] deviceArr = deviceString.split("\\.");
 				if (deviceArr.length >= 2) {
 					deviceArr[0] = WordUtils.capitalize(deviceArr[0]);
@@ -90,21 +90,19 @@ public class DevicesConfig {
 
 					String shortName = deviceArr[0] + deviceArr[1];
 					String deviceName = deviceArr[1];
-					String deviceClass = classInfo.getClassName();
+					String deviceClass = className;
 					String manufacturer = deviceArr[0];
 					String type = manufacturer.substring(0, 1);
 					addDevice(deviceName, shortName, deviceClass, IDString, manufacturer, type);
 				} else {
 					// no org.jsynthlib.synthdrivers.<vendor>.<type> convention
-					addDevice(classInfo.getClassName(), classInfo.getClassName(), classInfo.getClassName(), IDString, "Unknown", "U");
+					addDevice(className, className, className, IDString, "Unknown", "U");
 				}
 			} else {
 				// no org.jsynthlib.synthdrivers.<vendor>.<type> convention
-				addDevice(classInfo.getClassName(), classInfo.getClassName(), classInfo.getClassName(), IDString, "Unknown", "U");
+				addDevice(className, className, className, IDString, "Unknown", "U");
 			}
-
 		}
-
 	}
 
 	// @Deprecated

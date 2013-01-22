@@ -2,8 +2,6 @@ package org.jsynthlib.model.tablemodel;
 
 import java.util.ArrayList;
 
-import javax.swing.table.TableColumn;
-
 import org.jsynthlib.model.JSynthLibraryColumn;
 import org.jsynthlib.model.patch.Patch;
 import org.jsynthlib.tools.ErrorMsgUtil;

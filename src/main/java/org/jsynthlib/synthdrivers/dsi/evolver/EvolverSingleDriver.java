@@ -6,7 +6,6 @@ import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
-import org.jsynthlib.synthdrivers.korg.microkorg.MicroKorg;
 import org.jsynthlib.tools.HexaUtil;
 import org.jsynthlib.tools.MidiUtil;
 
@@ -80,9 +79,5 @@ public class EvolverSingleDriver extends SynthDriverPatchImpl {
 		return Evolver.HEADER_SIZE;
 	}
 
-	@Override
-	public boolean isUseableForLibrary() {
-		return true;
-	}
 
 }

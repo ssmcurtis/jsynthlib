@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jsynthlib.tools.DriverUtil;
-import org.jsynthlib.tools.HexaUtil;
 
 public enum MicroKorg {
 	PATCH_NAME_START_AT(5),

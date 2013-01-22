@@ -14,7 +14,7 @@ public enum Evolver {
 
 	private final int position;
 
-	public static final int PATCH_COUNT_IN_BANK = 128;
+	public static final int PROGRAM_COUNT_IN_BANK = 128;
 	public static final int BANK_COUNT = 4;
  	public static final int PATCH_DUMP_SIZE = 228;
  	public static final int BANK_DUMP_SIZE = 29184;
@@ -34,9 +34,9 @@ public enum Evolver {
 	}
 
 	public static String[] createPatchNumbers() {
-		String[] retarr = new String[PATCH_COUNT_IN_BANK];
-		String[] names = DriverUtil.generateNumbers(1, PATCH_COUNT_IN_BANK, "#000");
-		System.arraycopy(names, 0, retarr, 0, PATCH_COUNT_IN_BANK);
+		String[] retarr = new String[PROGRAM_COUNT_IN_BANK];
+		String[] names = DriverUtil.generateNumbers(1, PROGRAM_COUNT_IN_BANK, "#000");
+		System.arraycopy(names, 0, retarr, 0, PROGRAM_COUNT_IN_BANK);
 
 		return retarr;
 	}

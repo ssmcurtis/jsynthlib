@@ -8,7 +8,6 @@ import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.SysexMessage;
 
 import org.jsynthlib.tools.ErrorMsgUtil;
-import org.jsynthlib.tools.HexaUtil;
 
 /**
  * A class for efficient and convenient creatation of sysex messages. The basic concept is to store a sysex as a byte

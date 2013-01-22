@@ -2,6 +2,9 @@ package org.jsynthlib.menu.window;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
@@ -25,7 +28,7 @@ public class MidiMonitorDialog extends JSLDialog {
 	public MidiMonitorDialog() {
 		super(PatchBayApplication.getRootFrame(), "JSynthLib Midi Monitor", false);
 		setModal(false);
-		
+
 		JPanel container = new JPanel();
 		container.setLayout(new BorderLayout());
 		jt = new MyEditorPane();
@@ -74,6 +77,17 @@ public class MidiMonitorDialog extends JSLDialog {
 				}
 			});
 			buttonPanel.add(clr, BorderLayout.WEST);
+
+			JButton copy = new JButton("Copy");
+			copy.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					Toolkit toolkit = Toolkit.getDefaultToolkit();
+					Clipboard clipboard = toolkit.getSystemClipboard();
+					StringSelection selection = new StringSelection(jt.getText());
+					clipboard.setContents(selection, null);
+				}
+			});
+			buttonPanel.add(copy, BorderLayout.NORTH);
 
 			getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 			getRootPane().setDefaultButton(ok);

@@ -34,7 +34,7 @@ import org.jsynthlib.tools.UiUtil;
  * @version $Id$
  */
 @SuppressWarnings("serial")
-public class DevDrvPatchSelector extends JDialog {
+public class DeviceDriverBankPatchSelector extends JDialog {
 
 	// ===== Instance variables
 	/** The last index in driver Combo Box. */
@@ -63,7 +63,7 @@ public class DevDrvPatchSelector extends JDialog {
 	 *            String which describe the used menu item
 	 */
 	// for SendToDialog and reassignDialog
-	public DevDrvPatchSelector(Patch patch, String wintitle) {
+	public DeviceDriverBankPatchSelector(Patch patch, String wintitle) {
 		super(PatchBayApplication.getInstance(), wintitle, true);
 
 		p = patch;
@@ -71,7 +71,7 @@ public class DevDrvPatchSelector extends JDialog {
 		patchHeaderString = patch.getPatchHeader();
 	}
 
-	public DevDrvPatchSelector(String patchHeaderString, String wintitle) {
+	public DeviceDriverBankPatchSelector(String patchHeaderString, String wintitle) {
 		super(PatchBayApplication.getInstance(), wintitle, true);
 		this.patchHeaderString = patchHeaderString;
 	}
@@ -89,7 +89,7 @@ public class DevDrvPatchSelector extends JDialog {
 	 *            String which describe the used menu item
 	 */
 	// for SysexStoreDialog
-	public DevDrvPatchSelector(Patch patch, int banknum, int patchnum, String wintitle) {
+	public DeviceDriverBankPatchSelector(Patch patch, int banknum, int patchnum, String wintitle) {
 		super(PatchBayApplication.getInstance(), wintitle, true);
 
 		this.p = patch;

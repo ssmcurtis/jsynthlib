@@ -1,8 +1,7 @@
 // written by Kenneth L. Martinez
 // $Id$
-package org.jsynthlib.synthdrivers.clavia.nordlead;
+package org.jsynthlib.synthdrivers.clavia.nordlead2;
 
-import java.awt.Dimension;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Arrays;
@@ -16,7 +15,7 @@ import org.jsynthlib.model.device.Device;
 import org.jsynthlib.model.patch.Patch;
 
 public class NordLeadDevice extends Device implements ItemListener {
-	static final String DRIVER_INFO = "Slot one's edit buffer will be used to send and play patches.\n"
+	static final String DRIVER_INFO = "COPY FORM NL1: Slot one's edit buffer will be used to send and play patches.\n"
 			+ "Please be sure to properly set the two required midi channels - "
 			+ "the global channel (default is 16), and the first slot's midi " + "channel (default is 1).  Set the global channel on the\n"
 			+ "Configuration tab of Show Details.\n\n" + "If the global channel is incorrect, patches can't be sent "
@@ -31,7 +30,7 @@ public class NordLeadDevice extends Device implements ItemListener {
 
 	/** Creates new NordLead */
 	public NordLeadDevice() {
-		super("Nord", "Lead", null, DRIVER_INFO, "Kenneth L. Martinez");
+		super(NordLead2x.VENDOR, NordLead2x.DEVICE, null, DRIVER_INFO, "Kenneth L. Martinez, ssmCurtis");
 	}
 
 	/** Constructor for for actual work. */
@@ -39,31 +38,29 @@ public class NordLeadDevice extends Device implements ItemListener {
 		this();
 		this.prefs = prefs;
 
-		// setSynthName("NL1-2");
-		// Driver drv;
-		/*
-		 * JOptionPane.showMessageDialog(PatchEdit.getInstance(), DRIVER_INFO, "Nord Lead Driver Release Notes",
-		 * JOptionPane.WARNING_MESSAGE );
-		 */
-		addDriver(new NLPatchBankDriver());
-		addDriver(new NLPatchSingleDriver());
-		addDriver(new NLDrumBankDriver());
-		addDriver(new NLDrumSingleDriver());
-		addDriver(new NLPerfBankDriver());
-		addDriver(new NLPerfSingleDriver());
-		addDriver(new NL2PerfBankDriver());
-		addDriver(new NL2PerfSingleDriver());
-	}
+		setMaxProgramForLibraryStorage(NordLead2x.PROGRAM_COUNT_IN_BANK);
 
+		NL2xPatchSingleDriver libraryDriver = new NL2xPatchSingleDriver();
+		libraryDriver.setUseForStoreLibrary(true);
+		addDriver(libraryDriver);
+
+		addDriver(new NL2xPatchBankDriver());
+		addDriver(new NL2xPerfBankDriver());
+		addDriver(new NL2xPerfSingleDriver());
+	
+	}
+	
+	@Override
 	public JPanel config() {
 		JPanel panel = new JPanel();
 
 		panel.add(new JLabel("Select Nord Lead Global Channel"));
 		channelList = new JComboBox<String>(channels);
-		channelList.setMaximumSize(new Dimension(150, 25));
+		// channelList.setMaximumSize(new Dimension(25, 25));
 		channelList.setSelectedIndex(getGlobalChannel() - 1);
 		channelList.addItemListener(this);
 		panel.add(channelList);
+
 		return panel;
 	}
 
@@ -100,18 +97,17 @@ public class NordLeadDevice extends Device implements ItemListener {
 	@Override
 	public boolean comparePatches(Patch p1, Patch p2) {
 		// do not compare checksum and header
-
 		byte[] stay = p1.getByteArray();
 
-		int stayLength = stay.length - 2 - NordLead.HEADER_SIZE;
+		int stayLength = stay.length - 2 - NordLead2x.HEADER_SIZE;
 		byte[] stay1 = new byte[stayLength];
-		System.arraycopy(stay, NordLead.HEADER_SIZE, stay1, 0, stayLength);
+		System.arraycopy(stay, NordLead2x.HEADER_SIZE, stay1, 0, stayLength);
 
 		byte[] delete = p2.getByteArray();
 
-		int deleteLength = delete.length - 2 - NordLead.HEADER_SIZE;
+		int deleteLength = delete.length - 2 - NordLead2x.HEADER_SIZE;
 		byte[] delete1 = new byte[deleteLength];
-		System.arraycopy(delete, NordLead.HEADER_SIZE, delete1, 0, deleteLength);
+		System.arraycopy(delete, NordLead2x.HEADER_SIZE, delete1, 0, deleteLength);
 
 		return Arrays.equals(stay1, delete1);
 	}

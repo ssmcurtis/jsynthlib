@@ -6,11 +6,8 @@ import java.util.Map;
 
 import javax.swing.AbstractAction;
 
-import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.Actions;
-import org.jsynthlib.menu.window.AbstractLibraryFrame;
 import org.jsynthlib.menu.window.LibraryFrame;
-import org.jsynthlib.menu.window.SortDialog;
 import org.jsynthlib.tools.ErrorMsgUtil;
 
 public class SelectDuplicateAction extends AbstractAction {

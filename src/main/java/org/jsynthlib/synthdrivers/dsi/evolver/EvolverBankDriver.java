@@ -19,7 +19,7 @@ public class EvolverBankDriver extends SynthDriverBank {
 	private static final SysexHandler SYS_REQ = new SysexHandler("F0 01 20 01 05 *bankNum* *patchNum* F7");
 
 	public EvolverBankDriver() {
-		super("Bank*", "ssmCurtis", Evolver.PATCH_COUNT_IN_BANK, Evolver.BANK_COUNT);
+		super("Bank*", "ssmCurtis", Evolver.PROGRAM_COUNT_IN_BANK, Evolver.BANK_COUNT);
 		sysexID = Evolver.DEVICE_SYSEX_ID;
 		singleSysexID = Evolver.DEVICE_SYSEX_ID;
 

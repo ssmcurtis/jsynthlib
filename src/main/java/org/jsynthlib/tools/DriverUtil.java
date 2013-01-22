@@ -76,9 +76,9 @@ public class DriverUtil {
 
 	// TODO ssmCurtis ... split always F0..F7 ?
 	private static Patch[] createPatches(byte[] sysex, SynthDriver driver, String filename) {
-		
+
 		// INFO CREATE PATCH FOR SYSEX
-		
+
 		if (driver == null) {
 			return null;
 		} else if (driver.isConverter()) {
@@ -271,8 +271,11 @@ public class DriverUtil {
 	 */
 	public static String[] generateNumbers(int min, int max, String format) {
 		String retval[] = new String[max - min + 1];
+
 		DecimalFormat df = (DecimalFormat) NumberFormat.getInstance().clone();
+
 		df.applyPattern(format);
+
 		while (max >= min) {
 			retval[max - min] = df.format(max--);
 		}

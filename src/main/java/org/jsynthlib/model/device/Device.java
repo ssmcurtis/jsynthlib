@@ -2,6 +2,7 @@ package org.jsynthlib.model.device;
 
 import java.awt.Frame;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.prefs.Preferences;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -12,10 +13,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import org.jsynthlib.JSynthConstants;
 import org.jsynthlib.menu.preferences.AppConfig;
 import org.jsynthlib.menu.window.DeviceDetailsDialog;
 import org.jsynthlib.model.driver.Converter;
 import org.jsynthlib.model.driver.SynthDriver;
+import org.jsynthlib.model.patch.Patch;
 import org.jsynthlib.tools.ErrorMsgUtil;
 import org.jsynthlib.tools.MidiUtil;
 
@@ -85,6 +88,8 @@ public abstract class Device /* implements Serializable, Storable */{
 	/** Authors of the device driver. */
 	private final String authors;
 
+	private int maxProgrammsForLibraryStorage = JSynthConstants.MAX_PROGRAMMS_FOR_STORE_LIBRARY;
+
 	/** set to true when initialization of MIDI output is done. */
 	private boolean initPort = false;
 	/** MIDI output Receiver */
@@ -133,7 +138,7 @@ public abstract class Device /* implements Serializable, Storable */{
 		int inPort = prefs.getInt("inPort", initPortIn);
 		setInPort(inPort);
 		int initPortOut = AppConfig.getInitPortOut();
-		int outPort = prefs.getInt("port", initPortOut); 
+		int outPort = prefs.getInt("port", initPortOut);
 		setPort(outPort);
 	}
 
@@ -182,8 +187,8 @@ public abstract class Device /* implements Serializable, Storable */{
 	 * 
 	 * @return Value of property infoText.
 	 */
-	public final String getInfoText() {
-		return infoText;
+	public String getInfoText() {
+		return infoText + "\n\nMax programs for library storage: " + getMaxPatchesForLibraryStorage();
 	}
 
 	/**
@@ -291,7 +296,7 @@ public abstract class Device /* implements Serializable, Storable */{
 			try {
 				rcvr = MidiUtil.getReceiver(port);
 			} catch (MidiUnavailableException e) {
-				
+
 				ErrorMsgUtil.reportStatus(e);
 				int answer = JOptionPane.showConfirmDialog(null, "At last one device's MIDI port is unavailable.\n"
 						+ "You might verify your setup and restart the application.\n" + "Press CANCEL to quit or OK to continue.",
@@ -299,7 +304,7 @@ public abstract class Device /* implements Serializable, Storable */{
 				if (answer == JOptionPane.CANCEL_OPTION) {
 					System.exit(0);
 				}
-				
+
 			}
 		}
 		prefs.putInt("port", port);
@@ -416,10 +421,8 @@ public abstract class Device /* implements Serializable, Storable */{
 			di = MidiUtil.getOutputName(getPort());
 		} catch (Exception ex) {
 		}
-		return getManufacturerName() + " "
-				+ getModelName() 
-				+ " <" + getSynthName() + ">  -  MIDI Out Port: " + ((di == "") ? "None" : di) + "  -  MIDI Channel: "
-				+ getChannel();
+		return getManufacturerName() + " " + getModelName() + " <" + getSynthName() + ">  -  MIDI Out Port: " + ((di == "") ? "None" : di)
+				+ "  -  MIDI Channel: " + getChannel();
 	}
 
 	/**
@@ -433,7 +436,24 @@ public abstract class Device /* implements Serializable, Storable */{
 	 * Show a dialog for the details of the device.
 	 */
 	public void showDetails(Frame owner) {
-		DeviceDetailsDialog ddd = new DeviceDetailsDialog(owner, this);
+		DeviceDetailsDialog ddd = new DeviceDetailsDialog(owner, this, false);
 		ddd.setVisible(true);
 	}
+
+	public boolean comparePatches(Patch p1, Patch p2) {
+
+		byte[] stay = p1.getByteArray();
+		byte[] delete = p2.getByteArray();
+
+		return Arrays.equals(stay, delete);
+	}
+
+	public int getMaxPatchesForLibraryStorage() {
+		return maxProgrammsForLibraryStorage;
+	}
+
+	public void setMaxProgramForLibraryStorage(int maxPatchesForLibraryStorage) {
+		this.maxProgrammsForLibraryStorage = maxPatchesForLibraryStorage;
+	}
+
 }

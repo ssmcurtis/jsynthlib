@@ -22,6 +22,7 @@ import javax.swing.tree.TreePath;
 import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.DeviceSelectionTree;
 import org.jsynthlib.menu.JSLDialog;
+import org.jsynthlib.menu.window.DeviceDetailsDialog;
 import org.jsynthlib.model.device.Device;
 import org.jsynthlib.tools.UiUtil;
 
@@ -40,7 +41,9 @@ public class DeviceDialog extends JSLDialog {
 		JPanel container = new JPanel();
 		container.setLayout(new BorderLayout());
 
-		deviceSelectionTree = new DeviceSelectionTree();
+		deviceSelectionTree = new DeviceSelectionTree(isReadOnly);
+		
+
 		JScrollPane scrollpane = new JScrollPane(deviceSelectionTree);
 		container.add(scrollpane, BorderLayout.CENTER);
 
@@ -75,6 +78,27 @@ public class DeviceDialog extends JSLDialog {
 				}
 			});
 			buttonPanel.add(ok);
+		} else {
+			// The following code catches double-clicks on leafs and treats them like pressing "OK"
+			MouseListener ml = new MouseAdapter() {
+				public void mousePressed(MouseEvent e) {
+					int selRow = deviceSelectionTree.getRowForLocation(e.getX(), e.getY());
+					TreePath tp = deviceSelectionTree.getPathForRow(selRow);
+					// Did they even click on a tree item
+					if (tp != null) {
+						if (e.getClickCount() == 2) {
+							// User double-clicked. What did they click on?
+							DefaultMutableTreeNode o = (DefaultMutableTreeNode) tp.getLastPathComponent();
+							if (o.isLeaf()) {
+								// User double-clicked on a leaf. Treat it like "OK"
+								showInfo();
+							}
+						}
+					}
+				}
+			};
+			deviceSelectionTree.addMouseListener(ml);
+
 		}
 		JButton cancel = new JButton("Cancel");
 		cancel.addActionListener(new ActionListener() {
@@ -91,6 +115,21 @@ public class DeviceDialog extends JSLDialog {
 		setSize(400, 600);
 
 		UiUtil.centerDialog(this);
+	}
+
+	private void showInfo() {
+
+		String s = (String) deviceSelectionTree.getSelectedValue();
+
+		if (s == null) {
+			return;
+		}
+
+		String cls = PatchBayApplication.deviceConfig.getClassNameForDeviceName(s);
+		Device device = PatchBayApplication.deviceConfig.createDevice(cls, null);
+		DeviceDetailsDialog ddd = new DeviceDetailsDialog(UiUtil.getFrame(this), device, true);
+		ddd.setVisible(true);
+
 	}
 
 	void okPressed() {

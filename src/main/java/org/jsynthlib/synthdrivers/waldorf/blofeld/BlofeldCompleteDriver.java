@@ -10,8 +10,6 @@ import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.ErrorMsgUtil;
 
 /**
- * Bank driver for KAWAI K4/K4r voice patch.
- * 
  * @version $Id$
  */
 public class BlofeldCompleteDriver extends SynthDriverBank {
@@ -19,14 +17,14 @@ public class BlofeldCompleteDriver extends SynthDriverBank {
 	private static final SysexHandler sysexHandler = new SysexHandler(Blofeld.REQUEST_BANK);
 
 	public BlofeldCompleteDriver() {
-		super("Complete", "ssmCurtis", Blofeld.PATCH_COUNT_IN_SYNTH, 1);
+		super("Complete", "ssmCurtis", Blofeld.PROGRAM_COUNT_IN_SYNTH, 1);
 		sysexID = Blofeld.DEVICE_SYSEX_ID;
 		patchSize = Blofeld.BANK_SIZE_MIDI_SYSEX;
-		patchNameStart = Blofeld.PATCH_NAME_START_AT.position();
-		patchNameSize = Blofeld.PATCH_NAME_LENGTH.position();
+		patchNameStart = Blofeld.P_NAME_START_AT.position();
+		patchNameSize = Blofeld.P_NAME_LENGTH.position();
 		deviceIDoffset = Blofeld.DEVICE_ID_OFFSET;
 
-		checksumOffset = Blofeld.PATCH_CHECKSUM_OFFSET.position();
+		checksumOffset = Blofeld.P_CHECKSUM_OFFSET.position();
 		bankNumbers = Blofeld.BANK_NAMES_COMPLETE;
 		patchNumbers = Blofeld.createPatchNumbersCompleteSynth();
 
@@ -43,9 +41,9 @@ public class BlofeldCompleteDriver extends SynthDriverBank {
 		System.out.println(">>>> Get patch name");
 
 		int nameStart = getPatchStart(patchNum);
-		nameStart += Blofeld.PATCH_NAME_START_AT.position(); // offset of name in patch data
+		nameStart += Blofeld.P_NAME_START_AT.position(); // offset of name in patch data
 		try {
-			StringBuffer s = new StringBuffer(new String(p.getSysex(), nameStart, Blofeld.PATCH_NAME_LENGTH.position(), "US-ASCII"));
+			StringBuffer s = new StringBuffer(new String(p.getSysex(), nameStart, Blofeld.P_NAME_LENGTH.position(), "US-ASCII"));
 			return s.toString();
 		} catch (UnsupportedEncodingException ex) {
 			return "-";
@@ -104,8 +102,8 @@ public class BlofeldCompleteDriver extends SynthDriverBank {
 	}
 
 	public void calculateChecksum(PatchDataImpl p) {
-		// set an always accepted checksum
-		p.getSysex()[Blofeld.PATCH_CHECKSUM_OFFSET.position()] = 0x7F;
+		// set default checksum
+		p.getSysex()[Blofeld.P_CHECKSUM_OFFSET.position()] = 0x7F;
 	}
 
 	private int getPatchStart(int patchNum) {

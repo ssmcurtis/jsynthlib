@@ -1,11 +1,8 @@
 package org.jsynthlib.synthdrivers.korg.microkorg;
 
 import java.nio.ByteBuffer;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.sound.midi.MidiMessage;
-import javax.swing.JOptionPane;
 
 import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverBank;
@@ -13,7 +10,6 @@ import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.ErrorMsgUtil;
 import org.jsynthlib.tools.HexaUtil;
-import org.jsynthlib.tools.MidiUtil;
 
 /**
  * Bank driver for KAWAI K4/K4r voice patch.
@@ -237,11 +233,6 @@ public class MicroKorgBankDriver extends SynthDriverBank {
 
 	public int getHeaderSize() {
 		return MicroKorg.HEADER_SIZE;
-	}
-
-	@Override
-	public boolean isUseableForLibrary() {
-		return false;
 	}
 
 }

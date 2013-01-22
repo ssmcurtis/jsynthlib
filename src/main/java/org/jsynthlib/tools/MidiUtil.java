@@ -23,7 +23,6 @@ package org.jsynthlib.tools;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -51,10 +50,6 @@ import org.jsynthlib.midi.TrackTest;
 import org.jsynthlib.model.JSynthBpm;
 import org.jsynthlib.model.JSynthOctave;
 import org.jsynthlib.model.JSynthSequence;
-import org.jsynthlib.model.device.Device;
-import org.jsynthlib.model.driver.NameValue;
-import org.jsynthlib.model.driver.SynthDriver;
-import org.jsynthlib.model.driver.SynthDriverPatch;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 
 /**

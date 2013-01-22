@@ -2,7 +2,6 @@ package org.jsynthlib.menu.window;
 
 import java.awt.Toolkit;
 import java.io.File;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -17,6 +16,7 @@ import org.jsynthlib.menu.PatchTransferHandler;
 import org.jsynthlib.menu.helper.ExtensionFilter;
 import org.jsynthlib.menu.helper.SysexSort;
 import org.jsynthlib.model.JSynthLibraryColumn;
+import org.jsynthlib.model.device.Device;
 import org.jsynthlib.model.patch.Patch;
 import org.jsynthlib.model.tablemodel.LibraryModel;
 import org.jsynthlib.model.tablemodel.PatchTableModel;
@@ -59,13 +59,11 @@ public class LibraryFrame extends AbstractLibraryFrame {
 		Iterator<Patch> it = myModel.getList().iterator();
 
 		Patch stayPatch = it.next();
-		byte[] stay = stayPatch.getByteArray();
-
+		Device device = stayPatch.getDevice();
 		while (it.hasNext()) {
 			Patch selectedPatch = it.next();
-			byte[] delete = selectedPatch.getByteArray();
-			if (Arrays.equals(stay, delete)) {
-				// TODO ssmCurtis - changed from delte to selected
+			if (device.comparePatches(stayPatch, selectedPatch)) {
+				// TODO ssmCurtis - changed from delete to selected
 				// deletePatch.setComment(deletePatch.getComment() + " #same as " + stayPatch.getComment()) ;
 				// it.remove();
 
@@ -73,7 +71,6 @@ public class LibraryFrame extends AbstractLibraryFrame {
 
 				numDeleted++;
 			} else {
-				stay = delete;
 				stayPatch = selectedPatch;
 			}
 		}

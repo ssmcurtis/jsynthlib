@@ -31,7 +31,7 @@ public class DeviceDetailsDialog extends JDialog {
 	// private JTable table2;
 	private Device device;
 
-	public DeviceDetailsDialog(Frame owner, Device d) {
+	public DeviceDetailsDialog(Frame owner, Device d, boolean isReadonly) {
 		super(owner, "Device Details", true);
 		device = d;
 
@@ -39,8 +39,7 @@ public class DeviceDetailsDialog extends JDialog {
 		container.setLayout(new BorderLayout());
 		JPanel infoPane = new JPanel();
 		infoPane.setLayout(new BorderLayout());
-		infoPane.add(new JLabel("Device Name:  " + device.getManufacturerName() + " " + device.getModelName()),
-				BorderLayout.NORTH);
+		infoPane.add(new JLabel("Device Name:  " + device.getManufacturerName() + " " + device.getModelName()), BorderLayout.NORTH);
 		JTextArea jta = new JTextArea(null, 10, 50);
 		jta.append(device.getInfoText());
 		jta.setLineWrap(true);
@@ -106,14 +105,19 @@ public class DeviceDetailsDialog extends JDialog {
 
 		getRootPane().setDefaultButton(ok);
 		container.add(buttonPanel, BorderLayout.SOUTH);
-		JPanel configPane = new JPanel();
-		configPane.setLayout(new BorderLayout());
-		configPane.add(device.config(), BorderLayout.NORTH);
-		configPane.add(buttonPane2, BorderLayout.SOUTH);
+
 		JTabbedPane jtp = new JTabbedPane();
 		jtp.addTab("Information", infoPane);
-		jtp.addTab("Configuration", configPane);
-		jtp.addTab("Loaded Drivers", container);
+
+		if (!isReadonly) {
+			JPanel configPane = new JPanel();
+			configPane.setLayout(new BorderLayout());
+			configPane.add(device.config(), BorderLayout.NORTH);
+			configPane.add(buttonPane2, BorderLayout.SOUTH);
+			jtp.addTab("Configuration", configPane);
+		}
+
+		jtp.addTab("Drivers", container);
 		getContentPane().add(jtp);
 		pack();
 		UiUtil.centerDialog(this);

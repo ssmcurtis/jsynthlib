@@ -14,7 +14,7 @@ import org.jsynthlib.model.patch.Patch;
  * @author Torsten Tittmann
  * @version $Id$
  */
-public class ReassignPatchDialog extends DevDrvPatchSelector {
+public class ReassignPatchDialog extends DeviceDriverBankPatchSelector {
 
 	/**
 	 * Constructor

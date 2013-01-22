@@ -4,16 +4,12 @@
 
 package org.jsynthlib.synthdrivers.alesis.andromeda;
 
-import java.nio.ByteBuffer;
-
 import javax.swing.JOptionPane;
 
 import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
-import org.jsynthlib.synthdrivers.korg.microkorg.MicroKorg;
-import org.jsynthlib.tools.ErrorMsgUtil;
 import org.jsynthlib.tools.MidiUtil;
 
 public class AlesisA6PgmSingleDriver extends SynthDriverPatchImpl {
@@ -103,11 +99,6 @@ public class AlesisA6PgmSingleDriver extends SynthDriverPatchImpl {
 	@Override
 	public int getHeaderSize() {
 		return Andromeda.HEADER_SIZE;
-	}
-
-	@Override
-	public boolean isUseableForLibrary() {
-		return true;
 	}
 
 	

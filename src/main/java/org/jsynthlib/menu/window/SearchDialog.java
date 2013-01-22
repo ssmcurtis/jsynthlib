@@ -8,7 +8,6 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.Action;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -21,7 +20,6 @@ import javax.swing.JTextField;
 import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.Actions;
 import org.jsynthlib.menu.JSLFrame;
-import org.jsynthlib.menu.action.PlayAction;
 import org.jsynthlib.model.JSynthLibraryColumn;
 import org.jsynthlib.model.patch.Patch;
 import org.jsynthlib.model.tablemodel.PatchTableModel;

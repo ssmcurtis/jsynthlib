@@ -1,18 +1,13 @@
 package org.jsynthlib.synthdrivers.korg.microkorg;
 
-import java.lang.annotation.Annotation;
 import java.nio.ByteBuffer;
 
-import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiMessage;
-import javax.sound.midi.SysexMessage;
 
-import org.jsynthlib.menu.preferences.AppConfig;
 import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
-import org.jsynthlib.synthdrivers.waldorf.blofeld.Blofeld;
 import org.jsynthlib.tools.HexaUtil;
 import org.jsynthlib.tools.MidiUtil;
 
@@ -50,9 +45,10 @@ public class MicroKorgSingleDriver extends SynthDriverPatchImpl {
 		patchToSend.getSysex()[2] = MicroKorg.getMidiChannelByte(getChannel());
 		
 		sendPatch(patchToSend);
-		MidiUtil.waitForSevenBitTechnology(AppConfig.getMidiOutDelay()*4);
+		// TODO value to driver configuration
+		MidiUtil.waitForSevenBitTechnology(2000);
 
-		System.out.println(HexaUtil.hexDumpOneLine(patchToSend.getSysex()));
+		// System.out.println(HexaUtil.hexDumpOneLine(patchToSend.getSysex()));
 
 		// PatchDataImpl toSend = p.clone();
 		// ByteBuffer midi = MicroKorg.processDumpDataEncrypt(p.getSysex(), getChannel(), 3);
@@ -63,7 +59,6 @@ public class MicroKorgSingleDriver extends SynthDriverPatchImpl {
 		System.out.println(HexaUtil.hexDumpOneLine(msg.getMessage()));
 		
 		send(msg);
-		MidiUtil.waitForSevenBitTechnology(AppConfig.getMidiOutDelay()*4);
 
 		// MicroKorg.WRITE_SINGLE_BYTES[2] = MicroKorg.getMidiChannelByte(getChannel());
 		// MicroKorg.WRITE_SINGLE_BYTES[6] = HexaUtil.intToByte(patchNum);
@@ -137,9 +132,6 @@ public class MicroKorgSingleDriver extends SynthDriverPatchImpl {
 		return MicroKorg.HEADER_SIZE;
 	}
 
-	@Override
-	public boolean isUseableForLibrary() {
-		return true;
-	}
+
 
 }

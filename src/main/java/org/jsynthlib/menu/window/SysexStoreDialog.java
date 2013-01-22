@@ -14,7 +14,7 @@ import org.jsynthlib.model.patch.Patch;
  * @author Torsten Tittmann
  * @version $Id$
  */
-public class SysexStoreDialog extends DevDrvPatchSelector {
+public class SysexStoreDialog extends DeviceDriverBankPatchSelector {
 
 	/**
 	 * Constructor with choosable default patchNumber.

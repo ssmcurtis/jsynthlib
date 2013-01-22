@@ -2,7 +2,6 @@ package org.jsynthlib.synthdrivers.alesis.andromeda;
 
 import java.nio.ByteBuffer;
 
-import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.DriverUtil;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -16,7 +15,7 @@ public enum Andromeda {
 
 	private final int position;
 
-	public static final int PATCH_COUNT_IN_BANK = 128;
+	public static final int PROGRAM_COUNT_IN_BANK = 128;
 
 	public static final int HEADER_SIZE = 8;
 
@@ -76,7 +75,7 @@ public enum Andromeda {
 	public static boolean bankPatchSizeIsSupported(int size) {
 		System.out.println(">>> Bank size " + size);
 		switch (size) {
-		case (PROGRAM_SIZE_7BIT * PATCH_COUNT_IN_BANK):
+		case (PROGRAM_SIZE_7BIT * PROGRAM_COUNT_IN_BANK):
 			// case (PROGRAM_SIZE_8BIT * PATCH_COUNT_IN_BANK):
 			return true;
 		}
@@ -84,9 +83,9 @@ public enum Andromeda {
 	}
 
 	public static String[] createPatchNumbers() {
-		String[] retarr = new String[PATCH_COUNT_IN_BANK];
-		String[] names = DriverUtil.generateNumbers(1, PATCH_COUNT_IN_BANK, "Patch #000");
-		System.arraycopy(names, 0, retarr, 0, PATCH_COUNT_IN_BANK);
+		String[] retarr = new String[PROGRAM_COUNT_IN_BANK];
+		String[] names = DriverUtil.generateNumbers(1, PROGRAM_COUNT_IN_BANK, "Patch #000");
+		System.arraycopy(names, 0, retarr, 0, PROGRAM_COUNT_IN_BANK);
 
 		return retarr;
 	}

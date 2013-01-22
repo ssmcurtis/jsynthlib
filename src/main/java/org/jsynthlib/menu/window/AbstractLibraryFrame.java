@@ -5,7 +5,6 @@
  */
 package org.jsynthlib.menu.window;
 
-import java.awt.AWTKeyStroke;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -24,11 +23,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import javax.swing.FocusManager;
 import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
@@ -36,14 +32,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.KeyStroke;
 import javax.swing.TransferHandler;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.filechooser.FileFilter;
-import javax.swing.table.TableColumn;
 import javax.swing.text.MaskFormatter;
 
 import org.jsynthlib.PatchBayApplication;
@@ -53,7 +47,6 @@ import org.jsynthlib.menu.PatchTransferHandler;
 import org.jsynthlib.menu.helper.ProxyImportHandler;
 import org.jsynthlib.menu.preferences.AppConfig;
 import org.jsynthlib.model.JSynthImportFileType;
-import org.jsynthlib.model.JSynthLibraryColumn;
 import org.jsynthlib.model.patch.Patch;
 import org.jsynthlib.model.patch.PatchBank;
 import org.jsynthlib.model.patch.PatchBasket;
@@ -77,7 +70,7 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 
 	final String TYPE;
 
-	private PatchTransferHandler pth;
+	private PatchTransferHandler transferHandler;
 	/** Has the library been altered since it was last saved? */
 	protected boolean changed = false;
 	private JLabel statusBar;
@@ -88,7 +81,7 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 		super(PatchBayApplication.getDesktop(), title);
 
 		TYPE = type;
-		this.pth = pth;
+		this.transferHandler = pth;
 
 		// sorting
 		// JTable table = new JTable(myModel);
@@ -133,13 +126,13 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 
 	// JSLFrame method
 	public boolean canImport(DataFlavor[] flavors) {
-		return pth.canImport(table, flavors);
+		return transferHandler.canImport(table, flavors);
 	}
 
 	private void setDriverForPatch(Patch patch) {
 
 		// INFO CHOOSE DRIVER
-		
+
 		if (patch.getDriver() == null) {
 			patch.findDriver();
 		}
@@ -153,7 +146,7 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 	}
 
 	public void copySelectedPatch() {
-		pth.exportToClipboard(table, Toolkit.getDefaultToolkit().getSystemClipboard(), TransferHandler.COPY);
+		transferHandler.exportToClipboard(table, Toolkit.getDefaultToolkit().getSystemClipboard(), TransferHandler.COPY);
 	}
 
 	private void createTable() {
@@ -220,7 +213,7 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 			}
 		});
 		// table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		table.setTransferHandler(pth);
+		table.setTransferHandler(transferHandler);
 		table.setDragEnabled(true);
 
 		// setupColumns();
@@ -275,13 +268,14 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 
 	public void deleteSelectedPatches() {
 		ErrorMsgUtil.reportStatus("delete patch : " + table.getSelectedRowCount());
-		int[] ia = table.getSelectedRows();
+		int[] selection = table.getSelectedRows();
+
 		// Without this we cannot delete the patch at the bottom.
 		table.clearSelection();
 		// delete from bottom not to change indices to be removed
-		for (int i = ia.length; i > 0; i--) {
-			ErrorMsgUtil.reportStatus("i = " + table.convertRowIndexToModel(ia[i - 1]));
-			myModel.removeAt(table.convertRowIndexToModel(ia[i - 1]));
+		for (int i = selection.length; i > 0; i--) {
+			// ErrorMsgUtil.reportStatus("i = " + selection[i - 1]);
+			myModel.removeAt(table.convertRowIndexToModel(selection[i - 1]));
 		}
 		setChanged();
 	}
@@ -295,8 +289,6 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 	abstract void enableActions();
 
 	public void exportPatch(File file) throws IOException, FileNotFoundException {
-		System.out.println("Export - Selected row: " + table.getSelectedRow());
-		System.out.println("Export - Converted row: " + table.convertRowIndexToModel(table.getSelectedRow()));
 		if (table.getSelectedRowCount() == 0) {
 			ErrorMsgUtil.reportError("Error", "No Patch Selected.");
 			return;
@@ -342,10 +334,7 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 	}
 
 	public Patch getSelectedPatch() {
-		System.out.println(">> Get - Selected row: " + table.getSelectedRow() + "Converted row: "
-				+ table.convertRowIndexToModel(table.getSelectedRow()) + " ColumnCount: " + myModel.getRowCount());
 
-		// TODO ssmCurtis - Q&D
 		int selectedRowRaw = table.getSelectedRow();
 
 		if (selectedRowRaw == -1) {
@@ -359,6 +348,7 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 
 	public Patch[] getSelectedPatches() {
 		int[] ia = table.getSelectedRows();
+
 		List<Patch> li = new ArrayList<Patch>();
 		for (int i = ia.length; i > 0; i--) {
 			li.add(myModel.getPatchAt(table.convertRowIndexToModel(ia[i - 1])));
@@ -399,7 +389,7 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 
 		}
 
-		// sill null
+		// sill null - f.e. a renamed sysex file
 		if (patarray == null) {
 
 			patarray = ImportUtil.getPatchesFromSysex(file);
@@ -415,6 +405,7 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 		return (changed);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void open(File file) throws IOException, ClassNotFoundException {
 
 		setTitle(file.getName());
@@ -422,7 +413,7 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 
 		FileInputStream f = new FileInputStream(file);
 		ObjectInputStream s = new ObjectInputStream(f);
-		myModel.setList((ArrayList) s.readObject());
+		myModel.setList((ArrayList<Patch>) s.readObject());
 		s.close();
 		f.close();
 
@@ -433,7 +424,7 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 	}
 
 	public void pastePatch() {
-		if (pth.importData(table, Toolkit.getDefaultToolkit().getSystemClipboard().getContents(this))) {
+		if (transferHandler.importData(table, Toolkit.getDefaultToolkit().getSystemClipboard().getContents(this))) {
 			setChanged();
 		} else {
 			Actions.setEnabled(false, Actions.EN_PASTE);
@@ -498,7 +489,7 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 		try {
 			FileOutputStream f = new FileOutputStream(filename);
 			ObjectOutputStream s = new ObjectOutputStream(f);
-			List li = myModel.getList();
+			ArrayList<Patch> li = myModel.getList();
 
 			s.writeObject(li);
 			s.flush();
@@ -543,13 +534,4 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 		new SysexStoreDialog(getSelectedPatch(), 0, 0);
 	}
 
-	// private void newFilter() {
-	// RowFilter<PatchTableModel, Object> rf = null;
-	// try {
-	// rf = RowFilter.regexFilter(filterText.getText(), 0);
-	// } catch (java.util.regex.PatternSyntaxException e) {
-	// return;
-	// }
-	// sorter.setRowFilter(rf);
-	// }
 }
