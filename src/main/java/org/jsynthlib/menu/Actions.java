@@ -70,6 +70,7 @@ import org.jsynthlib.menu.action.SendToAction;
 import org.jsynthlib.menu.action.ShowDevicesAction;
 import org.jsynthlib.menu.action.StoreAction;
 import org.jsynthlib.menu.action.StoreLibraryAction;
+import org.jsynthlib.menu.action.UpdateCommentAction;
 import org.jsynthlib.menu.action.UploadAction;
 import org.jsynthlib.menu.action._ShowTestAction;
 import org.jsynthlib.menu.preferences.AppConfig;
@@ -141,6 +142,7 @@ final public class Actions {
 	public static final long EN_SELECT_BYFILTER = 0x0000040000000000L;
 	public static final long EN_SELECT_CLEAR = 0x0000080000000000L;
 	public static final long EN_STORE_LIBRARY = 0x0000100000000000L;
+	public static final long EN_UPDATE_COMMENT = 0x0000200000000000L;
 
 	/** All actions excluding ones which are always enabled. */
 	public static final long EN_ALL = (// EN_ABOUT
@@ -149,6 +151,7 @@ final public class Actions {
 			| EN_STORE_LIBRARY
 			// | EN_DOCS
 			| EN_EDIT
+			| EN_UPDATE_COMMENT
 			// | EN_EXIT
 			| EN_EXPORT
 			| EN_EXTRACT
@@ -213,6 +216,7 @@ final public class Actions {
 	private static Action playAction = new PlayAction(mnemonics);
 	private static Action playAllAction = new PlayCompleteAction(mnemonics);
 	private static Action editAction = new EditAction(mnemonics);
+	private static Action updateCommentAction = new UpdateCommentAction(mnemonics);
 	private static Action reassignAction = new ReassignAction(mnemonics);
 	private static Action extractAction = new ExtractAction(mnemonics);
 
@@ -321,6 +325,7 @@ final public class Actions {
 
 		mi = menuPatch.add(editAction);
 		mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, mask));
+		menuPatch.add(updateCommentAction);
 
 		menuPatch.addSeparator();
 		mi = menuPatch.add(searchAction);
@@ -653,6 +658,8 @@ final public class Actions {
 			docsAction.setEnabled(b);
 		if ((v & EN_EDIT) != 0)
 			editAction.setEnabled(b);
+		if ((v & EN_UPDATE_COMMENT) != 0)
+			updateCommentAction.setEnabled(b);
 		if ((v & EN_EXIT) != 0)
 			exitAction.setEnabled(b);
 		if ((v & EN_EXPORT) != 0)
@@ -852,7 +859,9 @@ final public class Actions {
 
 	// TODO ssmCurtis - check .. new thread
 	public static void EditActionProc() {
+		
 		class Worker extends Thread {
+			
 			public void run() {
 				try {
 					JSLFrame frm = getSelectedFrame().editSelectedPatch();
@@ -879,6 +888,7 @@ final public class Actions {
 				}
 			}
 		}
+		
 		Worker w = new Worker();
 		w.setDaemon(true);
 		w.start();

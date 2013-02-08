@@ -396,6 +396,8 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 
 		}
 
+		System.out.println("Count patches: " + patarray.length);
+
 		TableUtil.addPatchToTable(patarray);
 
 		revalidateDrivers();

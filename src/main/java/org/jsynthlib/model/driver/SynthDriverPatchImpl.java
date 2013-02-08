@@ -151,7 +151,7 @@ abstract public class SynthDriverPatchImpl implements SynthDriverPatch {
 	protected String sysexID = null;
 
 	private boolean useForStoreLibrary = false;
-	
+
 	@Override
 	public String getSysexID() {
 		return sysexID;
@@ -265,6 +265,42 @@ abstract public class SynthDriverPatchImpl implements SynthDriverPatch {
 		// ErrorMsg.reportStatus("DriverString:" + driverString);
 		// ErrorMsg.reportStatus("PatchString: " + patchString);
 		return (compareString.toString().equalsIgnoreCase(patchString.substring(0, sysexID.length())));
+	}
+
+	/**
+	 * Compares the header & size of a SINGLE (!) Patch to this driver to see if this driver is the correct one to
+	 * support the SINGLE patch.
+	 * 
+	 * @param patchString
+	 *            the result of <code>p.getPatchHeader()</code>.
+	 * @param sysex
+	 *            a byte array of sysex message
+	 * @return <code>true</code> if this driver supports the Patch.
+	 * @see #patchSize
+	 * @see #sysexID
+	 */
+	public boolean supportsPatchSingle(String patchString, byte[] sysex) {
+		if (sysexID == null || patchString.length() < sysexID.length())
+			return false;
+
+		// TODO TX802 sysexId different for single and bank
+		int compareLength = sysexID.length() > 6 ? 6 : sysexID.length();
+
+		StringBuffer compareString = new StringBuffer();
+		for (int i = 0; i < compareLength; i++) {
+			switch (sysexID.charAt(i)) {
+			case '*':
+				compareString.append(patchString.charAt(i));
+				break;
+			default:
+				compareString.append(sysexID.charAt(i));
+			}
+		}
+		// ErrorMsg.reportStatus(toString());
+		// ErrorMsgUtil.reportStatus("Comp.String: " + compareString.toString());
+		// ErrorMsgUtil.reportStatus("PatchString: " + patchString);
+		
+		return (compareString.toString().equalsIgnoreCase(patchString.substring(0, compareLength)));
 	}
 
 	// These are not 'final' because BankDriver and Converter class override
@@ -764,9 +800,9 @@ abstract public class SynthDriverPatchImpl implements SynthDriverPatch {
 		this.useForStoreLibrary = useForStoreLibrary;
 	}
 
-	public void setFirstBankFirstPatch(){
+	public void setFirstBankFirstPatch() {
 		setBankNum(0);
 		sendProgramChange(0);
 	}
-	
+
 }

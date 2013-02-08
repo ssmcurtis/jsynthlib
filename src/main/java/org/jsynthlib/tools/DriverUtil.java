@@ -165,7 +165,7 @@ public class DriverUtil {
 	public static SynthDriver chooseDriver(byte[] sysex, Device dev) {
 		// INFO FIND DRIVER BY DEVICE
 
-		System.out.println("Find driver by device");
+		// System.out.println("Find driver by device");
 
 		String patchString = getPatchHeader(sysex);
 		if (dev == null) {

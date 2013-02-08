@@ -84,7 +84,7 @@ public class LibraryFrame extends AbstractLibraryFrame {
 	void enableActions() {
 		// one or more patches are included.
 		Actions.setEnabled(table.getRowCount() > 0, Actions.EN_PLAY_ALL | Actions.EN_SAVE | Actions.EN_SAVE_AS | Actions.EN_SEARCH
-				| Actions.EN_STORE_LIBRARY);
+				| Actions.EN_UPDATE_COMMENT | Actions.EN_STORE_LIBRARY);
 
 		// // more than one patches are included.
 		Actions.setEnabled(table.getRowCount() > 1, Actions.EN_SELECT_DUPLICATE | Actions.EN_SELECT_BYFILTER);

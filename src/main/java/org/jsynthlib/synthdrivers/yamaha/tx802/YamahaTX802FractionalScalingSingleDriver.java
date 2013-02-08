@@ -46,7 +46,7 @@ public class YamahaTX802FractionalScalingSingleDriver extends DX7FamilyFractiona
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		if ((((DX7FamilyDevice) (getDevice())).getTipsMsgFlag() & 0x01) == 1)
 			// show Information
-			YamahaTX802Strings.dxShowInformation(toString(), YamahaTX802Strings.STORE_SINGLE_FRACTIONAL_SCALING_STRING);
+			YamahaTX802Message.dxShowInformation(toString(), YamahaTX802Message.STORE_SINGLE_FRACTIONAL_SCALING_STRING);
 
 		sendPatchWorker(p);
 	}
@@ -54,7 +54,7 @@ public class YamahaTX802FractionalScalingSingleDriver extends DX7FamilyFractiona
 	public void requestPatchDump(int bankNum, int patchNum) {
 		if ((((DX7FamilyDevice) (getDevice())).getTipsMsgFlag() & 0x01) == 1)
 			// show Information
-			YamahaTX802Strings.dxShowInformation(toString(), YamahaTX802Strings.FRACTIONAL_SCALING_CARTRIDGE_STRING);
+			YamahaTX802Message.dxShowInformation(toString(), YamahaTX802Message.FRACTIONAL_SCALING_CARTRIDGE_STRING);
 
 		// keyswitch to voice mode
 		YamahaTX802SysexHelpers.chVoiceMode(this, (byte) (getChannel() + 0x10));

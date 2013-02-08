@@ -62,6 +62,7 @@ public class DeviceDetailsDialog extends JDialog {
 		container.add(new JLabel("This device contains the following installed drivers:"), BorderLayout.NORTH);
 
 		DeviceDetailsTableModel dataModel = new DeviceDetailsTableModel(device);
+		
 		JTable table = new JTable(dataModel);
 		// table2=table;
 		table.setPreferredScrollableViewportSize(new Dimension(500, 250));

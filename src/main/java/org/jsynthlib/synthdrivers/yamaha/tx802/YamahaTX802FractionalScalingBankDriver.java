@@ -41,7 +41,7 @@ public class YamahaTX802FractionalScalingBankDriver extends DX7FamilyFractionalS
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		if ((((DX7FamilyDevice) (getDevice())).getTipsMsgFlag() & 0x01) == 1)
 			// show Information
-			YamahaTX802Strings.dxShowInformation(toString(), YamahaTX802Strings.FRACTIONAL_SCALING_CARTRIDGE_STRING);
+			YamahaTX802Message.dxShowInformation(toString(), YamahaTX802Message.FRACTIONAL_SCALING_CARTRIDGE_STRING);
 
 		if ((((DX7FamilyDevice) (getDevice())).getSwOffMemProtFlag() & 0x01) == 1) {
 			// switch off memory protection
@@ -49,7 +49,7 @@ public class YamahaTX802FractionalScalingBankDriver extends DX7FamilyFractionalS
 		} else {
 			if ((((DX7FamilyDevice) (getDevice())).getTipsMsgFlag() & 0x01) == 1)
 				// show Information
-				YamahaTX802Strings.dxShowInformation(toString(), YamahaTX802Strings.MEMORY_PROTECTION_STRING);
+				YamahaTX802Message.dxShowInformation(toString(), YamahaTX802Message.MEMORY_PROTECTION_STRING);
 		}
 
 		// choose the desired MIDI Receive block ((1-32), (33-64))
@@ -61,7 +61,7 @@ public class YamahaTX802FractionalScalingBankDriver extends DX7FamilyFractionalS
 	public void requestPatchDump(int bankNum, int patchNum) {
 		if ((((DX7FamilyDevice) (getDevice())).getTipsMsgFlag() & 0x01) == 1)
 			// show Information
-			YamahaTX802Strings.dxShowInformation(toString(), YamahaTX802Strings.FRACTIONAL_SCALING_CARTRIDGE_STRING);
+			YamahaTX802Message.dxShowInformation(toString(), YamahaTX802Message.FRACTIONAL_SCALING_CARTRIDGE_STRING);
 
 		// choose the desired MIDI transmit block (internal (1-32), internal (33-64))
 		YamahaTX802SysexHelpers.chBlock(this, (byte) (getChannel() + 0x10), (byte) (bankNum));

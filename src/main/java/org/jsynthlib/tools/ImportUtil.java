@@ -35,12 +35,13 @@ public class ImportUtil {
 	public static Patch[] getPatchesFromMidi(java.io.File file) {
 		Sequence seq;
 		Track[] tr;
-		Patch[] patchArray = null;
+
+		List<Patch> li = new ArrayList<>();
 		try {
 			seq = MidiSystem.getSequence(file);
 		} catch (Exception ex) {
 			// If we fall in an exception the file was not a Midifile....
-			return patchArray;
+			return li.toArray(new Patch[] {});
 		}
 		tr = seq.getTracks();
 		// ErrorMsg.reportStatus("Track Count "+tr.length);
@@ -52,7 +53,12 @@ public class ImportUtil {
 
 				if (tr[j].get(i).getMessage() instanceof SysexMessage) {
 					// ErrorMsg.reportStatus("Track "+j+" Event "+i+" SYSEX!!");
-					patchArray = DriverUtil.createPatches(tr[j].get(i).getMessage().getMessage(), getLocation(file));
+
+					System.out.println("IMPORT MIDI ... ");
+					for (Patch p : DriverUtil.createPatches(tr[j].get(i).getMessage().getMessage(), getLocation(file))) {
+						p.setComment(j + "-" + p.getComment());
+						li.add(p);
+					}
 
 					// for (int k = 0; k < patarray.length; k++) {
 					// frame.pastePatch(patarray[k]);
@@ -61,7 +67,7 @@ public class ImportUtil {
 
 			}
 		}
-		return patchArray;
+		return li.toArray(new Patch[] {});
 	}
 
 	public static Patch[] getPatchesFromTexhex(java.io.File file) {
@@ -80,7 +86,7 @@ public class ImportUtil {
 			if (texhex.startsWith("F0")) {
 				patchArray = DriverUtil.createPatches(HexaUtil.convertStringToSyex(texhex), getLocation(file));
 			}
-			
+
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -96,9 +102,9 @@ public class ImportUtil {
 			byte[] buffer = new byte[(int) file.length()];
 			fileIn.read(buffer);
 			fileIn.close();
-			
+
 			patchArray = DriverUtil.createPatches(buffer, getLocation(file));
-			
+
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -175,7 +181,7 @@ public class ImportUtil {
 			System.out.println(HexaUtil.hexDumpOneLine(barr, 0, -1, barr.length));
 
 			patchArray = DriverUtil.createPatches(barr, getLocation(file));
-			
+
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

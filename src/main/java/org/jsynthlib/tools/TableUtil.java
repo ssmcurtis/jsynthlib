@@ -25,14 +25,14 @@ public class TableUtil {
 					Patch q = ((PatchBank) pk).get(j);
 					if (q != null) {
 						q.setFileName(pk.getFileName());
-						q.setComment(pn[j]);
+						q.setComment(pk.getComment() + " "+ pn[j]);
 						frame.getMyModel().addPatch(q);
 					}
 				}
 			} else {
 				frame.getMyModel().addPatch(pk);
 			}
-			// INFO moved .. frame.revalidateDrivers();
+			// INFO removed .. frame.revalidateDrivers();
 		}
 		frame.revalidateDrivers();
 

@@ -25,6 +25,7 @@ package org.jsynthlib.synthdrivers.yamaha.tx802;
 
 import org.jsynthlib.menu.JSLFrame;
 import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.synthdrivers.korg.microkorg.MicroKorg;
 import org.jsynthlib.synthdrivers.yamaha.dx7.common.DX7FamilyDevice;
 import org.jsynthlib.synthdrivers.yamaha.dx7.common.DX7FamilyVoiceSingleDriver;
 
@@ -47,7 +48,7 @@ public class YamahaTX802VoiceSingleDriver extends DX7FamilyVoiceSingleDriver {
 
 		if ((((DX7FamilyDevice) (getDevice())).getTipsMsgFlag() & 0x01) == 1)
 			// show Information
-			YamahaTX802Strings.dxShowInformation(toString(), YamahaTX802Strings.STORE_SINGLE_VOICE_STRING);
+			YamahaTX802Message.dxShowInformation(toString(), YamahaTX802Message.STORE_SINGLE_VOICE_STRING);
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {
@@ -72,5 +73,6 @@ public class YamahaTX802VoiceSingleDriver extends DX7FamilyVoiceSingleDriver {
 
 		super.sendPatch(toSend);
 	}
+
 
 }

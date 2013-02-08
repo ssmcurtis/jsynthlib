@@ -25,10 +25,11 @@ package org.jsynthlib.synthdrivers.yamaha.tx802;
 
 import java.util.prefs.Preferences;
 
+import org.jsynthlib.synthdrivers.waldorf.blofeld.BlofeldSingleDriver;
 import org.jsynthlib.synthdrivers.yamaha.dx7.common.DX7FamilyDevice;
 
 public class YamahaTX802Device extends DX7FamilyDevice {
-	private static final String dxInfoText = YamahaTX802Strings.INFO_TEXT;
+	private static final String dxInfoText = YamahaTX802Message.INFO_TEXT;
 
 	/** Creates new Yamaha TX802 Device */
 	public YamahaTX802Device() {
@@ -45,7 +46,11 @@ public class YamahaTX802Device extends DX7FamilyDevice {
 
 		// voice patch
 		addDriver(new YamahaTX802VoiceSingleDriver());
-		addDriver(new YamahaTX802VoiceBankDriver());
+
+		YamahaTX802VoiceBankDriver libraryDriver = new YamahaTX802VoiceBankDriver();
+		libraryDriver.setUseForStoreLibrary(true);
+		setMaxProgramForLibraryStorage(32);
+		addDriver(libraryDriver);
 
 		// additional voice patch
 		addDriver(new YamahaTX802AdditionalVoiceSingleDriver()); // experimental !!!!

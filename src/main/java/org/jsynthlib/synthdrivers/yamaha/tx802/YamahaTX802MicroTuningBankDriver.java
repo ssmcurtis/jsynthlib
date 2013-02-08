@@ -41,7 +41,7 @@ public class YamahaTX802MicroTuningBankDriver extends DX7FamilyMicroTuningBankDr
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		if ((((DX7FamilyDevice) (getDevice())).getTipsMsgFlag() & 0x01) == 1)
 			// show Information
-			YamahaTX802Strings.dxShowInformation(toString(), YamahaTX802Strings.MICRO_TUNING_CARTRIDGE_STRING);
+			YamahaTX802Message.dxShowInformation(toString(), YamahaTX802Message.MICRO_TUNING_CARTRIDGE_STRING);
 
 		if ((((DX7FamilyDevice) (getDevice())).getSwOffMemProtFlag() & 0x01) == 1) {
 			// switch off memory protection
@@ -49,7 +49,7 @@ public class YamahaTX802MicroTuningBankDriver extends DX7FamilyMicroTuningBankDr
 		} else {
 			if ((((DX7FamilyDevice) (getDevice())).getTipsMsgFlag() & 0x01) == 1)
 				// show Information
-				YamahaTX802Strings.dxShowInformation(toString(), YamahaTX802Strings.MEMORY_PROTECTION_STRING);
+				YamahaTX802Message.dxShowInformation(toString(), YamahaTX802Message.MEMORY_PROTECTION_STRING);
 		}
 
 		sendPatchWorker(p);
@@ -58,7 +58,7 @@ public class YamahaTX802MicroTuningBankDriver extends DX7FamilyMicroTuningBankDr
 	public void requestPatchDump(int bankNum, int patchNum) {
 		if ((((DX7FamilyDevice) (getDevice())).getTipsMsgFlag() & 0x01) == 1)
 			// show Information
-			YamahaTX802Strings.dxShowInformation(toString(), YamahaTX802Strings.MICRO_TUNING_CARTRIDGE_STRING);
+			YamahaTX802Message.dxShowInformation(toString(), YamahaTX802Message.MICRO_TUNING_CARTRIDGE_STRING);
 
 		send(sysexRequestDump.toSysexMessage(getChannel() + 0x20));
 	}

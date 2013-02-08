@@ -4,6 +4,8 @@ import org.jsynthlib.menu.JSLFrame;
 import org.jsynthlib.menu.window.BankEditorFrame;
 import org.jsynthlib.model.patch.PatchDataImpl;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 /**
  * This is an implementation of IBankDriver and the base class for bank drivers which use <code>Patch<IPatch>.<p>
  */
@@ -35,6 +37,11 @@ abstract public class SynthDriverBank extends SynthDriverPatchImpl {
 	 */
 	// This can be "private static final".
 	protected int singleSize;
+
+	private PatchDataImpl currentBank = null;
+	
+	private byte[] lastSysex = null;
+	
 
 	/**
 	 * Creates a new <code>BankDriver</code> instance.
@@ -196,5 +203,49 @@ abstract public class SynthDriverBank extends SynthDriverPatchImpl {
 	 * @see PatchDataImpl#setName(int, String)
 	 */
 	public abstract void setPatchName(PatchDataImpl bank, int patchNum, String name);
+
+	/**
+	 * MUST overwrite this for init currentBank (if null) using correct byte[] size and put singlePatch
+	 * 
+	 * @param patchNum
+	 * @param name
+	 */
+	public void addToCurrentBank(PatchDataImpl singlePatch, int patchNum) {
+		throw new NotImplementedException();
+	}
+
+	public void sendCurrentbank() {
+		if (currentBank != null) {
+			storePatch(currentBank, 0, 0);
+		}
+	}
+
+	public void resetCurrentbank() {
+		currentBank = null;
+	}
+
+	public PatchDataImpl getCurrentBank() {
+		return currentBank;
+	}
+
+	public void setCurrentBank(PatchDataImpl currentBank) {
+		this.currentBank = currentBank;
+	}
+
+
+	public byte[] getLastSysex() {
+		return lastSysex;
+	}
+
+	/**
+	 * Keep last patch for fill bank before send.
+	 * 
+	 * @param lastSysex
+	 */
+	public void setLastSysex(byte[] lastSysex) {
+		this.lastSysex = lastSysex;
+	}
+
 	// end of IBankDriver methods
+
 }

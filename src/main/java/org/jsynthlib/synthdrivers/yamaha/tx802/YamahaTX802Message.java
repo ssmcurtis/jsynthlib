@@ -25,7 +25,7 @@ package org.jsynthlib.synthdrivers.yamaha.tx802;
 
 import org.jsynthlib.synthdrivers.yamaha.dx7.common.DX7FamilyStrings;
 
-public class YamahaTX802Strings extends DX7FamilyStrings {
+public class YamahaTX802Message extends DX7FamilyStrings {
 	protected static final String INFO_TEXT = "This JSynthLib \"Yamaha TX802\" device driver supports the following patch types"
 			+ " with librarian and editor function:"
 			+ "\n - Voice"

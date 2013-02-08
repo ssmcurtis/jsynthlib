@@ -47,6 +47,6 @@ public class YamahaTX802PerformanceSingleDriver extends DX7FamilyPerformanceIIIS
 
 		if (((YamahaTX802Device) getDevice()).getTipsMsgFlag() == 1)
 			// show Information
-			YamahaTX802Strings.dxShowInformation(toString(), YamahaTX802Strings.STORE_SINGLE_PERFORMANCE_STRING);
+			YamahaTX802Message.dxShowInformation(toString(), YamahaTX802Message.STORE_SINGLE_PERFORMANCE_STRING);
 	}
 }

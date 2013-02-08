@@ -552,7 +552,7 @@ public class Pattern extends AbstractPattern implements JFugueElement, PatternIn
 	 * @see org.jfugue.PatternInterface#acceptVisitor(org.jfugue.ElementVisitor)
 	 */
 	public void acceptVisitor(ElementVisitor visitor) {
-		// TODO	make this not use the parser
+		// TODO make this not use the parser
 		visitor.visit(this);
 		MusicStringParser msp = new MusicStringParser();
 		msp.addParserListener(new ListenerToVisitorAdaptor(visitor));

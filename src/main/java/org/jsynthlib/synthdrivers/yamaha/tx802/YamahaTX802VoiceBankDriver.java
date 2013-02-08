@@ -26,8 +26,12 @@ package org.jsynthlib.synthdrivers.yamaha.tx802;
 import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.synthdrivers.yamaha.dx7.common.DX7FamilyDevice;
 import org.jsynthlib.synthdrivers.yamaha.dx7.common.DX7FamilyVoiceBankDriver;
+import org.jsynthlib.tools.HexaUtil;
+
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class YamahaTX802VoiceBankDriver extends DX7FamilyVoiceBankDriver {
+
 	public YamahaTX802VoiceBankDriver() {
 		super(YamahaTX802VoiceConstants.INIT_VOICE, YamahaTX802VoiceConstants.BANK_VOICE_PATCH_NUMBERS,
 				YamahaTX802VoiceConstants.BANK_VOICE_BANK_NUMBERS);
@@ -37,6 +41,7 @@ public class YamahaTX802VoiceBankDriver extends DX7FamilyVoiceBankDriver {
 		return super.createNewPatch();
 	}
 
+	@Override
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		if ((((DX7FamilyDevice) (getDevice())).getSwOffMemProtFlag() & 0x01) == 1) {
 			// switch off memory protection
@@ -44,7 +49,7 @@ public class YamahaTX802VoiceBankDriver extends DX7FamilyVoiceBankDriver {
 		} else {
 			if ((((DX7FamilyDevice) (getDevice())).getTipsMsgFlag() & 0x01) == 1)
 				// show Information
-				YamahaTX802Strings.dxShowInformation(toString(), YamahaTX802Strings.MEMORY_PROTECTION_STRING);
+				YamahaTX802Message.dxShowInformation(toString(), YamahaTX802Message.MEMORY_PROTECTION_STRING);
 		}
 
 		// choose the desired MIDI Receive block (internal (1-32), internal (33-64))
@@ -53,10 +58,23 @@ public class YamahaTX802VoiceBankDriver extends DX7FamilyVoiceBankDriver {
 		sendPatchWorker(p);
 	};
 
+	@Override
 	public void requestPatchDump(int bankNum, int patchNum) {
 		// choose the desired MIDI transmit block (internal (1-32), internal (33-64))
 		YamahaTX802SysexHelpers.chBlock(this, (byte) (getChannel() + 0x10), (byte) (bankNum));
 
 		send(sysexRequestDump.toSysexMessage(getChannel() + 0x20));
+	}
+
+	@Override
+	public void addToCurrentBank(PatchDataImpl singlePatch, int patchNum) {
+		if (getCurrentBank() == null) {
+			setCurrentBank(createNewPatch());
+		}
+
+		putPatch(getCurrentBank(), singlePatch, patchNum);
+		// System.out.println(getPatchName(getCurrentBank(), patchNum));
+		calculateChecksum(getCurrentBank());
+
 	}
 }

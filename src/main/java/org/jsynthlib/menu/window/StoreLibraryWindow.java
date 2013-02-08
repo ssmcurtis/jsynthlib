@@ -16,9 +16,11 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 
 import org.jsynthlib.JSynthConstants;
+import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.Actions;
 import org.jsynthlib.menu.preferences.AppConfig;
 import org.jsynthlib.model.device.Device;
@@ -26,7 +28,10 @@ import org.jsynthlib.model.driver.SynthDriverBank;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.patch.Patch;
 import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.model.tablemodel.PatchTableModel;
 import org.jsynthlib.tools.UiUtil;
+
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class StoreLibraryWindow {
 	private JFrame f;
@@ -42,8 +47,7 @@ public class StoreLibraryWindow {
 	private List<String> devices = new ArrayList<>();
 
 	public StoreLibraryWindow() {
-		f = new JFrame("Store non-generic patches from library (max. " + JSynthConstants.MAX_PROGRAMMS_FOR_STORE_LIBRARY
-				+ " Patches for device)");
+		f = new JFrame("Store non-generic patches from library");
 		f.getContentPane().setLayout(new FlowLayout());
 
 		ta = new JTextArea("", 20, 50);
@@ -87,15 +91,29 @@ public class StoreLibraryWindow {
 							}
 						}
 						appendText("");
-						
+
 						ArrayList<Patch> patches = Actions.getSelectedFrame().getPatchCollection();
-						
+
+						if (!(PatchBayApplication.getDesktop().getSelectedFrame() instanceof LibraryFrame)) {
+							throw new NotImplementedException();
+						}
+
+						LibraryFrame libraryFrame = (LibraryFrame) PatchBayApplication.getDesktop().getSelectedFrame();
+						JTable table = libraryFrame.getTable();
+						PatchTableModel pm = (PatchTableModel) libraryFrame.getTable().getModel();
+
+						int maxPatchesinTable = libraryFrame.getPatchCollection().size();
+
 						for (Map.Entry<SynthDriverPatchImpl, Integer> entry : supportedDevices.entrySet()) {
 
 							SynthDriverPatchImpl driver = entry.getKey();
 
 							int maxPatchesForThisDevice = entry.getValue();
-							for (Patch p : patches) {
+
+							for (int i = 0; i < maxPatchesinTable; i++) {
+
+								Patch p = pm.getPatchAt(table.convertRowIndexToModel(i));
+
 								if (entry.getValue() > 0) {
 
 									if (p instanceof PatchDataImpl) {
@@ -104,7 +122,7 @@ public class StoreLibraryWindow {
 										PatchDataImpl patchToSend = (PatchDataImpl) p;
 
 										boolean sameDevice = driver.getDevice().equals(patchToSend.getDevice());
-										boolean patchSupported = driver.supportsPatch(p.getPatchHeader(), p.getByteArray());
+										boolean patchSupported = driver.supportsPatchSingle(p.getPatchHeader(), p.getByteArray());
 
 										// System.out.println(driver.getDevice() + " " + patchToSend.getDevice());
 										// System.out.println("Device " + sameDevice + " Patch " + patchSupported);
@@ -113,6 +131,8 @@ public class StoreLibraryWindow {
 
 											// supportedDevices.put(driver, (entry.getValue()));
 											int pos = maxPatchesForThisDevice - entry.getValue();
+											// System.out.println("Pos: " + (pos + 1) + " " + p.getComment());
+
 											String keyString = driver.getDevice().getManufacturerName() + " "
 													+ driver.getDevice().getModelName();
 											if (p.getName().trim().isEmpty() || p.getName().equals("-")) {
@@ -124,7 +144,7 @@ public class StoreLibraryWindow {
 											}
 
 											if (driver.isBankDriver()) {
-												((SynthDriverBank) driver).putPatch(null, patchToSend, pos);
+												((SynthDriverBank) driver).addToCurrentBank(patchToSend, pos);
 											} else {
 												driver.storePatch(patchToSend, 0, pos);
 											}
@@ -132,13 +152,12 @@ public class StoreLibraryWindow {
 											entry.setValue(entry.getValue() - 1);
 
 										}
-
+									} else {
+										System.out.println(">> wrong instancetype .. " + p.getClass().getSimpleName());
 									}
-								} else {
-									System.out.println(">> instancetype .. ");
 								}
 							}
-							
+
 							// change to 0 / 0
 							driver.setFirstBankFirstPatch();
 						}
@@ -148,7 +167,8 @@ public class StoreLibraryWindow {
 							SynthDriverPatchImpl driver = entry.getKey();
 
 							if (driver.isBankDriver()) {
-								((SynthDriverBank) driver).storePatch(null, 0, 0);
+								((SynthDriverBank) driver).sendCurrentbank();
+								((SynthDriverBank) driver).resetCurrentbank();
 							}
 						}
 						btnQuit.setEnabled(true);

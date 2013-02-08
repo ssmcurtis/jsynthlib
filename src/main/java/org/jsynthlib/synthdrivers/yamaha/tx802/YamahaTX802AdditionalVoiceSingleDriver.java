@@ -48,7 +48,7 @@ public class YamahaTX802AdditionalVoiceSingleDriver extends DX7FamilyAdditionalV
 
 		if ((((DX7FamilyDevice) (getDevice())).getTipsMsgFlag() & 0x01) == 1)
 			// show Information
-			YamahaTX802Strings.dxShowInformation(toString(), YamahaTX802Strings.STORE_SINGLE_ADDITIONAL_VOICE_STRING);
+			YamahaTX802Message.dxShowInformation(toString(), YamahaTX802Message.STORE_SINGLE_ADDITIONAL_VOICE_STRING);
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {

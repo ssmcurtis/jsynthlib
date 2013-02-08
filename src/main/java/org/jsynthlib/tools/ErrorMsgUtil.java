@@ -4,6 +4,7 @@ import javax.swing.JOptionPane;
 
 import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.window.ErrorDialog;
+import org.jsynthlib.synthdrivers.studioelectronics.atcx.Atcx;
 
 /**
  * This class handles error or warning conditions and debug messages.
@@ -55,6 +56,10 @@ public class ErrorMsgUtil {
 		ErrorMsgUtil.debugLevel = debugLevel;
 	}
 
+
+	public static void reportMissingFunctionality(String vendor, String device) {
+		ErrorMsgUtil.reportError("Not available", vendor + " does not implemented this function for " + device);
+	}
 	/**
 	 * Show a message in an error dialog window.
 	 * 

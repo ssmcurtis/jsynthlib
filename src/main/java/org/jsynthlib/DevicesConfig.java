@@ -9,7 +9,7 @@
  * @see DeviceListWriter_SE
  */
 
-package org.jsynthlib.synthdrivers;
+package org.jsynthlib;
 
 import java.lang.reflect.Constructor;
 import java.util.Collection;
@@ -21,7 +21,6 @@ import java.util.TreeSet;
 import java.util.prefs.Preferences;
 
 import org.apache.commons.lang3.text.WordUtils;
-import org.jsynthlib.JSynthConstants;
 import org.jsynthlib.model.descriptor.DeviceDescriptor;
 import org.jsynthlib.model.device.Device;
 import org.jsynthlib.tools.ErrorMsgUtil;
@@ -71,7 +70,7 @@ public class DevicesConfig {
 		Reflections reflections = new Reflections(cfgBuilder);
 
 		Set<Class<? extends Device>> subTypes = reflections.getSubTypesOf(Device.class);
-		ErrorMsgUtil.reportError("Size: ", " = " + subTypes.size());
+		ErrorMsgUtil.reportError("Devices loaded", subTypes.size() + " devices found");
 
 		String classPrefix = JSynthConstants.SYNTLIB_CLASS_PACKAGE_PREFIX;
 		for (Object o : subTypes) {

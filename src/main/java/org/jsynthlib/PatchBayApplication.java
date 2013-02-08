@@ -18,7 +18,6 @@ import org.jsynthlib.menu.MenuDesktop;
 import org.jsynthlib.menu.preferences.AppConfig;
 import org.jsynthlib.menu.preferences.PrefsDialog;
 import org.jsynthlib.menu.window.WaitDialog;
-import org.jsynthlib.synthdrivers.DevicesConfig;
 import org.jsynthlib.tools.ErrorMsgUtil;
 import org.jsynthlib.tools.MidiUtil;
 import org.jsynthlib.tools.UiUtil;

@@ -28,6 +28,7 @@ import org.jsynthlib.menu.JSLFrame;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
+import org.jsynthlib.synthdrivers.korg.microkorg.MicroKorg;
 
 public class DX7FamilyVoiceSingleDriver extends SynthDriverPatchImpl {
 	byte[] initSysex;
@@ -60,8 +61,14 @@ public class DX7FamilyVoiceSingleDriver extends SynthDriverPatchImpl {
 		return new PatchDataImpl(initSysex, this);
 	}
 
-	public JSLFrame editPatch(PatchDataImpl p) {
-		return new DX7FamilyVoiceEditor(getManufacturerName() + " " + getModelName() + " \"" + getPatchType()
-				+ "\" Editor", (PatchDataImpl) p);
+	// public JSLFrame editPatch(PatchDataImpl p) {
+	// return new DX7FamilyVoiceEditor(getManufacturerName() + " " + getModelName() + " \"" + getPatchType()
+	// + "\" Editor", (PatchDataImpl) p);
+	// }
+
+	@Override
+	public int getHeaderSize() {
+		return DX7FamilyVoiceBankDriver.dxSysexHeaderSize;
 	}
+
 }
