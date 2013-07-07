@@ -21,8 +21,8 @@
 
 package org.jsynthlib.synthdrivers.tcelectronic.gmajor;
 
+import org.jsynthlib.menu.widgets.ParamModel;
 import org.jsynthlib.model.patch.PatchDataImpl;
-import org.jsynthlib.widgets.ParamModel;
 
 class TCBitModel extends ParamModel {
 	protected int mask;

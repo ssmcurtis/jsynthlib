@@ -27,21 +27,20 @@ public class Se1PatchBankDriver extends SynthDriverBank {
 	@Override
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 
-		PatchDataImpl v = new PatchDataImpl(Se1.getDefautltBankPatch(), getDevice());
+		// PatchDataImpl v = new PatchDataImpl(Se1.getDefautltBankPatch(), getDevice());
+		// boolean mismatchFound = false;
+		// for (int i = 0; i < v.getSysex().length; i++) {
+		//
+		// if (v.getSysex()[i] != p.getSysex()[i]) {
+		// System.out.println(i + ": Reference:" + HexaUtil.byteToHexString(v.getSysex()[i]) + " created: "
+		// + HexaUtil.byteToHexString(p.getSysex()[i]));
+		// mismatchFound = true;
+		// }
+		// }
+		// if (mismatchFound) {
+		// System.out.println("ERRRRROR");
+		// }
 
-//		boolean mismatchFound = false;
-//		for (int i = 0; i < v.getSysex().length; i++) {
-//
-//			if (v.getSysex()[i] != p.getSysex()[i]) {
-//				System.out.println(i + ": Reference:" + HexaUtil.byteToHexString(v.getSysex()[i]) + " created: "
-//						+ HexaUtil.byteToHexString(p.getSysex()[i]));
-//				mismatchFound = true;
-//			}
-//		}
-//		if (mismatchFound) {
-//			System.out.println("ERRRRROR");
-//		}
-		
 		sendPatch((PatchDataImpl) p);
 	}
 

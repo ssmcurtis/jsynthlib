@@ -21,8 +21,8 @@
 
 package org.jsynthlib.synthdrivers.line6.pod20;
 
+import org.jsynthlib.menu.widgets.ParamModel;
 import org.jsynthlib.model.patch.PatchDataImpl;
-import org.jsynthlib.widgets.ParamModel;
 
 /**
  * Scalable ParamModel--to allow different max values for CC and Sysex.

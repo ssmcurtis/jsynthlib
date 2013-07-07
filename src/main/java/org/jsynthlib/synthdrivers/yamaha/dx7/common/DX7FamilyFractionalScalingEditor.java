@@ -32,11 +32,11 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import org.jsynthlib.PatchBayApplication;
+import org.jsynthlib.menu.widgets.ParamModel;
+import org.jsynthlib.menu.widgets.SpinnerWidget;
+import org.jsynthlib.menu.widgets.SysexSender;
 import org.jsynthlib.menu.window.PatchEditorFrame;
 import org.jsynthlib.model.patch.PatchDataImpl;
-import org.jsynthlib.widgets.ParamModel;
-import org.jsynthlib.widgets.SpinnerWidget;
-import org.jsynthlib.widgets.SysexSender;
 
 public class DX7FamilyFractionalScalingEditor extends PatchEditorFrame {
 	// {"Operator 6","Operator 5","Operator 4","Operator 3","Operator 2","Operator 1"};

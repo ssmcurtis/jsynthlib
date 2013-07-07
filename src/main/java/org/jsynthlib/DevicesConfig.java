@@ -65,12 +65,17 @@ public class DevicesConfig {
 	private void readDevicesFromClasspath() {
 		// Reflections reflections = new Reflections("org.jsynthlib.synthdrivers");
 
+		// String javaClassPath = System.getProperty("java.class.path");
+
 		ConfigurationBuilder cfgBuilder = new ConfigurationBuilder().setUrls(ClasspathHelper.forPackage("org.jsynthlib.synthdrivers"))
 				.setScanners(new SubTypesScanner(), new ResourcesScanner());
+		// ConfigurationBuilder cfgBuilder = new ConfigurationBuilder().setUrls(ClasspathHelper.forJavaClassPath())
+		// .setScanners(new SubTypesScanner(), new ResourcesScanner());
 		Reflections reflections = new Reflections(cfgBuilder);
 
 		Set<Class<? extends Device>> subTypes = reflections.getSubTypesOf(Device.class);
-		ErrorMsgUtil.reportError("Devices loaded", subTypes.size() + " devices found");
+		// ErrorMsgUtil.reportError("Devices loaded", subTypes.size() + " devices found in "+ javaClassPath);
+		ErrorMsgUtil.reportError("Devices loaded", subTypes.size() + " devices found.");
 
 		String classPrefix = JSynthConstants.SYNTLIB_CLASS_PACKAGE_PREFIX;
 		for (Object o : subTypes) {

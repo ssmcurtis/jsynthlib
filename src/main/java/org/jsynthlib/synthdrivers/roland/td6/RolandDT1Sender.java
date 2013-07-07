@@ -28,10 +28,10 @@ import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.ShortMessage;
 import javax.sound.midi.SysexMessage;
 
+import org.jsynthlib.menu.widgets.ISender;
 import org.jsynthlib.model.driver.SynthDriverPatch;
 import org.jsynthlib.tools.ErrorMsgUtil;
 import org.jsynthlib.tools.HexaUtil;
-import org.jsynthlib.widgets.SysexWidget;
 
 /**
  * RolandDT1Sender.java
@@ -43,7 +43,7 @@ import org.jsynthlib.widgets.SysexWidget;
  * @author <a href="mailto:hiroo.hayashi@computer.org">Hiroo Hayashi</a>
  * @version $Id$
  */
-public class RolandDT1Sender implements SysexWidget.ISender {
+public class RolandDT1Sender implements ISender {
 	/** System Exclusive Data Stream */
 	private byte[] b;
 	/** address size : 3 or 4 byte */

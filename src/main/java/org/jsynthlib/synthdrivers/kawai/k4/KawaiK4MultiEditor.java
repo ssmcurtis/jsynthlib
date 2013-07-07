@@ -7,13 +7,13 @@ import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
+import org.jsynthlib.menu.widgets.CheckBoxWidget;
+import org.jsynthlib.menu.widgets.ComboBoxWidget;
+import org.jsynthlib.menu.widgets.LabelWidget;
+import org.jsynthlib.menu.widgets.PatchNameWidget;
+import org.jsynthlib.menu.widgets.ScrollBarWidget;
 import org.jsynthlib.menu.window.PatchEditorFrame;
 import org.jsynthlib.model.patch.PatchDataImpl;
-import org.jsynthlib.widgets.CheckBoxWidget;
-import org.jsynthlib.widgets.ComboBoxWidget;
-import org.jsynthlib.widgets.LabelWidget;
-import org.jsynthlib.widgets.PatchNameWidget;
-import org.jsynthlib.widgets.ScrollBarWidget;
 
 /**
  * Editor for Multi-Banks of the Kawai K4. It has two parts: 1. The common part for Name,Volume and Effect 2. The part

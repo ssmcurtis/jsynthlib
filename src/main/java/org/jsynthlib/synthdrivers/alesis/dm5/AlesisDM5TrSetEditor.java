@@ -28,10 +28,10 @@ import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
+import org.jsynthlib.menu.widgets.KnobWidget;
+import org.jsynthlib.menu.widgets.ParamModel;
 import org.jsynthlib.menu.window.PatchEditorFrame;
 import org.jsynthlib.model.patch.PatchDataImpl;
-import org.jsynthlib.widgets.KnobWidget;
-import org.jsynthlib.widgets.ParamModel;
 
 /**
  * Alesis DM5 Trigger Setup Editor. Edits Gain, Velocity, Cross-Talk, Noise Floor, and Decay parameters for each of the

@@ -21,7 +21,7 @@
 
 package org.jsynthlib.synthdrivers.line6.pod20;
 
-import org.jsynthlib.widgets.SysexWidget;
+import org.jsynthlib.menu.widgets.IParamModel;
 
 /**
  * Dummy do-nothing model. This model is used for the Global Wah on/off setting. Pod supports a CC number for Wah on off
@@ -29,7 +29,7 @@ import org.jsynthlib.widgets.SysexWidget;
  * 
  * @author Jeff Weber
  */
-class NullModel implements SysexWidget.IParamModel {
+class NullModel implements IParamModel {
 	/** Constructs aNullModel. */
 	NullModel() {
 	}

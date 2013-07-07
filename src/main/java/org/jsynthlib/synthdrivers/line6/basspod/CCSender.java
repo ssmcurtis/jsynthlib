@@ -24,18 +24,18 @@ package org.jsynthlib.synthdrivers.line6.basspod;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.ShortMessage;
 
+import org.jsynthlib.menu.widgets.ISender;
+import org.jsynthlib.menu.widgets.SysexSender;
 import org.jsynthlib.model.driver.SynthDriverPatch;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.tools.ErrorMsgUtil;
-import org.jsynthlib.widgets.SysexSender;
-import org.jsynthlib.widgets.SysexWidget;
 
 /**
  * POD generic Continuous Controller message sender class.
  * 
  * @author Jeff Weber
  */
-class CCSender extends SysexSender implements SysexWidget.ISender {
+class CCSender extends SysexSender implements ISender {
 	/** Represents the Continuous Controller number. */
 	private int param;
 

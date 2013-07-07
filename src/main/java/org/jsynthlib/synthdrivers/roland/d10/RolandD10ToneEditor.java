@@ -27,12 +27,12 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import org.jsynthlib.menu.widgets.CheckBoxWidget;
+import org.jsynthlib.menu.widgets.ComboBoxWidget;
+import org.jsynthlib.menu.widgets.EnvelopeWidget;
+import org.jsynthlib.menu.widgets.PatchNameWidget;
+import org.jsynthlib.menu.widgets.ScrollBarWidget;
 import org.jsynthlib.model.patch.PatchDataImpl;
-import org.jsynthlib.widgets.CheckBoxWidget;
-import org.jsynthlib.widgets.ComboBoxWidget;
-import org.jsynthlib.widgets.EnvelopeWidget;
-import org.jsynthlib.widgets.PatchNameWidget;
-import org.jsynthlib.widgets.ScrollBarWidget;
 
 /**
  * 

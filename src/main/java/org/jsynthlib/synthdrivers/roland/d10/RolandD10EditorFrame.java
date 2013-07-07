@@ -33,11 +33,11 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 
+import org.jsynthlib.menu.widgets.ComboBoxWidget;
+import org.jsynthlib.menu.widgets.ScrollBarWidget;
 import org.jsynthlib.menu.window.PatchEditorFrame;
 import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.model.patch.PatchSingle;
-import org.jsynthlib.widgets.ComboBoxWidget;
-import org.jsynthlib.widgets.ScrollBarWidget;
 
 public class RolandD10EditorFrame extends PatchEditorFrame {
 

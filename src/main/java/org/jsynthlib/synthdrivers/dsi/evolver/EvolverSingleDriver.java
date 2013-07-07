@@ -33,7 +33,6 @@ public class EvolverSingleDriver extends SynthDriverPatchImpl {
 		patchNameSize = Evolver.PATCH_NAME_END_AT.number();
 		deviceIDoffset = Evolver.DEVICE_ID_OFFSET.number();
 
-//		checksumOffset = Evolver.CHECKSUM_START_AT.number();
 		bankNumbers = Evolver.BANK_NAMES;
 		patchNumbers = Evolver.createPatchNumbers();
 	}
@@ -50,20 +49,14 @@ public class EvolverSingleDriver extends SynthDriverPatchImpl {
 	}
 
 	public void sendPatch(PatchDataImpl p) {
-		System.out.println(">>>> send patch");
-		
-		//System.out.println(">>>" + HexaUtil.hexDumpOneLine(p.getSysex(), 0, -1, 100));
-		
 		PatchDataImpl patchClone = (PatchDataImpl) p.clone();
 		patchClone.getSysex()[Evolver.BANK_AT.number()] = 0; 
 		patchClone.getSysex()[Evolver.PATCH_AT.number()] = 0; 
 		
-		// System.out.prtln(">>>" + HexaUtil.hexDumpOneLine(p2.getSysex(), 0, -1, 100));
 		super.sendPatch(patchClone);
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {
-		System.out.println(">>>> request patch");
 
 		this.bankNum = bankNum;
 		this.patchNum = patchNum;

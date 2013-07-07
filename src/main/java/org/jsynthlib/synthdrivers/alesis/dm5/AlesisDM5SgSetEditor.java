@@ -40,16 +40,18 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.jsynthlib.menu.preferences.AppConfig;
+import org.jsynthlib.menu.widgets.ComboBoxWidget;
+import org.jsynthlib.menu.widgets.IParamModel;
+import org.jsynthlib.menu.widgets.ISender;
+import org.jsynthlib.menu.widgets.PatchNameWidget;
+import org.jsynthlib.menu.widgets.ScrollBarLookupWidget;
+import org.jsynthlib.menu.widgets.ScrollBarWidget;
+import org.jsynthlib.menu.widgets.SysexWidget;
 import org.jsynthlib.menu.window.PatchEditorFrame;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.patch.Patch;
 import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.ErrorMsgUtil;
-import org.jsynthlib.widgets.ComboBoxWidget;
-import org.jsynthlib.widgets.PatchNameWidget;
-import org.jsynthlib.widgets.ScrollBarLookupWidget;
-import org.jsynthlib.widgets.ScrollBarWidget;
-import org.jsynthlib.widgets.SysexWidget;
 
 /**
  * Alesis DM5 Single Drumset Editor Edits individual note parameters and trigger note assignments for a single drumset

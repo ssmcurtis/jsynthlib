@@ -21,8 +21,8 @@
 
 package org.jsynthlib.synthdrivers.line6.pod20;
 
+import org.jsynthlib.menu.widgets.ParamModel;
 import org.jsynthlib.model.patch.PatchDataImpl;
-import org.jsynthlib.widgets.ParamModel;
 
 /**
  * Delay Speed is represented by three bytes in offsets 27-29. There are two controls in the editor, one for coarse

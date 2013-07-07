@@ -21,17 +21,17 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import org.jsynthlib.menu.widgets.CheckBoxWidget;
+import org.jsynthlib.menu.widgets.ComboBoxWidget;
+import org.jsynthlib.menu.widgets.EnvelopeWidget;
+import org.jsynthlib.menu.widgets.ParamModel;
+import org.jsynthlib.menu.widgets.PatchNameWidget;
+import org.jsynthlib.menu.widgets.ScrollBarWidget;
+import org.jsynthlib.menu.widgets.SysexSender;
 import org.jsynthlib.menu.window.PatchEditorFrame;
 import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.ErrorMsgUtil;
 import org.jsynthlib.tools.UiUtil;
-import org.jsynthlib.widgets.CheckBoxWidget;
-import org.jsynthlib.widgets.ComboBoxWidget;
-import org.jsynthlib.widgets.EnvelopeWidget;
-import org.jsynthlib.widgets.ParamModel;
-import org.jsynthlib.widgets.PatchNameWidget;
-import org.jsynthlib.widgets.ScrollBarWidget;
-import org.jsynthlib.widgets.SysexSender;
 
 class OberheimMatrixSingleEditor extends PatchEditorFrame {
 	CheckBoxWidget table1Check[] = new CheckBoxWidget[11];

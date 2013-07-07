@@ -246,7 +246,7 @@ public class BankEditorFrame extends MenuFrame implements PatchBasket {
 	}
 
 	public Patch getSelectedPatch() {
-		return bankData.get(getSelectedPatchNum());
+		return bankData.getExtractedPatch(getSelectedPatchNum());
 	}
 
 	public void sendSelectedPatch() {

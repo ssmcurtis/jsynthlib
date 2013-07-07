@@ -29,10 +29,13 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.jsynthlib.menu.widgets.IParamModel;
+import org.jsynthlib.menu.widgets.IParameter;
+import org.jsynthlib.menu.widgets.ISender;
+import org.jsynthlib.menu.widgets.KnobLookupWidget;
+import org.jsynthlib.menu.widgets.SysexWidget;
 import org.jsynthlib.model.patch.Patch;
 import org.jsynthlib.synthdrivers.yamaha.ub99.format.IFormat;
-import org.jsynthlib.widgets.KnobLookupWidget;
-import org.jsynthlib.widgets.SysexWidget;
 
 import com.dreamfabric.DKnob;
 

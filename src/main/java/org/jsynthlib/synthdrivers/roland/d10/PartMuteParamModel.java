@@ -20,7 +20,7 @@
  */
 package org.jsynthlib.synthdrivers.roland.d10;
 
-import org.jsynthlib.widgets.SysexWidget.IParamModel;
+import org.jsynthlib.menu.widgets.IParamModel;
 
 /**
  * This class acts as a param model for each of the four partial mute checkboxes. Since they all operate on the same

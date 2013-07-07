@@ -29,15 +29,15 @@ import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
+import org.jsynthlib.menu.widgets.CheckBoxWidget;
+import org.jsynthlib.menu.widgets.ComboBoxWidget;
+import org.jsynthlib.menu.widgets.KnobWidget;
+import org.jsynthlib.menu.widgets.ParamModel;
+import org.jsynthlib.menu.widgets.PatchNameWidget;
+import org.jsynthlib.menu.widgets.SysexSender;
 import org.jsynthlib.menu.window.PatchEditorFrame;
 import org.jsynthlib.model.driver.SynthDriverPatch;
 import org.jsynthlib.model.patch.PatchDataImpl;
-import org.jsynthlib.widgets.CheckBoxWidget;
-import org.jsynthlib.widgets.ComboBoxWidget;
-import org.jsynthlib.widgets.KnobWidget;
-import org.jsynthlib.widgets.ParamModel;
-import org.jsynthlib.widgets.PatchNameWidget;
-import org.jsynthlib.widgets.SysexSender;
 
 /**
  * Line6 Program Patch Editor

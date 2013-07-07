@@ -22,6 +22,7 @@ import org.jsynthlib.advanced.style.FormatedString;
 import org.jsynthlib.advanced.style.XMEditor;
 import org.jsynthlib.menu.helper.HexDumpContent;
 import org.jsynthlib.model.patch.Patch;
+import org.jsynthlib.tools.HexaUtil;
 
 /**
  * This class serves as a initial substitute for a patch editor. It is to be used for verifying that your driver is
@@ -69,7 +70,7 @@ public class HexDumpEditorHighlighted extends PatchEditorFrame {
 		this.setVisible(true);
 
 		SysexMessage[] mainPatchSysex = mainPatch.getMessages();
-		
+
 		SysexMessage[] comparePatchSysex = null;
 		if (comparePatch != null) {
 			comparePatchSysex = comparePatch.getMessages();
@@ -83,12 +84,16 @@ public class HexDumpEditorHighlighted extends PatchEditorFrame {
 		HexDumpContent hxdump = new HexDumpContent(mainPatch);
 
 		if (mainPatchSysex.length == 0) {
+			// no F7..F0 -> try show byte array
+
 			try {
-				editor.getDoc().insertString(editor.getDoc().getLength(), "No sysex data", headerAttribute);
+				editor.getDoc().insertString(editor.getDoc().getLength(), getNoSysexMessage(mainPatch.export()), headerAttribute);
 			} catch (BadLocationException e) {
 				e.printStackTrace();
 			}
+
 			editor.getStatusPane().add(new JLabel("Count: 0"));
+
 		} else {
 
 			for (int i = 0; i < mainPatchSysex.length; i++) {
@@ -97,20 +102,26 @@ public class HexDumpEditorHighlighted extends PatchEditorFrame {
 					editor.getDoc().insertString(editor.getDoc().getLength(), "Message " + i + ":\n", headerAttribute);
 
 					if (comparePatch != null) {
+
 						List<FormatedString> output = hxdump.hexDumpFormated(mainPatchSysex[i].getMessage(),
 								comparePatchSysex[i].getMessage(), 0, -1, bytesperline, true, true);
+
 						if (output.isEmpty()) {
-							editor.getDoc().insertString(editor.getDoc().getLength(), "No sysex data", headerAttribute);
+							editor.getDoc().insertString(editor.getDoc().getLength(), getNoSysexMessage(mainPatchSysex[i].getMessage()),
+									headerAttribute);
 						} else {
 							for (FormatedString item : output) {
 								editor.getDoc().insertString(editor.getDoc().getLength(), item.getText(), item.getAttributeSet());
 							}
 						}
 					} else {
+
 						List<FormatedString> output = hxdump.hexDumpFormated(mainPatchSysex[i].getMessage(), null, 0, -1, bytesperline,
 								true, true);
+
 						if (output.isEmpty()) {
-							editor.getDoc().insertString(editor.getDoc().getLength(), "No sysex data", headerAttribute);
+							editor.getDoc().insertString(editor.getDoc().getLength(), getNoSysexMessage(mainPatchSysex[i].getMessage()),
+									headerAttribute);
 						} else {
 							for (FormatedString item : output) {
 								editor.getDoc().insertString(editor.getDoc().getLength(), item.getText(), item.getAttributeSet());
@@ -120,20 +131,30 @@ public class HexDumpEditorHighlighted extends PatchEditorFrame {
 				} catch (BadLocationException e) {
 					e.printStackTrace();
 				}
+
 				int size = mainPatchSysex[i].getMessage().length;
+
 				minSize = minSize > size ? size : minSize;
 				maxSize = maxSize < size ? size : minSize;
 				counter++;
 			}
 
+			int wrapperSize = mainPatch.getDriver().getHeaderSize() + 1;
+
 			if (comparePatch != null) {
 				editor.getStatusPane().add(
 						new JLabel("Count: " + mainPatch.getPatchSize() + " Byte" + " (" + nf.format(1 - hxdump.getDiffernce()) + ")"));
 			} else if (minSize == maxSize) {
-				editor.getStatusPane().add(new JLabel("Count: " + counter + " Size: " + minSize + " Byte"));
+				editor.getStatusPane()
+						.add(new JLabel("Count: " + counter + " Size: " + minSize + "(" + (minSize - wrapperSize) + ") Byte"));
 			} else {
-				editor.getStatusPane().add(new JLabel("Count: " + counter + " Size: " + minSize + ".." + maxSize + " Byte"));
+				editor.getStatusPane().add(
+						new JLabel("Count: " + counter + " Size: " + minSize + ".." + maxSize + " Byte, size of wrapper:" + wrapperSize));
 			}
 		}
+	}
+
+	private static String getNoSysexMessage(byte[] data) {
+		return "No sysex data\n" + HexaUtil.hexDump(data, 0, -1, 16);
 	}
 }

@@ -30,14 +30,16 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
+import org.jsynthlib.menu.widgets.CheckBoxWidget;
+import org.jsynthlib.menu.widgets.EnvelopeWidget;
+import org.jsynthlib.menu.widgets.IParamModel;
+import org.jsynthlib.menu.widgets.ISender;
+import org.jsynthlib.menu.widgets.ScrollBarLookupWidget;
+import org.jsynthlib.menu.widgets.ScrollBarWidget;
+import org.jsynthlib.menu.widgets.SysexWidget;
 import org.jsynthlib.menu.window.PatchEditorFrame;
 import org.jsynthlib.model.driver.SynthDriverPatch;
 import org.jsynthlib.model.patch.PatchDataImpl;
-import org.jsynthlib.widgets.CheckBoxWidget;
-import org.jsynthlib.widgets.EnvelopeWidget;
-import org.jsynthlib.widgets.ScrollBarLookupWidget;
-import org.jsynthlib.widgets.ScrollBarWidget;
-import org.jsynthlib.widgets.SysexWidget;
 
 /**
  * Editor for a patch from a Casio CZ-101/1000. Patch must be 264 bytes long, not the 263-byte version from the synth.
@@ -462,7 +464,7 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 	/**
 	 * Dummy model for those widgets that won't take null for an answer.
 	 */
-	class NullModel implements SysexWidget.IParamModel {
+	class NullModel implements IParamModel {
 		int currValue;
 
 		/** Constructs a NullModel. */
@@ -845,8 +847,8 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 		/**
 		 * Only one stage can be sustain.
 		 */
-		public SysexWidget.IParamModel getSustainModel() {
-			return new SysexWidget.IParamModel() {
+		public IParamModel getSustainModel() {
+			return new IParamModel() {
 				public void set(int value) {
 					setSustainStage(value);
 				}
@@ -860,8 +862,8 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 		/**
 		 * Lets user freely flip sustain bits for all 8 stages.
 		 */
-		public SysexWidget.IParamModel getSustainModel2(final int stage) {
-			return new SysexWidget.IParamModel() {
+		public IParamModel getSustainModel2(final int stage) {
+			return new IParamModel() {
 				public void set(int value) {
 					setSustainStage(stage, value);
 				}
@@ -872,8 +874,8 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 			};
 		}
 
-		public SysexWidget.IParamModel getEndStageModel() {
-			return new SysexWidget.IParamModel() {
+		public IParamModel getEndStageModel() {
+			return new IParamModel() {
 				public void set(int value) {
 					setEndStage(value);
 				}
@@ -884,8 +886,8 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 			};
 		}
 
-		public SysexWidget.IParamModel getRateModel(final int stage) {
-			return new SysexWidget.IParamModel() {
+		public IParamModel getRateModel(final int stage) {
+			return new IParamModel() {
 				public void set(int value) {
 					if (!hackMode)
 						value = 119 * value / 99;
@@ -905,8 +907,8 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 			};
 		}
 
-		public SysexWidget.IParamModel getLevelModel(final int stage) {
-			return new SysexWidget.IParamModel() {
+		public IParamModel getLevelModel(final int stage) {
+			return new IParamModel() {
 				public void set(int value) {
 					if (!hackMode) {
 						if (value == 1)
@@ -967,7 +969,7 @@ public class CasioCZ1000SingleEditor extends PatchEditorFrame {
 	/**
 	 * Dummy sender for those widgets that won't take null for an answer.
 	 */
-	class NullSender implements SysexWidget.ISender {
+	class NullSender implements ISender {
 		public void send(SynthDriverPatch driver, int value) {
 		}
 	}

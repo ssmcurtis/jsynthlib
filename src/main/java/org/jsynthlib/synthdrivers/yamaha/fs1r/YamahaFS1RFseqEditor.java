@@ -18,13 +18,13 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 import org.jsynthlib.PatchBayApplication;
+import org.jsynthlib.menu.widgets.ComboBoxWidget;
+import org.jsynthlib.menu.widgets.KnobWidget;
+import org.jsynthlib.menu.widgets.PatchNameWidget;
+import org.jsynthlib.menu.widgets.SpinnerWidget;
 import org.jsynthlib.menu.window.MenuFrame;
 import org.jsynthlib.menu.window.PatchEditorFrame;
 import org.jsynthlib.model.patch.PatchDataImpl;
-import org.jsynthlib.widgets.ComboBoxWidget;
-import org.jsynthlib.widgets.KnobWidget;
-import org.jsynthlib.widgets.PatchNameWidget;
-import org.jsynthlib.widgets.SpinnerWidget;
 
 /**
  * Editor for Formant sequence.

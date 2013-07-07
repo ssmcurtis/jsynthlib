@@ -28,17 +28,17 @@ import javax.swing.table.TableColumn;
 
 import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.widgets.CheckBoxWidget;
+import org.jsynthlib.menu.widgets.ComboBoxWidget;
+import org.jsynthlib.menu.widgets.KnobLookupWidget;
+import org.jsynthlib.menu.widgets.KnobWidget;
+import org.jsynthlib.menu.widgets.ParamModel;
+import org.jsynthlib.menu.widgets.PatchNameWidget;
+import org.jsynthlib.menu.widgets.SpinnerWidget;
+import org.jsynthlib.menu.widgets.SysexSender;
+import org.jsynthlib.menu.widgets.SysexWidget;
 import org.jsynthlib.menu.window.PatchEditorFrame;
 import org.jsynthlib.model.patch.PatchDataImpl;
-import org.jsynthlib.widgets.CheckBoxWidget;
-import org.jsynthlib.widgets.ComboBoxWidget;
-import org.jsynthlib.widgets.KnobLookupWidget;
-import org.jsynthlib.widgets.KnobWidget;
-import org.jsynthlib.widgets.ParamModel;
-import org.jsynthlib.widgets.PatchNameWidget;
-import org.jsynthlib.widgets.SpinnerWidget;
-import org.jsynthlib.widgets.SysexSender;
-import org.jsynthlib.widgets.SysexWidget;
 
 /**
  * Voice editor. TODO : pour selectionner le numero de partie performance il faut le faire avant de construire les

@@ -23,9 +23,9 @@ package org.jsynthlib.synthdrivers.alesis.dm5;
 
 import javax.sound.midi.InvalidMidiDataException;
 
+import org.jsynthlib.menu.widgets.ISender;
 import org.jsynthlib.model.driver.SynthDriverPatch;
 import org.jsynthlib.tools.ErrorMsgUtil;
-import org.jsynthlib.widgets.SysexWidget;
 
 /**
  * The TrigSender class is used to send NRPNs to the DM5. The parameters handled by the TrigSender are specifically
@@ -33,7 +33,7 @@ import org.jsynthlib.widgets.SysexWidget;
  * 
  * @author Jeff Weber
  */
-class TrigSender extends NRPNSender implements SysexWidget.ISender {
+class TrigSender extends NRPNSender implements ISender {
 	final static int TR_V_CURVE = 1;
 	final static int TR_NOTE_NBR = 2;
 	final static int TR_GAIN = 3;

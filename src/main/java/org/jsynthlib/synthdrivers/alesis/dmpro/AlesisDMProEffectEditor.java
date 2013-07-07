@@ -29,12 +29,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 
+import org.jsynthlib.menu.widgets.ComboBoxWidget;
+import org.jsynthlib.menu.widgets.IParamModel;
+import org.jsynthlib.menu.widgets.ScrollBarWidget;
+import org.jsynthlib.menu.widgets.SysexSender;
 import org.jsynthlib.menu.window.PatchEditorFrame;
 import org.jsynthlib.model.patch.PatchDataImpl;
-import org.jsynthlib.widgets.ComboBoxWidget;
-import org.jsynthlib.widgets.ScrollBarWidget;
-import org.jsynthlib.widgets.SysexSender;
-import org.jsynthlib.widgets.SysexWidget;
 
 /**
  * Created on den 4 januari 2003, 23:01
@@ -235,7 +235,7 @@ class AlesisDMProFXSender extends SysexSender {
 
 }
 
-class AlesisDMProFXModel implements SysexWidget.IParamModel {
+class AlesisDMProFXModel implements IParamModel {
 
 	private AlesisDMProParser m_oParser;
 	private int m_nByte;

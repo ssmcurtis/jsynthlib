@@ -36,16 +36,16 @@ public class AtcxDevice extends Device {
 
 	@Override
 	public boolean comparePatches(Patch p1, Patch p2) {
-		// do not compare checksum and header
+		// do not compare footer and header
 		byte[] stay = p1.getByteArray();
 
-		int stayLength = stay.length - 2 - Atcx.HEADER_SIZE;
+		int stayLength = stay.length - 1 - Atcx.HEADER_SIZE;
 		byte[] stay1 = new byte[stayLength];
 		System.arraycopy(stay, Atcx.HEADER_SIZE, stay1, 0, stayLength);
 
 		byte[] delete = p2.getByteArray();
 
-		int deleteLength = delete.length - 2 - Atcx.HEADER_SIZE;
+		int deleteLength = delete.length - 1 - Atcx.HEADER_SIZE;
 		byte[] delete1 = new byte[deleteLength];
 		System.arraycopy(delete, Atcx.HEADER_SIZE, delete1, 0, deleteLength);
 

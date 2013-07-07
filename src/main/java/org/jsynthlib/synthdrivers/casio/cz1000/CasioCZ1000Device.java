@@ -29,8 +29,8 @@ import java.util.prefs.Preferences;
 
 import javax.swing.JPanel;
 
+import org.jsynthlib.menu.widgets.ComboBoxWidget;
 import org.jsynthlib.model.device.Device;
-import org.jsynthlib.widgets.ComboBoxWidget;
 
 /**
  * Single patch driver for Casio CZ-101 and CZ-1000. Note : on the casio, if you initiate a dump (from the PC or the

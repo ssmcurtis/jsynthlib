@@ -34,7 +34,7 @@ public class YamahaFS1RBankEditor extends BankEditorFrame {
 	 * @see YamahaFS1RPerformanceEditor
 	 */
 	public JSLFrame EditPatch(int aNumPatch, int aPart) {
-		PatchDataImpl p = (PatchDataImpl) bankData.get(aNumPatch);
+		PatchDataImpl p = (PatchDataImpl) bankData.getExtractedPatch(aNumPatch);
 		if (p == null) {
 			return null;
 		}

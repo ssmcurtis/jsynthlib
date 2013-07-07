@@ -21,7 +21,7 @@
 
 package org.jsynthlib.synthdrivers.yamaha.ub99;
 
-import org.jsynthlib.widgets.SysexSender;
+import org.jsynthlib.menu.widgets.SysexSender;
 
 class YamahaUB99Sender extends SysexSender {
 	byte[] sysex;

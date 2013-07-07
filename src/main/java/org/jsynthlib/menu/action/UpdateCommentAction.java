@@ -16,7 +16,7 @@ import org.jsynthlib.model.tablemodel.PatchTableModel;
 
 public class UpdateCommentAction extends AbstractAction {
 	public UpdateCommentAction(Map<Serializable, Integer> mnemonics) {
-		super("Update comment", null);
+		super("Update comment *", null);
 		this.setEnabled(false);
 	}
 
@@ -27,13 +27,24 @@ public class UpdateCommentAction extends AbstractAction {
 		PatchTableModel pm = (PatchTableModel) libraryFrame.getTable().getModel();
 
 		int maxPatchesinTable = libraryFrame.getPatchCollection().size();
+		int maxPatchNames = -1;
 
 		for (int i = 0; i < maxPatchesinTable; i++) {
 
 			Patch p = pm.getPatchAt(table.convertRowIndexToModel(i));
-			p.setComment("Patch " + (i + 1));
+			
+			if (maxPatchNames == -1) {
+				// set max
+				maxPatchNames = p.getDriver().getPatchNumbers().length;
+			}
+
+			if (i < maxPatchNames) {
+				p.setComment(p.getDriver().getPatchNumbers()[i]);
+			} else {
+				p.setComment("Patch " + (i + 1));
+			}
 		}
-		
+
 		libraryFrame.getMyModel().fireTableDataChanged();
 	}
 }

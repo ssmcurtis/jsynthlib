@@ -39,9 +39,8 @@ abstract public class SynthDriverBank extends SynthDriverPatchImpl {
 	protected int singleSize;
 
 	private PatchDataImpl currentBank = null;
-	
+
 	private byte[] lastSysex = null;
-	
 
 	/**
 	 * Creates a new <code>BankDriver</code> instance.
@@ -104,9 +103,11 @@ abstract public class SynthDriverBank extends SynthDriverPatchImpl {
 	 * 
 	 * @see PatchDataImpl#edit()
 	 */
-	public JSLFrame editPatch(PatchDataImpl bank) {
-		return new BankEditorFrame(bank);
-	}
+
+	// TODO BankEditorFrame
+	// public JSLFrame editPatch(PatchDataImpl bank) {
+	// return new BankEditorFrame(bank);
+	// }
 
 	//
 	// for IPatch interface methods
@@ -159,7 +160,9 @@ abstract public class SynthDriverBank extends SynthDriverPatchImpl {
 			return false;
 
 		String patchString = p.getPatchHeader().toString();
+
 		StringBuffer driverString = new StringBuffer(singleSysexID);
+
 		for (int j = 0; j < driverString.length(); j++)
 			if (driverString.charAt(j) == '*')
 				driverString.setCharAt(j, patchString.charAt(j));
@@ -186,7 +189,7 @@ abstract public class SynthDriverBank extends SynthDriverPatchImpl {
 	/**
 	 * Gets a patch from the bank, converting it as needed.
 	 * 
-	 * @see PatchDataImpl#get(int)
+	 * @see PatchDataImpl#getExtractedPatch(int)
 	 */
 	public abstract PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum);
 
@@ -231,7 +234,6 @@ abstract public class SynthDriverBank extends SynthDriverPatchImpl {
 	public void setCurrentBank(PatchDataImpl currentBank) {
 		this.currentBank = currentBank;
 	}
-
 
 	public byte[] getLastSysex() {
 		return lastSysex;

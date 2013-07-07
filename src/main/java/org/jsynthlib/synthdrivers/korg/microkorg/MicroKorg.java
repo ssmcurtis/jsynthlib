@@ -46,7 +46,7 @@ public enum MicroKorg {
 	public static final String REQUEST_SINGLE = "F0 42 *midiChannel* 58 10 F7";
 	public static final String REQUEST_BANK = "F0 42 *midiChannel* 58 1C F7";
 
-	public static final String PROGRAM_DATA_DUMP_HEADER_STRING = "F0 42 *midiChannel* 58 4C";
+	// public static final String PROGRAM_DATA_DUMP_HEADER_STRING = "F0 42 *midiChannel* 58 4C";
 	public static final String WRITE_SINGLE = "F0 42 *midiChannel* 58 11 00 *patchNum* F7";
 	public static byte[] WRITE_SINGLE_BYTES = new byte[] { (byte) 0xF0, 0x42, 0x30, 0x58, 0x11, 0x00, 0x00, (byte) 0xF7 };
 	public static final byte[] PROGRAM_DATA_DUMP_HEADER = new byte[] { (byte) 0xF0, 0x42, 0x30, 0x58, 0x4C };

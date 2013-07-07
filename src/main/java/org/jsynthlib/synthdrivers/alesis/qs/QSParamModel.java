@@ -1,8 +1,8 @@
 package org.jsynthlib.synthdrivers.alesis.qs;
 
+import org.jsynthlib.menu.widgets.IParamModel;
 import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.synthdrivers.alesis.SysexRoutines;
-import org.jsynthlib.widgets.SysexWidget;
 
 /**
  * Param model AlesisQS keyboards. Allows changing of specific ranges of bits in the patch, taking into account the
@@ -12,7 +12,7 @@ import org.jsynthlib.widgets.SysexWidget;
  * @version $Id$
  */
 
-public class QSParamModel implements SysexWidget.IParamModel {
+public class QSParamModel implements IParamModel {
 	private int msBit;
 	private int bitSize;
 	private boolean signed;

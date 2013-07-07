@@ -21,10 +21,10 @@
 
 package org.jsynthlib.synthdrivers.line6.pod20;
 
+import org.jsynthlib.menu.widgets.KnobWidget;
+import org.jsynthlib.menu.widgets.ParamModel;
+import org.jsynthlib.menu.widgets.SysexSender;
 import org.jsynthlib.model.patch.PatchDataImpl;
-import org.jsynthlib.widgets.KnobWidget;
-import org.jsynthlib.widgets.ParamModel;
-import org.jsynthlib.widgets.SysexSender;
 
 /**
  * Hideable version of the KnobWidget.

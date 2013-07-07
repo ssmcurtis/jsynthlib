@@ -57,7 +57,7 @@ public class BankEditorModel extends AbstractTableModel {
 	}
 
 	public Patch getPatchAt(int row, int col) {
-		return this.bankEditorFrame.bankData.get(this.bankEditorFrame.getPatchNum(row, col));
+		return this.bankEditorFrame.bankData.getExtractedPatch(this.bankEditorFrame.getPatchNum(row, col));
 	}
 
 	public void setPatchAt(Patch p, int row, int col) {

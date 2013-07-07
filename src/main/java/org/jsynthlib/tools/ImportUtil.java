@@ -56,6 +56,8 @@ public class ImportUtil {
 
 					System.out.println("IMPORT MIDI ... ");
 					for (Patch p : DriverUtil.createPatches(tr[j].get(i).getMessage().getMessage(), getLocation(file))) {
+						
+						// TODO ssmCurtis - add Prefix during MIDI import
 						p.setComment(j + "-" + p.getComment());
 						li.add(p);
 					}

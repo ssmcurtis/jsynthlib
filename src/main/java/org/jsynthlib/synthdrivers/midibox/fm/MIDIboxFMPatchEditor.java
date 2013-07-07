@@ -46,15 +46,15 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 
+import org.jsynthlib.menu.widgets.CheckBoxWidget;
+import org.jsynthlib.menu.widgets.ComboBoxWidget;
+import org.jsynthlib.menu.widgets.EnvelopeWidget;
+import org.jsynthlib.menu.widgets.KnobWidget;
+import org.jsynthlib.menu.widgets.PatchNameWidget;
+import org.jsynthlib.menu.widgets.ScrollBarWidget;
 import org.jsynthlib.menu.window.PatchEditorFrame;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.patch.PatchDataImpl;
-import org.jsynthlib.widgets.CheckBoxWidget;
-import org.jsynthlib.widgets.ComboBoxWidget;
-import org.jsynthlib.widgets.EnvelopeWidget;
-import org.jsynthlib.widgets.KnobWidget;
-import org.jsynthlib.widgets.PatchNameWidget;
-import org.jsynthlib.widgets.ScrollBarWidget;
 
 class MIDIboxFMPatchEditor extends PatchEditorFrame {
 	final String[] parName = new String[] { "  0 | <reserved>", "  1 | Modulation Wheel", "  2 | Transpose",

@@ -23,11 +23,11 @@ package org.jsynthlib.synthdrivers.alesis.dm5;
 
 import javax.swing.JPanel;
 
+import org.jsynthlib.menu.widgets.ComboBoxWidget;
+import org.jsynthlib.menu.widgets.ParamModel;
+import org.jsynthlib.menu.widgets.SysexSender;
 import org.jsynthlib.menu.window.PatchEditorFrame;
 import org.jsynthlib.model.patch.PatchDataImpl;
-import org.jsynthlib.widgets.ComboBoxWidget;
-import org.jsynthlib.widgets.ParamModel;
-import org.jsynthlib.widgets.SysexSender;
 
 /**
  * Alesis DM5 Program Change Table Editor

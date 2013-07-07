@@ -30,15 +30,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 
+import org.jsynthlib.menu.widgets.CheckBoxWidget;
+import org.jsynthlib.menu.widgets.ComboBoxWidget;
+import org.jsynthlib.menu.widgets.IParamModel;
+import org.jsynthlib.menu.widgets.PatchNameWidget;
+import org.jsynthlib.menu.widgets.ScrollBarLookupWidget;
+import org.jsynthlib.menu.widgets.ScrollBarWidget;
+import org.jsynthlib.menu.widgets.SysexSender;
 import org.jsynthlib.menu.window.PatchEditorFrame;
 import org.jsynthlib.model.patch.PatchDataImpl;
-import org.jsynthlib.widgets.CheckBoxWidget;
-import org.jsynthlib.widgets.ComboBoxWidget;
-import org.jsynthlib.widgets.PatchNameWidget;
-import org.jsynthlib.widgets.ScrollBarLookupWidget;
-import org.jsynthlib.widgets.ScrollBarWidget;
-import org.jsynthlib.widgets.SysexSender;
-import org.jsynthlib.widgets.SysexWidget;
 
 /**
  * @author Peter Hageus (peter.hageus@comhem.se)
@@ -157,7 +157,7 @@ class AlesisDMProDrumKitEditor extends PatchEditorFrame {
 
 		JComboBox m_cboOther = null;
 
-		public BuddyCombo(String l, PatchDataImpl p, SysexWidget.IParamModel ofs, SysexSender s, String[] o,
+		public BuddyCombo(String l, PatchDataImpl p, IParamModel ofs, SysexSender s, String[] o,
 				JComboBox cboOther) {
 			super(l, p, ofs, s, o);
 			m_cboOther = cboOther;
@@ -228,7 +228,7 @@ class AlesisDMProSender extends SysexSender {
 
 }
 
-class AlesisDMProModel implements SysexWidget.IParamModel {
+class AlesisDMProModel implements IParamModel {
 	private AlesisDMProParser m_oParser;
 	private int m_nByte;
 	private int m_nBit;

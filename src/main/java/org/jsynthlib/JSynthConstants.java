@@ -7,17 +7,19 @@ package org.jsynthlib;
  * @version $Id$
  */
 public class JSynthConstants {
-	
+
+	public static final String VENDOR = "JSynthLib2";
+
 	// potential preferences
 	public static final int MAX_PROGRAMMS_FOR_STORE_LIBRARY = 16;
-	
+
 	/** JSynthLib version number */
 	public static final String VERSION = "0.21-alpha";
 	public static final String VERSION_2 = "01";
-	
+
 	public static final String SYNTLIB_CLASS_PACKAGE_PREFIX = "org.jsynthlib.synthdrivers.";
 	public static final String SYNTLIB_CLASS_GENERIC = "org.jsynthlib.synthdrivers.generic.GenericDevice";
-	
+
 	public static final String SYNTLIB_CLASS_PACKAGE = "01";
 
 	/** App Config properties file name */
@@ -36,11 +38,10 @@ public class JSynthConstants {
 
 	/** Number of faders */
 	public static final int NUM_FADERS = 33;
-		
+
 	public static final int MIDI_SYSEX_WAIT_FOR_DATA = 10;
 	public static final int maxCountForImportFromDirectory = Integer.MAX_VALUE;
-	public static final int widthFileChooser =600;
-	public static final int heightFileChooser =500;
-	
-	
+	public static final int widthFileChooser = 600;
+	public static final int heightFileChooser = 500;
+
 }

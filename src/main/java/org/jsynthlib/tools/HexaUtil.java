@@ -1,8 +1,12 @@
 package org.jsynthlib.tools;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jsynthlib.advanced.style.FormatedString;
+
+import com.google.common.primitives.Bytes;
 
 public class HexaUtil {
 
@@ -25,7 +29,7 @@ public class HexaUtil {
 
 	public static String byteToHexString(byte b) {
 		int i = b & BYTE_INTEGER_FILTER;
-		if (i <= 16) {
+		if (i < 16) {
 			return "0" + Integer.toHexString(i).toUpperCase();
 		} else {
 			return Integer.toHexString(i).toUpperCase();
@@ -39,6 +43,27 @@ public class HexaUtil {
 
 	public static boolean isEndSysex(byte b) {
 		return b == sysex_end;
+	}
+
+	public static synchronized List<byte[]> splitSysexMessages(byte[] data) {
+		List<byte[]> li = new ArrayList<>();
+
+		List<Byte> tmp = null;
+
+		for (byte b : data) {
+			if (isStartSysex(b)) {
+				tmp = new ArrayList<>();
+			}
+			
+			tmp.add(b);
+			
+			if (isEndSysex(b)) {
+				byte[] tb = Bytes.toArray(tmp);
+				li.add(tb);
+			}
+		}
+
+		return li;
 	}
 
 	public static String byteToBinStringSplit(byte b, int bitpos) {
@@ -57,7 +82,7 @@ public class HexaUtil {
 		}
 
 	}
-	
+
 	public static String byteToBinStringSplit7(byte b, int bitpos) {
 		String s = byteToBinString7(b);
 		if (bitpos == 0) {

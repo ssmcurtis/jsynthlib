@@ -305,7 +305,7 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 		}
 		PatchBank myPatch = (PatchBank) getSelectedPatch();
 		for (int i = 0; i < myPatch.getNumPatches(); i++) {
-			PatchSingle p = myPatch.get(i);
+			PatchSingle p = myPatch.getExtractedPatch(i);
 			if (p != null)
 				myModel.addPatch(p);
 		}

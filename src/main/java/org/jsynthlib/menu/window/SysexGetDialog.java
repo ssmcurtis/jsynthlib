@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.EOFException;
 import java.util.ArrayList;
 
 import javax.sound.midi.SysexMessage;
@@ -26,6 +27,7 @@ import org.jsynthlib.model.driver.SynthDriverBank;
 import org.jsynthlib.model.driver.SynthDriverPatch;
 import org.jsynthlib.model.patch.Patch;
 import org.jsynthlib.tools.ErrorMsgUtil;
+import org.jsynthlib.tools.HexaUtil;
 import org.jsynthlib.tools.MidiUtil;
 import org.jsynthlib.tools.TableUtil;
 import org.jsynthlib.tools.UiUtil;
@@ -54,7 +56,9 @@ public class SysexGetDialog extends JDialog {
 	/** MIDI input port from which SysEX messages come. */
 	private int inPort;
 
-	private int requestNextPatch = 0;
+	private boolean sendPatchAcknowledge = true;
+	private boolean isEof = false;
+	private boolean sendPatchRequest = true;
 	private int patchSize = 1;
 
 	private Timer readSysexTimer;
@@ -72,7 +76,7 @@ public class SysexGetDialog extends JDialog {
 	private JButton cancel = new JButton("Cancel");
 
 	private int currentPatchNumber = 0;
-	private int currentBankNumber = 0;
+	private int bankNumber = 0;
 	private int patchCountInBank = 1;
 
 	private SynthDriverPatch driver = null;
@@ -168,19 +172,28 @@ public class SysexGetDialog extends JDialog {
 	}
 
 	protected void pasteIntoSelectedFrame() {
-		SynthDriverPatch driver = (SynthDriverPatch) driverComboBox.getSelectedItem();
+		// SynthDriverPatch driver = (SynthDriverPatch) driverComboBox.getSelectedItem();
 
 		if (sysexSize > 0 && queue != null && currentPatchNumber < patchCountInBank) {
 
-			SysexMessage[] msgs = (SysexMessage[]) queue.toArray(new SysexMessage[0]);
+			System.out.println("## DAT");
 
-			// INFO CREATE PATCHES
+			// System.out.println(">>> Number: " + currentPatchNumber + " " +
+			// driver.getPatchNumbers()[currentPatchNumber]);
+
+			SysexMessage[] msgs = (SysexMessage[]) queue.toArray(new SysexMessage[]{});
+
+			// INFO CREATE PATCHES : GET FROM SYNTH
 			Patch[] patarray = driver.createPatches(msgs);
 
 			if (patarray.length > 0) {
-				patarray[0].setComment(driver.getBankNumbers()[currentBankNumber] + " " + driver.getPatchNumbers()[currentPatchNumber]);
+				// TODO ssmCurtis check banknames
+				patarray[0].setComment(driver.getPatchNumbers()[currentPatchNumber]);
 			}
-			TableUtil.addPatchToTable(patarray);
+
+			// TODO ssmCurtis - check overwriting comment after import from device
+			TableUtil.addPatchToTable(patarray, true);
+
 		}
 	}
 
@@ -209,7 +222,7 @@ public class SysexGetDialog extends JDialog {
 
 	public class DriverActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent evt) {
-			SynthDriverPatch driver = (SynthDriverPatch) driverComboBox.getSelectedItem();
+			driver = (SynthDriverPatch) driverComboBox.getSelectedItem();
 			if (driver == null) {
 				return;
 			}
@@ -247,66 +260,19 @@ public class SysexGetDialog extends JDialog {
 		}
 	}
 
-	public class GetBankAsSingleActionListener implements ActionListener {
-		public void actionPerformed(ActionEvent evt) {
-			getRootPane().setDefaultButton(cancel);
-
-			get.setEnabled(false);
-			paste.setEnabled(false);
-			done.setEnabled(false);
-			getBankAsSingles.setEnabled(false);
-
-			driver = (SynthDriverPatch) driverComboBox.getSelectedItem();
-
-			if (driver instanceof SynthDriverBank) {
-				ErrorMsgUtil.reportError("Driver selection", "Only available for single driver");
-			} else {
-				currentBankNumber = bankNumComboBox.getSelectedIndex();
-				currentPatchNumber = patchNumComboBox.getSelectedIndex();
-				patchCountInBank = driver.getPatchNumbers().length;
-
-				inPort = driver.getDevice().getInPort();
-
-				ErrorMsgUtil.reportStatus("SysexGetDialog | port: " + inPort + " | bankNum: " + currentBankNumber + " | patchNum: "
-						+ currentPatchNumber);
-
-				// ----- Start timer and request dump
-				// statusLabel.setText("Getting sysex dump for patch " + currentPatchNumber);
-				timeout = driver.getPatchSize();
-				sysexSize = 0;
-				patchSize = driver.getPatchSize();
-				queue = new ArrayList<SysexMessage>();
-
-				// reset queue
-				MidiUtil.clearSysexInputQueue(inPort); // clear MIDI input buffer
-
-				// wait for results
-				readSysexTimer = new Timer(timeout, new ReadSysexActionListener());
-				readSysexTimer.setInitialDelay(0);
-				readSysexTimer.start();
-
-				// request sysex
-				RequestSysexActionListener requestTimer = new RequestSysexActionListener();
-				requestSysexTimer = new Timer(timeout, requestTimer);
-				requestSysexTimer.start();
-			}
-
-		}
-	}
-
 	public class GetActionListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent evt) {
 			driver = (SynthDriverPatch) driverComboBox.getSelectedItem();
 
-			currentBankNumber = bankNumComboBox.getSelectedIndex();
+			bankNumber = bankNumComboBox.getSelectedIndex();
 			currentPatchNumber = patchNumComboBox.getSelectedIndex();
 			patchCountInBank = driver.getPatchNumbers().length;
 
 			inPort = driver.getDevice().getInPort();
 
-			ErrorMsgUtil.reportStatus("SysexGetDialog | port: " + inPort + " | bankNum: " + currentBankNumber + " | patchNum: "
-					+ currentPatchNumber);
+			ErrorMsgUtil.reportStatus("SysexGetDialog | port: " + inPort + " | bankNum: " + bankNumber + " | patchNum: "
+					+ currentPatchNumber + "|" + patchCountInBank);
 
 			statusLabel.setText("Getting sysex dump...");
 
@@ -324,46 +290,156 @@ public class SysexGetDialog extends JDialog {
 			// reset midi queue
 			MidiUtil.clearSysexInputQueue(inPort); // clear MIDI input buffer
 
+			if (driver.isRequestAndAcknowledge()) {
+				sendPatchAcknowledge = false;
+				requestSysexTimer = new Timer(0, new SendAcknowledgeActionListener());
+				requestSysexTimer.start();
+			}
+
 			// wait for results
 			readSysexTimer = new Timer(0, new SimpleSysexActionListener());
 			readSysexTimer.start();
-
-			driver.requestPatchDump(currentBankNumber, currentPatchNumber);
+			// send driver request ... once
+			System.out.println("## REQ");
+			driver.requestPatchDump(bankNumber, currentPatchNumber);
 		}
 	}
 
-	public class RequestSysexActionListener implements ActionListener {
+	public class GetBankAsSingleActionListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent evt) {
+			getRootPane().setDefaultButton(cancel);
 
-			ErrorMsgUtil.reportStatus("> REQUEST TIMER.. ");
+			get.setEnabled(false);
+			paste.setEnabled(false);
+			done.setEnabled(false);
+			getBankAsSingles.setEnabled(false);
 
-			if (requestNextPatch < 1) {
+			driver = (SynthDriverPatch) driverComboBox.getSelectedItem();
 
-				currentPatchNumber += requestNextPatch; // -1 same patch again
+			if (driver instanceof SynthDriverBank) {
+				ErrorMsgUtil.reportError("Driver selection", "Only available for single driver");
+			} else {
+				bankNumber = bankNumComboBox.getSelectedIndex();
 
-				requestNextPatch = 1;
+				// as start
+				currentPatchNumber = patchNumComboBox.getSelectedIndex();
 
-				if (currentPatchNumber < patchCountInBank) {
-					statusLabel.setText("To go " + (patchCountInBank - currentPatchNumber));
-					driver.requestPatchDump(currentBankNumber, currentPatchNumber);
-				} else {
-					stopTimer();
-					setVisible(false);
+				// TODO ssmCurtis - patch count in bank
+				patchCountInBank = driver.getPatchNumbers().length;
+
+				inPort = driver.getDevice().getInPort();
+
+				ErrorMsgUtil.reportStatus("SysexGetDialog | port: " + inPort + " | bankNum: " + bankNumber + " | patchNum: "
+						+ currentPatchNumber + "|" + patchCountInBank);
+
+				// TODO ssmCurtis - adjust timeout by user
+				timeout = driver.getPatchSize();
+				sysexSize = 0;
+				patchSize = driver.getPatchSize();
+				queue = new ArrayList<SysexMessage>();
+
+				// reset queue
+				MidiUtil.clearSysexInputQueue(inPort); // clear MIDI input buffer
+
+				// wait for results
+				readSysexTimer = new Timer(timeout, new ReadSysexCurrentReceivedPachActionListener());
+				readSysexTimer.start();
+
+				// request sysex
+				RequestSysexNextPatchActionListener requestTimer = new RequestSysexNextPatchActionListener();
+				requestSysexTimer = new Timer(timeout, requestTimer);
+				requestSysexTimer.start();
+			}
+
+		}
+	}
+
+	public class SendAcknowledgeActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent evt) {
+
+			if (!isEof && sendPatchAcknowledge) {
+
+				MidiUtil.clearSysexInputQueue(inPort);
+
+				driver.sendAcknowledge();
+
+				sendPatchAcknowledge = false;
+				if (queue.size() > 0) {
+					SysexMessage lastMessage = queue.get(queue.size() - 1);
+					
+					System.out.println(HexaUtil.hexDumpOneLine(lastMessage.getData(), 0, -1, 16));
+					
+					isEof = driver.isEof(lastMessage.getData());
+					if (isEof) {
+						queue.remove(lastMessage);
+					}
 				}
-				currentPatchNumber++;
+				System.out.println("Size: " + queue.size() + " eof: " + isEof + " sendAck: " + sendPatchAcknowledge);
+			}
+		}
+	}
+
+	public class SimpleSysexActionListener implements ActionListener {
+
+		public void actionPerformed(ActionEvent evt) {
+			// ErrorMsgUtil.reportStatus("_ RECEIVE TIMER SIMPLE.. ");
+
+			try {
+				if (!sendPatchAcknowledge && !isEof) {
+					while (!MidiUtil.isSysexInputQueueEmpty(inPort)) {
+						SysexMessage msg = (SysexMessage) MidiUtil.getMessage(inPort, timeout);
+
+						queue.add(msg);
+						// ErrorMsg.reportStatus
+						// ("TimerActionListener | size more bytes: " +
+						// msg.getLength());
+						sysexSize += msg.getLength();
+						statusLabel.setText(sysexSize + " Bytes Received");
+						sendPatchAcknowledge = true;
+					}
+				}
+			} catch (Exception ex) {
+				setVisible(false);
+				stopTimer();
+				ErrorMsgUtil.reportError("Error", "Unable to receive Sysex", ex);
 			}
 		}
 
 	}
 
-	public class ReadSysexActionListener implements ActionListener {
+	public class RequestSysexNextPatchActionListener implements ActionListener {
+
+		public void actionPerformed(ActionEvent evt) {
+
+			if (sendPatchRequest) {
+
+				sendPatchRequest = false;
+
+				ErrorMsgUtil.reportStatus("> Try request for " + currentPatchNumber + "/" + patchCountInBank);
+
+				if (currentPatchNumber < patchCountInBank) {
+					statusLabel.setText("To go " + (patchCountInBank - currentPatchNumber));
+
+					ErrorMsgUtil.reportStatus("> send request");
+
+					driver.requestPatchDump(bankNumber, currentPatchNumber);
+
+				} else {
+					stopTimer();
+					setVisible(false);
+				}
+			}
+		}
+
+	}
+
+	public class ReadSysexCurrentReceivedPachActionListener implements ActionListener {
 
 		// TODO ssmCurtis - preferences
 		int requestPatchAgain = requestPatchAgainDefault;
 
 		public void actionPerformed(ActionEvent evt) {
-			ErrorMsgUtil.reportStatus("_ RECEIVE TIMER.. ");
 
 			try {
 				while (!MidiUtil.isSysexInputQueueEmpty(inPort)) {
@@ -381,7 +457,7 @@ public class SysexGetDialog extends JDialog {
 
 			if (sysexSize == patchSize) {
 				// patch arrived
-				ErrorMsgUtil.reportStatus(">>>>> sysex - patch arrived ...");
+				ErrorMsgUtil.reportStatus("> patch arrived");
 
 				pasteIntoSelectedFrame();
 
@@ -390,42 +466,9 @@ public class SysexGetDialog extends JDialog {
 
 				// reset queue
 				MidiUtil.clearSysexInputQueue(inPort);
-				requestNextPatch = 0;
-			} else {
-				requestPatchAgain--;
-				if (requestPatchAgain == 0) {
-					requestPatchAgain = requestPatchAgainDefault;
-					requestNextPatch = -1;
-				}
+				currentPatchNumber++;
 			}
-
-		}
-
-	}
-
-	public class SimpleSysexActionListener implements ActionListener {
-
-		public void actionPerformed(ActionEvent evt) {
-			// ErrorMsgUtil.reportStatus("_ RECEIVE TIMER SIMPLE.. ");
-
-			try {
-				while (!MidiUtil.isSysexInputQueueEmpty(inPort)) {
-					SysexMessage msg;
-
-					msg = (SysexMessage) MidiUtil.getMessage(inPort, timeout);
-					queue.add(msg);
-					// ErrorMsg.reportStatus
-					// ("TimerActionListener | size more bytes: " +
-					// msg.getLength());
-					sysexSize += msg.getLength();
-					// could removed for bank as singles
-					statusLabel.setText(sysexSize + " Bytes Received");
-				}
-			} catch (Exception ex) {
-				setVisible(false);
-				stopTimer();
-				ErrorMsgUtil.reportError("Error", "Unable to receive Sysex", ex);
-			}
+			sendPatchRequest = true;
 		}
 
 	}

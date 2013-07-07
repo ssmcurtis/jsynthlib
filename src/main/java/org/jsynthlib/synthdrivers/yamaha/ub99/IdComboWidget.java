@@ -30,8 +30,10 @@ import java.util.Vector;
 
 import javax.swing.JComboBox;
 
+import org.jsynthlib.menu.widgets.IParamModel;
+import org.jsynthlib.menu.widgets.ISender;
+import org.jsynthlib.menu.widgets.SysexWidget;
 import org.jsynthlib.model.patch.Patch;
-import org.jsynthlib.widgets.SysexWidget;
 
 public class IdComboWidget extends SysexWidget {
 	protected JComboBox cb;

@@ -27,6 +27,7 @@ public class MicroKorgSingleDriver extends SynthDriverPatchImpl {
 
 		patchNameStart = MicroKorg.PATCH_NAME_START_AT.position();
 		patchNameSize = MicroKorg.PATCH_NAME_LENGTH.position();
+		
 		deviceIDoffset = MicroKorg.DEVICE_ID_OFFSET;
 
 		checksumOffset = MicroKorg.PATCH_CHECKSUM_OFFSET.position();
@@ -92,7 +93,7 @@ public class MicroKorgSingleDriver extends SynthDriverPatchImpl {
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {
-
+		// TODO change to: NameValue deviceId = new NameValue("deviceId", getDeviceID());
 		MidiUtil.changeProgram(this, patchNum);
 
 		MidiMessage msg = sysexHandler.toSysexMessage(getChannel());

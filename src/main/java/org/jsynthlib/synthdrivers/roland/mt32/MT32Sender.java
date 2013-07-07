@@ -27,7 +27,7 @@
 
 package org.jsynthlib.synthdrivers.roland.mt32;
 
-import org.jsynthlib.widgets.SysexSender;
+import org.jsynthlib.menu.widgets.SysexSender;
 
 class MT32Sender extends SysexSender {
 	/*

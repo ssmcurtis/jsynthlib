@@ -24,8 +24,8 @@
 
 package org.jsynthlib.synthdrivers.midibox.fm;
 
+import org.jsynthlib.menu.widgets.ParamModel;
 import org.jsynthlib.model.patch.PatchDataImpl;
-import org.jsynthlib.widgets.ParamModel;
 
 class MIDIboxFMModel extends ParamModel {
 	int flag;

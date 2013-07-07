@@ -21,8 +21,8 @@
 
 package org.jsynthlib.synthdrivers.yamaha.ub99;
 
+import org.jsynthlib.menu.widgets.ParamModel;
 import org.jsynthlib.model.patch.PatchDataImpl;
-import org.jsynthlib.widgets.ParamModel;
 
 class YamahaUB99Model extends ParamModel {
 	boolean twobytes;

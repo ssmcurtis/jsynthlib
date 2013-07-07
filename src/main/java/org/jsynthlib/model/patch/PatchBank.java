@@ -47,7 +47,7 @@ public interface PatchBank extends Patch {
 	void delete(int patchNum);
 
 	/** Gets a patch from the bank, converting it as needed. */
-	PatchSingle get(int patchNum);
+	PatchSingle getExtractedPatch(int patchNum);
 
 	/** Get the name of the patch at the given number <code>patchNum</code>. */
 	String getName(int patchNum);

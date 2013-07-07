@@ -256,6 +256,8 @@ public class PatchDataImpl implements PatchSingle, PatchBank {
 	}
 
 	public final String lookupManufacturer() {
+		
+		// TODO - ssmCurtis exception if sysex header <=3
 		return JSynthManufacturerLookup.get(getSysex()[1], getSysex()[2], getSysex()[3]);
 	}
 
@@ -310,7 +312,7 @@ public class PatchDataImpl implements PatchSingle, PatchBank {
 		((SynthDriverBank) driver).deletePatch(this, patchNum);
 	}
 
-	public final PatchSingle get(int patchNum) {
+	public final PatchSingle getExtractedPatch(int patchNum) {
 		return ((SynthDriverBank) driver).extractPatch(this, patchNum);
 	}
 

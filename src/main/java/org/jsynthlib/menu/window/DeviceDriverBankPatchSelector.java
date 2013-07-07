@@ -93,8 +93,8 @@ public class DeviceDriverBankPatchSelector extends JDialog {
 		super(PatchBayApplication.getInstance(), wintitle, true);
 
 		this.p = patch;
-		sysexByteArray = patch.getByteArray();
-		patchHeaderString = patch.getPatchHeader();
+		this.sysexByteArray = patch.getByteArray();
+		this.patchHeaderString = patch.getPatchHeader();
 		this.patchNum = patchnum;
 		this.bankNum = banknum;
 	}
@@ -133,10 +133,9 @@ public class DeviceDriverBankPatchSelector extends JDialog {
 						deviceComboBox.addItem(device);
 						newDevice = false;
 					}
-					if (p != null && p.getDriver() == driver) { // default is the driver associated with patch
+					if (p != null && p.getDriver() == driver) {
 						driverNum = m;
-						deviceComboBox.setSelectedIndex(deviceComboBox.getItemCount() - 1); // invoke
-																							// DeviceActionListener
+						deviceComboBox.setSelectedIndex(deviceComboBox.getItemCount() - 1);
 					}
 					nDriver++;
 					m++;
@@ -228,7 +227,7 @@ public class DeviceDriverBankPatchSelector extends JDialog {
 			for (int i = 0; i < device.driverCount(); i++) {
 				SynthDriver driver = device.getDriver(i);
 
-				// TODO ssymCurtis - only single
+				// TODO ssymCurtis - only single ?
 				if (patchIsSupported(driver)) {
 					driverComboBox.addItem(driver);
 					nDriver++;

@@ -12,10 +12,10 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
+import org.jsynthlib.menu.widgets.ParamModel;
+import org.jsynthlib.menu.widgets.ScrollBarWidget;
 import org.jsynthlib.menu.window.PatchEditorFrame;
 import org.jsynthlib.model.patch.PatchDataImpl;
-import org.jsynthlib.widgets.ParamModel;
-import org.jsynthlib.widgets.ScrollBarWidget;
 
 class RolandGP16SingleEditor extends PatchEditorFrame {
 	private String[] expAssChoices = new String[] { "Off", "Compressor-Tone", "Compressor-Attack",

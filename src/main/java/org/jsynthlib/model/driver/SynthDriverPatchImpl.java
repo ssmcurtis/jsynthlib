@@ -20,6 +20,7 @@ import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.model.patch.PatchSingle;
 import org.jsynthlib.tools.DriverUtil;
 import org.jsynthlib.tools.ErrorMsgUtil;
+import org.jsynthlib.tools.HexaUtil;
 import org.jsynthlib.tools.MidiUtil;
 
 /**
@@ -108,7 +109,7 @@ abstract public class SynthDriverPatchImpl implements SynthDriverPatch {
 	 * 
 	 * @see #calculateChecksum(PatchDataImpl)
 	 */
-	protected int checksumOffset;
+	protected int checksumOffset = -1;
 	/**
 	 * Start of range that Checksum covers.
 	 * <p>
@@ -299,7 +300,7 @@ abstract public class SynthDriverPatchImpl implements SynthDriverPatch {
 		// ErrorMsg.reportStatus(toString());
 		// ErrorMsgUtil.reportStatus("Comp.String: " + compareString.toString());
 		// ErrorMsgUtil.reportStatus("PatchString: " + patchString);
-		
+
 		return (compareString.toString().equalsIgnoreCase(patchString.substring(0, compareLength)));
 	}
 
@@ -741,14 +742,17 @@ abstract public class SynthDriverPatchImpl implements SynthDriverPatch {
 	 *            a byte array of Sysex data. If it has checksum, the checksum must be calculated before calling this
 	 *            method.
 	 */
+	@Deprecated
 	public final void send(byte[] sysex) {
 		try {
 			SysexMessage[] a = MidiUtil.byteArrayToSysexMessages(sysex);
-			for (int i = 0; i < a.length; i++)
+			for (int i = 0; i < a.length; i++) {
 				device.send(a[i]);
+			}
 		} catch (InvalidMidiDataException e) {
 			ErrorMsgUtil.reportStatus(e);
 		}
+		
 	}
 
 	/** Send ShortMessage to MIDI outport. */
@@ -803,6 +807,19 @@ abstract public class SynthDriverPatchImpl implements SynthDriverPatch {
 	public void setFirstBankFirstPatch() {
 		setBankNum(0);
 		sendProgramChange(0);
+	}
+
+	@Override
+	public boolean isRequestAndAcknowledge() {
+		return false;
+	}
+
+	@Override
+	public void sendAcknowledge() {
+	}
+	
+	public boolean isEof(byte[] sysex){
+		return false;
 	}
 
 }

@@ -21,7 +21,7 @@
 
 package org.jsynthlib.synthdrivers.roland.td6;
 
-import org.jsynthlib.widgets.TreeWidget;
+import org.jsynthlib.menu.widgets.TreeWidget;
 
 /**
  * Instrument.java

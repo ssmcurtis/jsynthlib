@@ -27,8 +27,8 @@
 
 package org.jsynthlib.synthdrivers.roland.mt32;
 
+import org.jsynthlib.menu.widgets.ParamModel;
 import org.jsynthlib.model.patch.PatchDataImpl;
-import org.jsynthlib.widgets.ParamModel;
 
 class MT32Model extends ParamModel {
 	private int bitmask;

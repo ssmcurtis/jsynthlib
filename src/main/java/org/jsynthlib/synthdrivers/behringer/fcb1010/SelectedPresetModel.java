@@ -21,7 +21,7 @@
 
 package org.jsynthlib.synthdrivers.behringer.fcb1010;
 
-import org.jsynthlib.widgets.SysexWidget;
+import org.jsynthlib.menu.widgets.SysexWidget;
 
 /**
  * Behringer FCB1010 Selected Preset Model - Handles updating all widgets on the presets pane of the FCB1010 editor when

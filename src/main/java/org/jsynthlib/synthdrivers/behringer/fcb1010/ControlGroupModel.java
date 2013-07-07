@@ -24,8 +24,8 @@ package org.jsynthlib.synthdrivers.behringer.fcb1010;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-import org.jsynthlib.widgets.CheckBoxWidget;
-import org.jsynthlib.widgets.ComboBoxWidget;
+import org.jsynthlib.menu.widgets.CheckBoxWidget;
+import org.jsynthlib.menu.widgets.ComboBoxWidget;
 
 /**
  * Class ControlGroupModel associates a group of ComboBoxWidgets to a single CheckBoxWidget and handles

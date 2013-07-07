@@ -10,16 +10,16 @@ import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 
+import org.jsynthlib.menu.widgets.CheckBoxWidget;
+import org.jsynthlib.menu.widgets.ComboBoxWidget;
+import org.jsynthlib.menu.widgets.ParamModel;
+import org.jsynthlib.menu.widgets.PatchNameWidget;
+import org.jsynthlib.menu.widgets.ScrollBarWidget;
+import org.jsynthlib.menu.widgets.SysexSender;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.patch.Patch;
 import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.ErrorMsgUtil;
-import org.jsynthlib.widgets.CheckBoxWidget;
-import org.jsynthlib.widgets.ComboBoxWidget;
-import org.jsynthlib.widgets.ParamModel;
-import org.jsynthlib.widgets.PatchNameWidget;
-import org.jsynthlib.widgets.ScrollBarWidget;
-import org.jsynthlib.widgets.SysexSender;
 
 /**
  * Marker class that allows dependency checking to work. (It fails if RolandGP16DataHandlers.class isn't found.)

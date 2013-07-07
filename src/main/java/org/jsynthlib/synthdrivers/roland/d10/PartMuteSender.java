@@ -20,8 +20,8 @@
  */
 package org.jsynthlib.synthdrivers.roland.d10;
 
+import org.jsynthlib.menu.widgets.ISender;
 import org.jsynthlib.model.driver.SynthDriverPatch;
-import org.jsynthlib.widgets.SysexWidget.ISender;
 
 /**
  * This class is used for sending a Tones partitial mute setting. Since there are four checkboxes that operates on the

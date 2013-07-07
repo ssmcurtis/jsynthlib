@@ -28,8 +28,8 @@ import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.BASE_TONE_TEMP_
 
 import java.util.HashMap;
 
+import org.jsynthlib.menu.widgets.SysexSender;
 import org.jsynthlib.synthdrivers.roland.d10.message.D10DataSetMessage;
-import org.jsynthlib.widgets.SysexSender;
 
 /**
  * @author Roger Westerlund <roger.westerlund@home.se>

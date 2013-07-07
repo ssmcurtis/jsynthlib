@@ -1,11 +1,11 @@
 package org.jsynthlib.synthdrivers.yamaha.fs1r;
 
 import org.jsynthlib.menu.JSLFrame;
+import org.jsynthlib.menu.widgets.ParamModel;
+import org.jsynthlib.menu.widgets.SysexSender;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
-import org.jsynthlib.widgets.ParamModel;
-import org.jsynthlib.widgets.SysexSender;
 
 /**
  * Formant sequence driver for FS1R. Size of sysex depends of frame format which can be 128, 256, 384 or 512 bytes long.

@@ -57,42 +57,42 @@ public class StoreLibraryWindow {
 
 		btnProcess = new JButton("Store");
 		buttons.add(btnProcess);
+
+		supportedDevices = new HashMap<SynthDriverPatchImpl, Integer>();
+		for (int i = 0; i < AppConfig.deviceCount(); i++) {
+			Device device = AppConfig.getDevice(i);
+
+			for (int j = 0; j < device.driverCount(); j++) {
+				// System.out.println(device.driverCount() + " " +
+				// device.getDriver(j).getClass().getSimpleName());
+
+				if (device.getDriver(j) instanceof SynthDriverPatchImpl) {
+					SynthDriverPatchImpl driver = (SynthDriverPatchImpl) device.getDriver(j);
+					if (driver.isUseForStoreLibrary()) {
+						String keyString = driver.getDevice().getManufacturerName() + " " + driver.getDevice().getModelName() + " ("
+								+ driver.getClass().getSimpleName() + ")";
+
+						if (!devices.contains(keyString)) {
+							appendText(keyString);
+							devices.add(keyString);
+							supportedDevices.put(driver, device.getMaxPatchesForLibraryStorage());
+						}
+					}
+				}
+			}
+		}
+		appendText("");
+
 		btnProcess.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
 				// appendText("Supported devices:");
-				supportedDevices = new HashMap<SynthDriverPatchImpl, Integer>();
 				btnQuit.setEnabled(false);
 				btnCopy.setEnabled(false);
 
 				Thread worker = new Thread() {
 
 					public void run() {
-						for (int i = 0; i < AppConfig.deviceCount(); i++) {
-							Device device = AppConfig.getDevice(i);
-
-							for (int j = 0; j < device.driverCount(); j++) {
-								// System.out.println(device.driverCount() + " " +
-								// device.getDriver(j).getClass().getSimpleName());
-
-								if (device.getDriver(j) instanceof SynthDriverPatchImpl) {
-									SynthDriverPatchImpl driver = (SynthDriverPatchImpl) device.getDriver(j);
-									if (driver.isUseForStoreLibrary()) {
-										String keyString = driver.getDevice().getManufacturerName() + " "
-												+ driver.getDevice().getModelName() + "(" + driver.getClass().getSimpleName() + ")";
-
-										if (!devices.contains(keyString)) {
-											appendText(keyString);
-											devices.add(keyString);
-											supportedDevices.put(driver, device.getMaxPatchesForLibraryStorage());
-										}
-									}
-								}
-							}
-						}
-						appendText("");
-
-						ArrayList<Patch> patches = Actions.getSelectedFrame().getPatchCollection();
 
 						if (!(PatchBayApplication.getDesktop().getSelectedFrame() instanceof LibraryFrame)) {
 							throw new NotImplementedException();
@@ -158,8 +158,10 @@ public class StoreLibraryWindow {
 								}
 							}
 
-							// change to 0 / 0
-							driver.setFirstBankFirstPatch();
+							// TODO ssmCurtis - change to 0 / 0
+							if (!driver.isBankDriver()) {
+								// driver.setFirstBankFirstPatch();
+							}
 						}
 
 						for (Map.Entry<SynthDriverPatchImpl, Integer> entry : supportedDevices.entrySet()) {

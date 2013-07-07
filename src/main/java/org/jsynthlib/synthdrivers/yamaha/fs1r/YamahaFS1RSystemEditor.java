@@ -4,12 +4,12 @@ import javax.swing.Box;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
+import org.jsynthlib.menu.widgets.ComboBoxWidget;
+import org.jsynthlib.menu.widgets.ParamModel;
+import org.jsynthlib.menu.widgets.SpinnerWidget;
+import org.jsynthlib.menu.widgets.SysexSender;
 import org.jsynthlib.menu.window.PatchEditorFrame;
 import org.jsynthlib.model.patch.PatchDataImpl;
-import org.jsynthlib.widgets.ComboBoxWidget;
-import org.jsynthlib.widgets.ParamModel;
-import org.jsynthlib.widgets.SpinnerWidget;
-import org.jsynthlib.widgets.SysexSender;
 
 /**
  * Editor for system parameters. There are lots of parameters still to add, I made the most important.

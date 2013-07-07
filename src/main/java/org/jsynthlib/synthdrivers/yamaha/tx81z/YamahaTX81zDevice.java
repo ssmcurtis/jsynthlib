@@ -9,6 +9,7 @@ package org.jsynthlib.synthdrivers.yamaha.tx81z;
 import java.util.prefs.Preferences;
 
 import org.jsynthlib.model.device.Device;
+import org.jsynthlib.synthdrivers.waldorf.microwave.Microwave;
 
 /**
  * 
@@ -31,7 +32,11 @@ public class YamahaTX81zDevice extends Device {
 		this();
 		this.prefs = prefs;
 
+		setMaxProgramForLibraryStorage(32);
+		YamahaTX81zSingleDriver libraryDriver = new YamahaTX81zSingleDriver();
+		libraryDriver.setUseForStoreLibrary(true);
+		addDriver(libraryDriver);
+
 		addDriver(new YamahaTX81zBankDriver());
-		addDriver(new YamahaTX81zSingleDriver());
 	}
 }

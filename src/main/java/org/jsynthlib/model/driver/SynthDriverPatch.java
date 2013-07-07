@@ -24,7 +24,7 @@ public interface SynthDriverPatch extends SynthDriver {
 	int getPatchSize();
 
 	public int getHeaderSize();
-	
+
 	/**
 	 * Returns String[] returns full list of patchNumbers.
 	 * 
@@ -71,7 +71,7 @@ public interface SynthDriverPatch extends SynthDriver {
 	 * @see DriverUtil#createPatch(byte[])
 	 */
 	Patch createPatch(byte[] sysex, String filename);
-	
+
 	Patch createPatch(byte[] sysex);
 
 	/**
@@ -100,8 +100,15 @@ public interface SynthDriverPatch extends SynthDriver {
 	 * Returns full name for referring to this Driver. Used for labels by driver selection comboboxes.
 	 */
 	String toString();
-	
+
 	public String getSysexID();
-	
+
 	public int getChecksumBytePos();
+
+	public boolean isRequestAndAcknowledge();
+
+	public void sendAcknowledge();
+
+	public boolean isEof(byte[] sysex);
+
 }

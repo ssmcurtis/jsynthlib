@@ -29,9 +29,15 @@ public class YamahaTX81zSingleDriver extends SynthDriverPatchImpl {
 	}
 
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
+		// TODO Fix original error later
+		if (bankNum<0) {
+			bankNum = 0;
+		}
 		setBankNum(bankNum);
 		sendProgramChange(patchNum);
 		sendPatch(p);
+		
+		// TODO TX81z - store
 		try {
 			Thread.sleep(100);
 			send(new byte[] { (byte) 0xF0, (byte) 0x43, (byte) (0x10 + getChannel() - 1), (byte) 0x13, (byte) 0x41, (byte) 0x7F,

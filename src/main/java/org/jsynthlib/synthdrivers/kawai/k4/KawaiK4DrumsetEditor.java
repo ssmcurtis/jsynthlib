@@ -13,13 +13,14 @@ import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
+import org.jsynthlib.menu.widgets.ComboBoxWidget;
+import org.jsynthlib.menu.widgets.IParamModel;
+import org.jsynthlib.menu.widgets.ParamModel;
+import org.jsynthlib.menu.widgets.ScrollBarWidget;
+import org.jsynthlib.menu.widgets.SysexSender;
+import org.jsynthlib.menu.widgets.SysexWidget;
 import org.jsynthlib.menu.window.PatchEditorFrame;
 import org.jsynthlib.model.patch.PatchDataImpl;
-import org.jsynthlib.widgets.ComboBoxWidget;
-import org.jsynthlib.widgets.ParamModel;
-import org.jsynthlib.widgets.ScrollBarWidget;
-import org.jsynthlib.widgets.SysexSender;
-import org.jsynthlib.widgets.SysexWidget;
 
 class KawaiK4DrumsetEditor extends PatchEditorFrame {
 	static final String[] NOTE_NAME = new String[] { "C1", "C#1", "D1", "D#1", "E1", "F1", "F#1", "G1", "G#1", "A1",
@@ -171,7 +172,7 @@ class KawaiK4DrumsetEditor extends PatchEditorFrame {
 		pack();
 	}
 
-	class K4DrumWaveModel implements SysexWidget.IParamModel {
+	class K4DrumWaveModel implements IParamModel {
 		private PatchDataImpl patch;
 		private int source;
 

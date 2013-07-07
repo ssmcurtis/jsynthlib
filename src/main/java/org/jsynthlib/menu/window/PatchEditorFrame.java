@@ -29,6 +29,7 @@ import org.jsynthlib.menu.JSLFrameEvent;
 import org.jsynthlib.menu.JSLFrameListener;
 import org.jsynthlib.menu.PatchTransferHandler;
 import org.jsynthlib.menu.preferences.AppConfig;
+import org.jsynthlib.menu.widgets.SysexWidget;
 import org.jsynthlib.model.JSynthImportFileType;
 import org.jsynthlib.model.patch.Patch;
 import org.jsynthlib.model.patch.PatchBasket;
@@ -36,7 +37,6 @@ import org.jsynthlib.model.patch.PatchSingle;
 import org.jsynthlib.tools.ClipboardUtil;
 import org.jsynthlib.tools.ErrorMsgUtil;
 import org.jsynthlib.tools.MidiUtil;
-import org.jsynthlib.widgets.SysexWidget;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 

@@ -48,8 +48,8 @@ public final class PatchBayApplication {
 		ErrorMsgUtil.setDebugLevel(debugLevel);
 
 		// for bug report
-		ErrorMsgUtil.reportStatus("JSynthLib: " + JSynthConstants.VERSION + ", Java: " + UiUtil.getJavaVersion() + ", OS: " + UiUtil.getOSName()
-				+ ", " + UiUtil.getOSVersion());
+		ErrorMsgUtil.reportStatus("JSynthLib: " + JSynthConstants.VERSION + ", Java: " + UiUtil.getJavaVersion() + ", OS: "
+				+ UiUtil.getOSName() + ", " + UiUtil.getOSVersion());
 		// Load SynthDriver database (synthdrivers.properties)
 		deviceConfig = new DevicesConfig();
 
@@ -113,8 +113,12 @@ public final class PatchBayApplication {
 			Actions.openFrame(new File(fname));
 		}
 	}
-
-	protected void finalize() { // ???
+	
+	@Override
+	protected void finalize() throws Throwable {
+		super.finalize();
+		
+		// TODO ssmCurtis - Object.finalize()
 		ErrorMsgUtil.reportStatus("JSynthLib finalizing...");
 		masterInEnable(false);
 	}

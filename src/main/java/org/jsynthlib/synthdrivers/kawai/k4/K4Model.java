@@ -1,7 +1,7 @@
 package org.jsynthlib.synthdrivers.kawai.k4;
 
+import org.jsynthlib.menu.widgets.ParamModel;
 import org.jsynthlib.model.patch.PatchDataImpl;
-import org.jsynthlib.widgets.ParamModel;
 
 class K4Model extends ParamModel {
 	private int bitmask;

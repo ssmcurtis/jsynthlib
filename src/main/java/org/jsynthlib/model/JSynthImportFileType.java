@@ -1,21 +1,20 @@
 package org.jsynthlib.model;
 
 public enum JSynthImportFileType {
-	MIDI(".mid", "MIDI Files (*.mid)", false),
-	NGF(".ngf", "Nord Generator (*.ngf)", false),
-	TXTHEX(".txt", "TexHex Files (*.txt)", false),
-	MICROKORG_PRG(".prg", "microKorg Files (*.prg)", false),
-	MICROKORG_SET(".set", "microKorg Files (*.set)", false),
-	SYX(".syx", "Sysex Files (*.syx)", true);
+	MIDI(".mid", "MIDI Files (*.mid)"),
+	NGF(".ngf", "Nord Generator (*.ngf)"),
+	TXTHEX(".txt", "TexHex Files (*.txt)"),
+	MICROKORG_PRG(".prg", "microKorg Files (*.prg)"),
+	MICROKORG_SET(".set", "microKorg Files (*.set)"),
+	WRK(".wrk", "Cakewalk Files* (*.wrk)"),
+	SYX(".syx", "Sysex Files (*.syx)");
 
 	private final String extension;
 	private final String description;
-	private final boolean defaultFilter;
 
-	JSynthImportFileType(String extension, String description, boolean defaultFilter) {
+	JSynthImportFileType(String extension, String description) {
 		this.extension = extension;
 		this.description = description;
-		this.defaultFilter = defaultFilter;
 	}
 
 	public String getExtension() {
@@ -26,10 +25,6 @@ public enum JSynthImportFileType {
 		return description;
 	}
 
-	@Deprecated
-	public boolean isDefaultFilter() {
-		return defaultFilter;
-	}
 	
 	public static JSynthImportFileType getImportFileTypeForDescription(String descritionString) {
 		for (JSynthImportFileType importFileType : JSynthImportFileType.values()) {

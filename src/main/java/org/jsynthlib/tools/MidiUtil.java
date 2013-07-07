@@ -80,7 +80,6 @@ import org.jsynthlib.model.driver.SynthDriverPatchImpl;
  *      Guide</a>
  */
 public final class MidiUtil {
-
 	/**
 	 * holds the state if a SysexMessage is completely displayed or shorten to one hexdump line. (Complete Sysex
 	 * Message)
@@ -418,7 +417,7 @@ public final class MidiUtil {
 	 * @see #getInputMidiDeviceInfo()
 	 * @see #setSysexInputQueue
 	 */
-	public static void clearSysexInputQueue(int port) {
+	public static synchronized void clearSysexInputQueue(int port) {
 		setSysexInputQueue(port);
 		sysexInputQueue[port].clearQueue();
 	}
@@ -439,7 +438,7 @@ public final class MidiUtil {
 	 * @see #getInputMidiDeviceInfo()
 	 * @see #clearSysexInputQueue
 	 */
-	public static MidiMessage getMessage(int port, long timeout) throws MidiUtil.TimeoutException, InvalidMidiDataException {
+	public static synchronized  MidiMessage getMessage(int port, long timeout) throws MidiUtil.TimeoutException, InvalidMidiDataException {
 		return sysexInputQueue[port].getMessage(timeout);
 	}
 
@@ -451,8 +450,9 @@ public final class MidiUtil {
 	 * is more efficient to create SysexMessages directly because a synth driver knows the start index and length of
 	 * each Sysex data in an array.
 	 */
+	@Deprecated
 	public static SysexMessage[] byteArrayToSysexMessages(byte[] d) throws InvalidMidiDataException {
-		ArrayList list = new ArrayList();
+		ArrayList<SysexMessage> list = new ArrayList<SysexMessage>();
 
 		for (int i = 0; i < d.length; i++) {
 			if ((d[i] & 0xFF) == SysexMessage.SYSTEM_EXCLUSIVE) {

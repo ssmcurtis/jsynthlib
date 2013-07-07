@@ -261,6 +261,8 @@ public class SysexHandler /* implements Serializable */{
 		// Replace the deviceID number
 		if (deviceIdIndex != -1)
 			sysex[deviceIdIndex] = (byte) (deviceID - 1);
+		
+		// TODO microkorg
 		if (deviceId16Index != -1)
 			sysex[deviceId16Index] = (byte) (deviceID - 1 + addToBankByte);
 
@@ -318,6 +320,7 @@ public class SysexHandler /* implements Serializable */{
 		return addToBankByte;
 	}
 
+	// TODO ssmCurtis - evaluate other solutions for this issue
 	public void setAddToBankByte(int addToBankByte) {
 		this.addToBankByte = addToBankByte;
 	}

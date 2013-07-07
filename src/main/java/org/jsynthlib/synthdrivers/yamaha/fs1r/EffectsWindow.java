@@ -11,11 +11,11 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import org.jsynthlib.menu.widgets.ComboBoxWidget;
+import org.jsynthlib.menu.widgets.KnobLookupWidget;
+import org.jsynthlib.menu.widgets.KnobWidget;
+import org.jsynthlib.menu.widgets.ParamModel;
 import org.jsynthlib.model.patch.PatchDataImpl;
-import org.jsynthlib.widgets.ComboBoxWidget;
-import org.jsynthlib.widgets.KnobLookupWidget;
-import org.jsynthlib.widgets.KnobWidget;
-import org.jsynthlib.widgets.ParamModel;
 
 /**
  * Effects panel contains Reverberation, Variation and Insertion.

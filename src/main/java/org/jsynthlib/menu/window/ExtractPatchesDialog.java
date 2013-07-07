@@ -5,6 +5,7 @@
 package org.jsynthlib.menu.window;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jsynthlib.model.driver.SynthDriver;
@@ -35,7 +36,7 @@ public class ExtractPatchesDialog extends DeviceDriverBankPatchSelector {
 		super(patchHeaderString, "Extract patches from generic");
 		this.byteBuffer = byteBuffer;
 		this.filename = filename;
-		
+
 		initDialog("Extract for device", false);
 	}
 
@@ -46,45 +47,20 @@ public class ExtractPatchesDialog extends DeviceDriverBankPatchSelector {
 		System.out.println(">>>> Action ");
 		SynthDriverPatch driver = (SynthDriverPatch) driverComboBox.getSelectedItem();
 
-//		int bufSize = byteBuffer.capacity();
-//		int cursor = 0;
-//		List<Patch> li = new ArrayList<Patch>();
-//		List<Byte> sysexList = new ArrayList<Byte>();
-//		byte[] sysex = null;
-//		boolean select = false;
-//		while (cursor < bufSize) {
-//			byte b = byteBuffer.get(cursor);
-//			if (HexaUtil.isStartSysex(b)) {
-//				select = true;
-//			}
-//			if (select) {
-//				sysexList.add(b);
-//			}
-//			if (HexaUtil.isEndSysex(b)) {
-//				select = false;
-//				sysex = new byte[sysexList.size()];
-//				int bc = 0;
-//				for (Byte byteFromList : sysexList) {
-//					sysex[bc] = byteFromList.byteValue();
-//					bc++;
-//				}
-//				Patch patch = driver.createPatch(sysex, filename);
-//				li.add(patch);
-//				sysexList = new ArrayList<Byte>();
-//			}
-//			cursor++;
-//		}
-		
 		List<byte[]> setOfSysex = DriverUtil.splitSysexBytearray(byteBuffer);
-		Patch[] patcharray = new Patch[setOfSysex.size()];
-		int index = 0;
-		for(byte[] oneSysex : setOfSysex) {
-			Patch patch = driver.createPatch(oneSysex, filename);
-			patcharray[index] = patch;
-			index++;
-		}
+		List<Patch> patchList = new ArrayList<>();
 		
-		TableUtil.addPatchToTable(patcharray);
+		for (byte[] oneSysex : setOfSysex) {
+			
+			if (oneSysex.length == driver.getPatchSize()) {
+
+				Patch patch = driver.createPatch(oneSysex, filename);
+				patchList.add(patch);
+			}
+			
+		}
+
+		TableUtil.addPatchToTable(patchList);
 
 		setVisible(false);
 		dispose();

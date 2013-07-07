@@ -51,7 +51,7 @@ public class DriverUtil {
 	 */
 	public static Patch[] createPatches(byte[] sysex, String filename) {
 		// INFO FIND DRIVER AND CREATE PATCHES
-		System.out.println("Size: " + sysex.length + "-" + HexaUtil.hexDumpOneLine(sysex, 0, -1, 100));
+		// System.out.println("Size: " + sysex.length + "-" + HexaUtil.hexDumpOneLine(sysex, 0, -1, 100));
 		SynthDriver driver = chooseDriver(sysex);
 
 		return createPatches(sysex, driver, filename);
@@ -270,6 +270,9 @@ public class DriverUtil {
 	 * @see SynthDriverPatch#getBankNumbers
 	 */
 	public static String[] generateNumbers(int min, int max, String format) {
+		return generateNumbers(min, max, "", format);
+	}
+	public static String[] generateNumbers(int min, int max, String prefix, String format) {
 		String retval[] = new String[max - min + 1];
 
 		DecimalFormat df = (DecimalFormat) NumberFormat.getInstance().clone();
@@ -277,7 +280,7 @@ public class DriverUtil {
 		df.applyPattern(format);
 
 		while (max >= min) {
-			retval[max - min] = df.format(max--);
+			retval[max - min] = prefix + df.format(max--);
 		}
 		return retval;
 	}

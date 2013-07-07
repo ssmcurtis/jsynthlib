@@ -241,6 +241,9 @@ final public class Actions {
 	private static JComboBox<String> octave = new JComboBox<String>(JSynthOctave.getNames());
 	private static JComboBox<Integer> loop = new JComboBox<Integer>(new Integer[] { 0, 1, 4, 8, 16, 32 });
 
+	
+	private static JMenu menuSpecial = new JMenu("Special");
+
 	// don't have to call constructor for Utility class.
 	private Actions() {
 	}
@@ -267,6 +270,8 @@ final public class Actions {
 		menuBar.add(createEditMenu(mnemonics, mask));
 
 		menuBar.add(createPatchMenu(mnemonics, mask));
+		
+		menuBar.add(createSpecialMenu(mnemonics, mask));
 
 		menuBar.add(createWindowMenu(mnemonics, mask));
 		menuBar.add(createHelpMenu(mnemonics, mask));
@@ -384,6 +389,13 @@ final public class Actions {
 		return menuPatch;
 	}
 
+	private static JMenu createSpecialMenu(HashMap<Serializable, Integer> mnemonics, int mask) {
+		
+		mnemonics.put(menuSpecial, new Integer(KeyEvent.VK_S));
+		return menuSpecial;
+	}
+
+	
 	/** List of JSLWindowMenus including one for invisible frame. */
 	public static ArrayList<JSLWindowMenu> windowMenus = new ArrayList<JSLWindowMenu>();
 
@@ -506,8 +518,8 @@ final public class Actions {
 
 		menuPatchPopup.add(playAction);
 		menuPatchPopup.add(sendAction);
-		menuPatchPopup.add(storeLibraryAction);
 		menuPatchPopup.add(storeAction);
+		menuPatchPopup.add(storeLibraryAction);
 		menuPatchPopup.add(reassignAction);
 		menuPatchPopup.addSeparator();
 
@@ -952,4 +964,18 @@ final public class Actions {
 	public static void setSelectByFilterDialog(SelectByFilterDialog selectByFilterDialog) {
 		Actions.selectByFilterDialog = selectByFilterDialog;
 	}
+
+	public static void addSpecialMenuAction(Action specialAction){
+		System.out.println(">>>> Add special action");
+		menuSpecial.add(specialAction);
+	}
+
+	public static HashMap<Serializable, Integer> getMnemonics() {
+		return mnemonics;
+	}
+
+	public static void setMnemonics(HashMap<Serializable, Integer> mnemonics) {
+		Actions.mnemonics = mnemonics;
+	}
+	
 }
