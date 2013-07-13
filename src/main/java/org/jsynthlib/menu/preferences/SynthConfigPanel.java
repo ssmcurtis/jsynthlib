@@ -31,6 +31,8 @@ import org.jsynthlib.model.device.Device;
 import org.jsynthlib.tools.MidiUtil;
 import org.jsynthlib.tools.UiUtil;
 
+import org.jsynthlib.tools.ErrorMsgUtil;
+
 /**
  * ConfigPanel for Synthesizer Configuration
  * 
@@ -126,7 +128,7 @@ public class SynthConfigPanel extends ConfigPanel {
 		// INFO Q&D
 		for (String s : AppConfig.getAvailableStudioSetups()) {
 			
-			System.out.println(s + " " + JSynthLib.getStudio());
+			ErrorMsgUtil.reportStatus(s + " " + JSynthLib.getStudio());
 			
 			if (s.equals(JSynthLib.getStudio())) {
 				configs.setSelectedIndex(index);
@@ -153,7 +155,7 @@ public class SynthConfigPanel extends ConfigPanel {
 					Device myDevice = AppConfig.getDevice(table.getSelectedRow());
 					int port = multiMIDI ? myDevice.getPort() : AppConfig.getInitPortOut();
 
-					System.out.println("Port: " + port + " Channel: " + myDevice.getChannel());
+					ErrorMsgUtil.reportStatus("Port: " + port + " Channel: " + myDevice.getChannel());
 
 					new MidiActionPlayNote(port, myDevice.getChannel());
 				}
@@ -190,7 +192,7 @@ public class SynthConfigPanel extends ConfigPanel {
 
 		table.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
-				System.out.println("Pressed ... view .. " + table.getSelectedRow());
+				ErrorMsgUtil.reportStatus("Pressed ... view .. " + table.getSelectedRow());
 
 				maybeShowPopup(e);
 			}

@@ -34,7 +34,7 @@ public class Mks80ToneBankDriver extends Mks80BankDriver {
 
 	@Override
 	public boolean canHoldPatch(PatchDataImpl p) {
-		System.out.println("Size: " + p.getSysex().length);
+		ErrorMsgUtil.reportStatus("Size: " + p.getSysex().length);
 		if ((Mks80.DATA_PACKAGE_IN_BANK != p.getSysex().length) && (singleSize != 0)) {
 			return false;
 		}
@@ -77,7 +77,7 @@ public class Mks80ToneBankDriver extends Mks80BankDriver {
 	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
 		// default bank is 4080: 16xData
 
-		System.out.println(patchNum + " Size:" + bank.getSysex().length);
+		ErrorMsgUtil.reportStatus(patchNum + " Size:" + bank.getSysex().length);
 
 		byte[] toneSysex = new byte[Mks80.TONE_SIZE_IN_BANK_SYSEX_CONTAINER];
 		byte[] patchSysex = new byte[Mks80.PATCH_SIZE_IN_BANK_SYSEX_CONTAINER];
@@ -93,16 +93,16 @@ public class Mks80ToneBankDriver extends Mks80BankDriver {
 		int sourceStart = (Mks80.BANK_DATA_PACKAGE_SIZE * dataPackage) + Mks80.HEADER_SIZE
 				+ (Mks80.DATA_PACKAGE_IN_BANK * postionInPackage);
 
-		System.out.println(sourceStart + Mks80.DATA_PACKAGE_IN_BANK + " " + bank.getSysex().length);
+		ErrorMsgUtil.reportStatus(sourceStart + Mks80.DATA_PACKAGE_IN_BANK + " " + bank.getSysex().length);
 
 		if (sourceStart + Mks80.DATA_PACKAGE_IN_BANK < bank.getSysex().length) {
 			System.arraycopy(bank.getSysex(), sourceStart, toneSysex, Mks80.HEADER_SIZE, Mks80.TONE_SIZE_IN_BANK);
 			System.arraycopy(bank.getSysex(), sourceStart + Mks80.TONE_SIZE_IN_BANK, patchSysex, Mks80.HEADER_SIZE,
 					Mks80.PATCH_SIZE_IN_BANK);
 
-			System.out.println("From: " + sourceStart + " to " + (sourceStart + Mks80.TONE_SIZE_IN_BANK));
-			System.out.println("Tone: " + HexaUtil.hexDump(toneSysex, 0, -1, 64));
-			System.out.println("Patch: " + HexaUtil.hexDump(patchSysex, 0, -1, 64));
+			ErrorMsgUtil.reportStatus("From: " + sourceStart + " to " + (sourceStart + Mks80.TONE_SIZE_IN_BANK));
+			ErrorMsgUtil.reportStatus("Tone: " + HexaUtil.hexDump(toneSysex, 0, -1, 64));
+			ErrorMsgUtil.reportStatus("Patch: " + HexaUtil.hexDump(patchSysex, 0, -1, 64));
 
 			return new PatchDataImpl(toneSysex);
 		} else {
@@ -132,7 +132,7 @@ public class Mks80ToneBankDriver extends Mks80BankDriver {
 			}
 		}
 
-		// System.out.println("Put patch: " + patchNum);
+		// ErrorMsgUtil.reportStatus("Put patch: " + patchNum);
 
 		int dataPackage = patchNum / 4;
 		int postionInPackage = patchNum % 4;

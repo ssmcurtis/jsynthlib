@@ -415,12 +415,12 @@ public class PatchDataImpl implements PatchSingle, PatchBank {
 	}
 
 	public byte[] getSysex() {
-		// System.out.println("GET sysex in Patch " + Utility.hexDump(sysex, 0, -1, -1));
+		// ErrorMsgUtil.reportStatus("GET sysex in Patch " + Utility.hexDump(sysex, 0, -1, -1));
 		return sysex;
 	}
 
 	public void setSysex(byte[] sysex) {
-		// System.out.println("SET sysex in Patch" + Utility.hexDump(sysex, 0, -1, -1));
+		// ErrorMsgUtil.reportStatus("SET sysex in Patch" + Utility.hexDump(sysex, 0, -1, -1));
 		this.sysex = sysex;
 	}
 

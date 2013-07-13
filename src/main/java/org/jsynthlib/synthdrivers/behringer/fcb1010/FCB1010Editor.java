@@ -271,7 +271,7 @@ public class FCB1010Editor extends PatchEditorFrame implements ActionListener {
 		int startPos = Constants.HDR_SIZE + (bank * BANK_LENGTH) + (preset * PRESET_LENGTH);
 		localScrap = new byte[PRESET_LENGTH];
 		System.arraycopy(deNibblizedSysex, startPos, localScrap, 0, PRESET_LENGTH);
-		// System.out.println("  " + (Utility.hexDump(localScrap, 0, -1, 16)));
+		// ErrorMsgUtil.reportStatus("  " + (Utility.hexDump(localScrap, 0, -1, 16)));
 	}
 
 	/**
@@ -287,7 +287,7 @@ public class FCB1010Editor extends PatchEditorFrame implements ActionListener {
 		int startPos = Constants.HDR_SIZE + (bank * BANK_LENGTH);
 		localScrap = new byte[BANK_LENGTH];
 		System.arraycopy(deNibblizedSysex, startPos, localScrap, 0, BANK_LENGTH);
-		// System.out.println("  " + (Utility.hexDump(localScrap, 0, -1, 16)));
+		// ErrorMsgUtil.reportStatus("  " + (Utility.hexDump(localScrap, 0, -1, 16)));
 	}
 
 	/**

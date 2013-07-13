@@ -8,6 +8,8 @@ import org.jsynthlib.model.driver.SynthDriverBank;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
 
+import org.jsynthlib.tools.ErrorMsgUtil;
+
 /**
  * Bank driver for KAWAI K4/K4r voice patch.
  * 
@@ -37,13 +39,13 @@ public class Bit99BankDriver extends SynthDriverBank {
 	}
 
 	public int getPatchStart(int patchNum) {
-		System.out.println(">>>> Get patch start");
+		ErrorMsgUtil.reportStatus(">>>> Get patch start");
 
 		return HSIZE + (SSIZE * patchNum);
 	}
 
 	public String getPatchName(PatchDataImpl p, int patchNum) {
-		System.out.println(">>>> Get patch name");
+		ErrorMsgUtil.reportStatus(">>>> Get patch name");
 
 		// int nameStart = getPatchStart(patchNum);
 		// nameStart += 0; // offset of name in patch data
@@ -58,7 +60,7 @@ public class Bit99BankDriver extends SynthDriverBank {
 	}
 
 	public void setPatchName(PatchDataImpl p, int patchNum, String name) {
-		System.out.println(">>>> Set name");
+		ErrorMsgUtil.reportStatus(">>>> Set name");
 		// patchNameSize = 10;
 		// patchNameStart = getPatchStart(patchNum);
 		//
@@ -76,7 +78,7 @@ public class Bit99BankDriver extends SynthDriverBank {
 	}
 
 	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) {
-		System.out.println(">>>> put patch");
+		ErrorMsgUtil.reportStatus(">>>> put patch");
 		if (!canHoldPatch(p)) {
 			JOptionPane.showMessageDialog(null, "This type of patch does not fit in to this type of bank.", "Error",
 					JOptionPane.ERROR_MESSAGE);
@@ -88,7 +90,7 @@ public class Bit99BankDriver extends SynthDriverBank {
 	}
 
 	public PatchDataImpl extractPatch(PatchDataImpl bank, int patchNum) {
-		System.out.println(">>>> Get patch");
+		ErrorMsgUtil.reportStatus(">>>> Get patch");
 		// byte[] sysex = new byte[HSIZE + SSIZE + 1];
 		// sysex[0] = (byte) 0xF0;
 		// sysex[1] = (byte) 0x40;
@@ -114,7 +116,7 @@ public class Bit99BankDriver extends SynthDriverBank {
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {
-		System.out.println(">>>> Send sysex");
+		ErrorMsgUtil.reportStatus(">>>> Send sysex");
 		NameValue bank = new NameValue("bankNum", bankNum << 1);
 		NameValue patch = new NameValue("patchNum", 1);
 		MidiMessage msg = SYS_REQ.toSysexMessage(getChannel(), bank, patch);
@@ -122,7 +124,7 @@ public class Bit99BankDriver extends SynthDriverBank {
 	}
 
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
-		System.out.println(">>>> store patch");
+		ErrorMsgUtil.reportStatus(">>>> store patch");
 
 		try {
 			Thread.sleep(100);

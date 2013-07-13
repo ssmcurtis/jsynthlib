@@ -25,6 +25,7 @@ import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.RYTHM_SETUP_COU
 import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.SIZE_HEADER_DT1;
 import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.SIZE_TRAILER;
 import static org.jsynthlib.synthdrivers.roland.d10.D10Constants.TONE_COUNT;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 /**
  * @author Roger Westerlund <roger.westerlund@home.se>
@@ -76,11 +77,11 @@ public class RolandD10Support {
 	public static void dump(byte[] data) {
 		for (int index = 0; index < data.length; index++) {
 			if (index != 0) {
-				System.out.print(" ");
+				// System.out.print(" ");
 			}
-			System.out.print(Integer.toHexString(data[index]));
+			// System.out.print(Integer.toHexString(data[index]));
 		}
-		System.out.println("");
+		ErrorMsgUtil.reportStatus("");
 	}
 
 	/**

@@ -26,6 +26,8 @@ import org.jsynthlib.model.driver.SynthDriverPatch;
 import org.jsynthlib.model.patch.Patch;
 import org.jsynthlib.tools.UiUtil;
 
+import org.jsynthlib.tools.ErrorMsgUtil;
+
 /**
  * Dialog to choose the Device, Driver, BankNumber and PatchNumber of a Patch. Only Devices, Drivers, Bank- and
  * PatchNumbers are choosable, which are supporting the Patch. Is used for Reassign..., Store... and SendTo... a patch.
@@ -128,7 +130,7 @@ public class DeviceDriverBankPatchSelector extends JDialog {
 				SynthDriver driver = device.getDriver(j);
 
 				if (patchIsSupported(driver)) {
-					System.out.println(">>> Supported driver ... ");
+					ErrorMsgUtil.reportStatus(">>> Supported driver ... ");
 					if (newDevice) { // only one entry for each supporting device
 						deviceComboBox.addItem(device);
 						newDevice = false;

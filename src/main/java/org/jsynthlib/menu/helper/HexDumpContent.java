@@ -178,7 +178,7 @@ public class HexDumpContent {
 			item = new FormatedString("\n");
 			outputList.add(item);
 		}
-		System.out.println(mainSysex.length + " " + notSameBytes);
+		ErrorMsgUtil.reportStatus(mainSysex.length + " " + notSameBytes);
 		differnce = notSameBytes.floatValue() / mainSysex.length;
 		return (outputList);
 	}

@@ -25,9 +25,10 @@ package org.jsynthlib.synthdrivers.yamaha.tx802;
 
 import org.jsynthlib.menu.JSLFrame;
 import org.jsynthlib.model.patch.PatchDataImpl;
-import org.jsynthlib.synthdrivers.korg.microkorg.MicroKorg;
 import org.jsynthlib.synthdrivers.yamaha.dx7.common.DX7FamilyDevice;
 import org.jsynthlib.synthdrivers.yamaha.dx7.common.DX7FamilyVoiceSingleDriver;
+
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 public class YamahaTX802VoiceSingleDriver extends DX7FamilyVoiceSingleDriver {
 	public YamahaTX802VoiceSingleDriver() {
@@ -61,7 +62,7 @@ public class YamahaTX802VoiceSingleDriver extends DX7FamilyVoiceSingleDriver {
 	}
 	
 	public void sendPatch(PatchDataImpl p) {
-		System.out.println(">>>> send patch tx802");
+		ErrorMsgUtil.reportStatus(">>>> send patch tx802");
 
 		PatchDataImpl toSend = p.clone();
 
@@ -69,7 +70,7 @@ public class YamahaTX802VoiceSingleDriver extends DX7FamilyVoiceSingleDriver {
 //		toSend.getSysex()[Blofeld.BANK_AT.position()] = 0x7F;
 //		toSend.getSysex()[Blofeld.PATCH_AT.position()] = 0x00;
 
-//		System.out.println("TO SEND " + HexaUtil.hexDump(toSend.getSysex(), 0, toSend.getSysex().length, toSend.getSysex().length));
+//		ErrorMsgUtil.reportStatus("TO SEND " + HexaUtil.hexDump(toSend.getSysex(), 0, toSend.getSysex().length, toSend.getSysex().length));
 
 		super.sendPatch(toSend);
 	}

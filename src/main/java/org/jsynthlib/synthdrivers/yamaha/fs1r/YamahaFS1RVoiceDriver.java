@@ -121,7 +121,7 @@ public class YamahaFS1RVoiceDriver extends SynthDriverPatchImpl {
 
 	public void setBankNum(int bankNum) {
 		mCurrentBankNum = bankNum;
-		// System.out.println("setBankNum = "+ bankNum);
+		// ErrorMsgUtil.reportStatus("setBankNum = "+ bankNum);
 		updateSysexRequest();
 	}
 
@@ -132,7 +132,7 @@ public class YamahaFS1RVoiceDriver extends SynthDriverPatchImpl {
 				mCurrentPatchNum = 3;
 			}
 		}
-		// System.out.println("setPatchNum = "+patchNum);
+		// ErrorMsgUtil.reportStatus("setPatchNum = "+patchNum);
 		updateSysexRequest();
 	}
 

@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 
 import org.jsynthlib.tools.DriverUtil;
 
+import org.jsynthlib.tools.ErrorMsgUtil;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public enum Andromeda {
@@ -73,7 +74,7 @@ public enum Andromeda {
 	}
 
 	public static boolean bankPatchSizeIsSupported(int size) {
-		System.out.println(">>> Bank size " + size);
+		ErrorMsgUtil.reportStatus(">>> Bank size " + size);
 		switch (size) {
 		case (PROGRAM_SIZE_7BIT * PROGRAM_COUNT_IN_BANK):
 			// case (PROGRAM_SIZE_8BIT * PATCH_COUNT_IN_BANK):
@@ -102,7 +103,7 @@ public enum Andromeda {
 
 		int targetPointer = HEADER_SIZE;
 		for (int i = 0; i < COUNT_56BIT_BUNDLES; i++) {
-			System.out.println("Start:" + (i * 7) + " End:" + ((i * 7) + 8) + " Max: " + coreProgram.length);
+			ErrorMsgUtil.reportStatus("Start:" + (i * 7) + " End:" + ((i * 7) + 8) + " Max: " + coreProgram.length);
 
 			byte[] b8 = new byte[8];
 			System.arraycopy(coreProgram, i * 8, b8, 0, 8);
@@ -117,7 +118,7 @@ public enum Andromeda {
 		ByteBuffer buffer = ByteBuffer.allocate(PROGRAM_SIZE_8BIT_SYSEX);
 		buffer.put(target);
 
-		// System.out.println("Target programm size:  " + target.length);
+		// ErrorMsgUtil.reportStatus("Target programm size:  " + target.length);
 
 		return buffer;
 	}
@@ -147,7 +148,7 @@ public enum Andromeda {
 		ByteBuffer buffer = ByteBuffer.allocate(PROGRAM_SIZE_7BIT_SYSEX);
 		buffer.put(target);
 
-		// System.out.println("Target programm size:  " + target.length);
+		// ErrorMsgUtil.reportStatus("Target programm size:  " + target.length);
 		return buffer;
 	}
 

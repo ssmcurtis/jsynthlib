@@ -34,13 +34,13 @@ public class EvolverBankDriver extends SynthDriverBank {
 	}
 
 	public int getPatchStart(int patchNum) {
-		System.out.println(">>>> Get patch start" + HSIZE + (SSIZE * patchNum));
+		ErrorMsgUtil.reportStatus(">>>> Get patch start" + HSIZE + (SSIZE * patchNum));
 
 		return HSIZE + (SSIZE * patchNum);
 	}
 
 	public String getPatchName(PatchDataImpl p, int patchNum) {
-		System.out.println(">>>> Get patch name in bankdriver");
+		ErrorMsgUtil.reportStatus(">>>> Get patch name in bankdriver");
 
 		// int nameStart = getPatchStart(patchNum);
 		// nameStart += 0; // offset of name in patch data
@@ -55,7 +55,7 @@ public class EvolverBankDriver extends SynthDriverBank {
 	}
 
 	public void setPatchName(PatchDataImpl p, int patchNum, String name) {
-		System.out.println(">>>> Set name in bankdriver");
+		ErrorMsgUtil.reportStatus(">>>> Set name in bankdriver");
 		// patchNameSize = 10;
 		// patchNameStart = getPatchStart(patchNum);
 		//
@@ -73,7 +73,7 @@ public class EvolverBankDriver extends SynthDriverBank {
 	}
 
 	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) {
-		System.out.println(">>>> put patch in bankdriver");
+		ErrorMsgUtil.reportStatus(">>>> put patch in bankdriver");
 //		if (!canHoldPatch(p)) {
 //			JOptionPane.showMessageDialog(null, "This type of patch does not fit in to this type of bank.", "Error",
 //					JOptionPane.ERROR_MESSAGE);
@@ -95,7 +95,7 @@ public class EvolverBankDriver extends SynthDriverBank {
 	}
 
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
-		System.out.println(">>>> store patch in bankdriver");
+		ErrorMsgUtil.reportStatus(">>>> store patch in bankdriver");
 
 //		try {
 //			Thread.sleep(100);

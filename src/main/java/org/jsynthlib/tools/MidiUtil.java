@@ -296,7 +296,7 @@ public final class MidiUtil {
 		// for (int i = 0; i < outputMidiDeviceInfo.length; i++) {
 		// try {
 		// MidiDevice device = MidiSystem.getMidiDevice(outputMidiDeviceInfo[i]);
-		// System.out.println(device.getDeviceInfo().getName() +">>  Class " + device.getClass());
+		// ErrorMsgUtil.reportStatus(device.getDeviceInfo().getName() +">>  Class " + device.getClass());
 		// } catch (Exception e) {
 		// // e.printStackTrace();
 		// }
@@ -1036,37 +1036,37 @@ public final class MidiUtil {
 		for (int i = 0; i < id.length; i++)
 			bd[i] = (byte) id[i];
 
-		System.out.println(HexaUtil.hexDump(bd, 0, -1, 16));
-		System.out.println("------------");
-		System.out.println(HexaUtil.hexDump(bd, 5, 12, 4));
-		System.out.println("------------");
+		ErrorMsgUtil.reportStatus(HexaUtil.hexDump(bd, 0, -1, 16));
+		ErrorMsgUtil.reportStatus("------------");
+		ErrorMsgUtil.reportStatus(HexaUtil.hexDump(bd, 5, 12, 4));
+		ErrorMsgUtil.reportStatus("------------");
 
 		SysexMessage sysex = new SysexMessage();
-		System.out.println(sysexMessageToString(sysex, 5));
-		System.out.println("------------");
+		ErrorMsgUtil.reportStatus(sysexMessageToString(sysex, 5));
+		ErrorMsgUtil.reportStatus("------------");
 		sysex.setMessage(bd, 15);
-		System.out.println(sysexMessageToString(sysex));
+		ErrorMsgUtil.reportStatus(sysexMessageToString(sysex));
 		sysex.setMessage(bd, 16);
-		System.out.println(sysexMessageToString(sysex));
+		ErrorMsgUtil.reportStatus(sysexMessageToString(sysex));
 		sysex.setMessage(bd, 17);
-		System.out.println(sysexMessageToString(sysex));
+		ErrorMsgUtil.reportStatus(sysexMessageToString(sysex));
 		sysex.setMessage(bd, 20);
-		System.out.println(sysexMessageToString(sysex));
+		ErrorMsgUtil.reportStatus(sysexMessageToString(sysex));
 
 		ShortMessage smsg = new ShortMessage();
 		smsg.setMessage(ShortMessage.NOTE_ON, 0x4B, 0x70); // 2B
-		System.out.println(shortMessageToString(smsg));
+		ErrorMsgUtil.reportStatus(shortMessageToString(smsg));
 		smsg.setMessage(ShortMessage.PROGRAM_CHANGE, 0x4B, 0x70); // 1B
-		System.out.println(shortMessageToString(smsg));
+		ErrorMsgUtil.reportStatus(shortMessageToString(smsg));
 		smsg.setMessage(ShortMessage.TIMING_CLOCK, 0x4B, 0x70);
-		System.out.println(shortMessageToString(smsg));
+		ErrorMsgUtil.reportStatus(shortMessageToString(smsg));
 
-		System.out.println(midiMessageToString(sysex));
+		ErrorMsgUtil.reportStatus(midiMessageToString(sysex));
 		smsg.setMessage(ShortMessage.MIDI_TIME_CODE, 0x4B, 0x70); // 1B
-		System.out.println(midiMessageToString(smsg));
+		ErrorMsgUtil.reportStatus(midiMessageToString(smsg));
 		MidiMessage msg = new ShortMessage();
 		((ShortMessage) msg).setMessage(ShortMessage.SONG_POSITION_POINTER, 0x4B, 0x70); // 2B
-		System.out.println(midiMessageToString(msg));
+		ErrorMsgUtil.reportStatus(midiMessageToString(msg));
 	}
 
 	/** Returns true if there is available MIDI output port. */
@@ -1086,7 +1086,7 @@ public final class MidiUtil {
 
 		// TODO ssmCurtis close() transmitters, receivers etc.
 
-		// System.out.println("\n\nUse device " + MidiUtil.getOutputMidiDeviceInfo(midiDeviceInfo).getName() + "\n");
+		// ErrorMsgUtil.reportStatus("\n\nUse device " + MidiUtil.getOutputMidiDeviceInfo(midiDeviceInfo).getName() + "\n");
 
 		Sequencer sequencer;
 		MidiDevice midiDevice;
@@ -1126,7 +1126,7 @@ public final class MidiUtil {
 			mySeq.deleteTrack(oldTrack);
 
 			// debug
-			// System.out.println("Events to play");
+			// ErrorMsgUtil.reportStatus("Events to play");
 			// if (ErrorMsgUtil.getDebugLevel() > 0) {
 			// Track t = mySeq.getTracks()[0];
 			// for (int i = 0; i < t.size(); i++) {
@@ -1135,11 +1135,11 @@ public final class MidiUtil {
 			// for (byte b : event.getMessage().getMessage()) {
 			// s += HexaUtil.byteToHexString(b) + " ";
 			// }
-			// System.out.println("byte[]: " + s);
+			// ErrorMsgUtil.reportStatus("byte[]: " + s);
 			// }
 			// }
 			sequencer.setTempoInBPM(JSynthBpm.getBpmId(AppConfig.getBpmOrdinal()).getBpm());
-			System.out.println("Loop " + AppConfig.getLoopcount());
+			ErrorMsgUtil.reportStatus("Loop " + AppConfig.getLoopcount());
 			sequencer.setLoopCount(AppConfig.getLoopcount());
 
 			sequencer.setSequence(mySeq);
@@ -1153,7 +1153,7 @@ public final class MidiUtil {
 	public static void changeProgram(SynthDriverPatchImpl driver, int programmNumber) {
 		ShortMessage message = new ShortMessage();
 		try {
-			System.out.println("> Channel: " + driver.getChannel() + " patch: " + programmNumber);
+			ErrorMsgUtil.reportStatus("> Channel: " + driver.getChannel() + " patch: " + programmNumber);
 			message.setMessage(ShortMessage.PROGRAM_CHANGE, driver.getChannel() - 1, programmNumber, 0);
 			driver.getDevice().send(message);
 			Thread.sleep(100);
@@ -1187,7 +1187,7 @@ public final class MidiUtil {
 		for (Map.Entry<String, Integer> entry : kv.entrySet()) {
 			header.replace("*" + entry.getKey() + "*", Integer.toHexString(entry.getValue()));
 		}
-		System.out.println(header);
+		ErrorMsgUtil.reportStatus(header);
 		return HexaUtil.convertStringToSyex(header);
 	}
 

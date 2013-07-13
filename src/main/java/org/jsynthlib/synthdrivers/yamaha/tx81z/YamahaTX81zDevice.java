@@ -9,7 +9,6 @@ package org.jsynthlib.synthdrivers.yamaha.tx81z;
 import java.util.prefs.Preferences;
 
 import org.jsynthlib.model.device.Device;
-import org.jsynthlib.synthdrivers.waldorf.microwave.Microwave;
 
 /**
  * 

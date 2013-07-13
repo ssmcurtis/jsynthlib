@@ -8,6 +8,8 @@ import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Receiver;
 import javax.sound.midi.ShortMessage;
 
+import org.jsynthlib.tools.ErrorMsgUtil;
+
 public class MidiActionProgramChange implements Runnable, ThreadStop {
 
 	private static String esi = "4-M8U";
@@ -26,7 +28,7 @@ public class MidiActionProgramChange implements Runnable, ThreadStop {
 		} else {
 			run();
 		}
-		System.out.println(" MidiActionReset constructor: Threads " + Thread.activeCount());
+		ErrorMsgUtil.reportStatus(" MidiActionReset constructor: Threads " + Thread.activeCount());
 	}
 
 	public void run() {

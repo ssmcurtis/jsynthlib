@@ -4,6 +4,8 @@ import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.synthdrivers.roland.mks80.Mks80;
 import org.jsynthlib.tools.HexaUtil;
 
+import org.jsynthlib.tools.ErrorMsgUtil;
+
 /**
  * An implementation of IParamModel for Patch class.
  * 
@@ -33,7 +35,7 @@ public class ParamModel implements IParamModel {
 	// SysexWidget.IParamModel interface methods
 	/** Set a parameter value <code>value</code>. */
 	public void set(int value) {
-		System.out.println("SET: " + value + " hx:" +HexaUtil.byteToHexString(HexaUtil.intToByte(value)) + " rol:"
+		ErrorMsgUtil.reportStatus("SET: " + value + " hx:" +HexaUtil.byteToHexString(HexaUtil.intToByte(value)) + " rol:"
 				+ Mks80.byteToBankPatchNumber(HexaUtil.intToByte(value)));
 
 		patch.getSysex()[ofs] = (byte) value;
@@ -42,7 +44,7 @@ public class ParamModel implements IParamModel {
 	/** Get a parameter value. */
 	public int get() {
 		Integer value = (int) patch.getSysex()[ofs];
-		System.out.println("GET: " + value + " hx:" +HexaUtil.byteToHexString(HexaUtil.intToByte(value)) + " rol:"
+		ErrorMsgUtil.reportStatus("GET: " + value + " hx:" +HexaUtil.byteToHexString(HexaUtil.intToByte(value)) + " rol:"
 				+ Mks80.byteToBankPatchNumber(HexaUtil.intToByte(value)));
 		return value;
 	}

@@ -12,6 +12,8 @@
 package org.jsynthlib;
 
 import java.lang.reflect.Constructor;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -27,7 +29,6 @@ import org.jsynthlib.tools.ErrorMsgUtil;
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
 import org.reflections.scanners.SubTypesScanner;
-import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
 public class DevicesConfig {
@@ -66,27 +67,40 @@ public class DevicesConfig {
 		// Reflections reflections = new Reflections("org.jsynthlib.synthdrivers");
 
 		// String javaClassPath = System.getProperty("java.class.path");
+		// Reflections reflections = new Reflections(
+		// new ConfigurationBuilder()
+		// .setUrls(ClasspathHelper.forJavaClassPath())
+		// );
 
-		ConfigurationBuilder cfgBuilder = new ConfigurationBuilder().setUrls(ClasspathHelper.forPackage("org.jsynthlib.synthdrivers"))
-				.setScanners(new SubTypesScanner(), new ResourcesScanner());
-		// ConfigurationBuilder cfgBuilder = new ConfigurationBuilder().setUrls(ClasspathHelper.forJavaClassPath())
+		// ConfigurationBuilder cfgBuilder = new
+		// ConfigurationBuilder().setUrls(ClasspathHelper.forPackage("org.jsynthlib.synthdrivers"))
 		// .setScanners(new SubTypesScanner(), new ResourcesScanner());
+		URL url = null;
+		try {
+			url = new URL("file:./");
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ConfigurationBuilder cfgBuilder = new ConfigurationBuilder().setUrls(url)
+				.setScanners(new SubTypesScanner(), new ResourcesScanner());
 		Reflections reflections = new Reflections(cfgBuilder);
 
 		Set<Class<? extends Device>> subTypes = reflections.getSubTypesOf(Device.class);
 		// ErrorMsgUtil.reportError("Devices loaded", subTypes.size() + " devices found in "+ javaClassPath);
-		ErrorMsgUtil.reportError("Devices loaded", subTypes.size() + " devices found.");
+		ErrorMsgUtil.reportWarning("Devices loaded", "Driver for " + subTypes.size()
+				+ " devices found.\nSee Help->Supported Devices for more information.");
 
 		String classPrefix = JSynthConstants.SYNTLIB_CLASS_PACKAGE_PREFIX;
 		for (Object o : subTypes) {
 			@SuppressWarnings("unchecked")
 			String className = ((Class<Device>) o).getName();
 			String IDString = "NONE";
-			System.out.println("> 2 " + className);
-			// System.out.println(">> add " + classInfo);
+			// ErrorMsgUtil.reportStatus("> 2 " + className);
+			// ErrorMsgUtil.reportStatus(">> add " + classInfo);
 			if (className.startsWith(classPrefix)) {
 				String deviceString = className.substring(classPrefix.length());
-				System.out.println("deviceClass " + deviceString);
+				// ErrorMsgUtil.reportStatus("deviceClass " + deviceString);
 				String[] deviceArr = deviceString.split("\\.");
 				if (deviceArr.length >= 2) {
 					deviceArr[0] = WordUtils.capitalize(deviceArr[0]);

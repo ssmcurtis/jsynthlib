@@ -1,10 +1,9 @@
 package org.jsynthlib.synthdrivers.roland.mks80;
 
-import java.io.InputStream;
-
-import org.jsynthlib.synthdrivers.waldorf.microwave.Microwave;
 import org.jsynthlib.tools.DriverUtil;
 import org.jsynthlib.tools.HexaUtil;
+
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 public class Mks80 {
 
@@ -82,7 +81,7 @@ public class Mks80 {
 			sysex[TONE_SIZE_IN_BANK_SYSEX_CONTAINER - 2] = (byte) 0x00;
 			sysex[TONE_SIZE_IN_BANK_SYSEX_CONTAINER - 1] = (byte) 0xF7;
 		} else {
-			System.out.println(">>>> WRAP ERROR");
+			ErrorMsgUtil.reportStatus(">>>> WRAP ERROR");
 		}
 	}
 
@@ -98,7 +97,7 @@ public class Mks80 {
 			sysex[PATCH_SIZE_IN_BANK_SYSEX_CONTAINER - 2] = (byte) 0x00;
 			sysex[PATCH_SIZE_IN_BANK_SYSEX_CONTAINER - 1] = (byte) 0xF7;
 		} else {
-			System.out.println(">>>> WRAP ERROR");
+			ErrorMsgUtil.reportStatus(">>>> WRAP ERROR");
 		}
 	}
 

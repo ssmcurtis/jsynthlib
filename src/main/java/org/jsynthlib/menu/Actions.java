@@ -146,8 +146,7 @@ final public class Actions {
 
 	/** All actions excluding ones which are always enabled. */
 	public static final long EN_ALL = (// EN_ABOUT
-	EN_COPY | EN_CUT
-			| EN_DELETE
+	EN_COPY | EN_CUT | EN_DELETE
 			| EN_STORE_LIBRARY
 			// | EN_DOCS
 			| EN_EDIT
@@ -241,7 +240,6 @@ final public class Actions {
 	private static JComboBox<String> octave = new JComboBox<String>(JSynthOctave.getNames());
 	private static JComboBox<Integer> loop = new JComboBox<Integer>(new Integer[] { 0, 1, 4, 8, 16, 32 });
 
-	
 	private static JMenu menuSpecial = new JMenu("Special");
 
 	// don't have to call constructor for Utility class.
@@ -270,8 +268,8 @@ final public class Actions {
 		menuBar.add(createEditMenu(mnemonics, mask));
 
 		menuBar.add(createPatchMenu(mnemonics, mask));
-		
-		menuBar.add(createSpecialMenu(mnemonics, mask));
+
+		// menuBar.add(createSpecialMenu(mnemonics, mask));
 
 		menuBar.add(createWindowMenu(mnemonics, mask));
 		menuBar.add(createHelpMenu(mnemonics, mask));
@@ -390,12 +388,11 @@ final public class Actions {
 	}
 
 	private static JMenu createSpecialMenu(HashMap<Serializable, Integer> mnemonics, int mask) {
-		
+
 		mnemonics.put(menuSpecial, new Integer(KeyEvent.VK_S));
 		return menuSpecial;
 	}
 
-	
 	/** List of JSLWindowMenus including one for invisible frame. */
 	public static ArrayList<JSLWindowMenu> windowMenus = new ArrayList<JSLWindowMenu>();
 
@@ -475,7 +472,9 @@ final public class Actions {
 		JMenuItem mi;
 		JMenu menuHelp = new JMenu("Help");
 		mnemonics.put(menuHelp, new Integer(KeyEvent.VK_H));
-		mi = menuHelp.add(showTestAction);
+		if (ErrorMsgUtil.getDebugLevel() > 0) {
+			mi = menuHelp.add(showTestAction);
+		}
 		mi = menuHelp.add(showDevice);
 
 		mi = menuHelp.add(docsAction);
@@ -858,22 +857,22 @@ final public class Actions {
 
 	public static PatchBasket getSelectedFrame() {
 		if (PatchBayApplication.getDesktop().getSelectedFrame() instanceof AbstractLibraryFrame) {
-			// System.out.println("Actions.getSelectedFrame: AbstractLibraryFrame");
+			// ErrorMsgUtil.reportStatus("Actions.getSelectedFrame: AbstractLibraryFrame");
 		} else if (PatchBayApplication.getDesktop().getSelectedFrame() instanceof BankEditorFrame) {
-			// System.out.println("Actions.getSelectedFrame: BankEditorFrame");
+			// ErrorMsgUtil.reportStatus("Actions.getSelectedFrame: BankEditorFrame");
 		} else if (PatchBayApplication.getDesktop().getSelectedFrame() instanceof PatchEditorFrame) {
-			// System.out.println("Actions.getSelectedFrame: PatchEditorFrame");
+			// ErrorMsgUtil.reportStatus("Actions.getSelectedFrame: PatchEditorFrame");
 		} else {
-			// System.out.println("Actions.getSelectedFrame: unknown");
+			// ErrorMsgUtil.reportStatus("Actions.getSelectedFrame: unknown");
 		}
 		return (PatchBasket) PatchBayApplication.getDesktop().getSelectedFrame();
 	}
 
 	// TODO ssmCurtis - check .. new thread
 	public static void EditActionProc() {
-		
+
 		class Worker extends Thread {
-			
+
 			public void run() {
 				try {
 					JSLFrame frm = getSelectedFrame().editSelectedPatch();
@@ -900,7 +899,7 @@ final public class Actions {
 				}
 			}
 		}
-		
+
 		Worker w = new Worker();
 		w.setDaemon(true);
 		w.start();
@@ -965,8 +964,8 @@ final public class Actions {
 		Actions.selectByFilterDialog = selectByFilterDialog;
 	}
 
-	public static void addSpecialMenuAction(Action specialAction){
-		System.out.println(">>>> Add special action");
+	public static void addSpecialMenuAction(Action specialAction) {
+		ErrorMsgUtil.reportStatus(">>>> Add special action");
 		menuSpecial.add(specialAction);
 	}
 
@@ -977,5 +976,5 @@ final public class Actions {
 	public static void setMnemonics(HashMap<Serializable, Integer> mnemonics) {
 		Actions.mnemonics = mnemonics;
 	}
-	
+
 }

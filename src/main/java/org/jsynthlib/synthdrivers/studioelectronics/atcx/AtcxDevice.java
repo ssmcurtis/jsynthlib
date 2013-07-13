@@ -7,7 +7,6 @@ import javax.swing.JComboBox;
 
 import org.jsynthlib.model.device.Device;
 import org.jsynthlib.model.patch.Patch;
-import org.jsynthlib.synthdrivers.studioelectronics.se1.Se1;
 
 public class AtcxDevice extends Device {
 	static final String DRIVER_INFO = Atcx.VENDOR + " " + Atcx.DEVICE

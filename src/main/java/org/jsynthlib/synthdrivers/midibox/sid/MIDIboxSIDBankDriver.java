@@ -70,7 +70,7 @@ public class MIDIboxSIDBankDriver extends SynthDriverBank {
 
 		for (int i = 0; i < 128; ++i) {
 			PatchDataImpl ps = extractPatch(p, i);
-			System.out.println("Sending Patch #" + i);
+			ErrorMsgUtil.reportStatus("Sending Patch #" + i);
 			// SlowSender.sendSysEx(p.getDriver().getPort(), ps.sysex, 500);
 			send(ps.getSysex());
 			try {

@@ -254,7 +254,7 @@ class FCB1010ParamModel extends ParamModel {
 	}
 
 	/*
-	 * static void dump(byte[] bytes) { for (int i = 0; i < 10; i++) { System.out.println("Bank " + i + " -----");
-	 * System.out.println("  " + (Utility.hexDump(bytes, Constants.HDR_SIZE + (160 * i), 160, 16))); } }
+	 * static void dump(byte[] bytes) { for (int i = 0; i < 10; i++) { ErrorMsgUtil.reportStatus("Bank " + i + " -----");
+	 * ErrorMsgUtil.reportStatus("  " + (Utility.hexDump(bytes, Constants.HDR_SIZE + (160 * i), 160, 16))); } }
 	 */
 }

@@ -4,7 +4,6 @@ import javax.swing.JOptionPane;
 
 import org.jsynthlib.PatchBayApplication;
 import org.jsynthlib.menu.window.ErrorDialog;
-import org.jsynthlib.synthdrivers.studioelectronics.atcx.Atcx;
 
 /**
  * This class handles error or warning conditions and debug messages.
@@ -25,8 +24,8 @@ import org.jsynthlib.synthdrivers.studioelectronics.atcx.Atcx;
  *      0x8 JSLFrame debug message
  * </pre>
  * 
- * In general <code>System.out.print</code> or <code>System.out.println</code> should not be used in JSynthLib. An
- * example of the exception is <code>main</code> method for debugging.
+ * In general <code>// System.out.print</code> or <code>ErrorMsgUtil.reportStatus</code> should not be used in
+ * JSynthLib. An example of the exception is <code>main</code> method for debugging.
  * 
  * @author ???
  * @version $Id$
@@ -56,10 +55,10 @@ public class ErrorMsgUtil {
 		ErrorMsgUtil.debugLevel = debugLevel;
 	}
 
-
 	public static void reportMissingFunctionality(String vendor, String device) {
 		ErrorMsgUtil.reportError("Not available", vendor + " does not implemented this function for " + device);
 	}
+
 	/**
 	 * Show a message in an error dialog window.
 	 * 
@@ -69,15 +68,16 @@ public class ErrorMsgUtil {
 	 *            error message.
 	 */
 	public static void reportError(String errorTitle, String errorMSG) {
-		
+
 		ErrorDialog.showMessageDialog(PatchBayApplication.getInstance(), errorMSG, errorTitle, JOptionPane.ERROR_MESSAGE);
-		
+
 		if ((debugLevel & DEBUG_MSG) != 0) {
-			System.out.println("ERR> '" + errorMSG + "' reported.");
+			ErrorMsgUtil.reportStatus("ERR> '" + errorMSG + "' reported.");
 		}
-		
+
 		if ((debugLevel & DUMP_STACK) != 0) {
-			System.out.println(" DEBUG - Stack >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+			ErrorMsgUtil
+					.reportStatus(" DEBUG - Stack >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 			Thread.dumpStack();
 		}
 	}
@@ -95,8 +95,8 @@ public class ErrorMsgUtil {
 	public static void reportError(String errorTitle, String errorMSG, Exception e) {
 		ErrorDialog.showMessageDialog(PatchBayApplication.getInstance(), errorMSG, errorTitle, JOptionPane.ERROR_MESSAGE, e);
 		if ((debugLevel & DEBUG_MSG) != 0) {
-			System.out.println("ERR> '" + errorMSG + "' reported.");
-			System.out.println("ERR> [Exception] " + e.getMessage());
+			ErrorMsgUtil.reportStatus("ERR> '" + errorMSG + "' reported.");
+			ErrorMsgUtil.reportStatus("ERR> [Exception] " + e.getMessage());
 		}
 		if ((debugLevel & DUMP_STACK) != 0)
 			e.printStackTrace(System.out);
@@ -114,7 +114,7 @@ public class ErrorMsgUtil {
 		ErrorDialog.showMessageDialog(PatchBayApplication.getInstance()/* phil@muqus.com */, errorMSG, errorTitle,
 				JOptionPane.WARNING_MESSAGE);
 		if ((debugLevel & DEBUG_MSG) != 0)
-			System.out.println("WRN> '" + errorMSG + "' reported.");
+			ErrorMsgUtil.reportStatus("WRN> '" + errorMSG + "' reported.");
 		if ((debugLevel & DUMP_STACK) != 0)
 			Thread.dumpStack();
 	}
@@ -133,8 +133,8 @@ public class ErrorMsgUtil {
 		ErrorDialog.showMessageDialog(PatchBayApplication.getInstance()/* phil@muqus.com */, errorMSG, errorTitle,
 				JOptionPane.WARNING_MESSAGE);
 		if ((debugLevel & DEBUG_MSG) != 0) {
-			System.out.println("WRN> '" + errorMSG + "' reported.");
-			System.out.println("WRN> [Exception] " + e.getMessage());
+			ErrorMsgUtil.reportStatus("WRN> '" + errorMSG + "' reported.");
+			ErrorMsgUtil.reportStatus("WRN> [Exception] " + e.getMessage());
 		}
 		if ((debugLevel & DUMP_STACK) != 0)
 			e.printStackTrace(System.out);
@@ -149,8 +149,9 @@ public class ErrorMsgUtil {
 	 *            debug message string.
 	 */
 	public static void reportStatus(int mask, String msg) {
-		if ((debugLevel & mask) != 0)
+		if ((debugLevel & mask) != 0) {
 			System.out.println(msg);
+		}
 	}
 
 	/**
@@ -171,7 +172,7 @@ public class ErrorMsgUtil {
 	 */
 	public static void reportStatus(Exception e) {
 		if ((debugLevel & DEBUG_MSG) != 0)
-			System.out.println("[Exception] " + e.getMessage());
+			ErrorMsgUtil.reportStatus("[Exception] " + e.getMessage());
 		if ((debugLevel & DUMP_STACK) != 0)
 			e.printStackTrace(System.out);
 	}

@@ -11,6 +11,8 @@ import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.HexaUtil;
 import org.jsynthlib.tools.MidiUtil;
 
+import org.jsynthlib.tools.ErrorMsgUtil;
+
 /**
  * 
  * @version $Id$
@@ -39,9 +41,9 @@ public class MicroKorgSingleDriver extends SynthDriverPatchImpl {
 	}
 
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
-		 System.out.println(patchNum + " >>>> store patch ... microkrog produces windows bluescreen using som devices (f.e. M8U)");
+		 ErrorMsgUtil.reportStatus(patchNum + " >>>> store patch ... microkrog produces windows bluescreen using som devices (f.e. M8U)");
 
-		// System.out.println(HexaUtil.hexDumpOneLine(p.getByteArray()));
+		// ErrorMsgUtil.reportStatus(HexaUtil.hexDumpOneLine(p.getByteArray()));
 		PatchDataImpl patchToSend = p.clone();
 		patchToSend.getSysex()[2] = MicroKorg.getMidiChannelByte(getChannel());
 		
@@ -49,7 +51,7 @@ public class MicroKorgSingleDriver extends SynthDriverPatchImpl {
 		// TODO value to driver configuration
 		MidiUtil.waitForSevenBitTechnology(2000);
 
-		// System.out.println(HexaUtil.hexDumpOneLine(patchToSend.getSysex()));
+		// ErrorMsgUtil.reportStatus(HexaUtil.hexDumpOneLine(patchToSend.getSysex()));
 
 		// PatchDataImpl toSend = p.clone();
 		// ByteBuffer midi = MicroKorg.processDumpDataEncrypt(p.getSysex(), getChannel(), 3);
@@ -57,7 +59,7 @@ public class MicroKorgSingleDriver extends SynthDriverPatchImpl {
 		NameValue channel = new NameValue("midiChannel", MicroKorg.getMidiChannelByte(getChannel()));
 		NameValue patchNumber = new NameValue("patchNum", patchNum);
 		MidiMessage msg = writeHandler.toSysexMessage(getDeviceID(), channel, patchNumber);
-		System.out.println(HexaUtil.hexDumpOneLine(msg.getMessage()));
+		ErrorMsgUtil.reportStatus(HexaUtil.hexDumpOneLine(msg.getMessage()));
 		
 		send(msg);
 
@@ -66,7 +68,7 @@ public class MicroKorgSingleDriver extends SynthDriverPatchImpl {
 		// SysexMessage sxm = new SysexMessage();
 		// try {
 		// sxm.setMessage(MicroKorg.WRITE_SINGLE_BYTES, MicroKorg.WRITE_SINGLE_BYTES.length);
-		// System.out.println(HexaUtil.hexDumpOneLine(sxm.getData()));
+		// ErrorMsgUtil.reportStatus(HexaUtil.hexDumpOneLine(sxm.getData()));
 		// send(sxm);
 		// } catch (InvalidMidiDataException e) {
 		// // TODO Auto-generated catch block

@@ -198,10 +198,10 @@ public class ComparePatchDialog extends JDialog {
 			if (columnToSearch != null) {
 				match = JSynthLibraryColumn.getPropertyValue(p, columnToSearch).toLowerCase().indexOf(text) != -1;
 			} else {
-				System.out.println("columnToSearch " + columnToSearch);
+				ErrorMsgUtil.reportStatus("columnToSearch " + columnToSearch);
 				for (JSynthLibraryColumn col : JSynthLibraryColumn.values()) {
 					if (col.isVisible()) {
-						System.out.println("column " + col);
+						ErrorMsgUtil.reportStatus("column " + col);
 						match = JSynthLibraryColumn.getPropertyValue(p, col).toLowerCase().indexOf(text) != -1;
 						if (match) {
 							break;

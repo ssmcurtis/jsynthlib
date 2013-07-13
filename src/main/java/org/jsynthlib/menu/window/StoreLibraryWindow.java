@@ -19,9 +19,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 
-import org.jsynthlib.JSynthConstants;
 import org.jsynthlib.PatchBayApplication;
-import org.jsynthlib.menu.Actions;
 import org.jsynthlib.menu.preferences.AppConfig;
 import org.jsynthlib.model.device.Device;
 import org.jsynthlib.model.driver.SynthDriverBank;
@@ -31,6 +29,7 @@ import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.model.tablemodel.PatchTableModel;
 import org.jsynthlib.tools.UiUtil;
 
+import org.jsynthlib.tools.ErrorMsgUtil;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class StoreLibraryWindow {
@@ -63,7 +62,7 @@ public class StoreLibraryWindow {
 			Device device = AppConfig.getDevice(i);
 
 			for (int j = 0; j < device.driverCount(); j++) {
-				// System.out.println(device.driverCount() + " " +
+				// ErrorMsgUtil.reportStatus(device.driverCount() + " " +
 				// device.getDriver(j).getClass().getSimpleName());
 
 				if (device.getDriver(j) instanceof SynthDriverPatchImpl) {
@@ -117,21 +116,21 @@ public class StoreLibraryWindow {
 								if (entry.getValue() > 0) {
 
 									if (p instanceof PatchDataImpl) {
-										// System.out.println(p.getClass().getSimpleName());
+										// ErrorMsgUtil.reportStatus(p.getClass().getSimpleName());
 
 										PatchDataImpl patchToSend = (PatchDataImpl) p;
 
 										boolean sameDevice = driver.getDevice().equals(patchToSend.getDevice());
 										boolean patchSupported = driver.supportsPatchSingle(p.getPatchHeader(), p.getByteArray());
 
-										// System.out.println(driver.getDevice() + " " + patchToSend.getDevice());
-										// System.out.println("Device " + sameDevice + " Patch " + patchSupported);
+										// ErrorMsgUtil.reportStatus(driver.getDevice() + " " + patchToSend.getDevice());
+										// ErrorMsgUtil.reportStatus("Device " + sameDevice + " Patch " + patchSupported);
 
 										if (sameDevice && patchSupported) {
 
 											// supportedDevices.put(driver, (entry.getValue()));
 											int pos = maxPatchesForThisDevice - entry.getValue();
-											// System.out.println("Pos: " + (pos + 1) + " " + p.getComment());
+											// ErrorMsgUtil.reportStatus("Pos: " + (pos + 1) + " " + p.getComment());
 
 											String keyString = driver.getDevice().getManufacturerName() + " "
 													+ driver.getDevice().getModelName();
@@ -153,7 +152,7 @@ public class StoreLibraryWindow {
 
 										}
 									} else {
-										System.out.println(">> wrong instancetype .. " + p.getClass().getSimpleName());
+										ErrorMsgUtil.reportStatus(">> wrong instancetype .. " + p.getClass().getSimpleName());
 									}
 								}
 							}

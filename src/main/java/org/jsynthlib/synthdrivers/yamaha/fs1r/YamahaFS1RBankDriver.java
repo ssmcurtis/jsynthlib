@@ -141,7 +141,7 @@ public class YamahaFS1RBankDriver extends SynthDriverBank {
 	public String getPatchName(PatchDataImpl ip, int patchNum) {
 		PatchDataImpl p = (PatchDataImpl) ip;
 		int oPatchStart = getPatchStart(patchNum);
-		// System.out.println("getPatchName "+patchNum+" start = "+oPatchStart);
+		// ErrorMsgUtil.reportStatus("getPatchName "+patchNum+" start = "+oPatchStart);
 		if (patchNum > 127)
 			return YamahaFS1RVoiceDriver.getInstance().getPatchName(p, oPatchStart);
 		else
@@ -186,7 +186,7 @@ public class YamahaFS1RBankDriver extends SynthDriverBank {
 	 * @return the new "empty" bank
 	 */
 	public PatchDataImpl createNewPatch() {
-		// System.out.println("createNewPatch");
+		// ErrorMsgUtil.reportStatus("createNewPatch");
 		byte[] sysex = new byte[BANK_AND_HEADER_SIZE];
 		// dummy sysex header (FS1R has no bank sysex)
 		sysex[0] = (byte) 0xF0;

@@ -32,13 +32,13 @@ public class Se1PatchBankDriver extends SynthDriverBank {
 		// for (int i = 0; i < v.getSysex().length; i++) {
 		//
 		// if (v.getSysex()[i] != p.getSysex()[i]) {
-		// System.out.println(i + ": Reference:" + HexaUtil.byteToHexString(v.getSysex()[i]) + " created: "
+		// ErrorMsgUtil.reportStatus(i + ": Reference:" + HexaUtil.byteToHexString(v.getSysex()[i]) + " created: "
 		// + HexaUtil.byteToHexString(p.getSysex()[i]));
 		// mismatchFound = true;
 		// }
 		// }
 		// if (mismatchFound) {
-		// System.out.println("ERRRRROR");
+		// ErrorMsgUtil.reportStatus("ERRRRROR");
 		// }
 
 		sendPatch((PatchDataImpl) p);
@@ -52,7 +52,7 @@ public class Se1PatchBankDriver extends SynthDriverBank {
 		}
 		int sourceStart = Se1.HEADER_SIZE;
 		int targetStart = Se1.HEADER_SIZE + (patchNum * Se1.PROGRAM_SIZE);
-		// System.out.println("From: " + targetStart + " to " + (targetStart + Atcx.PROGRAM_SIZE));
+		// ErrorMsgUtil.reportStatus("From: " + targetStart + " to " + (targetStart + Atcx.PROGRAM_SIZE));
 
 		System.arraycopy(((PatchDataImpl) patch).getSysex(), sourceStart, ((PatchDataImpl) bank).getSysex(), targetStart, Se1.PROGRAM_SIZE);
 
@@ -147,17 +147,17 @@ public class Se1PatchBankDriver extends SynthDriverBank {
 	}
 
 	private void debugBank(byte[] source, byte[] target, int patchNum) {
-		System.out.println("Patch:" + patchNum);
+		ErrorMsgUtil.reportStatus("Patch:" + patchNum);
 		int sourceStart = Se1.HEADER_SIZE;
 		int targetStart = Se1.HEADER_SIZE + (patchNum * Se1.PROGRAM_SIZE);
 
-		// System.out.println("From: " + targetStart + " to " + (targetStart + Atcx.PROGRAM_SIZE));
+		// ErrorMsgUtil.reportStatus("From: " + targetStart + " to " + (targetStart + Atcx.PROGRAM_SIZE));
 
 		for (int i = 0; i < Se1.PROGRAM_SIZE; i++) {
 			byte b = source[sourceStart + i];
 			int index = targetStart + i;
 			if (b != target[index]) {
-				System.out.println(patchNum + "/" + i + ": " + HexaUtil.byteToHexString(b) + " " + HexaUtil.byteToHexString(target[index]));
+				ErrorMsgUtil.reportStatus(patchNum + "/" + i + ": " + HexaUtil.byteToHexString(b) + " " + HexaUtil.byteToHexString(target[index]));
 			}
 		}
 	}

@@ -120,7 +120,7 @@ public class RolandMT32PatchTempDriver extends SynthDriverPatchImpl {
 		// this.calculateChecksum(p, 4, 253, 0);
 		// p.sysex[255] = (byte) 0xF7;
 
-		// System.out.println("sendPatch: Not implemented yet.");
+		// ErrorMsgUtil.reportStatus("sendPatch: Not implemented yet.");
 		sendPatchWorker(p);
 	}
 

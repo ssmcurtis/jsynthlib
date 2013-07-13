@@ -1,10 +1,7 @@
 // written by ssmCurtis
 package org.jsynthlib.synthdrivers.studioelectronics.atcx;
 
-import org.jsynthlib.PatchBayApplication;
-import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverBank;
-import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.ErrorMsgUtil;
 import org.jsynthlib.tools.HexaUtil;
@@ -36,13 +33,13 @@ public class AtcxPatchBankDriver extends SynthDriverBank {
 //		for (int i = 0; i < v.getSysex().length; i++) {
 //
 //			if (v.getSysex()[i] != p.getSysex()[i]) {
-//				System.out.println(i + ": Reference:" + HexaUtil.byteToHexString(v.getSysex()[i]) + " created: "
+//				ErrorMsgUtil.reportStatus(i + ": Reference:" + HexaUtil.byteToHexString(v.getSysex()[i]) + " created: "
 //						+ HexaUtil.byteToHexString(p.getSysex()[i]));
 //				mismatchFound = true;
 //			}
 //		}
 //		if (mismatchFound) {
-//			System.out.println("ERRRRROR");
+//			ErrorMsgUtil.reportStatus("ERRRRROR");
 //		}
 		
 		sendPatch((PatchDataImpl) p);
@@ -56,7 +53,7 @@ public class AtcxPatchBankDriver extends SynthDriverBank {
 		}
 		int sourceStart = Atcx.HEADER_SIZE;
 		int targetStart = Atcx.HEADER_SIZE + (patchNum * Atcx.PROGRAM_SIZE);
-		// System.out.println("From: " + targetStart + " to " + (targetStart + Atcx.PROGRAM_SIZE));
+		// ErrorMsgUtil.reportStatus("From: " + targetStart + " to " + (targetStart + Atcx.PROGRAM_SIZE));
 
 		System.arraycopy(((PatchDataImpl) patch).getSysex(), sourceStart, ((PatchDataImpl) bank).getSysex(), targetStart, Atcx.PROGRAM_SIZE);
 
@@ -151,17 +148,17 @@ public class AtcxPatchBankDriver extends SynthDriverBank {
 	}
 
 	private void debugBank(byte[] source, byte[] target, int patchNum) {
-		System.out.println("Patch:" + patchNum);
+		ErrorMsgUtil.reportStatus("Patch:" + patchNum);
 		int sourceStart = Atcx.HEADER_SIZE;
 		int targetStart = Atcx.HEADER_SIZE + (patchNum * Atcx.PROGRAM_SIZE);
 
-		// System.out.println("From: " + targetStart + " to " + (targetStart + Atcx.PROGRAM_SIZE));
+		// ErrorMsgUtil.reportStatus("From: " + targetStart + " to " + (targetStart + Atcx.PROGRAM_SIZE));
 
 		for (int i = 0; i < Atcx.PROGRAM_SIZE; i++) {
 			byte b = source[sourceStart + i];
 			int index = targetStart + i;
 			if (b != target[index]) {
-				System.out.println(patchNum + "/" + i + ": " + HexaUtil.byteToHexString(b) + " " + HexaUtil.byteToHexString(target[index]));
+				ErrorMsgUtil.reportStatus(patchNum + "/" + i + ": " + HexaUtil.byteToHexString(b) + " " + HexaUtil.byteToHexString(target[index]));
 			}
 		}
 	}

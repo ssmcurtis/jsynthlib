@@ -46,7 +46,7 @@ public class KawaiK4EffectBankDriver extends SynthDriverBank {
 	public String getPatchName(PatchDataImpl p, int patchNum) {
 		int nameStart = getPatchStart(patchNum);
 		nameStart += 0; // offset of name in patch data
-		// System.out.println("Patch Num "+patchNum+ "Name Start:"+nameStart);
+		// ErrorMsgUtil.reportStatus("Patch Num "+patchNum+ "Name Start:"+nameStart);
 		String s = "Effect Type " + (p.getSysex()[nameStart] + 1);
 		return s;
 	}

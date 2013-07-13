@@ -14,7 +14,7 @@ public class JSynthConstants {
 	public static final int MAX_PROGRAMMS_FOR_STORE_LIBRARY = 16;
 
 	/** JSynthLib version number */
-	public static final String VERSION = "0.21-alpha";
+	public static final String VERSION = "0.21-beta";
 	public static final String VERSION_2 = "01";
 
 	public static final String SYNTLIB_CLASS_PACKAGE_PREFIX = "org.jsynthlib.synthdrivers.";

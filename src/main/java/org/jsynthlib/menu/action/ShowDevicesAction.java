@@ -15,7 +15,7 @@ import org.jsynthlib.menu.preferences.DeviceDialog;
  */
 public class ShowDevicesAction extends AbstractAction {
 	public ShowDevicesAction(Map<Serializable, Integer> mnemonics) {
-		super("Supported synthesizer");
+		super("Supported Devices");
 		mnemonics.put(this, new Integer('S'));
 	}
 

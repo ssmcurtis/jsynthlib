@@ -3,7 +3,6 @@ package org.jsynthlib.synthdrivers.oberheim.ob8;
 
 import org.jsynthlib.model.driver.SynthDriverBank;
 import org.jsynthlib.model.patch.PatchDataImpl;
-import org.jsynthlib.synthdrivers.studioelectronics.atcx.Atcx;
 import org.jsynthlib.tools.ErrorMsgUtil;
 import org.jsynthlib.tools.HexaUtil;
 
@@ -34,7 +33,7 @@ public class Ob8BankDriver extends SynthDriverBank {
 		}
 		int sourceStart = Ob8.HEADER_SIZE;
 		int targetStart = Ob8.HEADER_SIZE + (patchNum * Ob8.PROGRAM_SIZE);
-		// System.out.println("From: " + targetStart + " to " + (targetStart + Atcx.PROGRAM_SIZE));
+		// ErrorMsgUtil.reportStatus("From: " + targetStart + " to " + (targetStart + Atcx.PROGRAM_SIZE));
 
 		System.arraycopy(((PatchDataImpl) patch).getSysex(), sourceStart, ((PatchDataImpl) bank).getSysex(), targetStart, Ob8.PROGRAM_SIZE);
 
@@ -56,7 +55,7 @@ public class Ob8BankDriver extends SynthDriverBank {
 
 	@Override
 	public void requestPatchDump(int bankNum, int patchNum) {
-		System.out.println("REQUEST ... ");
+		ErrorMsgUtil.reportStatus("REQUEST ... ");
 	}
 
 	@Override
@@ -68,17 +67,17 @@ public class Ob8BankDriver extends SynthDriverBank {
 	}
 
 	private void debugBank(byte[] source, byte[] target, int patchNum) {
-		System.out.println("Patch:" + patchNum);
+		ErrorMsgUtil.reportStatus("Patch:" + patchNum);
 		int sourceStart = Ob8.HEADER_SIZE;
 		int targetStart = Ob8.HEADER_SIZE + (patchNum * Ob8.PROGRAM_SIZE);
 
-		// System.out.println("From: " + targetStart + " to " + (targetStart + Atcx.PROGRAM_SIZE));
+		// ErrorMsgUtil.reportStatus("From: " + targetStart + " to " + (targetStart + Atcx.PROGRAM_SIZE));
 
 		for (int i = 0; i < Ob8.PROGRAM_SIZE; i++) {
 			byte b = source[sourceStart + i];
 			int index = targetStart + i;
 			if (b != target[index]) {
-				System.out.println(patchNum + "/" + i + ": " + HexaUtil.byteToHexString(b) + " " + HexaUtil.byteToHexString(target[index]));
+				ErrorMsgUtil.reportStatus(patchNum + "/" + i + ": " + HexaUtil.byteToHexString(b) + " " + HexaUtil.byteToHexString(target[index]));
 			}
 		}
 	}

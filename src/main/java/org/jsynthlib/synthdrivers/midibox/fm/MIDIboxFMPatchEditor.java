@@ -56,6 +56,8 @@ import org.jsynthlib.menu.window.PatchEditorFrame;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.patch.PatchDataImpl;
 
+import org.jsynthlib.tools.ErrorMsgUtil;
+
 class MIDIboxFMPatchEditor extends PatchEditorFrame {
 	final String[] parName = new String[] { "  0 | <reserved>", "  1 | Modulation Wheel", "  2 | Transpose",
 			"  3 | Unisono", "  4 | <reserved>", "  5 | <reserved>", "  6 | <reserved>", "  7 | Volume",
@@ -851,7 +853,7 @@ class MIDIboxFMPatchEditor extends PatchEditorFrame {
 		for (int i = 0; i < 4 * 32; ++i) {
 			byte stored_value = ((PatchDataImpl) patchByParameter).getSysex()[10 + 0x80 + i];
 			if (stored_value != cooked_dump[i]) {
-				System.out.println("Wavetable Field changed: " + i);
+				ErrorMsgUtil.reportStatus("Wavetable Field changed: " + i);
 				((PatchDataImpl) patchByParameter).getSysex()[10 + 0x80 + i] = cooked_dump[i];
 				SlowSender.sendParameter((SynthDriverPatchImpl) ((PatchDataImpl) patchByParameter).getDriver(), 0x80 + i, cooked_dump[i], 50);
 			}

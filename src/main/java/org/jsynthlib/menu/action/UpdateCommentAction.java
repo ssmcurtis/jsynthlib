@@ -8,9 +8,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JTable;
 
 import org.jsynthlib.PatchBayApplication;
-import org.jsynthlib.menu.Actions;
 import org.jsynthlib.menu.window.LibraryFrame;
-import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.patch.Patch;
 import org.jsynthlib.model.tablemodel.PatchTableModel;
 

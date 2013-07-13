@@ -59,13 +59,13 @@ public class Mks80SendSysex {
 
 		MidiUtil.clearSysexInputQueue(inPort);
 
-		System.out.println(">>>>> InPort " + driver.getDevice().getInPort());
+		ErrorMsgUtil.reportStatus(">>>>> InPort " + driver.getDevice().getInPort());
 		for (byte[] sysex : sysexMsg) {
 
 			SysexMessage msg = new SysexMessage();
 			queue.add(msg);
-			// System.out.println(HexaUtil.hexDump(sysex, 0, -1, 32));
-			// System.out.println();
+			// ErrorMsgUtil.reportStatus(HexaUtil.hexDump(sysex, 0, -1, 32));
+			// ErrorMsgUtil.reportStatus();
 
 			try {
 				msg.setMessage(sysex, sysex.length);
@@ -74,8 +74,8 @@ public class Mks80SendSysex {
 			}
 		}
 
-		// System.out.println(">>> Is input available: " + MidiUtil.isInputAvailable());
-		// System.out.println(">>> msg count: " + sysexMsg.size());
+		// ErrorMsgUtil.reportStatus(">>> Is input available: " + MidiUtil.isInputAvailable());
+		// ErrorMsgUtil.reportStatus(">>> msg count: " + sysexMsg.size());
 
 		sendNextSysexPart = false;
 
@@ -83,7 +83,7 @@ public class Mks80SendSysex {
 
 		midiChannel = new NameValue("midiChannel", driver.getChannel() - 1);
 		driver.send(WSF.toSysexMessage(0, midiChannel));
-		System.out.println("WSF");
+		ErrorMsgUtil.reportStatus("WSF");
 
 	}
 
@@ -99,15 +99,15 @@ public class Mks80SendSysex {
 				if (queuePointer < queue.size()) {
 
 					driver.send(queue.get(queuePointer));
-					// System.out.println(HexaUtil.hexDump(queue.get(queuePointer).getData(), 0, -1, 32));
-					System.out.println("DAT " + (queuePointer+1));
+					// ErrorMsgUtil.reportStatus(HexaUtil.hexDump(queue.get(queuePointer).getData(), 0, -1, 32));
+					ErrorMsgUtil.reportStatus("DAT " + (queuePointer+1));
 
 					queuePointer++;
 				} else {
 					MidiMessage msg = EOF.toSysexMessage(0, midiChannel);
 					driver.send(msg);
 
-					System.out.println("EOF");
+					ErrorMsgUtil.reportStatus("EOF");
 					eof = true;
 				}
 			}
@@ -124,11 +124,11 @@ public class Mks80SendSysex {
 
 					sendNextSysexPart = driver.isAcknowledge(msg.getData());
 
-					System.out.println("ACK: " + sendNextSysexPart);
-					// System.out.println(HexaUtil.hexDump(msg.getData(), 0, -1, 32));
+					ErrorMsgUtil.reportStatus("ACK: " + sendNextSysexPart);
+					// ErrorMsgUtil.reportStatus(HexaUtil.hexDump(msg.getData(), 0, -1, 32));
 
 					if (eof) {
-						System.out.println("Stop timer");
+						ErrorMsgUtil.reportStatus("Stop timer");
 						stopTimer();
 					}
 				}
@@ -157,13 +157,13 @@ public class Mks80SendSysex {
 			receive.stop();
 		}
 		MidiUtil.clearSysexInputQueue(inPort);
-		System.out.println(">>> Is input available: " + MidiUtil.isInputAvailable());
+		ErrorMsgUtil.reportStatus(">>> Is input available: " + MidiUtil.isInputAvailable());
 	}
 
 	@Override
 	protected void finalize() throws Throwable {
 		super.finalize();
-		System.out.println(">>> " + getClass().getSimpleName() + " finalize");
+		ErrorMsgUtil.reportStatus(">>> " + getClass().getSimpleName() + " finalize");
 		stopTimer();
 	}
 }

@@ -83,12 +83,12 @@ public class KorgWavestationWaveSequenceDriver extends SynthDriverPatchImpl {
 		int i;
 		int sum = 0;
 
-		// System.out.println("Checksum was" + p.sysex[ofs]);
+		// ErrorMsgUtil.reportStatus("Checksum was" + p.sysex[ofs]);
 		for (i = start; i <= end; i++) {
 			sum += p.getSysex()[i];
 		}
 		p.getSysex()[ofs] = (byte) (sum % 128);
-		// System.out.println("Checksum new is" + p.sysex[ofs]);
+		// ErrorMsgUtil.reportStatus("Checksum new is" + p.sysex[ofs]);
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {

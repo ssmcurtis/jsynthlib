@@ -12,7 +12,6 @@ import org.jsynthlib.menu.preferences.AppConfig;
 import org.jsynthlib.menu.window.AbstractLibraryFrame;
 import org.jsynthlib.menu.window.ExtractPatchesDialog;
 import org.jsynthlib.model.device.Device;
-import org.jsynthlib.model.driver.SynthDriver;
 import org.jsynthlib.model.driver.SynthDriverPatch;
 import org.jsynthlib.model.patch.Patch;
 import org.jsynthlib.tools.ErrorMsgUtil;
@@ -63,7 +62,7 @@ public class ExtractAction extends AbstractAction {
 
 							if (knownPatch(patchHeaderString, driver.getSysexID())) {
 								headerFound = true;
-								System.out.println(">>>> found ");
+								ErrorMsgUtil.reportStatus(">>>> found ");
 							}
 						}
 					}
@@ -103,7 +102,7 @@ public class ExtractAction extends AbstractAction {
 			}
 		}
 
-		System.out.println("Compare: " + patchHeaderString + " " + compareString);
+		ErrorMsgUtil.reportStatus("Compare: " + patchHeaderString + " " + compareString);
 
 		return (compareString.toString().equalsIgnoreCase(patchHeaderString.substring(0, length)));
 

@@ -26,6 +26,8 @@ import org.jsynthlib.menu.window.DeviceDetailsDialog;
 import org.jsynthlib.model.device.Device;
 import org.jsynthlib.tools.UiUtil;
 
+import org.jsynthlib.tools.ErrorMsgUtil;
+
 public class DeviceDialog extends JSLDialog {
 
 	DeviceSelectionTree deviceSelectionTree;
@@ -35,7 +37,7 @@ public class DeviceDialog extends JSLDialog {
 	public DeviceDialog(JFrame parent, boolean isReadOnly) {
 		super(parent, "Synthesizer Device Install", true);
 		if (isReadOnly) {
-			setTitle("Supported synthesizer");
+			setTitle("Supported Devices");
 		}
 
 		JPanel container = new JPanel();
@@ -141,7 +143,7 @@ public class DeviceDialog extends JSLDialog {
 
 		String cls = PatchBayApplication.deviceConfig.getClassNameForDeviceName(s);
 
-		System.out.println("DeviceDialog: " + cls);
+		ErrorMsgUtil.reportStatus("DeviceDialog: " + cls);
 
 		Device device = AppConfig.addDevice(cls);
 		if (device == null)

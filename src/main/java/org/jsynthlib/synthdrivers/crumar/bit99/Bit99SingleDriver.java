@@ -8,6 +8,8 @@ import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.HexaUtil;
 
+import org.jsynthlib.tools.ErrorMsgUtil;
+
 /**
  * Single Voice Patch Driver for Kawai K4.
  * 
@@ -39,7 +41,7 @@ public class Bit99SingleDriver extends SynthDriverPatchImpl {
 	}
 
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
-		System.out.println(">>>> store patch");
+		ErrorMsgUtil.reportStatus(">>>> store patch");
 
 		sendProgramChange(patchNum);
 		try {
@@ -59,13 +61,13 @@ public class Bit99SingleDriver extends SynthDriverPatchImpl {
 	}
 
 	public void sendPatch(PatchDataImpl p) {
-		System.out.println(">>>> send patch");
+		ErrorMsgUtil.reportStatus(">>>> send patch");
 
 		super.sendPatch(p);
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {
-		System.out.println(">>>> request patch");
+		ErrorMsgUtil.reportStatus(">>>> request patch");
 
 		this.bankNum = bankNum;
 		this.patchNum = patchNum;
@@ -75,7 +77,7 @@ public class Bit99SingleDriver extends SynthDriverPatchImpl {
 
 		MidiMessage msg = SYS_REQ.toSysexMessage(getChannel(), bank, patch);
 
-		System.out.println(">>>" + HexaUtil.hexDumpOneLine(msg.getMessage(), 0, -1, 100));
+		ErrorMsgUtil.reportStatus(">>>" + HexaUtil.hexDumpOneLine(msg.getMessage(), 0, -1, 100));
 		send(msg);
 	}
 

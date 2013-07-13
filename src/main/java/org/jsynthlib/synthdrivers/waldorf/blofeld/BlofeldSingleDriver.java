@@ -48,7 +48,7 @@ public class BlofeldSingleDriver extends SynthDriverPatchImpl {
 		toSend.getSysex()[Blofeld.P_BANK_AT.position()] = HexaUtil.intToByte(bankNum);
 		toSend.getSysex()[Blofeld.P_PATCH_AT.position()] = HexaUtil.intToByte(patchNum);
 
-		// System.out.println("TO SEND " + HexaUtil.hexDump(toSend.getSysex(), 0, toSend.getSysex().length, toSend.getSysex().length));
+		// ErrorMsgUtil.reportStatus("TO SEND " + HexaUtil.hexDump(toSend.getSysex(), 0, toSend.getSysex().length, toSend.getSysex().length));
 
 		send(toSend.getSysex());
 		MidiUtil.waitForSevenBitTechnology(2000);

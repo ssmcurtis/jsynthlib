@@ -30,7 +30,7 @@ public class BlofeldMultitimbralDriver extends SynthDriverPatchImpl {
 	}
 
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
-		// System.out.println(">>>> store patch " + HexaUtil.byteToHexString((byte) patchNum));
+		// ErrorMsgUtil.reportStatus(">>>> store patch " + HexaUtil.byteToHexString((byte) patchNum));
 
 		PatchDataImpl toSend = p.clone();
 
@@ -38,9 +38,9 @@ public class BlofeldMultitimbralDriver extends SynthDriverPatchImpl {
 		toSend.getSysex()[Blofeld.P_BANK_AT.position()] = 0x7F;
 		toSend.getSysex()[Blofeld.P_PATCH_AT.position()] = (byte) patchNum;
 
-		// System.out.println(HexaUtil.byteToHexString(toSend.getSysex()[Blofeld.PATCH_AT.position()]));
+		// ErrorMsgUtil.reportStatus(HexaUtil.byteToHexString(toSend.getSysex()[Blofeld.PATCH_AT.position()]));
 
-		// System.out.println("Store ...  " + HexaUtil.hexDump(toSend.getSysex(), 0, toSend.getSysex().length, toSend.getSysex().length));
+		// ErrorMsgUtil.reportStatus("Store ...  " + HexaUtil.hexDump(toSend.getSysex(), 0, toSend.getSysex().length, toSend.getSysex().length));
 
 		super.sendPatch(toSend);
 

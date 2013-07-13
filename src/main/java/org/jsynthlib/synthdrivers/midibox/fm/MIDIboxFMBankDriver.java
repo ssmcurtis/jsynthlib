@@ -69,7 +69,7 @@ public class MIDIboxFMBankDriver extends SynthDriverBank {
 		for (int i = 0; i < num_patches; ++i) {
 			PatchDataImpl ps = extractPatch(p, i);
 			ps.getSysex()[8] = (byte) bankNum;
-			System.out.println("Sending Patch #" + i);
+			ErrorMsgUtil.reportStatus("Sending Patch #" + i);
 			send(ps.getSysex());
 			try {
 				Thread.sleep(600);

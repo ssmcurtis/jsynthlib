@@ -39,6 +39,8 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 
+import org.jsynthlib.tools.ErrorMsgUtil;
+
 public class DocumentSizeFilter extends DocumentFilter {
     int maxCharacters;
     boolean DEBUG = false;
@@ -51,7 +53,7 @@ public class DocumentSizeFilter extends DocumentFilter {
                              String str, AttributeSet a)
         throws BadLocationException {
         if (DEBUG) {
-            System.out.println("in DocumentSizeFilter's insertString method");
+            ErrorMsgUtil.reportStatus("in DocumentSizeFilter's insertString method");
         }
 
         //This rejects the entire insertion if it would make
@@ -69,7 +71,7 @@ public class DocumentSizeFilter extends DocumentFilter {
                         String str, AttributeSet a)
         throws BadLocationException {
         if (DEBUG) {
-            System.out.println("in DocumentSizeFilter's replace method");
+            ErrorMsgUtil.reportStatus("in DocumentSizeFilter's replace method");
         }
         //This rejects the entire replacement if it would make
         //the contents too long. Another option would be

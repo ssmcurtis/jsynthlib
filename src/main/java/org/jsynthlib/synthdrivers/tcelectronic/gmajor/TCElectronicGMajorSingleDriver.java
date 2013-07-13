@@ -31,6 +31,8 @@ import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.DriverUtil;
 
+import org.jsynthlib.tools.ErrorMsgUtil;
+
 /**
  * Single patch driver for TC Electronic G-Major
  * 
@@ -103,7 +105,7 @@ public class TCElectronicGMajorSingleDriver extends SynthDriverPatchImpl {
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {
-		System.out.println("BANKNUM: " + bankNum + "PATCHNUM: " + patchNum);
+		ErrorMsgUtil.reportStatus("BANKNUM: " + bankNum + "PATCHNUM: " + patchNum);
 		send(SYS_REQ.toSysexMessage(getChannel(),
 				new NameValue("bankNum", TCElectronicGMajorUtil.calcBankNum(bankNum, patchNum)),
 				new NameValue("patchNum", TCElectronicGMajorUtil.calcPatchNum(bankNum, patchNum))));

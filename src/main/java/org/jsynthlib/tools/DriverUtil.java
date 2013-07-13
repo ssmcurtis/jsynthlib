@@ -51,7 +51,7 @@ public class DriverUtil {
 	 */
 	public static Patch[] createPatches(byte[] sysex, String filename) {
 		// INFO FIND DRIVER AND CREATE PATCHES
-		// System.out.println("Size: " + sysex.length + "-" + HexaUtil.hexDumpOneLine(sysex, 0, -1, 100));
+		// ErrorMsgUtil.reportStatus("Size: " + sysex.length + "-" + HexaUtil.hexDumpOneLine(sysex, 0, -1, 100));
 		SynthDriver driver = chooseDriver(sysex);
 
 		return createPatches(sysex, driver, filename);
@@ -165,7 +165,7 @@ public class DriverUtil {
 	public static SynthDriver chooseDriver(byte[] sysex, Device dev) {
 		// INFO FIND DRIVER BY DEVICE
 
-		// System.out.println("Find driver by device");
+		// ErrorMsgUtil.reportStatus("Find driver by device");
 
 		String patchString = getPatchHeader(sysex);
 		if (dev == null) {
@@ -323,10 +323,10 @@ public class DriverUtil {
 
 		byte[] test = new byte[] { hex };
 
-		System.out.printf("%d %32s%n", intHex, Integer.toBinaryString(intHex));
-		System.out.printf("%d %32s%n", hex & 0xff, Integer.toBinaryString(HexaUtil.byteToInt(hex)));
-		System.out.printf("%d %32s%n", hex & 0xff, Integer.toBinaryString(HexaUtil.byteToChar(hex)));
-		System.out.println(HexaUtil.byteToHexString(hex));
+		// System.out.printf("%d %32s%n", intHex, Integer.toBinaryString(intHex));
+		// System.out.printf("%d %32s%n", hex & 0xff, Integer.toBinaryString(HexaUtil.byteToInt(hex)));
+		// System.out.printf("%d %32s%n", hex & 0xff, Integer.toBinaryString(HexaUtil.byteToChar(hex)));
+		ErrorMsgUtil.reportStatus(HexaUtil.byteToHexString(hex));
 		HexaUtil.isStartSysex(hex);
 	}
 

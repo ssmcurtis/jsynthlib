@@ -61,9 +61,9 @@ public class AppConfig {
 			// clear studio configurations
 			// for(String pd : prefs.childrenNames()) {
 			// if(pd.equals("devices") || pd.equals("microkorg")) {
-			// System.out.println(">>>> " + pd);
+			// ErrorMsgUtil.reportStatus(">>>> " + pd);
 			// } else {
-			// System.out.println("delete " + pd);
+			// ErrorMsgUtil.reportStatus("delete " + pd);
 			// prefs.node(pd).removeNode();
 			// }
 			// }
@@ -524,7 +524,8 @@ public class AppConfig {
 	 * @return a <code>Device</code> value created.
 	 */
 	private static Device addDevice(String className, Preferences prefs) {
-		System.out.println("AppConfig add device " + className);
+		// ErrorMsgUtil.reportStatus("AppConfig add device " + className);
+		
 		Device device = PatchBayApplication.deviceConfig.createDevice(className, prefs);
 		if (device != null) {
 			device.setup();

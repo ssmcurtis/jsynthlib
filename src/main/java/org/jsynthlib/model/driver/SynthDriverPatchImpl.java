@@ -20,7 +20,6 @@ import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.model.patch.PatchSingle;
 import org.jsynthlib.tools.DriverUtil;
 import org.jsynthlib.tools.ErrorMsgUtil;
-import org.jsynthlib.tools.HexaUtil;
 import org.jsynthlib.tools.MidiUtil;
 
 /**
@@ -635,7 +634,7 @@ abstract public class SynthDriverPatchImpl implements SynthDriverPatch {
 	 */
 	public void playPatch(PatchDataImpl p) {
 		if (AppConfig.getSequencerEnable()) {
-			System.out.println("Port: " + getDevice().getPort());
+			ErrorMsgUtil.reportStatus("Port: " + getDevice().getPort());
 			MidiUtil.startSequencer(getDevice().getPort(), getChannel() - 1);
 		} else {
 			try {

@@ -7,27 +7,15 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagLayout;
 
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
 
 import org.jsynthlib.advanced.style.XMEditor;
-import org.jsynthlib.menu.widgets.CheckBoxWidget;
 import org.jsynthlib.menu.widgets.ComboBoxWidget;
-import org.jsynthlib.menu.widgets.EnvelopeWidget;
 import org.jsynthlib.menu.widgets.LabelWidget;
-import org.jsynthlib.menu.widgets.ParamModel;
-import org.jsynthlib.menu.widgets.PatchNameWidget;
-import org.jsynthlib.menu.widgets.ScrollBarLookupWidget;
-import org.jsynthlib.menu.widgets.ScrollBarWidget;
-import org.jsynthlib.menu.widgets.SysexSender;
 import org.jsynthlib.menu.window.PatchEditorFrame;
 import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.synthdrivers.roland.mks80.model.BankNumberForToneInPatch;

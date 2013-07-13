@@ -26,9 +26,6 @@ package org.jsynthlib.synthdrivers.yamaha.tx802;
 import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.synthdrivers.yamaha.dx7.common.DX7FamilyDevice;
 import org.jsynthlib.synthdrivers.yamaha.dx7.common.DX7FamilyVoiceBankDriver;
-import org.jsynthlib.tools.HexaUtil;
-
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class YamahaTX802VoiceBankDriver extends DX7FamilyVoiceBankDriver {
 
@@ -73,7 +70,7 @@ public class YamahaTX802VoiceBankDriver extends DX7FamilyVoiceBankDriver {
 		}
 
 		putPatch(getCurrentBank(), singlePatch, patchNum);
-		// System.out.println(getPatchName(getCurrentBank(), patchNum));
+		// ErrorMsgUtil.reportStatus(getPatchName(getCurrentBank(), patchNum));
 		calculateChecksum(getCurrentBank());
 
 	}

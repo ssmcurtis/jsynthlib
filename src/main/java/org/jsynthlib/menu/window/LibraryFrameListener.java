@@ -31,7 +31,7 @@ class LibraryFrameListener implements JSLFrameListener {
 		if (PatchBayApplication.getDesktop().getAllFrames().length == 0) {
 			Actions.setEnabled(false, Actions.EN_PASTE);
 		}
-		System.out.println(">>>> Closed");
+		ErrorMsgUtil.reportStatus(">>>> Closed");
 	}
 
 	public void JSLFrameClosing(JSLFrameEvent e) {
@@ -40,7 +40,7 @@ class LibraryFrameListener implements JSLFrameListener {
 
 		// close Patch/Bank Editor editing a patch in this frame.
 		JSLFrame[] jList = PatchBayApplication.getDesktop().getAllFrames();
-		System.out.println("Frames: " + jList.length);
+		ErrorMsgUtil.reportStatus("Frames: " + jList.length);
 		for (int j = 0; j < jList.length; j++) {
 			if (jList[j] instanceof BankEditorFrame) {
 				for (int i = 0; i < this.abstractLibraryFrame.myModel.getRowCount(); i++)

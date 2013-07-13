@@ -125,7 +125,7 @@ class YamahaFS1RPerformanceEditor extends PatchEditorFrame {
 					oPatch = YamahaFS1RBankDriver.getInstance().extractPatch(
 							((YamahaFS1RBankEditor) bankFrame).getBankPatch(), 128 + mVoiceSelector[oPart].getValue());
 				}
-				// System.out.println("SEND VOICE "+oPart+" "+mVoiceSelector[oPart].getValue());
+				// ErrorMsgUtil.reportStatus("SEND VOICE "+oPart+" "+mVoiceSelector[oPart].getValue());
 				YamahaFS1RVoiceDriver.getInstance().sendPatch(oPatch, oPart + 1);
 			}
 		}

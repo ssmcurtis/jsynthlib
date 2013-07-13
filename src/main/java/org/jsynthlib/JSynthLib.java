@@ -2,9 +2,11 @@ package org.jsynthlib;
 
 import java.util.ArrayList;
 
+import org.jsynthlib.tools.ErrorMsgUtil;
+
 public class JSynthLib {
 
-	private static int debugLevel = 3;
+	private static int debugLevel = 0;
 	private static ArrayList<String> fileList = new ArrayList<String>();
 	private static String studio = "devices";
 
@@ -18,7 +20,7 @@ public class JSynthLib {
 
 	public static void main(String[] args) {
 		parseArgument(args);
-		@SuppressWarnings("unused")
+		// @SuppressWarnings("unused")
 		PatchBayApplication frame = new PatchBayApplication(fileList, debugLevel);
 		// frame.setVisible(true);
 	}
@@ -28,7 +30,8 @@ public class JSynthLib {
 			for (int i = 0; i < args.length; i++) {
 				if (args[i].startsWith("-D")) {
 					// may cause Illegal Index Exception
-					debugLevel = Integer.parseInt(args[++i]);
+					int tmpDebugLevel = Integer.parseInt(args[++i]);
+					debugLevel = tmpDebugLevel > 1 ? 1 : debugLevel;
 				} else if (args[i].startsWith("-S")) {
 					studio = args[++i];
 					studio = studio.replaceAll("[^A-Za-z 0-9]", "x");
@@ -43,7 +46,7 @@ public class JSynthLib {
 					fileList.add(args[i]);
 				}
 			}
-			System.out.println(" Studio: " + studio);
+			ErrorMsgUtil.reportStatus(" Studio: " + studio);
 		} catch (Exception e) {
 			usage(1);
 		}

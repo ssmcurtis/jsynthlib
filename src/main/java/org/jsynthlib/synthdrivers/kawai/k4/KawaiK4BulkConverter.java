@@ -30,7 +30,7 @@ public class KawaiK4BulkConverter extends ConverterImpl {
 	 */
 	public PatchDataImpl[] extractPatch(PatchDataImpl p) {
 		byte[] sysex = p.getByteArray();
-		// System.out.println("Length p: " + sysex.length);
+		// ErrorMsgUtil.reportStatus("Length p: " + sysex.length);
 		byte[] sx = new byte[HSIZE + SSIZE + 1]; // Single Bank
 		byte[] mx = new byte[HSIZE + MSIZE + 1]; // Multi Bank
 		byte[] dx = new byte[HSIZE + DSIZE + 1]; // Drumset

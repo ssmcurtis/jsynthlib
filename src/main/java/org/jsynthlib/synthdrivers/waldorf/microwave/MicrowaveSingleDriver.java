@@ -29,7 +29,7 @@ import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.MidiUtil;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import org.jsynthlib.tools.ErrorMsgUtil;
 
 public class MicrowaveSingleDriver extends SynthDriverPatchImpl {
 
@@ -80,7 +80,7 @@ public class MicrowaveSingleDriver extends SynthDriverPatchImpl {
 
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
 		
-		System.out.println(">>>> ChangeProgram: "+ patchNum);
+		ErrorMsgUtil.reportStatus(">>>> ChangeProgram: "+ patchNum);
 		sendProgramChange(patchNum);
 
 		Microwave.wrapSingle(p.getSysex(), this.getDevice().getDeviceID());

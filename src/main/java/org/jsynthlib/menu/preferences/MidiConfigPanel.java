@@ -187,7 +187,7 @@ public class MidiConfigPanel extends ConfigPanel {
 
 		playButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new MidiActionPlayNote(cbOut.getSelectedIndex(), -1);
+				new MidiActionPlayNote(cbOut.getSelectedIndex(), 0);
 			}
 		});
 	}

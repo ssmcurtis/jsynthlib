@@ -81,9 +81,9 @@ public final class PatchBayApplication {
 		// Show dialog for the 1st invokation.
 		// This is no longer normal. Maybe we shouldn't save prefs if this
 		// happens (could be difficult)
-		if (!loadPrefsSuccessfull)
+		if (!loadPrefsSuccessfull) {
 			ErrorMsgUtil.reportError("Error", "Unable to load user preferences. Defaults loaded instead.");
-
+		}
 		// popup menu for Library window, etc.
 		Actions.createPopupMenu();
 
@@ -113,11 +113,11 @@ public final class PatchBayApplication {
 			Actions.openFrame(new File(fname));
 		}
 	}
-	
+
 	@Override
 	protected void finalize() throws Throwable {
 		super.finalize();
-		
+
 		// TODO ssmCurtis - Object.finalize()
 		ErrorMsgUtil.reportStatus("JSynthLib finalizing...");
 		masterInEnable(false);

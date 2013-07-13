@@ -9,6 +9,8 @@ import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.HexaUtil;
 
+import org.jsynthlib.tools.ErrorMsgUtil;
+
 public abstract class Mks80BankDriver extends SynthDriverBank {
 
 	private static final SysexHandler RQF = new SysexHandler(Mks80.RQF);
@@ -28,7 +30,7 @@ public abstract class Mks80BankDriver extends SynthDriverBank {
 			int end = (Mks80.BANK_DATA_PACKAGE_SIZE * i) + Mks80.HEADER_SIZE + Mks80.BANK_DATA_PROGRAM_DATA_SIZE - 1;
 			int offset = (Mks80.BANK_DATA_PACKAGE_SIZE * i) + Mks80.HEADER_SIZE + Mks80.BANK_DATA_PROGRAM_DATA_SIZE;
 
-			// System.out.println("start: " + start + " end: " + end + " offset: " + offset);
+			// ErrorMsgUtil.reportStatus("start: " + start + " end: " + end + " offset: " + offset);
 
 			this.calculateChecksum(p, start, end, offset);
 		}
@@ -63,7 +65,7 @@ public abstract class Mks80BankDriver extends SynthDriverBank {
 
 		send(msg);
 
-		System.out.println("RQF: " + HexaUtil.hexDumpOneLine(msg.getMessage()));
+		ErrorMsgUtil.reportStatus("RQF: " + HexaUtil.hexDumpOneLine(msg.getMessage()));
 	}
 
 	@Override
@@ -73,7 +75,7 @@ public abstract class Mks80BankDriver extends SynthDriverBank {
 
 		send(msg);
 
-		System.out.println("ACK: " + HexaUtil.hexDumpOneLine(msg.getMessage()));
+		ErrorMsgUtil.reportStatus("ACK: " + HexaUtil.hexDumpOneLine(msg.getMessage()));
 	}
 
 	@Override

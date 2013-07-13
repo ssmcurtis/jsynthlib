@@ -25,6 +25,8 @@ import java.io.InputStream;
 
 import org.jsynthlib.tools.DriverUtil;
 
+import org.jsynthlib.tools.ErrorMsgUtil;
+
 public class Microwave {
 	private static final String[] INTERNAL_BANK_NAMES = new String[] { "A", "B" };
 
@@ -95,7 +97,7 @@ public class Microwave {
 
 			sysex[PROGRAM_SIZE_SYSEX - 1] = (byte) 0xF7;
 		} else {
-			System.out.println(">>>> WRAP ERROR");
+			ErrorMsgUtil.reportStatus(">>>> WRAP ERROR");
 		}
 	}
 
@@ -112,7 +114,7 @@ public class Microwave {
 
 			sysex[BANK_SIZE_SYSEX - 1] = (byte) 0xF7;
 		} else {
-			System.out.println(">>>> WRAP ERROR");
+			ErrorMsgUtil.reportStatus(">>>> WRAP ERROR");
 		}
 	}
 
@@ -123,7 +125,7 @@ public class Microwave {
 		if (sysex.length == PROGRAM_SIZE_SYSEX) {
 			System.arraycopy(sysex, HEADER_SIZE, program, 0, PROGRAM_SIZE);
 		} else {
-			System.out.println(">>>> EXTRACT ERROR");
+			ErrorMsgUtil.reportStatus(">>>> EXTRACT ERROR");
 		}
 		return program;
 	}

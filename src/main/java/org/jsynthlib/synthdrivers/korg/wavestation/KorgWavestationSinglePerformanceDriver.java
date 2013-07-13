@@ -106,12 +106,12 @@ public class KorgWavestationSinglePerformanceDriver extends SynthDriverPatchImpl
 		int i;
 		int sum = 0;
 
-		System.out.println("Checksum was" + p.getSysex()[ofs]);
+		ErrorMsgUtil.reportStatus("Checksum was" + p.getSysex()[ofs]);
 		for (i = start; i <= end; i++) {
 			sum += p.getSysex()[i];
 		}
 		p.getSysex()[ofs] = (byte) (sum % 128);
-		System.out.println("Checksum new is" + p.getSysex()[ofs]);
+		ErrorMsgUtil.reportStatus("Checksum new is" + p.getSysex()[ofs]);
 
 	}
 

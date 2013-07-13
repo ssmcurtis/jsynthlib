@@ -108,7 +108,7 @@ public class YamahaFS1RPerformanceDriver extends SynthDriverPatchImpl {
 
 	public void setBankNum(int bankNum) {
 		mCurrentBankNum = bankNum;
-		// System.out.println("setBankNum = "+ bankNum);
+		// ErrorMsgUtil.reportStatus("setBankNum = "+ bankNum);
 		updateSysexRequest();
 	}
 
@@ -272,7 +272,7 @@ public class YamahaFS1RPerformanceDriver extends SynthDriverPatchImpl {
 			// l'offset indique dans la doc ne correspond pas a un offset lineaire
 			// dans le sysex, il faut recalculer la valeur sur 16bits lineaires
 			super(p, (offset & 127) + ((offset >> 1) & 0x3F80) + DATA_START);
-			// System.out.println("offset 0x"+Integer.toHexString(offset)+"  => "+((offset & 127) + ((offset >> 1) &
+			// ErrorMsgUtil.reportStatus("offset 0x"+Integer.toHexString(offset)+"  => "+((offset & 127) + ((offset >> 1) &
 			// 0x3F80) + DATA_START));
 			// les parametres d'effets sont en 16 bits
 			mIs16Bits = (offset >= 0x50 && offset < 0x60) || (offset >= 0x68 && offset < 0x0128);
@@ -302,7 +302,7 @@ public class YamahaFS1RPerformanceDriver extends SynthDriverPatchImpl {
 			} else {
 				patch.getSysex()[ofs] = (byte) (i & 127);
 			}
-			// System.out.println("set part = "+mPart+" ofs = "+Integer.toHexString(mOffset)+" valL = "+Integer.toHexString(patch.sysex[ofs])+" valH = "+Integer.toHexString(patch.sysex[ofs+1]));
+			// ErrorMsgUtil.reportStatus("set part = "+mPart+" ofs = "+Integer.toHexString(mOffset)+" valL = "+Integer.toHexString(patch.sysex[ofs])+" valH = "+Integer.toHexString(patch.sysex[ofs+1]));
 		}
 
 		public int get() {
@@ -310,7 +310,7 @@ public class YamahaFS1RPerformanceDriver extends SynthDriverPatchImpl {
 			if (mIs16Bits) {
 				oRet = patch.getSysex()[ofs + 1] | (patch.getSysex()[ofs] << 7);
 			}
-			// System.out.println("get part = "+mPart+" ofs = "+Integer.toHexString(mOffset)+" = "+oRet);
+			// ErrorMsgUtil.reportStatus("get part = "+mPart+" ofs = "+Integer.toHexString(mOffset)+" = "+oRet);
 			return oRet;
 		}
 	}

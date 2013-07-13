@@ -58,6 +58,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.jsynthlib.tools.ErrorMsgUtil;
+
 public class XMEditor extends JTextPane {
 	protected AbstractDocument doc;
 
@@ -107,7 +109,7 @@ public class XMEditor extends JTextPane {
 		try {
 			builder = builderFactory.newDocumentBuilder();
 		} catch (Exception e) {
-			System.out.println(e);
+			ErrorMsgUtil.reportStatus(e);
 		}
 		editorKit = new XMEditorKit();
 		setEditorKit(editorKit);
@@ -174,7 +176,7 @@ public class XMEditor extends JTextPane {
 			t.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 			t.transform(new DOMSource(document), new StreamResult(writer));
 		} catch (Exception e) {
-			System.out.println("write = " + e);
+			ErrorMsgUtil.reportStatus("write = " + e);
 		}
 	}
 
@@ -186,7 +188,7 @@ public class XMEditor extends JTextPane {
 			org.w3c.dom.Node dataNode = document.createCDATASection(data);
 			parent.appendChild(dataNode);
 		} catch (Exception e) {
-			System.out.println("writeData = " + e);
+			ErrorMsgUtil.reportStatus("writeData = " + e);
 		}
 	}
 
@@ -507,7 +509,7 @@ public class XMEditor extends JTextPane {
 			try {
 				undo.undo();
 			} catch (CannotUndoException ex) {
-				System.out.println("Unable to undo: " + ex);
+				ErrorMsgUtil.reportStatus("Unable to undo: " + ex);
 				ex.printStackTrace();
 			}
 			updateUndoState();
@@ -535,7 +537,7 @@ public class XMEditor extends JTextPane {
 			try {
 				undo.redo();
 			} catch (CannotRedoException ex) {
-				System.out.println("Unable to redo: " + ex);
+				ErrorMsgUtil.reportStatus("Unable to redo: " + ex);
 				ex.printStackTrace();
 			}
 			updateRedoState();

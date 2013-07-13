@@ -111,7 +111,7 @@ public class PatchEditorFrame extends MenuFrame implements PatchBasket {
 			}
 
 			public void mouseReleased(MouseEvent e) {
-//				System.out.println(">>> repaint scroller released vert" );
+//				ErrorMsgUtil.reportStatus(">>> repaint scroller released vert" );
 
 				repaint();
 			}
@@ -121,7 +121,7 @@ public class PatchEditorFrame extends MenuFrame implements PatchBasket {
 			}
 
 			public void mouseReleased(MouseEvent e) {
-//				System.out.println(">>> repaint scroller released hori" );
+//				ErrorMsgUtil.reportStatus(">>> repaint scroller released hori" );
 				repaint();
 			}
 		});

@@ -8,6 +8,7 @@ import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Receiver;
 import javax.sound.midi.ShortMessage;
 
+import org.jsynthlib.tools.ErrorMsgUtil;
 import org.jsynthlib.tools.MidiUtil;
 
 public class MidiActionPlayNote implements Runnable, ThreadStop {
@@ -38,7 +39,7 @@ public class MidiActionPlayNote implements Runnable, ThreadStop {
 		} else {
 			run();
 		}
-		System.out.println(" MidiPlayNote constructor: Threads " + Thread.activeCount());
+		ErrorMsgUtil.reportStatus(" MidiPlayNote constructor: Threads " + Thread.activeCount());
 	}
 
 	public void run() {
@@ -50,7 +51,7 @@ public class MidiActionPlayNote implements Runnable, ThreadStop {
 		if (outPort != -1) {
 			MidiDevice.Info[] infos = MidiSystem.getMidiDeviceInfo();
 			if (infos.length > outPort) {
-				System.out.println("Use device " + MidiUtil.getOutputMidiDeviceInfo(outPort).getName()
+				ErrorMsgUtil.reportStatus("Use device " + MidiUtil.getOutputMidiDeviceInfo(outPort).getName()
 						+ (midiChannel == -1 ? "" : " channel " + (midiChannel+1)));
 			}
 
@@ -72,6 +73,7 @@ public class MidiActionPlayNote implements Runnable, ThreadStop {
 				} else {
 
 					for (int channel = 0; channel < 16; channel++) {
+						ErrorMsgUtil.reportStatus("Channel " + channel);
 
 						for (MidiNote note : MidiNote.getExampleValues()) {
 							message.setMessage(ShortMessage.NOTE_ON, channel, note.getNumber(), 93);

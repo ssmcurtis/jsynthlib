@@ -1,7 +1,6 @@
 package org.jsynthlib.synthdrivers.oberheim.ob8;
 
 import org.jsynthlib.tools.DriverUtil;
-import org.jsynthlib.tools.HexaUtil;
 
 public class Ob8 {
 

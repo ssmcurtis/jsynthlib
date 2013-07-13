@@ -9,6 +9,8 @@ import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.HexaUtil;
 import org.jsynthlib.tools.MidiUtil;
 
+import org.jsynthlib.tools.ErrorMsgUtil;
+
 /**
  * Single Voice Patch Driver for Kawai K4.
  * 
@@ -38,7 +40,7 @@ public class EvolverSingleDriver extends SynthDriverPatchImpl {
 	}
 
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
-		System.out.println(">>>> store patch");
+		ErrorMsgUtil.reportStatus(">>>> store patch");
 
 		PatchDataImpl patchClone = (PatchDataImpl) p.clone();
 		patchClone.getSysex()[Evolver.BANK_AT.number()] = HexaUtil.intToByte(bankNum); 
@@ -64,7 +66,7 @@ public class EvolverSingleDriver extends SynthDriverPatchImpl {
 		NameValue bank = new NameValue("bankNum", bankNum);
 		NameValue patch = new NameValue("patchNum", patchNum);
 		MidiMessage msg = SYS_REQ.toSysexMessage(getChannel(), bank, patch);
-		System.out.println(">>>" + HexaUtil.hexDumpOneLine(msg.getMessage(), 0, -1, 100));
+		ErrorMsgUtil.reportStatus(">>>" + HexaUtil.hexDumpOneLine(msg.getMessage(), 0, -1, 100));
 		send(msg);
 	}
 	

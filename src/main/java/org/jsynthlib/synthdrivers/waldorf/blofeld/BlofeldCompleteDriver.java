@@ -38,7 +38,7 @@ public class BlofeldCompleteDriver extends SynthDriverBank {
 
 	@Override
 	public String getPatchName(PatchDataImpl p, int patchNum) {
-		System.out.println(">>>> Get patch name");
+		ErrorMsgUtil.reportStatus(">>>> Get patch name");
 
 		int nameStart = getPatchStart(patchNum);
 		nameStart += Blofeld.P_NAME_START_AT.position(); // offset of name in patch data
@@ -52,7 +52,7 @@ public class BlofeldCompleteDriver extends SynthDriverBank {
 
 	@Override
 	public void setPatchName(PatchDataImpl p, int patchNum, String name) {
-		System.out.println(">>>> Set name");
+		ErrorMsgUtil.reportStatus(">>>> Set name");
 		// patchNameSize = 10;
 		// patchNameStart = getPatchStart(patchNum);
 		//
@@ -71,7 +71,7 @@ public class BlofeldCompleteDriver extends SynthDriverBank {
 
 	@Override
 	public void putPatch(PatchDataImpl bank, PatchDataImpl p, int patchNum) {
-		System.out.println(">>>> put patch");
+		ErrorMsgUtil.reportStatus(">>>> put patch");
 		// if (!canHoldPatch(p)) {
 		// JOptionPane.showMessageDialog(null, "This type of patch does not fit in to this type of bank.", "Error",
 		// JOptionPane.ERROR_MESSAGE);
@@ -85,7 +85,7 @@ public class BlofeldCompleteDriver extends SynthDriverBank {
 
 	@Override
 	public PatchDataImpl extractPatch(PatchDataImpl bankPatch, int patchNum) {
-		System.out.println(">>>> Get patch " + getClass().getSimpleName() + " Patch: " + patchNum);
+		ErrorMsgUtil.reportStatus(">>>> Get patch " + getClass().getSimpleName() + " Patch: " + patchNum);
 
 		byte[] sysex = new byte[Blofeld.PROGRAM_SIZE_MIDI_SYSEX];
 		if (bankPatch.getSysex().length - getPatchStart(patchNum) - Blofeld.PROGRAM_SIZE_MIDI_SYSEX >= 0) {
@@ -112,7 +112,7 @@ public class BlofeldCompleteDriver extends SynthDriverBank {
 
 	@Override
 	public void requestPatchDump(int bankNum, int patchNum) {
-		System.out.println(">>>> Send sysex");
+		ErrorMsgUtil.reportStatus(">>>> Send sysex");
 
 		// NameValue bank = new SysexHandler.NameValue("bankNum", bankNum << 1);
 		// NameValue patch = new SysexHandler.NameValue("patchNum", 1);
@@ -122,7 +122,7 @@ public class BlofeldCompleteDriver extends SynthDriverBank {
 
 	@Override
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
-		System.out.println(">>>> store patch");
+		ErrorMsgUtil.reportStatus(">>>> store patch");
 
 		// try {
 		// Thread.sleep(100);

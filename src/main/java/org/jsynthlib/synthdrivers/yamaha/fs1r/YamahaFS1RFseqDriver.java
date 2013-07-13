@@ -101,7 +101,7 @@ public class YamahaFS1RFseqDriver extends SynthDriverPatchImpl {
 		for (int i = 0; i < oNbFrames; i++) {
 			int off = FSEQHEADER_SIZE + DATA_START + i * FRAME_SIZE;
 			oPitch[i] = (int) (p.getSysex()[off + 1] + (p.getSysex()[off] << 7));
-			// System.out.println("pitch "+i+" off "+off+" = "+oPitch[i]);
+			// ErrorMsgUtil.reportStatus("pitch "+i+" off "+off+" = "+oPitch[i]);
 		}
 		return oPitch;
 	}
@@ -122,7 +122,7 @@ public class YamahaFS1RFseqDriver extends SynthDriverPatchImpl {
 		for (int i = 0; i < oNbFrames; i++) {
 			int off = FSEQHEADER_SIZE + DATA_START + i * FRAME_SIZE + offset + aOp;
 			oRet[i] = (int) (p.getSysex()[off + 8] + (p.getSysex()[off] << 7));
-			// System.out.println("voiced freq "+i+" off "+off+" = "+oRet[i]);
+			// ErrorMsgUtil.reportStatus("voiced freq "+i+" off "+off+" = "+oRet[i]);
 		}
 		return oRet;
 	}

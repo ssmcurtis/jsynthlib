@@ -66,7 +66,7 @@ public class BankEditorFrame extends MenuFrame implements PatchBasket {
 	 */
 	public BankEditorFrame(PatchBank bankPatch) {
 		super(PatchBayApplication.getDesktop(), bankPatch.getDevice().getModelName() + " " + bankPatch.getType() + " Window");
-		System.out.println(">>>>> INIT BANK EDITOR FRAME ... " );
+		ErrorMsgUtil.reportStatus(">>>>> INIT BANK EDITOR FRAME ... " );
 		instance = this;
 		bankData = bankPatch;
 		initBankEditorFrame();
@@ -99,7 +99,7 @@ public class BankEditorFrame extends MenuFrame implements PatchBasket {
 		table.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				if (e.isPopupTrigger()) {
-					System.out.println(">>> popup trigger pressed" );
+					ErrorMsgUtil.reportStatus(">>> popup trigger pressed" );
 
 					Actions.showMenuPatchPopup(table, e.getX(), e.getY());
 				}
@@ -107,14 +107,14 @@ public class BankEditorFrame extends MenuFrame implements PatchBasket {
 
 			public void mouseReleased(MouseEvent e) {
 				if (e.isPopupTrigger()) {
-					System.out.println(">>> popup trigger released" );
+					ErrorMsgUtil.reportStatus(">>> popup trigger released" );
 					Actions.showMenuPatchPopup(table, e.getX(), e.getY());
 				}
 			}
 
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2)
-					System.out.println(">>> popup trigger double" );
+					ErrorMsgUtil.reportStatus(">>> popup trigger double" );
 					playSelectedPatch();
 			}
 		});

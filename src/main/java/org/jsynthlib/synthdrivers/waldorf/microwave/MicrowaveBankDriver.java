@@ -30,8 +30,6 @@ import org.jsynthlib.model.driver.SynthDriverBank;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.ErrorMsgUtil;
-import org.jsynthlib.tools.HexaUtil;
-import org.jsynthlib.tools.MidiUtil;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -119,7 +117,7 @@ public class MicrowaveBankDriver extends SynthDriverBank {
 			JOptionPane.showMessageDialog(null, "This type of patch does not fit in to this type of bank.", "Error",
 					JOptionPane.ERROR_MESSAGE);
 
-			System.out.println(">>> MW1 PutPatch Size: " + singlePatch.getSysex().length);
+			ErrorMsgUtil.reportStatus(">>> MW1 PutPatch Size: " + singlePatch.getSysex().length);
 			return;
 		}
 
@@ -186,7 +184,7 @@ public class MicrowaveBankDriver extends SynthDriverBank {
 		for (int i = 0; i < getNumPatches(); i++) {
 			putPatch(bankPatch, defaultSinglePatch, i);
 		}
-		// System.out.println(HexaUtil.hexDump(bankPatch.getSysex(), 0, -1, 16));
+		// ErrorMsgUtil.reportStatus(HexaUtil.hexDump(bankPatch.getSysex(), 0, -1, 16));
 
 		return bankPatch;
 

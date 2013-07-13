@@ -31,8 +31,8 @@ public class TableUtil {
 		for (int k = 0; k < patchAarray.length; k++) {
 
 			Patch pk = patchAarray[k];
-			System.out.println("Size: " + pk.getByteArray().length);
-			// System.out.println(HexaUtil.hexDump(pk.getByteArray(), 0, -1, 16));
+			ErrorMsgUtil.reportStatus("Size: " + pk.getByteArray().length);
+			// ErrorMsgUtil.reportStatus(HexaUtil.hexDump(pk.getByteArray(), 0, -1, 16));
 
 			if (pk.isBankPatch()) {
 
@@ -43,7 +43,7 @@ public class TableUtil {
 					Patch patchFromBank = ((PatchBank) pk).getExtractedPatch(j);
 
 					if (patchFromBank != null) {
-						System.out.println("P: \n" + HexaUtil.hexDump(patchFromBank.getByteArray(), 0, -1, 16));
+						ErrorMsgUtil.reportStatus("P: \n" + HexaUtil.hexDump(patchFromBank.getByteArray(), 0, -1, 16));
 
 						patchFromBank.setFileName(pk.getFileName());
 

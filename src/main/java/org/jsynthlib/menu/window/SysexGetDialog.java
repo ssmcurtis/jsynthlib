@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.EOFException;
 import java.util.ArrayList;
 
 import javax.sound.midi.SysexMessage;
@@ -176,9 +175,9 @@ public class SysexGetDialog extends JDialog {
 
 		if (sysexSize > 0 && queue != null && currentPatchNumber < patchCountInBank) {
 
-			System.out.println("## DAT");
+			ErrorMsgUtil.reportStatus("## DAT");
 
-			// System.out.println(">>> Number: " + currentPatchNumber + " " +
+			// ErrorMsgUtil.reportStatus(">>> Number: " + currentPatchNumber + " " +
 			// driver.getPatchNumbers()[currentPatchNumber]);
 
 			SysexMessage[] msgs = (SysexMessage[]) queue.toArray(new SysexMessage[]{});
@@ -300,7 +299,7 @@ public class SysexGetDialog extends JDialog {
 			readSysexTimer = new Timer(0, new SimpleSysexActionListener());
 			readSysexTimer.start();
 			// send driver request ... once
-			System.out.println("## REQ");
+			ErrorMsgUtil.reportStatus("## REQ");
 			driver.requestPatchDump(bankNumber, currentPatchNumber);
 		}
 	}
@@ -368,14 +367,14 @@ public class SysexGetDialog extends JDialog {
 				if (queue.size() > 0) {
 					SysexMessage lastMessage = queue.get(queue.size() - 1);
 					
-					System.out.println(HexaUtil.hexDumpOneLine(lastMessage.getData(), 0, -1, 16));
+					ErrorMsgUtil.reportStatus(HexaUtil.hexDumpOneLine(lastMessage.getData(), 0, -1, 16));
 					
 					isEof = driver.isEof(lastMessage.getData());
 					if (isEof) {
 						queue.remove(lastMessage);
 					}
 				}
-				System.out.println("Size: " + queue.size() + " eof: " + isEof + " sendAck: " + sendPatchAcknowledge);
+				ErrorMsgUtil.reportStatus("Size: " + queue.size() + " eof: " + isEof + " sendAck: " + sendPatchAcknowledge);
 			}
 		}
 	}

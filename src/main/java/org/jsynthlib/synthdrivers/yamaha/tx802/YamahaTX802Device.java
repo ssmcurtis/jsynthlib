@@ -25,7 +25,6 @@ package org.jsynthlib.synthdrivers.yamaha.tx802;
 
 import java.util.prefs.Preferences;
 
-import org.jsynthlib.synthdrivers.waldorf.blofeld.BlofeldSingleDriver;
 import org.jsynthlib.synthdrivers.yamaha.dx7.common.DX7FamilyDevice;
 
 public class YamahaTX802Device extends DX7FamilyDevice {

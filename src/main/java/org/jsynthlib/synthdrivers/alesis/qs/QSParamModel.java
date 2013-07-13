@@ -109,13 +109,13 @@ public class QSParamModel implements IParamModel {
 	public int get() {
 		// Function header is followed by one normal byte, which is either
 		// 0 (for global dump), or the program #, effect #, etc.
-		// System.out.println("msBit=" + this.msBit +
+		// ErrorMsgUtil.reportStatus("msBit=" + this.msBit +
 		// ", bitSize=" + this.bitSize +
 		// ", signed=" + this.signed);
 		int retVal = offset
 				+ SysexRoutines.getBits(this.patch.getSysex(), QSConstants.HEADER, this.msBit, this.bitSize, false);
 
-		// System.out.println("Returning: " + retVal);
+		// ErrorMsgUtil.reportStatus("Returning: " + retVal);
 		return retVal;
 	}
 

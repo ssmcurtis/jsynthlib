@@ -2,11 +2,7 @@
 // $Id$
 package org.jsynthlib.synthdrivers.moog.lamm;
 
-import javax.sound.midi.MidiMessage;
-
-import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
-import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.ErrorMsgUtil;
 import org.jsynthlib.tools.HexaUtil;
@@ -45,7 +41,7 @@ public class LammPatchSingleDriver extends SynthDriverPatchImpl {
 
 		sysex[Lamm.PATCH_NUM_OFFSET] = HexaUtil.intToByte(patchNum);
 		
-		System.out.println(HexaUtil.hexDumpOneLine(sysex));
+		ErrorMsgUtil.reportStatus(HexaUtil.hexDumpOneLine(sysex));
 		
 		try {
 			send(sysex);
@@ -67,8 +63,8 @@ public class LammPatchSingleDriver extends SynthDriverPatchImpl {
 
 	@Override
 	public void requestPatchDump(int bankNum, int patchNum) {
-		System.out.println("Bank: " + bankNum);
-		System.out.println("Patch: " + patchNum);
+		ErrorMsgUtil.reportStatus("Bank: " + bankNum);
+		ErrorMsgUtil.reportStatus("Patch: " + patchNum);
 
 //		MidiMessage msg = sysexHandler.toSysexMessage(getChannel());
 //		send(msg);

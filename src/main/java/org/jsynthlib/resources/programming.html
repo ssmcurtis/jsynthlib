@@ -152,7 +152,7 @@ maintain and would have less bug.)
 Use <var>ErrorMsg.reportStatus("message")</var> for debug message.
 This way the message is only printed if JSynthLib is run in debugging
 mode (AKA <kbd>java -jar JSynthLib.jar 2</kbd>). Don't use
-<var>System.out.println</var>.<p>
+<var>ErrorMsgUtil.reportStatus</var>.<p>
 
 Use <var>ErrorMsg.reportError("Title", "Message", e)</var> for error
 message which users need to see.<p>
@@ -1313,7 +1313,7 @@ use.
 
 <ol>
 <li>This is pretty common, but just sprinkle
-<var>System.out.println</var> statements through out the troublesome
+<var>ErrorMsgUtil.reportStatus</var> statements through out the troublesome
 code. Get a good idea of what values are what when and look for
 something that shouldn't be. Better yet, use
 <var>ErrorMsg.reportError("ErrorMsg goes here")</var> instead.

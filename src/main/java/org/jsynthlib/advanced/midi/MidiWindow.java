@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import org.jsynthlib.tools.ErrorMsgUtil;
 import org.jsynthlib.tools.UiUtil;
 
 public class MidiWindow implements WriteOutput {
@@ -54,7 +55,7 @@ public class MidiWindow implements WriteOutput {
 				playNote = new MidiActionPlayNote(MidiWindow.this, -1, -1, true);
 
 				int countAfter = Thread.activeCount();
-				System.out.println("Thread before: " + countBefore + " Thread after: " + countAfter);
+				ErrorMsgUtil.reportStatus("Thread before: " + countBefore + " Thread after: " + countAfter);
 
 			}
 		});
@@ -69,7 +70,7 @@ public class MidiWindow implements WriteOutput {
 				resetAll = new MidiActionReset(MidiWindow.this, false);
 
 				int countAfter = Thread.activeCount();
-				System.out.println("Thread before: " + countBefore + " Thread after: " + countAfter);
+				ErrorMsgUtil.reportStatus("Thread before: " + countBefore + " Thread after: " + countAfter);
 			}
 		});
 
@@ -83,7 +84,7 @@ public class MidiWindow implements WriteOutput {
 				changeLexicon = new MidiActionProgramChange(MidiWindow.this, false);
 
 				int countAfter = Thread.activeCount();
-				System.out.println("Thread before: " + countBefore + " Thread after: " + countAfter);
+				ErrorMsgUtil.reportStatus("Thread before: " + countBefore + " Thread after: " + countAfter);
 			}
 		});
 
@@ -104,7 +105,7 @@ public class MidiWindow implements WriteOutput {
 					playNote = null;
 				}
 
-				System.out.println(" MidiWindows: Threads " + Thread.activeCount());
+				ErrorMsgUtil.reportStatus(" MidiWindows: Threads " + Thread.activeCount());
 			}
 		});
 

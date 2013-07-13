@@ -1,19 +1,13 @@
 // written by ssmCurtis
 package org.jsynthlib.synthdrivers.oberheim.ob8;
 
-import java.io.UnsupportedEncodingException;
-
 import javax.sound.midi.MidiMessage;
 
-import org.jsynthlib.JSynthConstants;
 import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
-import org.jsynthlib.synthdrivers.dsi.evolver.Evolver;
-import org.jsynthlib.tools.ErrorMsgUtil;
 import org.jsynthlib.tools.HexaUtil;
-import org.jsynthlib.tools.MidiUtil;
 
 public class Ob8SingleDriver extends SynthDriverPatchImpl {
 
@@ -55,7 +49,7 @@ public class Ob8SingleDriver extends SynthDriverPatchImpl {
 
 		NameValue patch = new NameValue("patchNum", patchNum);
 		MidiMessage msg = SYS_REQ.toSysexMessage(getChannel(), patch);
-		// System.out.println(">>>" + HexaUtil.hexDumpOneLine(msg.getMessage(), 0, -1, 100));
+		// ErrorMsgUtil.reportStatus(">>>" + HexaUtil.hexDumpOneLine(msg.getMessage(), 0, -1, 100));
 		send(msg);
 		// MidiUtil.waitForSevenBitTechnology();
 

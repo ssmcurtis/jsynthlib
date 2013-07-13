@@ -76,7 +76,7 @@ public enum MicroKorg {
 
 	// TODO ADDRESS MS2000 issues - last bytes ...
 	public static boolean bankPatchSizeIsSupported(int size) {
-		// System.out.println(">>> Bank size " + size);
+		// ErrorMsgUtil.reportStatus(">>> Bank size " + size);
 		switch (size) {
 		case PROGRAM_COMPRESSED_SYSEX:
 		case BANK_SIZE_MIDI_SYSEX:
@@ -106,7 +106,7 @@ public enum MicroKorg {
 		byte[] header = new byte[MicroKorg.HEADER_SIZE];
 		System.arraycopy(source, 0, header, 0, MicroKorg.HEADER_SIZE);
 
-		// System.out.println("Source: " + source.length);
+		// ErrorMsgUtil.reportStatus("Source: " + source.length);
 
 		byte[] coreProgram = new byte[coreProgrammSize];
 		System.arraycopy(source, MicroKorg.HEADER_SIZE, coreProgram, 0, coreProgrammSize);
@@ -166,15 +166,15 @@ public enum MicroKorg {
 				// for (byte b : targetSet) {
 				// System.out.print(HexaUtil.byteToBinString(b) + " ");
 				// }
-				// System.out.println();
+				// ErrorMsgUtil.reportStatus();
 				// System.out.print((i / 8) + ": ");
 				// for (byte b : sourceSet) {
 				// System.out.print(HexaUtil.byteToBinString(b) + " ");
 				// }
-				// System.out.println("\n");
+				// ErrorMsgUtil.reportStatus("\n");
 
 			} else {
-				// System.out.println("Rest: " + (coreProgram.length - i) + " last used Pos. " + i);
+				// ErrorMsgUtil.reportStatus("Rest: " + (coreProgram.length - i) + " last used Pos. " + i);
 			}
 		}
 		ByteBuffer buffer = ByteBuffer.allocate(li.size() + MicroKorg.HEADER_SIZE + 1 + dummyBytesToAdd);
@@ -191,14 +191,14 @@ public enum MicroKorg {
 			target[pointer + i] = 0x40;
 		}
 
-		// System.out.println("Source programm size : " + coreProgram.length);
-		// System.out.println("Target programm size:  " + target.length);
+		// ErrorMsgUtil.reportStatus("Source programm size : " + coreProgram.length);
+		// ErrorMsgUtil.reportStatus("Target programm size:  " + target.length);
 
 		buffer.put(header);
 		buffer.put(target);
 		buffer.put((byte) 0xF7);
 
-		// System.out.println("Size source: " + (source.length) + " target: " + buffer.array().length);
+		// ErrorMsgUtil.reportStatus("Size source: " + (source.length) + " target: " + buffer.array().length);
 		return buffer;
 	}
 
@@ -227,7 +227,7 @@ public enum MicroKorg {
 				}
 
 				// firstMidiByte = (byte) (firstMidiByte | (sourceSet[0] & (0x80)) << 0);
-				// System.out.println(HexaUtil.byteToBinString(firstMidiByte));
+				// ErrorMsgUtil.reportStatus(HexaUtil.byteToBinString(firstMidiByte));
 				// firstMidiByte = (byte) (firstMidiByte | (sourceSet[1] & (0x80)));
 				// firstMidiByte = (byte) (firstMidiByte | (sourceSet[2] & (0x80)));
 				// firstMidiByte = (byte) (firstMidiByte | (sourceSet[3] & (0x80)));
@@ -252,14 +252,14 @@ public enum MicroKorg {
 				// for (byte b : targetSet) {
 				// System.out.print(HexaUtil.byteToBinString(b) + " ");
 				// }
-				// System.out.println();
+				// ErrorMsgUtil.reportStatus();
 				// System.out.print((i / 7) + ": ");
 				// for (byte b : sourceSet) {
 				// System.out.print(HexaUtil.byteToBinString(b) + " ");
 				// }
-				// System.out.println("\n");
+				// ErrorMsgUtil.reportStatus("\n");
 			} else {
-				// System.out.println("Rest: " + (coreProgram.length - i) + " last used Pos. " + i);
+				// ErrorMsgUtil.reportStatus("Rest: " + (coreProgram.length - i) + " last used Pos. " + i);
 			}
 		}
 		int targetSize = li.size() + dummyBytesToAdd;
@@ -284,12 +284,12 @@ public enum MicroKorg {
 
 		buffer.put((byte) 0xF7);
 
-		// System.out.println("Source programm size : " + coreProgram.length);
-		// System.out.println("Target programm size:  " + target.length);
+		// ErrorMsgUtil.reportStatus("Source programm size : " + coreProgram.length);
+		// ErrorMsgUtil.reportStatus("Target programm size:  " + target.length);
 
-		// System.out.println("Size source: " + coreProgram.length + " target: " + buffer.array().length);
+		// ErrorMsgUtil.reportStatus("Size source: " + coreProgram.length + " target: " + buffer.array().length);
 
-		// System.out.println(HexaUtil.hexDumpOneLine(buffer.array(), 0, -1, 297));
+		// ErrorMsgUtil.reportStatus(HexaUtil.hexDumpOneLine(buffer.array(), 0, -1, 297));
 		return buffer;
 	}
 

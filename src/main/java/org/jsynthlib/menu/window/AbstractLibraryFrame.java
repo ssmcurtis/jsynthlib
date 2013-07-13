@@ -196,7 +196,7 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 			public void mousePressed(MouseEvent e) {
 				if (e.isPopupTrigger()) {
 
-					// System.out.println(">>> Mouse pressed");
+					// ErrorMsgUtil.reportStatus(">>> Mouse pressed");
 					Actions.showMenuPatchPopup(table, e.getX(), e.getY());
 					table.setRowSelectionInterval(table.rowAtPoint(new Point(e.getX(), e.getY())),
 							table.rowAtPoint(new Point(e.getX(), e.getY())));
@@ -205,7 +205,7 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 
 			public void mouseReleased(MouseEvent e) {
 				if (e.isPopupTrigger()) {
-					// System.out.println(">>> Mouse released");
+					// ErrorMsgUtil.reportStatus(">>> Mouse released");
 					Actions.showMenuPatchPopup(table, e.getX(), e.getY());
 					table.setRowSelectionInterval(table.rowAtPoint(new Point(e.getX(), e.getY())),
 							table.rowAtPoint(new Point(e.getX(), e.getY())));
@@ -242,7 +242,7 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 		// public void keyReleased(KeyEvent e) {
 		// if (e.isControlDown()) {
 		// if (e.getKeyCode() == KeyEvent.VK_TAB)
-		// System.out.println("Endlich!!! TAB(released) mit STRG");
+		// ErrorMsgUtil.reportStatus("Endlich!!! TAB(released) mit STRG");
 		// }
 		//
 		// }
@@ -396,7 +396,7 @@ public abstract class AbstractLibraryFrame extends MenuFrame implements PatchBas
 
 		}
 
-		System.out.println("Count patches: " + patarray.length);
+		ErrorMsgUtil.reportStatus("Count patches: " + patarray.length);
 
 		TableUtil.addPatchToTable(patarray);
 

@@ -78,7 +78,7 @@ public class RolandMT32RhythmSetupTempDriver extends SynthDriverPatchImpl {
 		p.getSysex()[6] = (byte) 0x01;
 		p.getSysex()[7] = (byte) 0x10;
 
-		// System.out.println ("store patchNum " + patchNum + " to patAddrM/L " + patAddrM + " / " + patAddrL);
+		// ErrorMsgUtil.reportStatus ("store patchNum " + patchNum + " to patAddrM/L " + patAddrM + " / " + patAddrL);
 		// sendPatchWorker(p);
 		// send(p.sysex);
 		calculateChecksum(p, HSIZE, HSIZE + SSIZE - 2, HSIZE + SSIZE - 1);
@@ -112,7 +112,7 @@ public class RolandMT32RhythmSetupTempDriver extends SynthDriverPatchImpl {
 		// this.calculateChecksum(p, 4, 253, 0);
 		// p.sysex[255] = (byte) 0xF7;
 
-		// System.out.println("sendPatch: Not implemented yet.");
+		// ErrorMsgUtil.reportStatus("sendPatch: Not implemented yet.");
 		sendPatchWorker(p);
 	}
 

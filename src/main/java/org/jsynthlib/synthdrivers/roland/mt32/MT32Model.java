@@ -61,7 +61,7 @@ class MT32Model extends ParamModel {
 			mult = 64;
 		else if ((bitmask & 128) == 128)
 			mult = 128;
-		// System.out.println("offset: " + offset + "  b: " + b);
+		// ErrorMsgUtil.reportStatus("offset: " + offset + "  b: " + b);
 	}
 
 	public void set(int i) {

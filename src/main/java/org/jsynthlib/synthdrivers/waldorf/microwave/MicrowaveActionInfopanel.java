@@ -6,7 +6,6 @@ import java.util.Map;
 
 import javax.swing.AbstractAction;
 
-import org.jsynthlib.menu.Actions;
 import org.jsynthlib.tools.ErrorMsgUtil;
 
 public class MicrowaveActionInfopanel extends AbstractAction {

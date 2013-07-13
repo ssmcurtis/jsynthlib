@@ -329,17 +329,17 @@ public abstract class Device /* implements Serializable, Storable */{
 	 * send MidiMessage to MIDI output. Called by Driver.send().
 	 */
 	public final synchronized void send(MidiMessage message) {
-//		System.out.println("Send 1 ");
+//		ErrorMsgUtil.reportStatus("Send 1 ");
 		if (rcvr == null) {
-			System.out.println("Receiver is null");
+			ErrorMsgUtil.reportStatus("Receiver is null");
 			return;
 		}
 		try {
 			if (midiOutBufSize == 0 && AppConfig.getMidiOutBufSize() == 0) {
-				// System.out.println("Send 2a");
+				// ErrorMsgUtil.reportStatus("Send 2a");
 				MidiUtil.send(rcvr, message);
 			} else {
-				// System.out.println("Send 2b");
+				// ErrorMsgUtil.reportStatus("Send 2b");
 				MidiUtil.send(rcvr, message, Math.min(midiOutBufSize, AppConfig.getMidiOutBufSize()),
 						Math.max(midiOutDelay, AppConfig.getMidiOutDelay()));
 			}
@@ -350,7 +350,7 @@ public abstract class Device /* implements Serializable, Storable */{
 			e.printStackTrace();
 			ErrorMsgUtil.reportStatus(e);
 		}
-		// System.out.println("Send 3");
+		// ErrorMsgUtil.reportStatus("Send 3");
 
 	}
 

@@ -24,6 +24,8 @@ package org.jsynthlib.synthdrivers.tcelectronic.gmajor;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
+import org.jsynthlib.tools.ErrorMsgUtil;
+
 public class TCElectronicGMajorUtil {
 	// don't have to call constructor for Utility class.
 	private TCElectronicGMajorUtil() {
@@ -132,7 +134,7 @@ public class TCElectronicGMajorUtil {
 		BigDecimal bd = new BigDecimal(((to - from) / step) + 1);
 		bd = bd.setScale(0, BigDecimal.ROUND_HALF_UP);
 		int l = bd.intValue();
-		System.out.println("" + l);
+		ErrorMsgUtil.reportStatus("" + l);
 		String[] s = new String[l];
 		for (int i = 0; i < l; i++) {
 			s[i] = df.format(from + (i * step));

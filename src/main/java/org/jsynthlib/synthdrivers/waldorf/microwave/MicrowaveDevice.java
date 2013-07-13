@@ -27,8 +27,6 @@ import javax.swing.Action;
 
 import org.jsynthlib.menu.Actions;
 import org.jsynthlib.model.device.Device;
-import org.jsynthlib.synthdrivers.korg.microkorg.MicroKorg;
-import org.jsynthlib.synthdrivers.roland.mks80.Mks80ActionTonePatch;
 
 public class MicrowaveDevice extends Device {
 	private static final String INFO_TEXT = "Microwave 1";

@@ -5,6 +5,8 @@ import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.synthdrivers.roland.mks80.Mks80;
 import org.jsynthlib.tools.HexaUtil;
 
+import org.jsynthlib.tools.ErrorMsgUtil;
+
 public class BankNumberForToneInPatch implements IParamModel {
 	private PatchDataImpl patch;
 	private int ofs;
@@ -25,7 +27,7 @@ public class BankNumberForToneInPatch implements IParamModel {
 			value = Mks80.getBankNumber(ofs) + Mks80.getPatchnumber(v);
 		}
 
-		System.out.println("SET: " + value + " hx:" + HexaUtil.byteToHexString(HexaUtil.intToByte(value)));
+		ErrorMsgUtil.reportStatus("SET: " + value + " hx:" + HexaUtil.byteToHexString(HexaUtil.intToByte(value)));
 		patch.getSysex()[ofs] = value.byteValue();
 
 	}
@@ -39,7 +41,7 @@ public class BankNumberForToneInPatch implements IParamModel {
 		} else {
 			value = Mks80.getPatchnumber(v) - 1;
 		}
-		System.out.println("GET: " + value + " hx:" + HexaUtil.byteToHexString(HexaUtil.intToByte(value)));
+		ErrorMsgUtil.reportStatus("GET: " + value + " hx:" + HexaUtil.byteToHexString(HexaUtil.intToByte(value)));
 		return value;
 	}
 

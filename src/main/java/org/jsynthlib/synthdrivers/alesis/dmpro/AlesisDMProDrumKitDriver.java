@@ -26,6 +26,8 @@ import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
 
+import org.jsynthlib.tools.ErrorMsgUtil;
+
 public class AlesisDMProDrumKitDriver extends SynthDriverPatchImpl {
 
 	private final char[] m_arChars = new char[] { ' ', '!', '"', '#', '$', '%', '&', '"', '(', ')', '*', '+', ',', '-',
@@ -119,7 +121,7 @@ public class AlesisDMProDrumKitDriver extends SynthDriverPatchImpl {
 			str.append((char) m_arChars[oParser.getValue(8, 4, 7)]);
 
 		} catch (Exception e) {
-			System.out.println("getPatchName: " + e.getMessage());
+			ErrorMsgUtil.reportStatus("getPatchName: " + e.getMessage());
 		}
 
 		return str.toString();

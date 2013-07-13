@@ -111,8 +111,8 @@ public class NLPatchSingleDriver extends SynthDriverPatchImpl {
 	}
 
 	public void requestPatchDump(int bankNum, int patchNum) {
-		System.out.println("Bank: " + bankNum);
-		System.out.println("Patch: " + patchNum);
+		ErrorMsgUtil.reportStatus("Bank: " + bankNum);
+		ErrorMsgUtil.reportStatus("Patch: " + patchNum);
 
 		send(sysexRequestDump.toSysexMessage(((NordLeadDevice) getDevice()).getGlobalChannel(),
 				new NameValue("bankNum", bankNum + 11), new NameValue("patchNum", patchNum)));

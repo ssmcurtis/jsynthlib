@@ -23,6 +23,8 @@ import org.jsynthlib.menu.widgets.SysexSender;
 import org.jsynthlib.menu.window.PatchEditorFrame;
 import org.jsynthlib.model.patch.PatchDataImpl;
 
+import org.jsynthlib.tools.ErrorMsgUtil;
+
 class NXSParamModel extends ParamModel {
 	private int bitmask;
 	private int mult;
@@ -120,7 +122,7 @@ class NXSSender extends SysexSender {
 	public byte[] generate(int value) {
 
 		if (parameter == 0) {
-			System.out.println("Not implemented CC !!\n");
+			ErrorMsgUtil.reportStatus("Not implemented CC !!\n");
 		}
 
 		if (type == 0) {

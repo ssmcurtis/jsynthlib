@@ -77,6 +77,8 @@ import javax.swing.undo.UndoManager;
 
 import org.jsynthlib.tools.UiUtil;
 
+import org.jsynthlib.tools.ErrorMsgUtil;
+
 public class TextComponentDemo extends JFrame {
     JTextPane textPane;
     AbstractDocument doc;
@@ -403,7 +405,7 @@ public class TextComponentDemo extends JFrame {
             try {
                 undo.undo();
             } catch (CannotUndoException ex) {
-                System.out.println("Unable to undo: " + ex);
+                ErrorMsgUtil.reportStatus("Unable to undo: " + ex);
                 ex.printStackTrace();
             }
             updateUndoState();
@@ -431,7 +433,7 @@ public class TextComponentDemo extends JFrame {
             try {
                 undo.redo();
             } catch (CannotRedoException ex) {
-                System.out.println("Unable to redo: " + ex);
+                ErrorMsgUtil.reportStatus("Unable to redo: " + ex);
                 ex.printStackTrace();
             }
             updateRedoState();

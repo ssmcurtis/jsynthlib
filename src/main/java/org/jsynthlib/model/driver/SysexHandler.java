@@ -238,7 +238,7 @@ public class SysexHandler /* implements Serializable */{
 	private SysexMessage toSysexMessage(byte[] b) {
 		SysexMessage m = new SysexMessage();
 		try {
-			// System.out.println(HexaUtil.hexDumpOneLine(sysex, 0, -1, 20));
+			// ErrorMsgUtil.reportStatus(HexaUtil.hexDumpOneLine(sysex, 0, -1, 20));
 			m.setMessage(sysex, sysex.length);
 		} catch (InvalidMidiDataException e) {
 			ErrorMsgUtil.reportStatus(e);

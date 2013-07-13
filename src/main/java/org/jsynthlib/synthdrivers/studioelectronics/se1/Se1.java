@@ -1,6 +1,5 @@
 package org.jsynthlib.synthdrivers.studioelectronics.se1;
 
-import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.DriverUtil;
 import org.jsynthlib.tools.HexaUtil;
 

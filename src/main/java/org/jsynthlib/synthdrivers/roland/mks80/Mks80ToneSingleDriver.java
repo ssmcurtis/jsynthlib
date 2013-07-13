@@ -1,8 +1,6 @@
 // written by ssmCurtis
 package org.jsynthlib.synthdrivers.roland.mks80;
 
-import java.io.UnsupportedEncodingException;
-
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.ErrorMsgUtil;
@@ -21,21 +19,21 @@ public class Mks80ToneSingleDriver extends SynthDriverPatchImpl {
 
 	@Override
 	public void sendPatch(PatchDataImpl p) {
-		System.out.println("NOT IMPLEMENTED");
+		ErrorMsgUtil.reportStatus("NOT IMPLEMENTED");
 		ErrorMsgUtil.reportMissingFunctionality(Mks80.VENDOR, Mks80.DEVICE);
 	}
 
 	@Override
 	public void storePatch(PatchDataImpl p, int bankNum, int patchNum) {
-		System.out.println("NOT IMPLEMENTED");
+		ErrorMsgUtil.reportStatus("NOT IMPLEMENTED");
 		ErrorMsgUtil.reportMissingFunctionality(Mks80.VENDOR, Mks80.DEVICE);
 	}
 
 	@Override
 	public void requestPatchDump(int bankNum, int patchNum) {
-		System.out.println("Bank: " + bankNum);
-		System.out.println("Patch: " + patchNum);
-		System.out.println("NOT IMPLEMENTED");
+		ErrorMsgUtil.reportStatus("Bank: " + bankNum);
+		ErrorMsgUtil.reportStatus("Patch: " + patchNum);
+		ErrorMsgUtil.reportStatus("NOT IMPLEMENTED");
 		ErrorMsgUtil.reportMissingFunctionality(Mks80.VENDOR, Mks80.DEVICE);
 	}
 

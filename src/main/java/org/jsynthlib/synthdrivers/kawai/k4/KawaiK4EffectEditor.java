@@ -114,7 +114,7 @@ class KawaiK4EffectEditor extends PatchEditorFrame {
 					parameter1.setLabel(effectParam1[i]);
 					parameter2.setLabel(effectParam2[i]);
 					parameter3.setLabel(effectParam3[i]);
-					// System.out.println("Effect selected:"+i);
+					// ErrorMsgUtil.reportStatus("Effect selected:"+i);
 					scroll1.setEnabled(i >= 9);
 					scroll2.setEnabled(i >= 9);
 					scroll3.setEnabled(i >= 9);

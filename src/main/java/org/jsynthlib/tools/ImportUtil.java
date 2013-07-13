@@ -54,7 +54,7 @@ public class ImportUtil {
 				if (tr[j].get(i).getMessage() instanceof SysexMessage) {
 					// ErrorMsg.reportStatus("Track "+j+" Event "+i+" SYSEX!!");
 
-					System.out.println("IMPORT MIDI ... ");
+					ErrorMsgUtil.reportStatus("IMPORT MIDI ... ");
 					for (Patch p : DriverUtil.createPatches(tr[j].get(i).getMessage().getMessage(), getLocation(file))) {
 						
 						// TODO ssmCurtis - add Prefix during MIDI import
@@ -133,7 +133,7 @@ public class ImportUtil {
 				pattern = new byte[] { (byte) 0xF0, (byte) 0x82, (byte) 0x28, (byte) 0x42 };
 				replace = new byte[] { (byte) 0xF0, (byte) 0x42 };
 			}
-			System.out.println(HexaUtil.hexDumpOneLine(pattern, 0, pattern.length, pattern.length));
+			ErrorMsgUtil.reportStatus(HexaUtil.hexDumpOneLine(pattern, 0, pattern.length, pattern.length));
 
 			// ByteBuffer byteBuffer = ByteBuffer.allocate(buffer.length);
 			// byteBuffer.put(buffer);
@@ -153,8 +153,8 @@ public class ImportUtil {
 							equal = false;
 						}
 					}
-					System.out.println(HexaUtil.hexDumpOneLine(copyNexBytes, 0, -1, pattern.length));
-					System.out.println(HexaUtil.hexDumpOneLine(buffer, i, pattern.length, pattern.length));
+					ErrorMsgUtil.reportStatus(HexaUtil.hexDumpOneLine(copyNexBytes, 0, -1, pattern.length));
+					ErrorMsgUtil.reportStatus(HexaUtil.hexDumpOneLine(buffer, i, pattern.length, pattern.length));
 
 					if (equal) {
 						for (int j = 0; j < replace.length; j++) {
@@ -180,7 +180,7 @@ public class ImportUtil {
 				barr[pointer] = b;
 				pointer++;
 			}
-			System.out.println(HexaUtil.hexDumpOneLine(barr, 0, -1, barr.length));
+			ErrorMsgUtil.reportStatus(HexaUtil.hexDumpOneLine(barr, 0, -1, barr.length));
 
 			patchArray = DriverUtil.createPatches(barr, getLocation(file));
 

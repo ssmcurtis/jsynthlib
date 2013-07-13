@@ -2,6 +2,8 @@ package org.jsynthlib.synthdrivers.alesis;
 
 import org.jsynthlib.synthdrivers.alesis.qs.QSConstants;
 
+import org.jsynthlib.tools.ErrorMsgUtil;
+
 /**
  * Routines to help with Sysex'es. Alesis compresses data to save space This is taken from the manual.
  * 
@@ -42,7 +44,7 @@ public class SysexRoutines {
 	 * For testing
 	 */
 	public static void main(String[] args) {
-		System.out.println("\u00A5");
+		ErrorMsgUtil.reportStatus("\u00A5");
 		byte[] bytes = { 0, 0, 0, 112, 14 };
 		debug("Test1=" + getBits(bytes, 0, 30, 5, false));
 		debug("Test2=" + getBits(bytes, 0, 30, 5, true));
@@ -346,11 +348,11 @@ public class SysexRoutines {
 
 	public static void trace(String message) {
 		if (TRACE) {
-			System.out.println(message);
+			ErrorMsgUtil.reportStatus(message);
 		}
 	}
 
 	public static void debug(String message) {
-		System.out.println(message);
+		ErrorMsgUtil.reportStatus(message);
 	}
 }

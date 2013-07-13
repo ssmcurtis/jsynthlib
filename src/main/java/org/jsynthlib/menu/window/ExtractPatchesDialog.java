@@ -14,6 +14,8 @@ import org.jsynthlib.model.patch.Patch;
 import org.jsynthlib.tools.DriverUtil;
 import org.jsynthlib.tools.TableUtil;
 
+import org.jsynthlib.tools.ErrorMsgUtil;
+
 /**
  * If more than two devices are loaded which supports the given patch, show this Dialog to choose a new Device/Driver
  * combination for the patch. The internal patch assignment is used to send/play a patch.
@@ -44,7 +46,7 @@ public class ExtractPatchesDialog extends DeviceDriverBankPatchSelector {
 	 * Makes the actual work after pressing the 'Reassign' button
 	 */
 	protected void doit() {
-		System.out.println(">>>> Action ");
+		ErrorMsgUtil.reportStatus(">>>> Action ");
 		SynthDriverPatch driver = (SynthDriverPatch) driverComboBox.getSelectedItem();
 
 		List<byte[]> setOfSysex = DriverUtil.splitSysexBytearray(byteBuffer);

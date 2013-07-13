@@ -73,7 +73,7 @@ class TCBit {
 	}
 
 	private int getValue() {
-		// System.out.println(">>>>GETVALUE :" + printHex() + " " + printBin());
+		// ErrorMsgUtil.reportStatus(">>>>GETVALUE :" + printHex() + " " + printBin());
 		int value = (m_sysex[m_ofs + 1] << 7);
 		value = (value ^ m_sysex[m_ofs]);
 		return value;
@@ -91,7 +91,7 @@ class TCBit {
 		m_sysex[m_ofs + 1] = (byte) ((j >> 7) & 127);
 		m_sysex[m_ofs] = (byte) (j & 127);
 
-		// System.out.println(">>>>SET :" + i + " " + printHex() + " " + printBin());
+		// ErrorMsgUtil.reportStatus(">>>>SET :" + i + " " + printHex() + " " + printBin());
 	}
 
 	/**
@@ -100,7 +100,7 @@ class TCBit {
 	 */
 	public int get() {
 		int result = ((getValue() & m_mask) >> m_shift);
-		// System.out.println(">>>>GET: value = " + result);
+		// ErrorMsgUtil.reportStatus(">>>>GET: value = " + result);
 		return result;
 	}
 

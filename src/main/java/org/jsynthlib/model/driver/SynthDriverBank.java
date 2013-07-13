@@ -1,7 +1,5 @@
 package org.jsynthlib.model.driver;
 
-import org.jsynthlib.menu.JSLFrame;
-import org.jsynthlib.menu.window.BankEditorFrame;
 import org.jsynthlib.model.patch.PatchDataImpl;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;

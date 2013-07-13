@@ -49,7 +49,7 @@ public abstract class PatchTransferHandler extends TransferHandler {
 		PatchesAndScenes patchesAndScenes = new PatchesAndScenes();
 
 		if (c instanceof JTable) {
-			System.out.println("Create transferable ...");
+			ErrorMsgUtil.reportStatus("Create transferable ...");
 
 			JTable table = (JTable) c;
 			PatchTableModel pm = (PatchTableModel) table.getModel();
@@ -73,7 +73,7 @@ public abstract class PatchTransferHandler extends TransferHandler {
 			try {
 				if (transferable.isDataFlavorSupported(PATCHES_FLAVOR)) {
 
-					System.out.println("target: " + targetComponent.getClass().getName());
+					ErrorMsgUtil.reportStatus("target: " + targetComponent.getClass().getName());
 
 					boolean isMoveInside = false;
 
@@ -84,7 +84,7 @@ public abstract class PatchTransferHandler extends TransferHandler {
 						isMoveInside = libraryFrame.getTable().equals(targetComponent);
 					}
 
-					System.out.println("is move inside " + isMoveInside);
+					ErrorMsgUtil.reportStatus("is move inside " + isMoveInside);
 
 					@SuppressWarnings("unchecked")
 					Map<Integer, Patch> patches = (Map<Integer, Patch>) transferable.getTransferData(PATCHES_FLAVOR);
@@ -100,18 +100,18 @@ public abstract class PatchTransferHandler extends TransferHandler {
 								try {
 									int row = libraryFrame.getTable().convertRowIndexToModel(entry.getKey());
 
-									System.out.println("Remove now original row " + row + "(" + entry.getKey() + ")");
+									ErrorMsgUtil.reportStatus("Remove now original row " + row + "(" + entry.getKey() + ")");
 									libraryFrame.getMyModel().removeAt(row);
 
 									int targetRow = libraryFrame.getTable().getSelectedRow();
-									System.out.println("Add patch at row " + targetRow);
+									ErrorMsgUtil.reportStatus("Add patch at row " + targetRow);
 
 									libraryFrame.getMyModel().addPatch(targetRow, newPatch);
 
 									libraryFrame.getMyModel().fireTableDataChanged();
 									Patch px = libraryFrame.getPatchCollection().get(targetRow);
 
-									// System.out.println(px.getDevice().getModelName() + " " + px.getFileName());
+									// ErrorMsgUtil.reportStatus(px.getDevice().getModelName() + " " + px.getFileName());
 
 									libraryFrame.getTable().getSelectionModel().setSelectionInterval(targetRow, targetRow);
 								} catch (IndexOutOfBoundsException iobe) {

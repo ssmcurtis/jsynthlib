@@ -92,7 +92,7 @@ public class KawaiK5000BankDriver extends SynthDriverBank {
 		if (exists == patchExists(p, num))
 			return;
 		int sub = p.getSysex()[8 + (num / 7)];
-		System.out.println("bitmask was " + sub);
+		ErrorMsgUtil.reportStatus("bitmask was " + sub);
 		if (num % 7 == 0)
 			sub = sub ^ 1;
 		if (num % 7 == 1)
@@ -107,7 +107,7 @@ public class KawaiK5000BankDriver extends SynthDriverBank {
 			sub = sub ^ 32;
 		if (num % 7 == 6)
 			sub = sub ^ 64;
-		System.out.println("bitmask is " + sub);
+		ErrorMsgUtil.reportStatus("bitmask is " + sub);
 
 		p.getSysex()[8 + (num / 7)] = (byte) sub;
 	}
@@ -209,7 +209,7 @@ public class KawaiK5000BankDriver extends SynthDriverBank {
 		int nextPatchNum = patchNum;
 		while (patchIndex[nextPatchNum] == 0)
 			nextPatchNum++;
-		System.out.println("Insert at patchNum: " + nextPatchNum + " | index: " + patchIndex[nextPatchNum]);
+		ErrorMsgUtil.reportStatus("Insert at patchNum: " + nextPatchNum + " | index: " + patchIndex[nextPatchNum]);
 
 		// p.sysex <DATA> starts at 9, ends just before trailing F7
 		((PatchDataImpl) bank).setSysex(HexaUtil.byteArrayReplace(((PatchDataImpl) bank).getSysex(), patchIndex[nextPatchNum],
@@ -306,7 +306,7 @@ public class KawaiK5000BankDriver extends SynthDriverBank {
 		// Update index and checksum
 		indexedPatch = null;
 		setPatchExists(bank, patchNum, false);
-		System.out.println("NumPatches = " + numPatchesinBank(bank));
+		ErrorMsgUtil.reportStatus("NumPatches = " + numPatchesinBank(bank));
 		generateIndex(bank);
 		calculateChecksum(bank);
 	}

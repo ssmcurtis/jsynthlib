@@ -2,10 +2,7 @@
 // $Id$
 package org.jsynthlib.synthdrivers.moog.lamm;
 
-import org.jsynthlib.PatchBayApplication;
-import org.jsynthlib.model.driver.NameValue;
 import org.jsynthlib.model.driver.SynthDriverBank;
-import org.jsynthlib.model.driver.SysexHandler;
 import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.ErrorMsgUtil;
 

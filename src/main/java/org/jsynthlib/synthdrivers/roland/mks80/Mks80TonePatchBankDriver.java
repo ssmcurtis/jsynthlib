@@ -3,7 +3,6 @@ package org.jsynthlib.synthdrivers.roland.mks80;
 
 import org.jsynthlib.model.patch.PatchDataImpl;
 import org.jsynthlib.tools.ErrorMsgUtil;
-import org.jsynthlib.tools.HexaUtil;
 
 public class Mks80TonePatchBankDriver extends Mks80BankDriver {
 
@@ -34,7 +33,7 @@ public class Mks80TonePatchBankDriver extends Mks80BankDriver {
 
 	@Override
 	public boolean canHoldPatch(PatchDataImpl p) {
-		System.out.println("Size: " + p.getSysex().length);
+		ErrorMsgUtil.reportStatus("Size: " + p.getSysex().length);
 		if ((Mks80.DATA_PACKAGE_IN_BANK != p.getSysex().length) && (singleSize != 0)) {
 			return false;
 		}
@@ -110,7 +109,7 @@ public class Mks80TonePatchBankDriver extends Mks80BankDriver {
 			return;
 		}
 
-		// System.out.println("Put patch: " + patchNum);
+		// ErrorMsgUtil.reportStatus("Put patch: " + patchNum);
 
 		int dataPackage = patchNum / 4;
 		int postionInPackage = patchNum % 4;

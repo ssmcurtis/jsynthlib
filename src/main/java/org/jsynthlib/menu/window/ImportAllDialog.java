@@ -138,7 +138,7 @@ public class ImportAllDialog extends JDialog {
 		File[] files = directory.listFiles();
 		for (int i = 0; i < files.length; i++) {
 			File currentFile = files[i];
-			System.out.println("> " + currentFile.getName() + " dir:" +  currentFile.isDirectory());
+			ErrorMsgUtil.reportStatus("> " + currentFile.getName() + " dir:" +  currentFile.isDirectory());
 			if (AppConfig.getImportDirectoryRecursive() && currentFile.isDirectory()) {
 				doImport(currentFile, currentFile.getName());
 			} else {
@@ -155,13 +155,13 @@ public class ImportAllDialog extends JDialog {
 						try {
 							// import all supported filetypes
 							Actions.getSelectedFrame().importPatch(currentFile, fileType);
-							System.out.println(">> Imported " + name);
+							ErrorMsgUtil.reportStatus(">> Imported " + name);
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
 					}
 				} else {
-					System.out.println(">> Ignored " + name);
+					ErrorMsgUtil.reportStatus(">> Ignored " + name);
 				}
 			}
 		}

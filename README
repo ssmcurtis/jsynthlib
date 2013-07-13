@@ -1,3 +1,17 @@
+$Id: README,20130713 ssmcurtis $
+JSynthLib2 --- A Universal MIDI Synthsizer Librarian
+	
+	1. Install JRE (1.6 or later ): http://www.java.com/download/
+	2. Invoke JSynthLib 
+		- Windows JSynthLib2.bat
+		
+		- optional parameters: 
+			- for differnt studio setups "- S <device_config_name>"
+			- more detailed output on the console "-D 1" 
+	3. Add devices aka Synthesizer
+
+
+# original readme for more details, but older JRE
 $Id: README,v 1.2 2004-06-28 03:04:04 hayashi Exp $
 
 JSynthLib --- A Universal MIDI Synthsizer Librarian/Editor
