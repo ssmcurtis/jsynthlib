@@ -11,10 +11,12 @@
 
 package org.jsynthlib;
 
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
@@ -29,6 +31,7 @@ import org.jsynthlib.tools.ErrorMsgUtil;
 import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
 import org.reflections.scanners.SubTypesScanner;
+import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
 public class DevicesConfig {
@@ -75,15 +78,21 @@ public class DevicesConfig {
 		// ConfigurationBuilder cfgBuilder = new
 		// ConfigurationBuilder().setUrls(ClasspathHelper.forPackage("org.jsynthlib.synthdrivers"))
 		// .setScanners(new SubTypesScanner(), new ResourcesScanner());
-		URL url = null;
-		try {
-			url = new URL("file:./");
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		ConfigurationBuilder cfgBuilder = null;
+		File jarFile = new File("./JSynthLib2.jar");
+		if (jarFile.exists()) {
+			try {
+				cfgBuilder = new ConfigurationBuilder().setUrls(new URL("file:./JSynthLib2.jar")).setScanners(new SubTypesScanner(),
+						new ResourcesScanner());
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+		} else {
+			cfgBuilder = new ConfigurationBuilder().setUrls(ClasspathHelper.forPackage("org.jsynthlib.synthdrivers")).setScanners(
+					new SubTypesScanner(), new ResourcesScanner());
 		}
-		ConfigurationBuilder cfgBuilder = new ConfigurationBuilder().setUrls(url)
-				.setScanners(new SubTypesScanner(), new ResourcesScanner());
+
 		Reflections reflections = new Reflections(cfgBuilder);
 
 		Set<Class<? extends Device>> subTypes = reflections.getSubTypesOf(Device.class);
