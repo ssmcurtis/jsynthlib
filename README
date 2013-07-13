@@ -3,7 +3,8 @@ JSynthLib2 --- A Universal MIDI Synthsizer Librarian
 	
 	1. Install JRE (1.6 or later ): http://www.java.com/download/
 	2. Invoke JSynthLib 
-		- Windows JSynthLib2.bat
+		- Windows run JSynthLib2.bat 
+			in https://github.com/ssmcurtis/jsynthlib2/blob/dev/windows_run.zip
 		
 		- optional parameters: 
 			- for differnt studio setups "- S <device_config_name>"

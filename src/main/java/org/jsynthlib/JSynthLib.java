@@ -31,7 +31,8 @@ public class JSynthLib {
 				if (args[i].startsWith("-D")) {
 					// may cause Illegal Index Exception
 					int tmpDebugLevel = Integer.parseInt(args[++i]);
-					debugLevel = tmpDebugLevel > 1 ? 1 : debugLevel;
+					//debugLevel = tmpDebugLevel > 1 ? 1 : tmpDebugLevel;
+					debugLevel = tmpDebugLevel;
 				} else if (args[i].startsWith("-S")) {
 					studio = args[++i];
 					studio = studio.replaceAll("[^A-Za-z 0-9]", "x");
@@ -43,7 +44,7 @@ public class JSynthLib {
 				} else if (args[i].startsWith("-")) {
 					usage(1);
 				} else {
-					fileList.add(args[i]);
+					// fileList.add(args[i]);
 				}
 			}
 			ErrorMsgUtil.reportStatus(" Studio: " + studio);
@@ -53,7 +54,7 @@ public class JSynthLib {
 	}
 
 	private static void usage(int status) {
-		System.err.println("usage: java JSynthLib [-D number]  [-S studioconfig] [filename...]");
+		System.err.println("usage: java JSynthLib [-D number]  [-S studioconfig]");
 		System.err.println("    -S configuration name for used synth drivers (will be created if not exists), "
 				+ "see preferences -> synth driver for current configuration");
 		System.err.println("    -D number\tset debugging flags (argument is a bit mask)");
