@@ -57,6 +57,7 @@ public class SysexGetDialog extends JDialog {
 	private int inPort;
 
 	private boolean sendPatchAcknowledge = false;
+	private boolean useSendPatchAcknowledge = false;
 	private boolean isEof = false;
 	private boolean sendPatchRequest = true;
 	private int patchSize = 1;
@@ -81,7 +82,6 @@ public class SysexGetDialog extends JDialog {
 
 	private SynthDriverPatch driver = null;
 
-	
 	private JTextArea jta = new JTextArea(null, 10, 50);
 
 	public SysexGetDialog(JFrame parent) {
@@ -132,16 +132,14 @@ public class SysexGetDialog extends JDialog {
 		comboPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 		comboPanel.add(labelPanel, BorderLayout.CENTER);
 		comboPanel.add(fieldPanel, BorderLayout.EAST);
-		
+
 		jta.setLineWrap(true);
 		jta.setEditable(false);
 		jta.setWrapStyleWord(true);
 		jta.setCaretPosition(0);
 
 		comboPanel.add(jta, BorderLayout.SOUTH);
-		
-		
-		
+
 		dialogPanel.add(comboPanel, BorderLayout.CENTER);
 
 		JPanel buttonPanel = new JPanel();
@@ -306,6 +304,7 @@ public class SysexGetDialog extends JDialog {
 			MidiUtil.clearSysexInputQueue(inPort); // clear MIDI input buffer
 
 			if (driver.isRequestAndAcknowledge()) {
+				useSendPatchAcknowledge = true;
 				requestSysexTimer = new Timer(0, new SendAcknowledgeActionListener());
 				requestSysexTimer.start();
 			}
@@ -401,7 +400,7 @@ public class SysexGetDialog extends JDialog {
 
 			try {
 				if (!sendPatchAcknowledge && !isEof) {
-					
+
 					while (!MidiUtil.isSysexInputQueueEmpty(inPort)) {
 						SysexMessage msg = (SysexMessage) MidiUtil.getMessage(inPort, timeout);
 
@@ -411,9 +410,11 @@ public class SysexGetDialog extends JDialog {
 						// msg.getLength());
 						sysexSize += msg.getLength();
 						statusLabel.setText(sysexSize + " Bytes Received");
-						sendPatchAcknowledge = true;
+						if (useSendPatchAcknowledge) {
+							sendPatchAcknowledge = true;
+						}
 					}
-					
+
 				}
 			} catch (Exception ex) {
 				setVisible(false);

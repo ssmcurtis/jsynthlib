@@ -22,7 +22,7 @@ public class Lamm {
 
 	public static String[] createProgrammNumbers() {
 		String[] retarr = new String[PROGRAM_COUNT_IN_BANK];
-		String[] names = DriverUtil.generateNumbers(1, PROGRAM_COUNT_IN_BANK, "Patch #00");
+		String[] names = DriverUtil.generateNumbers(0, PROGRAM_COUNT_IN_BANK, "Patch #00");
 		System.arraycopy(names, 0, retarr, 0, PROGRAM_COUNT_IN_BANK);
 
 		return retarr;
