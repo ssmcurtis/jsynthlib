@@ -16,7 +16,8 @@ public enum Blofeld {
 
 	// public byte[] CURRENT_PROGRAM_DATA_HEADER = new byte[]{(byte) 0xF0, 0x42, 0x30, 0x58, 0x40};
 
-
+	public static final String DRIVER_INFO = "Waldorf Blofeld - supports Single, Complete (128 patches for banks A - H) and Multitimbral." ;
+	
 	public static final int HEADER_SIZE = 7;
 	
 	public static final int PROGRAM_SIZE_MIDI = 384;

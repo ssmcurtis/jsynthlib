@@ -40,6 +40,7 @@ public class DeviceDetailsDialog extends JDialog {
 		JPanel infoPane = new JPanel();
 		infoPane.setLayout(new BorderLayout());
 		infoPane.add(new JLabel("Device Name:  " + device.getManufacturerName() + " " + device.getModelName()), BorderLayout.NORTH);
+		
 		JTextArea jta = new JTextArea(null, 10, 50);
 		jta.append(device.getInfoText());
 		jta.setLineWrap(true);

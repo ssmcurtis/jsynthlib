@@ -9,12 +9,11 @@ import org.jsynthlib.model.device.Device;
 import org.jsynthlib.model.patch.Patch;
 
 public class Ob8Device extends Device {
-	static final String DRIVER_INFO = Ob8.VENDOR + " " + Ob8.DEVICE;
 
 	JComboBox<String> channelList;
 
 	public Ob8Device() {
-		super(Ob8.VENDOR, Ob8.DEVICE, null, DRIVER_INFO, "ssmCurtis");
+		super(Ob8.VENDOR, Ob8.DEVICE, null, Ob8.DRIVER_INFO, "ssmCurtis");
 	}
 
 	public Ob8Device(Preferences prefs) {

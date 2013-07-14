@@ -13,6 +13,10 @@ public enum Andromeda {
 	PATCH_CHECKSUM_OFFSET(-1),
 	BANK_AT(6),
 	PATCH_AT(7);
+	
+	static final String DRIVER_INFO = "The A6 lacks a MIDI addressable patch buffer. Therefore, when you\n"
+			+ "send or play a patch from within JSynthLib, user program 1 in bank user 1 will be\n"
+			+ "overwritten. JSynthLib2 treats this location as an edit buffer.";
 
 	private final int position;
 

@@ -1,6 +1,8 @@
-// written by Kenneth L. Martinez
+// written by ssmcurtis
 // $Id$
 package org.jsynthlib.synthdrivers.moog.lamm;
+
+import javax.sound.midi.MidiMessage;
 
 import org.jsynthlib.model.driver.SynthDriverPatchImpl;
 import org.jsynthlib.model.patch.PatchDataImpl;

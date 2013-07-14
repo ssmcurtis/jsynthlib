@@ -4,6 +4,8 @@ import org.jsynthlib.tools.DriverUtil;
 
 public class Ob8 {
 
+	public static final String DRIVER_INFO = "Oberheim OB 8 - get Single patch or use \"Get bank as singles for\" all 120 patches.";
+
 	private static final String[] INTERNAL_BANK_NAMES = new String[] { "01 A", "02 B", "03 AB", "04 C", "05 AC", "06 BC", "07 ABC", "08 D", "09 AD",
 			"10 BD", "11 ABD", "12 CD", "13 ACD", "14 BCD", "15 ABCD" };
 

@@ -815,6 +815,7 @@ abstract public class SynthDriverPatchImpl implements SynthDriverPatch {
 
 	@Override
 	public void sendAcknowledge() {
+		// no action 
 	}
 	
 	public boolean isEof(byte[] sysex){

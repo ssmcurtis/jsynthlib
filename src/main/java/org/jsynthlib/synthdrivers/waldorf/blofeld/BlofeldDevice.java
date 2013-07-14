@@ -9,7 +9,7 @@ import org.jsynthlib.model.patch.Patch;
 public class BlofeldDevice extends Device {
 
 	public BlofeldDevice(Preferences prefs) {
-		super(Blofeld.VENDOR, Blofeld.DEVICE, null, null, "");
+		super(Blofeld.VENDOR, Blofeld.DEVICE, null, Blofeld.DRIVER_INFO, "");
 		this.prefs = prefs;
 
 		setMaxProgramForLibraryStorage(Blofeld.PROGRAM_COUNT_IN_BANK);

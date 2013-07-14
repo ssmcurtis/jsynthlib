@@ -6,7 +6,7 @@ import org.jsynthlib.tools.ErrorMsgUtil;
 
 public class JSynthLib {
 
-	private static int debugLevel = 0;
+	private static int debugLevel = 3;
 	private static ArrayList<String> fileList = new ArrayList<String>();
 	private static String studio = "devices";
 

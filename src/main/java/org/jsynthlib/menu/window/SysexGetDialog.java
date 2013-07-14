@@ -17,6 +17,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.Timer;
 
 import org.jsynthlib.menu.preferences.AppConfig;
@@ -55,7 +56,7 @@ public class SysexGetDialog extends JDialog {
 	/** MIDI input port from which SysEX messages come. */
 	private int inPort;
 
-	private boolean sendPatchAcknowledge = true;
+	private boolean sendPatchAcknowledge = false;
 	private boolean isEof = false;
 	private boolean sendPatchRequest = true;
 	private int patchSize = 1;
@@ -79,6 +80,9 @@ public class SysexGetDialog extends JDialog {
 	private int patchCountInBank = 1;
 
 	private SynthDriverPatch driver = null;
+
+	
+	private JTextArea jta = new JTextArea(null, 10, 50);
 
 	public SysexGetDialog(JFrame parent) {
 		super(parent, "Get Sysex Data", true);
@@ -128,6 +132,16 @@ public class SysexGetDialog extends JDialog {
 		comboPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 		comboPanel.add(labelPanel, BorderLayout.CENTER);
 		comboPanel.add(fieldPanel, BorderLayout.EAST);
+		
+		jta.setLineWrap(true);
+		jta.setEditable(false);
+		jta.setWrapStyleWord(true);
+		jta.setCaretPosition(0);
+
+		comboPanel.add(jta, BorderLayout.SOUTH);
+		
+		
+		
 		dialogPanel.add(comboPanel, BorderLayout.CENTER);
 
 		JPanel buttonPanel = new JPanel();
@@ -180,7 +194,7 @@ public class SysexGetDialog extends JDialog {
 			// ErrorMsgUtil.reportStatus(">>> Number: " + currentPatchNumber + " " +
 			// driver.getPatchNumbers()[currentPatchNumber]);
 
-			SysexMessage[] msgs = (SysexMessage[]) queue.toArray(new SysexMessage[]{});
+			SysexMessage[] msgs = (SysexMessage[]) queue.toArray(new SysexMessage[] {});
 
 			// INFO CREATE PATCHES : GET FROM SYNTH
 			Patch[] patarray = driver.createPatches(msgs);
@@ -216,6 +230,8 @@ public class SysexGetDialog extends JDialog {
 				}
 			}
 			driverComboBox.setEnabled(driverComboBox.getItemCount() > 1);
+			// System.out.println(">>> " + device.getInfoText());
+			jta.setText(device.getInfoText());
 		}
 	}
 
@@ -270,8 +286,8 @@ public class SysexGetDialog extends JDialog {
 
 			inPort = driver.getDevice().getInPort();
 
-			ErrorMsgUtil.reportStatus("SysexGetDialog | port: " + inPort + " | bankNum: " + bankNumber + " | patchNum: "
-					+ currentPatchNumber + "|" + patchCountInBank);
+			ErrorMsgUtil.reportStatus("SysexGetDialog | port: " + driver.getDevice().getDeviceName() + " | bankNum: " + bankNumber
+					+ " | patchNum: " + currentPatchNumber + "|" + patchCountInBank);
 
 			statusLabel.setText("Getting sysex dump...");
 
@@ -290,7 +306,6 @@ public class SysexGetDialog extends JDialog {
 			MidiUtil.clearSysexInputQueue(inPort); // clear MIDI input buffer
 
 			if (driver.isRequestAndAcknowledge()) {
-				sendPatchAcknowledge = false;
 				requestSysexTimer = new Timer(0, new SendAcknowledgeActionListener());
 				requestSysexTimer.start();
 			}
@@ -366,9 +381,9 @@ public class SysexGetDialog extends JDialog {
 				sendPatchAcknowledge = false;
 				if (queue.size() > 0) {
 					SysexMessage lastMessage = queue.get(queue.size() - 1);
-					
+
 					ErrorMsgUtil.reportStatus(HexaUtil.hexDumpOneLine(lastMessage.getData(), 0, -1, 16));
-					
+
 					isEof = driver.isEof(lastMessage.getData());
 					if (isEof) {
 						queue.remove(lastMessage);
@@ -386,6 +401,7 @@ public class SysexGetDialog extends JDialog {
 
 			try {
 				if (!sendPatchAcknowledge && !isEof) {
+					
 					while (!MidiUtil.isSysexInputQueueEmpty(inPort)) {
 						SysexMessage msg = (SysexMessage) MidiUtil.getMessage(inPort, timeout);
 
@@ -397,6 +413,7 @@ public class SysexGetDialog extends JDialog {
 						statusLabel.setText(sysexSize + " Bytes Received");
 						sendPatchAcknowledge = true;
 					}
+					
 				}
 			} catch (Exception ex) {
 				setVisible(false);

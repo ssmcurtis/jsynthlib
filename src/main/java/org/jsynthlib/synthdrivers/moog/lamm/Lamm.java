@@ -4,6 +4,8 @@ import org.jsynthlib.tools.DriverUtil;
 
 public class Lamm {
 
+	public static final String DRIVER_INFO = "LA MemoryMoog 2012 - Press GET and initialted dumps from synth. \nSingle: C-7-enter \nAll: C-8-enter";
+
 	public static final int PATCH_NUM_OFFSET = 3; // Include F0, start with 0
 
 	public static final int HEADER_SIZE = 4;
